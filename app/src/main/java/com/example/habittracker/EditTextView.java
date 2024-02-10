@@ -12,6 +12,8 @@ public class EditTextView extends androidx.appcompat.widget.AppCompatEditText {
     public EditTextView(Context context) {
         super(context);
         init();
+
+
     }
 
     public EditTextView(Context context, AttributeSet attrs) {
@@ -37,7 +39,9 @@ public class EditTextView extends androidx.appcompat.widget.AppCompatEditText {
 
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        System.out.println("onKeyPreIme");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            System.out.println("back button");
             // Hide keyboard when the back button is pressed
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
