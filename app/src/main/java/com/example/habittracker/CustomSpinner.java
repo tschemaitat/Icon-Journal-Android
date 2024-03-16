@@ -20,8 +20,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner implements Widget {
+
+    public static final String className = "drop down";
+    boolean dataSet = false;
     Context context;
     ArrayList<ArrayList<Pair<Integer, String>>> optionPages;
+    String structureKey = null;
+    String valueKey = null;
+    ArrayList<String> groups = new ArrayList<>();
 
 
     String pageHeader;
@@ -71,6 +77,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
     }
 
     private void setOptions(ArrayList<String> spinnerOptions){
+        //System.out.println("setting options");
         //ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerOptions);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerOptions) {
             @NonNull
@@ -105,6 +112,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         super.setAdapter(adapter);
         selectedValue = nullValue;
 
+        //System.out.println("super.getAdapter().getCount() = " + super.getAdapter().getCount());
 
     }
     boolean dummy_selection_zero = true;
@@ -209,11 +217,10 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
             //set option selected to the index of the page's options
             DropDownPage clickedPage = currentPage.get(i - numberNotOptions);
             System.out.printf("selected: " + clickedPage.name);
-            if(!currentPage.hasChildren()){
+            if(!clickedPage.hasChildren()){
                 //option chosen is not a folder
-                System.out.println("option is not a folder, leaving");
-
-                dataChanged(currentPage.name);
+                System.out.println("option: \n" + clickedPage.name + "\n is not a folder, leaving");
+                dataChanged(clickedPage.name);
                 return;
             }
             //add new page to page stack
@@ -267,7 +274,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
             result.add(folder+" " + option.name);
         }
 
-
+        //System.out.println("formatted page: \n\t" + result);
 
         return result;
     }
@@ -275,7 +282,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
     @Override
     public Widget widgetClone() {
         CustomSpinner clone = new CustomSpinner(context);
-        clone.setData(clone.getData());
+        clone.setData(this.getData());
         return clone;
     }
     public Runnable onDataChangedListener;
@@ -286,7 +293,10 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
 
     @Override
     public DropDownParams getData(){
-        DropDownParams params = new DropDownParams(selectedValue, "default", null, null);
+        if(!dataSet){
+            throw new RuntimeException();
+        }
+        DropDownParams params = new DropDownParams(selectedValue, structureKey, valueKey, groups);
         return params;
     }
 
@@ -298,20 +308,23 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
 
     @Override
     public void setData(WidgetParams params){
+        dataSet = true;
         DropDownParams dropDownParams = ((DropDownParams) params);
         parentPage = Structure.getPages(dropDownParams.structureKey, dropDownParams.valueKey, dropDownParams.groups);
+        structureKey = dropDownParams.structureKey;
+        valueKey = dropDownParams.valueKey;
+        groups = dropDownParams.groups;
 
 
 
 
 
-
-        System.out.println("setting data: " + this);
+        //System.out.println("setting data: " + this);
 
         currentPage = parentPage;
         selectedValue = dropDownParams.selected;
         int specialOptions = 1;
-
+        //System.out.println("setting data for spinner: \n" + parentPage);
         setOptions(formatOptions(currentPage));
     }
 
@@ -333,6 +346,8 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         public ArrayList<String> groups;
 
         public DropDownParams(String selected, String structureKey, String valueKey, ArrayList<String> groups){
+            if(structureKey == null)
+                throw new RuntimeException();
             this.widgetClass = "drop down";
             this.selected = selected;
             this.structureKey = structureKey;
@@ -341,7 +356,9 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         }
 
         public DropDownParams(String structureKey, String valueKey, ArrayList<String> groups){
-            this.widgetClass = "drop down";
+            if(structureKey == null)
+                throw new RuntimeException();
+            this.widgetClass = CustomSpinner.className;
             this.selected = nullValue;
             this.structureKey = structureKey;
             this.valueKey = valueKey;
@@ -349,11 +366,17 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         }
 
         public DropDownParams(String structureKey, String valueKey){
-            this.widgetClass = "drop down";
+            if(structureKey == null)
+                throw new RuntimeException();
+            this.widgetClass = CustomSpinner.className;
             this.selected = nullValue;
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = new ArrayList<>();
+        }
+
+        public String toString(){
+            return "{" + className + ", " + selected + ", " +structureKey + ", " +valueKey + ", " +groups + "}";
         }
 
     }

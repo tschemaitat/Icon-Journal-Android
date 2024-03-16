@@ -106,7 +106,7 @@ public class GLib {
         System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className){
-            case "custom spinner":
+            case CustomSpinner.className:
                 widget = new CustomSpinner(context);
                 widget.setData(params);
                 break;

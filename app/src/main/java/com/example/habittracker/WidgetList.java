@@ -12,9 +12,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class WidgetList extends WidgetGroup implements Widget{
-    public Widget widget;
 
     public ConstraintLayout addView;
+    public WidgetParams cloneParams = null;
 
     public WidgetList(Context context){
         super(context);
@@ -44,7 +44,7 @@ public class WidgetList extends WidgetGroup implements Widget{
 
     @Override
     public WidgetParams getData(){
-        ListParams params = new ListParams(widget.getData(), getDataWidgets());
+        ListParams params = new ListParams(cloneParams, getDataWidgets());
 
         return params;
     }
@@ -56,15 +56,12 @@ public class WidgetList extends WidgetGroup implements Widget{
         return value;
     }
 
-    public Widget getCloneableWidget(){
-        return widget;
-    }
 
     @Override
     public void setData(WidgetParams params){
+        System.out.println("setting data for list");
         ListParams listParams = (ListParams) params;
-        widget = GLib.inflateWidget(context, listParams.cloneableWidget);
-
+        cloneParams = listParams.cloneableWidget;
         setWidgetsInLayout(listParams.currentWidgets);
         makeButton();
 
@@ -78,7 +75,7 @@ public class WidgetList extends WidgetGroup implements Widget{
             });
         }
 
-        System.out.println("data finished set: ");
+        System.out.println("data finished set for list");
         System.out.println(getData());
     }
 
@@ -88,7 +85,7 @@ public class WidgetList extends WidgetGroup implements Widget{
             public void onClick(View view) {
                 Widget newWidget = null;
 
-                newWidget = getCloneableWidget().widgetClone();
+                newWidget = GLib.inflateWidget(context, cloneParams);
                 newWidget.setOnDataChangedListener(new Runnable() {
                     @Override
                     public void run() {
@@ -118,9 +115,13 @@ public class WidgetList extends WidgetGroup implements Widget{
         }
 
         public ListParams(WidgetParams cloneableWidget){
+            this.widgetClass = "list";
             this.cloneableWidget = cloneableWidget;
             this.widgetClass = widgetClass;
             currentWidgets = new ArrayList<>();
+        }
+        public String toString(){
+            return "{list" + ", " + cloneableWidget + ", " +currentWidgets + "}";
         }
     }
 

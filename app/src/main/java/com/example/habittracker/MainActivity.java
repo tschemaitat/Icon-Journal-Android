@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         CustomSpinner customSpinner = findViewById(R.id.spinner);
 
 
-
+        System.out.println("\n\n\n\nmain activity---------------");
 
         setOptionsSpinner(customSpinner);
 
@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         WidgetList.ListParams parentParams = new WidgetList.ListParams(childListParams);
 
+        System.out.println("parentParams = " + parentParams);
+        System.out.println("childListParams = " + childListParams);
+
+        System.out.println("making parent list: ");
         list = new WidgetList(this);
         System.out.println("setting data parent: ");
         list.setData(parentParams);
@@ -65,10 +69,12 @@ public class MainActivity extends AppCompatActivity {
         parentWidgetGroup.addView(list.getView());
         StructureWidget structureWidget = new StructureWidget(this);
         parentWidgetGroup.addView(structureWidget.getView());
+        System.out.println("main activity finished------------\n\n\n");
     }
 
     public void setOptionsSpinner(CustomSpinner customSpinner){
-
+        CustomSpinner.DropDownParams params = new CustomSpinner.DropDownParams("default", null);
+        customSpinner.setData(params);
     }
 
 

@@ -16,10 +16,19 @@ public class Structure {
     }
 
     public static DropDownPage getPages(String structureKey, String valueKey, ArrayList<String> groups){
+        if(structureKey.equals("default")){
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add("body part");
+            temp.add("type");
+            return getPages("numbers", "name", temp);
+        }
         DropDownPage parentPage = new DropDownPage("parent");
 
 
         StructureEntry structureEntry = structures.get(structureKey);
+        if(structureEntry == null){
+            throw new RuntimeException(structureKey + " invalid");
+        }
         ArrayList<String> headerList = new ArrayList<>(Arrays.asList(structureEntry.header));
         String[][] matrix = structureEntry.data;
 
