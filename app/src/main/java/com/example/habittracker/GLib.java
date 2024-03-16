@@ -5,7 +5,14 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GLib {
     public static int calculateTextWidth(String text, float textSize, Typeface typeface) {
@@ -61,6 +68,64 @@ public class GLib {
 
     public static int dpToPx(Context context, int dp){
         return (int)(dp * (context.getResources().getDisplayMetrics().densityDpi / 160f));
+    }
+
+    public static ConstraintLayout createOutlinedMarginedLayout(Context context){
+        int margin = GLib.dpToPx(context, 5);
+        ConstraintLayout layout = (ConstraintLayout)GLib.inflate(context, R.layout.widget_group_layout);
+
+        //layoutParams.setMargins(margin, margin, margin, margin);
+
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(-2, -2);
+        layoutParams2.setMargins(margin, margin, margin, margin);
+
+
+        layout.setLayoutParams(layoutParams2);
+
+
+        return layout;
+    }
+
+    public static void outlinedLayoutAddView(ConstraintLayout outlinedLayout, View child){
+        ((ConstraintLayout)(outlinedLayout.getChildAt(0))).addView(child);
+    }
+
+    public static ConstraintLayout insertAddButton(View.OnClickListener listener, ViewGroup parent, Context context){
+        ConstraintLayout addView = (ConstraintLayout) GLib.inflate(context, R.layout.add_layout);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
+        addView.setLayoutParams(layoutParams);
+
+        addView.setOnClickListener(listener);
+        parent.addView(addView);
+        return addView;
+    }
+
+    public static Widget inflateWidget(Context context, WidgetParams params){
+
+        String className = params.widgetClass;
+        System.out.println("inflating widget: " + className);
+        Widget widget = null;
+        switch (className){
+            case "custom spinner":
+                widget = new CustomSpinner(context);
+                widget.setData(params);
+                break;
+            case "list":
+                widget = new WidgetList(context);
+                widget.setData(params);
+                break;
+            case "structure widget":
+                widget = new StructureWidget(context);
+                widget.setData(params);
+                break;
+            default:
+
+                throw new RuntimeException("unknown widget class: " + className);
+
+
+
+        }
+        return widget;
     }
 
 

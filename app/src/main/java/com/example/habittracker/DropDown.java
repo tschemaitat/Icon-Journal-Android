@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -44,7 +47,7 @@ public class DropDown extends ConstraintLayout{
         init();
     }
 
-    private void init(){
+    private void init() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(200, 100);
 
         layoutParams.setMargins(GLib.dpToPx(context, 10), 0, 0, 0);
@@ -53,7 +56,7 @@ public class DropDown extends ConstraintLayout{
         int[] locationScreen = new int[2];
 
 
-        if(optionPages == null || popUpParent == null)
+        if (optionPages == null || popUpParent == null)
             return;
         this.setOnClickListener(new OnClickListener() {
             @Override

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class SliderWithLabels extends ConstraintLayout {
 
-    private CustomSlider slider;
-    private ArrayList<String> valueArray = new ArrayList<>();
+    public CustomSlider slider;
+    public ArrayList<String> valueArray = new ArrayList<>();
     private ArrayList<Integer> labelIndexList = new ArrayList<>();
     private ArrayList<TextView> labels = new ArrayList<>();
 
@@ -32,6 +32,10 @@ public class SliderWithLabels extends ConstraintLayout {
     public SliderWithLabels(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public String selectedValue(){
+        return valueArray.get(Math.round(slider.getValue() * valueArray.size()));
     }
 
     private void init(Context context) {
