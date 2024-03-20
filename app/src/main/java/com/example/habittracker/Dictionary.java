@@ -1,71 +1,208 @@
 package com.example.habittracker;
 
 
-import com.example.habittracker.Slider.TextSlider;
+
+
+
+
 
 import java.util.ArrayList;
-import java.util.*;
 import java.util.HashMap;
 
 public class Dictionary {
 
-    static HashMap<String, DictEntry> structures = new HashMap<>();
+    static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
+
     static{
         generateStructures();
     }
-
-    public static String[] header(String structureKey){
-        return structures.get(structureKey).header;
+    public static void main(String[] args){
+//        ArrayList<ArrayList<String>> groups = new ArrayList<>();
+//        ArrayList<String> group = new ArrayList<>();
+//        group.add("attributes");
+//        group.add("attribute");
+//        groups.add(group);
+//        group = new ArrayList<>();
+//        group.add("genres");
+//        group.add("genre");
+//        groups.add(group);
+//        getPages("shows", "name", groups);
+        ArrayList<DataTreeItem> groups = new ArrayList<>();
+        ArrayList<String> group = new ArrayList<>();
+        group.add("specific genres");
+        group.add("sub genres");
+        group.add("sub genre");
+        groups.add(new DataTreeItem(group));
+        getPages("specific genres", "name", groups);
     }
 
-    public static DropDownPage getPages(String structureKey, String valueKey, ArrayList<String> groups){
-        if(structureKey.equals("default")){
-            ArrayList<String> temp = new ArrayList<>();
-            temp.add("body part");
-            temp.add("type");
-            return getPages("numbers", "name", temp);
-        }
-        if(structureKey.equals("structure keys")){
-            return structureKeys();
-        }
-        DropDownPage parentPage = new DropDownPage("parent");
 
 
-        DictEntry structureEntry = structures.get(structureKey);
-        if(structureEntry == null){
-            throw new RuntimeException(structureKey + " invalid");
-        }
-        ArrayList<String> headerList = new ArrayList<>(Arrays.asList(structureEntry.header));
-        String[][] matrix = structureEntry.data;
+    public static DataTree header(String structureKey){
+        return dictEntryMap.get(structureKey).header;
+    }
 
-        ArrayList<Integer> groupIndexList = new ArrayList<>();
-        for(String groupName: groups)
-            groupIndexList.add(headerList.indexOf(groupName));
 
-        int valueIndex = headerList.indexOf(valueKey);
+    public static DropDownPage getPages(String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
+        DictEntry dictEntry = dictEntryMap.get(structureKey);
+        DataTree header = dictEntry.header;
+        System.out.println("header = " + header);
+        ArrayList<DataTree> data = dictEntry.entries;
+        ArrayList<ArrayList<Integer>> groupToValue = getGroupIndexes(header, groups);
 
-        for(String[] entry: matrix){
-            DropDownPage currentPage = parentPage;
-            System.out.println("entry: " + Arrays.toString(entry));
-            for(int i = 0; i < groupIndexList.size(); i++){
+        int valueIndex = header.indexOf(valueKey);
 
-                String group = entry[groupIndexList.get(i)];
-                DropDownPage newPage = currentPage.get(group);
+        DropDownPage parentPage = new DropDownPage(structureKey +" page for " + valueKey);
 
-                if(newPage == null){
-                    newPage = new DropDownPage(group);
-                    currentPage.add(newPage);
+
+        for(DataTree tree: data){
+
+            ArrayList<DropDownPage> currentPages = new ArrayList<>();
+            currentPages.add(parentPage);
+            String entryValue = tree.getString(valueIndex);
+            ArrayList<ArrayList<String>> valuesOfGroups = tree.entryGroupValues(groupToValue);
+            System.out.println("valuesOfGroups = " + valuesOfGroups);
+
+            for(int groupIndex = 0; groupIndex < groups.size(); groupIndex++){
+
+                ArrayList<String> valuesOfCurrentGroup = valuesOfGroups.get(groupIndex);
+                ArrayList<DropDownPage> newPages = new ArrayList<>();
+
+                for(String groupValue: valuesOfCurrentGroup){
+
+                    for(DropDownPage page: currentPages){
+                        newPages.add(page.getOrAdd(groupValue));
+                    }
+
                 }
-                currentPage = newPage;
+
+                currentPages = newPages;
 
             }
-            currentPage.add(new DropDownPage(entry[valueIndex]));
+            for(DropDownPage page: currentPages)
+                page.add(entryValue);
         }
-
-        System.out.println(parentPage);
-
-        parentPage.init();
+        System.out.println("parentPage = " + parentPage);
         return parentPage;
+    }
+
+    public static ArrayList<ArrayList<Integer>> getGroupIndexes(DataTree header, ArrayList<DataTreeItem> groups){
+        ArrayList<ArrayList<Integer>> groupToValue = new ArrayList<>();
+        for(int i = 0; i < groups.size(); i++){
+            System.out.println("finding ");
+            groupToValue.add(header.indexOf(groups.get(i).path));
+        }
+        return groupToValue;
+    }
+
+    public static void generateStructures1(){
+        Object[] reLife = new Object[]{
+                "ReLIFE",
+                new Object[]{
+                        "romance",
+                        "isekai",
+                        "working together"
+                },
+                new Object[]{
+                        "composition",
+                        "character progression",
+                        "character",
+                        "story"
+                }
+        };
+
+        Object[] newGame = new Object[]{
+                "NEW GAME!",
+                new Object[]{
+                        "working together",
+                        "girls doing cute things"
+                },
+                new Object[]{
+                        "character",
+                        "dialogue"
+                }
+        };
+
+        Object[] shield = new Object[]{
+                "The Rising of the Shield Hero",
+                new Object[]{
+                        "isekai"
+                },
+                new Object[]{
+                        "character"
+                }
+        };
+        Object[][] objects = new Object[][]{reLife, newGame, shield};
+        ArrayList<DataTree> trees = DataTree.convert(objects);
+
+        Object[] header = new Object[]{
+                "name",
+                new KeyPair("genres",new Object[]{"genre"}),
+                new KeyPair("attributes",new Object[]{"attribute"})
+        };
+        DataTree showHeader = DataTree.convertHeader(header);
+        DictEntry shows = new DictEntry("shows", showHeader, trees, DictEntry.dictionary);
+        dictEntryMap.put(shows.key, shows);
+
+
+
+
+    }
+
+    public static void generateStructures(){
+        // ReLIFE
+
+        Object[][] specificGenres = new Object[][]{
+                new Object[]{
+                        "if new game and isekai combined",
+                        new Object[]{//array of specific genres
+                                new Object[]{//one specific genre
+                                        "isekai comedy",
+                                        new Object[]{//array of sub genres
+                                                new Object[]{
+                                                        "isekai",
+                                                        "0.4"
+                                                },
+                                                new Object[]{
+                                                        "comedy",
+                                                        "0.6"
+                                                },
+                                        },
+                                        "0.5"
+                                },
+                                new Object[]{
+                                        "slice of girls making games",
+                                        new Object[]{
+                                                new Object[]{
+                                                        "slice of life",
+                                                        "0.4"
+                                                },
+                                                new Object[]{
+                                                        "girls doing cute things",
+                                                        "0.6"
+                                                },
+                                                new Object[]{
+                                                        "video games",
+                                                        "0.6"
+                                                },
+                                        },
+                                        "0.5"
+                                }
+                        }
+                }};
+        Object[] header = new Object[]{
+                "name",
+                new KeyPair("specific genres",new Object[]{
+                        "specific genre name",
+                        new KeyPair("sub genres", new Object[]{
+                                "sub genre",
+                                "weight"
+                        }),
+                        "weight"
+                })
+        };
+        DictEntry shows = new DictEntry("specific genres", DataTree.convertHeader(header), DataTree.convert(specificGenres), DictEntry.dictionary);
+        dictEntryMap.put(shows.key, shows);
     }
 
 
@@ -73,58 +210,12 @@ public class Dictionary {
 
 
     public static DictEntry entry(String key){
-        return structures.get(key);
-    }
-
-    public static void generateStructures(){
-
-        String[] header = new String[]{
-                "name", "body part", "type"
-        };
-        String[][] numbers = new String[][]{
-                {"pushup", "arms", "anarobic"},
-                {"squat", "legs", "anarobic"},
-                {"running", "legs", "arobic"},
-                {"bike", "legs", "arobic"},
-                {"pullup", "arms", "anarobic"}
-        };
-
-        DictEntry entry = new DictEntry("numbers", header, numbers, DictEntry.dictionary);
-
-
-        structures.put("numbers", entry);
-
-        header = new String[]{
-                "type"
-        };
-        numbers = new String[][]{
-                {CustomEditText.className},
-                {WidgetList.className},
-                {CustomSpinner.className},
-
-        };
-
-        entry = new DictEntry("types", header, numbers, DictEntry.special);
-        structures.put("types", entry);
-
-        structures.put("people", new DictEntry("people",
-                new String[]{"Username", "Identifier", "One-time password", "Recovery code", "First name", "Last name", "Department", "Location"},
-                new String[][]{
-                {"booker12", "9012", "12se74", "rb9012", "Rachel", "Booker", "Sales", "Manchester"},
-                {"grey07", "2070", "04ap67", "lg2070", "Laura", "Grey", "Depot", "London"},
-                {"johnson81", "4081", "30no86", "cj4081", "Craig", "Johnson", "Depot", "London"},
-                {"jenkins46", "9346", "14ju73", "mj9346", "Mary", "Jenkins", "Engineering", "Manchester"},
-                {"smith79", "5079", "09ja61", "js5079", "Jamie", "Smith", "Engineering", "Manchester"}
-        }, DictEntry.dictionary));
-
-
-
-
+        return dictEntryMap.get(key);
     }
 
     public static DropDownPage structureKeys(){
         DropDownPage page = new DropDownPage("keys");
-        for(String key: structures.keySet()){
+        for(String key: dictEntryMap.keySet()){
             page.add(new DropDownPage(key));
         }
         return page;

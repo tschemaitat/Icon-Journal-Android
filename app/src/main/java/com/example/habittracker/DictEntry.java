@@ -1,20 +1,24 @@
 package com.example.habittracker;
 
+import com.example.habittracker.DataTree;
+
+import java.util.ArrayList;
+
 public class DictEntry {
     public static final String dictionary = "dictionary";
     public static final String special = "special";
 
     public String key;
-    public String[] header;
-    public String[][] data;
+    public DataTree header;
+    public ArrayList<DataTree> entries;
     public String type;
 
 
 
-    public DictEntry(String key, String[] header, String[][] data, String type) {
+    public DictEntry(String key, DataTree header, ArrayList<DataTree> entries, String type) {
         this.key = key;
         this.header = header;
-        this.data = data;
+        this.entries = entries;
         this.type = type;
     }
 

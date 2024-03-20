@@ -1,5 +1,7 @@
 package com.example.habittracker;
 
+
+
 import java.util.ArrayList;
 
 public class DropDownPage {
@@ -16,6 +18,10 @@ public class DropDownPage {
 
     public void add(DropDownPage page){
         children.add(page);
+    }
+
+    public void add(String page){
+        children.add(new DropDownPage(page));
     }
 
     public void init(){
@@ -35,6 +41,16 @@ public class DropDownPage {
                 return page;
         }
         return null;
+    }
+
+    public DropDownPage getOrAdd(String name){
+        for(DropDownPage page: children){
+            if(page.name.equals(name))
+                return page;
+        }
+        DropDownPage newPage = new DropDownPage(name);
+        add(newPage);
+        return newPage;
     }
 
     public DropDownPage get(int index){
@@ -70,3 +86,4 @@ public class DropDownPage {
         return options;
     }
 }
+
