@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText implements Widget{
     String text = "null";
+    public static final String className = "edit text";
     public CustomEditText(Context context) {
         super(context);
         init();
@@ -71,12 +72,7 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
 
     }
 
-    @Override
-    public Widget widgetClone() {
-        CustomEditText editText = new CustomEditText(getContext());
-        editText.setData(getData());
-        return null;
-    }
+
     public Runnable onDataChangedListener = null;
     @Override
     public void setOnDataChangedListener(Runnable runnable) {

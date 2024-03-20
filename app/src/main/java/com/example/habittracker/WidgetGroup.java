@@ -8,40 +8,56 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 
-public class WidgetGroup {
+public class WidgetGroup implements Widget{
     Context context;
 
 
     public ConstraintLayout outlineLayout;
     public LinearLayout widgetLayout;
+    private LinearLayout outerLinearLayout;
     ArrayList<Widget> widgetsInLayout = new ArrayList<>();
 
+    int margin = 5;
 
     public WidgetGroup(Context context){
         this.context = context;
         outlineLayout = GLib.createOutlinedMarginedLayout(context);
-        widgetLayout = createWidgetLayout();
 
-        outlineLayout.addView(widgetLayout);
+        outerLinearLayout = createOuterLayout();
+        outlineLayout.addView(outerLinearLayout);
+
+        widgetLayout = createWidgetLayout();
+        outerLinearLayout.addView(widgetLayout);
+
+
     }
 
 
 
     public void addWidget(Widget widget){
-        widgetLayout.addView(widget.getView());
-        widgetsInLayout.add(widget);
-        setParamsWidget(widget);
+        addWidgetLast(widget);
+
+//        widgetLayout.addView(widget.getView());
+//        widgetsInLayout.add(widget);
+//        setParamsWidget(widget);
+    }
+    boolean hasButton = false;
+    public void removeAddButton(){
+        hasButton = false;
+        outerLinearLayout.removeView(addButton);
     }
 
     public void addWidgetLast(Widget widget){
-        widgetLayout.addView(widget.getView(), widgetLayout.getChildCount() - 1);
+        widgetLayout.addView(widget.getView());
         widgetsInLayout.add(widgetsInLayout.size(), widget);
         setParamsWidget(widget);
     }
 
     public void removeWidget(Widget widget){
-        widgetLayout.addView(widget.getView());
-        widgetsInLayout.add(widget);
+        if(widget == null)
+            return;
+        widgetLayout.removeView(widget.getView());
+        widgetsInLayout.remove(widget);
     }
 
     public void setWidgetsInLayout(ArrayList<WidgetParams> params){
@@ -77,18 +93,87 @@ public class WidgetGroup {
         layoutParams.setMargins(margin, margin, margin, margin);
         widget.getView().setLayoutParams(layoutParams);
     }
-
-    public ConstraintLayout insertAddButtonAtEnd(View.OnClickListener listener){
-        return GLib.insertAddButton(listener, widgetLayout, context);
+    ConstraintLayout addButton = null;
+    public void insertAddButtonAtEnd(View.OnClickListener listener){
+        hasButton = true;
+        addButton = GLib.insertAddButton(listener, outerLinearLayout, context);
     }
 
     private LinearLayout createWidgetLayout(){
-        int margin = GLib.dpToPx(context, 15);
+
         LinearLayout linearLayout = new LinearLayout(context);
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(-2, -2);
-        linearLayout.setLayoutParams(layoutParams);
+        linearLayout.setLayoutParams(linearLayoutParams(margin));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        layoutParams.setMargins(margin, margin, margin, margin);
         return linearLayout;
+    }
+
+    private LinearLayout createOuterLayout(){
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setLayoutParams(constraintLayoutParams(margin));
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        return linearLayout;
+    }
+
+    public ConstraintLayout.LayoutParams constraintLayoutParams(int dp){
+        int margin = GLib.dpToPx(context, dp);
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(-2, -2);
+
+        layoutParams.setMargins(margin, margin, margin, margin);
+        return layoutParams;
+    }
+
+    public LinearLayout.LayoutParams linearLayoutParams(int dp){
+        int margin = GLib.dpToPx(context, dp);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
+        layoutParams.setMargins(margin, margin, margin, margin);
+        return layoutParams;
+    }
+    private Runnable onDataChangedListener = null;
+    @Override
+    public void setOnDataChangedListener(Runnable runnable) {
+        onDataChangedListener = runnable;
+    }
+
+    @Override
+    public WidgetParams getData() {
+        ArrayList<WidgetParams> values = new ArrayList<>();
+        for(Widget widget: widgetsInLayout)
+            values.add(widget.getData());
+        return new WidgetGroupParams(values);
+    }
+
+    @Override
+    public WidgetValue value() {
+        ArrayList<WidgetValue> values = new ArrayList<>();
+        for(Widget widget: widgetsInLayout)
+            values.add(widget.value());
+        return new WidgetGroupValue(values);
+    }
+
+    @Override
+    public void setData(WidgetParams params) {
+        WidgetGroupParams groupParams = (WidgetGroupParams) params;
+        for(WidgetParams widgetParams: groupParams.params){
+            addWidget(GLib.inflateWidget(context, widgetParams));
+        }
+    }
+
+    @Override
+    public View getView() {
+        return outlineLayout;
+    }
+
+    public static class WidgetGroupParams extends WidgetParams{
+        ArrayList<WidgetParams> params;
+        public WidgetGroupParams(ArrayList<WidgetParams> params){
+            this.params = params;
+            this.widgetClass = "widget group";
+        }
+    }
+    public static class WidgetGroupValue extends WidgetValue{
+        ArrayList<WidgetValue> values;
+        public WidgetGroupValue(ArrayList<WidgetValue> values){
+            this.values = values;
+        }
     }
 }

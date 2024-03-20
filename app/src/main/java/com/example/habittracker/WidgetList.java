@@ -13,27 +13,14 @@ import java.util.ArrayList;
 
 public class WidgetList extends WidgetGroup implements Widget{
 
-    public ConstraintLayout addView;
     public WidgetParams cloneParams = null;
+    public static final String className = "list";
 
     public WidgetList(Context context){
         super(context);
 
 
 
-    }
-
-
-    @Override
-    public Widget widgetClone(){
-        System.out.println("cloning: " + this);
-
-        System.out.println("this.getData() = " + this.getData());
-
-        Widget list = new WidgetList(context);
-        list.setData(getData());
-
-        return list;
     }
     public Runnable onDataChangedListener;
     @Override
@@ -80,7 +67,7 @@ public class WidgetList extends WidgetGroup implements Widget{
     }
 
     public void makeButton(){
-        addView = insertAddButtonAtEnd(new View.OnClickListener() {
+        insertAddButtonAtEnd(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Widget newWidget = null;

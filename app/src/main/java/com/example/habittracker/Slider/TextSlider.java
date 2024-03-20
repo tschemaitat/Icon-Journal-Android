@@ -44,16 +44,7 @@ public class TextSlider extends SliderWithLabels implements Widget {
         setValues(values, labelIndex);
     }
 
-    @Override
-    public Widget widgetClone() {
-        TextSlider clone = new TextSlider(context);
-        ArrayList<Integer> labelIndex = new ArrayList<>();
-        for(int i = 0; i < valueArray.size(); i++)
-            labelIndex.add(i);
-        clone.setValues(valueArray, labelIndex);
-        return clone;
 
-    }
     public Runnable onDataChangedListener;
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
