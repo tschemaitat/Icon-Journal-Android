@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.habittracker.DataTreeItem;
+import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.DropDownPage;
 import com.example.habittracker.Structs.Pair;
@@ -29,7 +29,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
     private ArrayList<ArrayList<Pair<Integer, String>>> optionPages;
     private String structureKey = null;
     private String valueKey = null;
-    private ArrayList<DataTreeItem> groups = new ArrayList<>();
+    private ArrayList<ItemPath> groups = new ArrayList<>();
 
 
     private String pageHeader;
@@ -44,7 +44,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
     public static String nullValue = "select option";
 
 
-    private DataTreeItem selectedValuePath = null;
+    private ItemPath selectedValuePath = null;
     public DropDown(Context context) {
         super(context);
         this.context = context;
@@ -82,7 +82,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
 
     private void init(){
         setListener();
-        selectedValuePath = new DataTreeItem(nullValue);
+        selectedValuePath = new ItemPath(nullValue);
 
         //super.performClick();
 //        setOnClickListener(new OnClickListener() {
@@ -127,7 +127,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         super.setAdapter(adapter);
-        selectedValuePath = new DataTreeItem(nullValue);
+        selectedValuePath = new ItemPath(nullValue);
 
         //System.out.println("super.getAdapter().getCount() = " + super.getAdapter().getCount());
 
@@ -148,7 +148,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
                 currentPage = parentPage;
                 setOptions(formatOptions(parentPage));
                 setSelection(0);
-                selectedValuePath = new DataTreeItem(nullValue);
+                selectedValuePath = new ItemPath(nullValue);
 
                 //System.out.println("Nothing selected");
             }
@@ -221,7 +221,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         //System.out.println("currentPage = " + currentPage);
         //if user pressed select option
         if(i == 0){
-            selectedValuePath = new DataTreeItem(nullValue);
+            selectedValuePath = new ItemPath(nullValue);
 
             return;
         }
@@ -278,7 +278,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         System.out.println("<drop down>data changed: " + newValue);
         ArrayList<String> path = currentPage.getPath();
         path.add(newValue);
-        selectedValuePath = new DataTreeItem(path);
+        selectedValuePath = new ItemPath(path);
         if(onDataChangedListener == null)
             throw new RuntimeException("<drop down: "+widgetName+">null listener set: " + setListener);
         onDataChangedListener.run();
@@ -338,7 +338,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         if(params instanceof DropDownParam){
             dataSet = true;
             DropDownParam dropDownParams = ((DropDownParam) params);
-            parentPage = Dictionary.getPages(dropDownParams.structureKey, dropDownParams.valueKey, dropDownParams.groups);
+            parentPage = Dictionary.getGroupedPages(dropDownParams.structureKey, dropDownParams.valueKey, dropDownParams.groups);
             structureKey = dropDownParams.structureKey;
             valueKey = dropDownParams.valueKey;
             groups = dropDownParams.groups;
@@ -357,13 +357,13 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         dataSet = true;
         parentPage = staticParams.page;
         currentPage = parentPage;
-        selectedValuePath = new DataTreeItem(nullValue);
+        selectedValuePath = new ItemPath(nullValue);
         setOptions(formatOptions(currentPage));
 
     }
 
     public void resetValue(){
-        selectedValuePath = new DataTreeItem(nullValue);
+        selectedValuePath = new ItemPath(nullValue);
         currentPage = parentPage;
     }
 
@@ -375,12 +375,12 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
 
 
     public static class DropDownParam extends WidgetParam {
-        public DataTreeItem selected;
+        public ItemPath selected;
         public String structureKey;
         public String valueKey;
-        public ArrayList<DataTreeItem> groups;
+        public ArrayList<ItemPath> groups;
 
-        public DropDownParam(DataTreeItem selected, String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
+        public DropDownParam(ItemPath selected, String structureKey, String valueKey, ArrayList<ItemPath> groups){
             if(structureKey == null)
                 throw new RuntimeException();
             this.widgetClass = "drop down";
@@ -390,11 +390,11 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
             this.groups = groups;
         }
 
-        public DropDownParam(String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
+        public DropDownParam(String structureKey, String valueKey, ArrayList<ItemPath> groups){
             if(structureKey == null)
                 throw new RuntimeException();
             this.widgetClass = DropDown.className;
-            this.selected = new DataTreeItem(nullValue);
+            this.selected = new ItemPath(nullValue);
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = groups;
@@ -404,7 +404,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
             if(structureKey == null)
                 throw new RuntimeException();
             this.widgetClass = DropDown.className;
-            this.selected = new DataTreeItem(nullValue);
+            this.selected = new ItemPath(nullValue);
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = new ArrayList<>();
@@ -417,8 +417,8 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
     }
 
     public static class DropDownValue extends WidgetValue {
-        public DataTreeItem selected;
-        public DropDownValue(DataTreeItem selected){
+        public ItemPath selected;
+        public DropDownValue(ItemPath selected){
             this.selected = selected;
 
         }

@@ -2,6 +2,8 @@ package com.example.habittracker;
 
 
 
+import com.example.habittracker.Structs.ItemPath;
+
 import java.util.ArrayList;
 
 public class DropDownPage {
@@ -94,16 +96,16 @@ public class DropDownPage {
         return options;
     }
 
-    public static DropDownPage fromItems(ArrayList<DataTreeItem> items){
+    public static DropDownPage fromItems(ArrayList<ItemPath> items){
         System.out.println("getting page from items");
-        for(DataTreeItem item: items)
+        for(ItemPath item: items)
             System.out.println("item = " + item);
         DropDownPage page = new DropDownPage("default");
         DropDownPage currentParent;
-        for(DataTreeItem item: items){
+        for(ItemPath item: items){
             currentParent = page;
-            for(int level = 0; level < item.path.size(); level++){
-                DropDownPage newPage = currentParent.getOrAdd(item.path.get(level));
+            for(int level = 0; level < item.getPath().size(); level++){
+                DropDownPage newPage = currentParent.getOrAdd(item.getPath().get(level));
                 newPage.parent = currentParent;
                 currentParent = newPage;
             }

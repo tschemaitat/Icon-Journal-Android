@@ -1,6 +1,7 @@
 package com.example.habittracker;
 
 
+import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 
 import java.util.ArrayList;
@@ -236,14 +237,14 @@ public class DataTree {
         return convertHeader(pair.getKey(), (Object[])pair.getValue());
     }
 
-    public static ArrayList<DataTreeItem> gatherItems(DataTree tree){
-        ArrayList<DataTreeItem> items = new ArrayList<>();
+    public static ArrayList<ItemPath> gatherItems(DataTree tree){
+        ArrayList<ItemPath> items = new ArrayList<>();
         ArrayList<String> stack = new ArrayList<>();
         gatherItems(items, tree, stack);
         return items;
     }
 
-    public static void gatherItems(ArrayList<DataTreeItem> items, DataTree tree, ArrayList<String> stack){
+    public static void gatherItems(ArrayList<ItemPath> items, DataTree tree, ArrayList<String> stack){
         for(int i = 0; i < tree.list.size(); i++){
             ArrayList<String> copy = (ArrayList<String>)stack.clone();
             if(tree.isTree(i)){
@@ -253,7 +254,7 @@ public class DataTree {
             }else{
                 String item = tree.getString(i);
                 copy.add(item);
-                items.add(new DataTreeItem(copy));
+                items.add(new ItemPath(copy));
             }
         }
     }

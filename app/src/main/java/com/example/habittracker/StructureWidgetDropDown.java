@@ -3,6 +3,7 @@ package com.example.habittracker;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -27,7 +28,6 @@ public class StructureWidgetDropDown {
         structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams);
         parent.addWidget(structureKeyDropDown);
         System.out.println("\n\n\nsetting structure key listener --------------");
-        System.out.println("onDataChangeListener = " + parent.onDataChangedListener);
         structureKeyDropDown.setOnDataChangedListener(() -> onStructureKeyChange());
 
         System.out.println("finished setting structure key listener --------------");
@@ -85,7 +85,7 @@ public class StructureWidgetDropDown {
 
 
 
-    ArrayList<DataTreeItem> selectedGroupKeys = null;
+    ArrayList<ItemPath> selectedGroupKeys = null;
 
     public void createValueKeyDropDown(){
         System.out.println("creating value key drop down");
@@ -136,7 +136,7 @@ public class StructureWidgetDropDown {
         int removeIndex = dropDowns.size();
         for(int i = 0; i < dropDowns.size(); i++){
             DropDown dropDown = dropDowns.get(i);
-            DataTreeItem item = dropDown.value().selected;
+            ItemPath item = dropDown.value().selected;
             if(item.getName().equals(DropDown.nullValue)){
                 removeIndex = i + 1;
                 break;
@@ -180,15 +180,15 @@ public class StructureWidgetDropDown {
     }
 
     //region type dropdown gather functions
-    public ArrayList<DataTreeItem> getGroupKeyList(){
+    public ArrayList<ItemPath> getGroupKeyList(){
         System.out.println("getting group key list");
-        ArrayList<DataTreeItem> items = DataTree.gatherItems(Dictionary.header(structureKey()));
+        ArrayList<ItemPath> items = DataTree.gatherItems(Dictionary.header(structureKey()));
         items.remove(valueKeyDropDown.value().selected);
         return items;
     }
-    public ArrayList<DataTreeItem> getReducedGroupKeyList(ArrayList<DataTreeItem> selectedGroupKeys){
-        ArrayList<DataTreeItem> items = getGroupKeyList();
-        for(DataTreeItem item: selectedGroupKeys){
+    public ArrayList<ItemPath> getReducedGroupKeyList(ArrayList<ItemPath> selectedGroupKeys){
+        ArrayList<ItemPath> items = getGroupKeyList();
+        for(ItemPath item: selectedGroupKeys){
             items.remove(item);
         }
         return items;

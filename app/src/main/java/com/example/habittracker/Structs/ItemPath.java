@@ -1,14 +1,14 @@
-package com.example.habittracker;
+package com.example.habittracker.Structs;
 
 import java.util.ArrayList;
 
-public class DataTreeItem {
-    ArrayList<String> path;
-    public DataTreeItem(ArrayList<String> path){
+public class ItemPath {
+    private ArrayList<String> path;
+    public ItemPath(ArrayList<String> path){
         this.path = path;
     }
 
-    public DataTreeItem(String name){
+    public ItemPath(String name){
         path = new ArrayList<>();
         path.add(name);
     }
@@ -22,8 +22,8 @@ public class DataTreeItem {
     }
     @Override
     public boolean equals(Object object){
-        if(object instanceof DataTreeItem){
-            DataTreeItem item = (DataTreeItem) object;
+        if(object instanceof ItemPath){
+            ItemPath item = (ItemPath) object;
             if(item.path.equals(path))
                 return true;
         }

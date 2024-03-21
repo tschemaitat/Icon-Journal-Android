@@ -6,6 +6,7 @@ package com.example.habittracker;
 
 
 
+import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Widgets.DropDown;
@@ -22,8 +23,6 @@ public class Dictionary {
     private static HashMap<String, Structure> journalStructures = new HashMap<>();
     private static HashMap<String, Structure> templateStructures = new HashMap<>();
     private static HashMap<String, Structure> structures = new HashMap<>();
-
-    static DictEntry typesEntry;
 
     static{
         generateDeepStructure();
@@ -69,7 +68,7 @@ public class Dictionary {
     }
 
 
-    public static DropDownPage getPages(String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
+    public static DropDownPage getGroupedPages(String structureKey, String valueKey, ArrayList<ItemPath> groups){
         DictEntry dictEntry = dictEntryMap.get(structureKey);
 
         if(dictEntry == null){
@@ -116,11 +115,11 @@ public class Dictionary {
         return parentPage;
     }
 
-    public static ArrayList<ArrayList<Integer>> getGroupIndexes(DataTree header, ArrayList<DataTreeItem> groups){
+    public static ArrayList<ArrayList<Integer>> getGroupIndexes(DataTree header, ArrayList<ItemPath> groups){
         ArrayList<ArrayList<Integer>> groupToValue = new ArrayList<>();
         for(int i = 0; i < groups.size(); i++){
             System.out.println("finding ");
-            groupToValue.add(header.indexOf(groups.get(i).path));
+            groupToValue.add(header.indexOf(groups.get(i).getPath()));
         }
         return groupToValue;
     }
