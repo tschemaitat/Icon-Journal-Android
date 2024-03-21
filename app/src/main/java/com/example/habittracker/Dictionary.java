@@ -6,45 +6,75 @@ package com.example.habittracker;
 
 
 
+import com.example.habittracker.Structs.KeyPair;
+import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.Widgets.DropDown;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Dictionary {
 
     static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
 
+    private static HashMap<String, Structure> categoryStructures = new HashMap<>();
+    private static HashMap<String, Structure> journalStructures = new HashMap<>();
+    private static HashMap<String, Structure> templateStructures = new HashMap<>();
+    private static HashMap<String, Structure> structures = new HashMap<>();
+
+    static DictEntry typesEntry;
+
     static{
-        generateStructures();
-    }
-    public static void main(String[] args){
-//        ArrayList<ArrayList<String>> groups = new ArrayList<>();
-//        ArrayList<String> group = new ArrayList<>();
-//        group.add("attributes");
-//        group.add("attribute");
-//        groups.add(group);
-//        group = new ArrayList<>();
-//        group.add("genres");
-//        group.add("genre");
-//        groups.add(group);
-//        getPages("shows", "name", groups);
-        ArrayList<DataTreeItem> groups = new ArrayList<>();
-        ArrayList<String> group = new ArrayList<>();
-        group.add("specific genres");
-        group.add("sub genres");
-        group.add("sub genre");
-        groups.add(new DataTreeItem(group));
-        getPages("specific genres", "name", groups);
+        generateDeepStructure();
+        generateShowGenreStructure();
     }
 
+    public static ArrayList<String> getCategoryKeys(){
+        return new ArrayList<>(categoryStructures.keySet());
+    }
+    public static ArrayList<String> getJournalKeys(){
+        return new ArrayList<>(journalStructures.keySet());
+    }
+
+    public static Structure getStructure(String key){
+        return structures.get(key);
+    }
 
 
     public static DataTree header(String structureKey){
-        return dictEntryMap.get(structureKey).header;
+        DictEntry entry = dictEntryMap.get(structureKey);
+        if(entry == null)
+            throw new NullPointerException("structureKey wrong: " + structureKey);
+        return entry.header;
+    }
+
+    public static DropDownPage getTypes(){
+        String[] numbers = new String[]{
+                "edit text",
+                "list",
+                DropDown.className,
+                "slider"
+        };
+
+        return new DropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
+    }
+
+    public static DropDownPage getStructureKeys(){
+        DropDownPage page = new DropDownPage("keys");
+        for(String s: dictEntryMap.keySet()){
+            page.add(s);
+        }
+        return page;
     }
 
 
     public static DropDownPage getPages(String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
         DictEntry dictEntry = dictEntryMap.get(structureKey);
+
+        if(dictEntry == null){
+            throw new RuntimeException("structureKey wrong: " + structureKey);
+        }
         DataTree header = dictEntry.header;
         System.out.println("header = " + header);
         ArrayList<DataTree> data = dictEntry.entries;
@@ -95,7 +125,7 @@ public class Dictionary {
         return groupToValue;
     }
 
-    public static void generateStructures1(){
+    public static void generateShowGenreStructure(){
         Object[] reLife = new Object[]{
                 "ReLIFE",
                 new Object[]{
@@ -149,7 +179,7 @@ public class Dictionary {
 
     }
 
-    public static void generateStructures(){
+    public static void generateDeepStructure(){
         // ReLIFE
 
         Object[][] specificGenres = new Object[][]{
@@ -204,7 +234,6 @@ public class Dictionary {
         DictEntry shows = new DictEntry("specific genres", DataTree.convertHeader(header), DataTree.convert(specificGenres), DictEntry.dictionary);
         dictEntryMap.put(shows.key, shows);
     }
-
 
 
 

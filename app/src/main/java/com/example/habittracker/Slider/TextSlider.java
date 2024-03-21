@@ -4,10 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.habittracker.SliderWithLabels;
-import com.example.habittracker.Widget;
-import com.example.habittracker.WidgetParams;
-import com.example.habittracker.WidgetValue;
+import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.WidgetValue;
 
 import java.util.ArrayList;
 
@@ -52,8 +51,8 @@ public class TextSlider extends SliderWithLabels implements Widget {
     }
 
     @Override
-    public TextSliderParams getData(){
-        return new TextSliderParams(selectedValue());
+    public TextSliderParam getData(){
+        return new TextSliderParam(selectedValue());
     }
 
     @Override
@@ -62,8 +61,8 @@ public class TextSlider extends SliderWithLabels implements Widget {
     }
 
     @Override
-    public void setData(WidgetParams params){
-        TextSliderParams casted = (TextSliderParams) params;
+    public void setData(WidgetParam params){
+        TextSliderParam casted = (TextSliderParam) params;
         String data = casted.selected;
         int index = valueArray.indexOf(data);
 
@@ -76,9 +75,9 @@ public class TextSlider extends SliderWithLabels implements Widget {
         return this;
     }
 
-    public static class TextSliderParams extends WidgetParams{
+    public static class TextSliderParam extends WidgetParam {
         String selected;
-        public TextSliderParams(String selected){
+        public TextSliderParam(String selected){
             this.selected = selected;
         }
     }

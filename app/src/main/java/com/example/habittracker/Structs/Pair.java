@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Structs;
 
 public class Pair<K, V> {
     private final K key;

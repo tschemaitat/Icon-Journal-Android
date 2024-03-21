@@ -6,10 +6,11 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.Widgets.Widget;
 
-public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText implements Widget{
+public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText implements Widget {
     String text = "null";
     public static final String className = "edit text";
     public CustomEditText(Context context) {
@@ -80,8 +81,8 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     @Override
-    public WidgetParams getData(){
-        EditTextParams params = new EditTextParams(text);
+    public WidgetParam getData(){
+        EditTextParam params = new EditTextParam(text);
 
         return params;
     }
@@ -93,8 +94,8 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     @Override
-    public void setData(WidgetParams params){
-        EditTextParams casted = ((EditTextParams) params);
+    public void setData(WidgetParam params){
+        EditTextParam casted = ((EditTextParam) params);
         setValue(casted.text);
     }
 
@@ -103,9 +104,9 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
         return this;
     }
 
-    public static class EditTextParams extends WidgetParams{
+    public static class EditTextParam extends WidgetParam {
         public String text;
-        public EditTextParams(String text){
+        public EditTextParam(String text){
             this.widgetClass = "edit text";
             this.text = text;
         }

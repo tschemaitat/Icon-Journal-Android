@@ -1,9 +1,9 @@
 package com.example.habittracker;
 
 
-import java.sql.SQLOutput;
+import com.example.habittracker.Structs.KeyPair;
+
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class DataTree {
     public String name;
@@ -236,6 +236,28 @@ public class DataTree {
         return convertHeader(pair.getKey(), (Object[])pair.getValue());
     }
 
+    public static ArrayList<DataTreeItem> gatherItems(DataTree tree){
+        ArrayList<DataTreeItem> items = new ArrayList<>();
+        ArrayList<String> stack = new ArrayList<>();
+        gatherItems(items, tree, stack);
+        return items;
+    }
+
+    public static void gatherItems(ArrayList<DataTreeItem> items, DataTree tree, ArrayList<String> stack){
+        for(int i = 0; i < tree.list.size(); i++){
+            ArrayList<String> copy = (ArrayList<String>)stack.clone();
+            if(tree.isTree(i)){
+                DataTree newTree = tree.getTree(i);
+                copy.add(newTree.name);
+                gatherItems(items, newTree, copy);
+            }else{
+                String item = tree.getString(i);
+                copy.add(item);
+                items.add(new DataTreeItem(copy));
+            }
+        }
+    }
+
     public String nameAndLength(){
         return "{ " + name + ", " + list.size() + " }";
     }
@@ -268,4 +290,6 @@ public class DataTree {
         }
         return result;
     }
+
+
 }

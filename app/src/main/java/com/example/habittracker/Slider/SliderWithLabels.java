@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Slider;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+
+import com.example.habittracker.CustomSlider;
+import com.example.habittracker.GLib;
 
 import java.util.ArrayList;
 

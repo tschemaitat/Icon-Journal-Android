@@ -1,23 +1,24 @@
-package com.example.habittracker;
+package com.example.habittracker.Widgets;
 
 import android.content.Context;
 import android.view.View;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.habittracker.GLib;
+import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.WidgetLinearLayout;
 
 import java.util.ArrayList;
 
-public class WidgetList extends WidgetGroup implements Widget{
+public class ListWidget extends WidgetLinearLayout implements Widget {
 
-    public WidgetParams cloneParams = null;
+    private WidgetParam cloneParams = null;
     public static final String className = "list";
+    private Context context;
 
-    public WidgetList(Context context){
+    public ListWidget(Context context){
         super(context);
+        this.context = context;
 
 
 
@@ -30,8 +31,8 @@ public class WidgetList extends WidgetGroup implements Widget{
 
 
     @Override
-    public WidgetParams getData(){
-        ListParams params = new ListParams(cloneParams, getDataWidgets());
+    public WidgetParam getData(){
+        ListParam params = new ListParam(cloneParams, getDataWidgets());
 
         return params;
     }
@@ -45,16 +46,16 @@ public class WidgetList extends WidgetGroup implements Widget{
 
 
     @Override
-    public void setData(WidgetParams params){
+    public void setData(WidgetParam params){
         System.out.println("setting data for list");
-        ListParams listParams = (ListParams) params;
+        ListParam listParams = (ListParam) params;
         cloneParams = listParams.cloneableWidget;
         setWidgetsInLayout(listParams.currentWidgets);
         makeButton();
 
 
-        for(int i = 0; i < widgetsInLayout.size(); i++){
-            widgetsInLayout.get(i).setOnDataChangedListener(new Runnable() {
+        for(int i = 0; i < widgets().size(); i++){
+            widgets().get(i).setOnDataChangedListener(new Runnable() {
                 @Override
                 public void run() {
                     onDataChangedListener.run();
@@ -67,7 +68,7 @@ public class WidgetList extends WidgetGroup implements Widget{
     }
 
     public void makeButton(){
-        insertAddButtonAtEnd(new View.OnClickListener() {
+        insertButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Widget newWidget = null;
@@ -81,27 +82,27 @@ public class WidgetList extends WidgetGroup implements Widget{
                 });
 
 
-                addWidgetLast(newWidget);
+                addWidget(newWidget);
             }
         });
     }
 
     @Override
     public View getView() {
-        return outlineLayout;
+        return super.getView();
     }
 
-    public static class ListParams extends WidgetParams{
-        public WidgetParams cloneableWidget;
-        public ArrayList<WidgetParams> currentWidgets;
+    public static class ListParam extends WidgetParam {
+        public WidgetParam cloneableWidget;
+        public ArrayList<WidgetParam> currentWidgets;
 
-        public ListParams(WidgetParams cloneableWidget, ArrayList<WidgetParams> currentWidgets){
+        public ListParam(WidgetParam cloneableWidget, ArrayList<WidgetParam> currentWidgets){
             this.widgetClass = "list";
             this.cloneableWidget = cloneableWidget;
             this.currentWidgets = currentWidgets;
         }
 
-        public ListParams(WidgetParams cloneableWidget){
+        public ListParam(WidgetParam cloneableWidget){
             this.widgetClass = "list";
             this.cloneableWidget = cloneableWidget;
             this.widgetClass = widgetClass;

@@ -1,7 +1,9 @@
-package com.example.habittracker;
+package com.example.habittracker.Slider;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.example.habittracker.Slider.SliderWithLabels;
 
 import java.util.ArrayList;
 

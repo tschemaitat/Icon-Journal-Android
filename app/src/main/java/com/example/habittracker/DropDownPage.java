@@ -6,15 +6,24 @@ import java.util.ArrayList;
 
 public class DropDownPage {
     public DropDownPage parent = null;
+    public String name;
+    public ArrayList<DropDownPage> children;
+
     public DropDownPage(String name){
         this.name = name;
         children = new ArrayList<>();
     }
 
-    public DropDownPage(String name, ArrayList<DropDownPage> children){
+    public DropDownPage(String name, ArrayList<String> stringList){
         this.name = name;
-        this.children = children;
+        children = new ArrayList<>();
+        for(String s: stringList)
+            children.add(new DropDownPage(s));
     }
+
+
+
+
 
     public void add(DropDownPage page){
         children.add(page);
@@ -57,8 +66,7 @@ public class DropDownPage {
         return children.get(index);
     }
 
-    public String name;
-    public ArrayList<DropDownPage> children;
+
 
     public String toString(){
         return stringWithTab(0);
@@ -84,6 +92,36 @@ public class DropDownPage {
             options.add(page.name);
         }
         return options;
+    }
+
+    public static DropDownPage fromItems(ArrayList<DataTreeItem> items){
+        System.out.println("getting page from items");
+        for(DataTreeItem item: items)
+            System.out.println("item = " + item);
+        DropDownPage page = new DropDownPage("default");
+        DropDownPage currentParent;
+        for(DataTreeItem item: items){
+            currentParent = page;
+            for(int level = 0; level < item.path.size(); level++){
+                DropDownPage newPage = currentParent.getOrAdd(item.path.get(level));
+                newPage.parent = currentParent;
+                currentParent = newPage;
+            }
+        }
+        return page;
+    }
+
+    public ArrayList<String> getPath(){
+        ArrayList<String> path = new ArrayList<>();
+        getPath(path);
+        return path;
+    }
+
+    public void getPath(ArrayList<String> path){
+        if(parent == null)
+            return;
+        parent.getPath(path);
+        path.add(name);
     }
 }
 

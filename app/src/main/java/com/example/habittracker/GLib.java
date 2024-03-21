@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Widgets.StructureWidget;
+import com.example.habittracker.Widgets.Widget;
 
 public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -103,18 +105,18 @@ public class GLib {
         return addView;
     }
 
-    public static Widget inflateWidget(Context context, WidgetParams params){
+    public static Widget inflateWidget(Context context, WidgetParam params){
 
         String className = params.widgetClass;
         System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className){
-            case CustomSpinner.className:
-                widget = new CustomSpinner(context);
+            case DropDown.className:
+                widget = new DropDown(context);
                 widget.setData(params);
                 break;
             case "list":
-                widget = new WidgetList(context);
+                widget = new ListWidget(context);
                 widget.setData(params);
                 break;
             case "structure widget":

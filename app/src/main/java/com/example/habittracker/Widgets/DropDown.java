@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Widgets;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,48 +12,69 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.habittracker.DataTreeItem;
+import com.example.habittracker.Dictionary;
+import com.example.habittracker.DropDownPage;
+import com.example.habittracker.Structs.Pair;
+import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.WidgetValue;
+
 import java.util.ArrayList;
 
-public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner implements Widget {
+public class DropDown extends androidx.appcompat.widget.AppCompatSpinner implements Widget {
 
     public static final String className = "drop down";
-    boolean dataSet = false;
-    Context context;
-    ArrayList<ArrayList<Pair<Integer, String>>> optionPages;
-    String structureKey = null;
-    String valueKey = null;
-    ArrayList<String> groups = new ArrayList<>();
+    private boolean dataSet = false;
+    private Context context;
+    private ArrayList<ArrayList<Pair<Integer, String>>> optionPages;
+    private String structureKey = null;
+    private String valueKey = null;
+    private ArrayList<DataTreeItem> groups = new ArrayList<>();
 
 
-    String pageHeader;
-    String folder = "\uD83D\uDCC1";
-    String backCharacter = "⤴";
+    private String pageHeader;
+    private String folder = "\uD83D\uDCC1";
+    private String backCharacter = "⤴";
 
-    DropDownPage parentPage = null;
-    DropDownPage currentPage = null;
+    private String widgetName = null;
+
+    private DropDownPage parentPage = null;
+    private DropDownPage currentPage = null;
 
     public static String nullValue = "select option";
 
-    String selectedValue = null;
-    public CustomSpinner(Context context) {
+
+    private DataTreeItem selectedValuePath = null;
+    public DropDown(Context context) {
         super(context);
         this.context = context;
         init();
     }
 
-    public CustomSpinner(Context context, int mode) {
+    public void setName(String name){
+        this.widgetName = name;
+    }
+
+    public DropDown(Context context, String widgetName){
+        super(context);
+        this.context = context;
+        init();
+        this.widgetName = widgetName;
+    }
+
+    public DropDown(Context context, int mode) {
         super(context, mode);
         this.context = context;
         init();
     }
 
-    public CustomSpinner(Context context, AttributeSet attrs) {
+    public DropDown(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
     }
 
-    public CustomSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DropDown(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
@@ -61,7 +82,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
 
     private void init(){
         setListener();
-        selectedValue = nullValue;
+        selectedValuePath = new DataTreeItem(nullValue);
 
         //super.performClick();
 //        setOnClickListener(new OnClickListener() {
@@ -106,7 +127,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         super.setAdapter(adapter);
-        selectedValue = nullValue;
+        selectedValuePath = new DataTreeItem(nullValue);
 
         //System.out.println("super.getAdapter().getCount() = " + super.getAdapter().getCount());
 
@@ -127,7 +148,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
                 currentPage = parentPage;
                 setOptions(formatOptions(parentPage));
                 setSelection(0);
-                selectedValue = nullValue;
+                selectedValuePath = new DataTreeItem(nullValue);
 
                 //System.out.println("Nothing selected");
             }
@@ -192,11 +213,15 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
 //    }
 
     private void processSelectedItem(AdapterView<?> adapterView, View view, int i, long l){
+        System.out.println("drop down slected item: " + i);
+        System.out.println("parent page: " + parentPage);
+        System.out.println("current page: " + currentPage);
+
         //adapterView.clearAnimation();
         //System.out.println("currentPage = " + currentPage);
         //if user pressed select option
         if(i == 0){
-            selectedValue = nullValue;
+            selectedValuePath = new DataTreeItem(nullValue);
 
             return;
         }
@@ -250,12 +275,13 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
     }
 
     private void dataChanged(String newValue){
-        selectedValue = newValue;
-        try{
-            onDataChangedListener.run();
-        }catch (Exception exception){
-            throw new RuntimeException("null listener set: " + setListener);
-        }
+        System.out.println("<drop down>data changed: " + newValue);
+        ArrayList<String> path = currentPage.getPath();
+        path.add(newValue);
+        selectedValuePath = new DataTreeItem(path);
+        if(onDataChangedListener == null)
+            throw new RuntimeException("<drop down: "+widgetName+">null listener set: " + setListener);
+        onDataChangedListener.run();
 
     }
 
@@ -292,26 +318,26 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
     }
 
     @Override
-    public DropDownParams getData(){
+    public DropDownParam getData(){
         if(!dataSet){
             throw new RuntimeException();
         }
-        DropDownParams params = new DropDownParams(selectedValue, structureKey, valueKey, groups);
+        DropDownParam params = new DropDownParam(selectedValuePath, structureKey, valueKey, groups);
         return params;
     }
 
     @Override
     public DropDownValue value(){
-        DropDownValue value = new DropDownValue(selectedValue);
+        DropDownValue value = new DropDownValue(selectedValuePath);
         return value;
     }
 
     @Override
-    public void setData(WidgetParams params){
+    public void setData(WidgetParam params){
 
-        if(params instanceof DropDownParams){
+        if(params instanceof DropDownParam){
             dataSet = true;
-            DropDownParams dropDownParams = ((DropDownParams) params);
+            DropDownParam dropDownParams = ((DropDownParam) params);
             parentPage = Dictionary.getPages(dropDownParams.structureKey, dropDownParams.valueKey, dropDownParams.groups);
             structureKey = dropDownParams.structureKey;
             valueKey = dropDownParams.valueKey;
@@ -321,7 +347,7 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
             //System.out.println("setting data: " + this);
 
             currentPage = parentPage;
-            selectedValue = dropDownParams.selected;
+            selectedValuePath = dropDownParams.selected;
             int specialOptions = 1;
             //System.out.println("setting data for spinner: \n" + parentPage);
             setOptions(formatOptions(currentPage));
@@ -331,13 +357,14 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
         dataSet = true;
         parentPage = staticParams.page;
         currentPage = parentPage;
-        selectedValue = nullValue;
+        selectedValuePath = new DataTreeItem(nullValue);
         setOptions(formatOptions(currentPage));
 
     }
 
-    public void setValue(String value){
-        selectedValue = value;
+    public void resetValue(){
+        selectedValuePath = new DataTreeItem(nullValue);
+        currentPage = parentPage;
     }
 
 
@@ -347,13 +374,13 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
     }
 
 
-    public static class DropDownParams extends WidgetParams{
-        public String selected;
+    public static class DropDownParam extends WidgetParam {
+        public DataTreeItem selected;
         public String structureKey;
         public String valueKey;
-        public ArrayList<String> groups;
+        public ArrayList<DataTreeItem> groups;
 
-        public DropDownParams(String selected, String structureKey, String valueKey, ArrayList<String> groups){
+        public DropDownParam(DataTreeItem selected, String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
             if(structureKey == null)
                 throw new RuntimeException();
             this.widgetClass = "drop down";
@@ -363,21 +390,21 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
             this.groups = groups;
         }
 
-        public DropDownParams(String structureKey, String valueKey, ArrayList<String> groups){
+        public DropDownParam(String structureKey, String valueKey, ArrayList<DataTreeItem> groups){
             if(structureKey == null)
                 throw new RuntimeException();
-            this.widgetClass = CustomSpinner.className;
-            this.selected = nullValue;
+            this.widgetClass = DropDown.className;
+            this.selected = new DataTreeItem(nullValue);
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = groups;
         }
 
-        public DropDownParams(String structureKey, String valueKey){
+        public DropDownParam(String structureKey, String valueKey){
             if(structureKey == null)
                 throw new RuntimeException();
-            this.widgetClass = CustomSpinner.className;
-            this.selected = nullValue;
+            this.widgetClass = DropDown.className;
+            this.selected = new DataTreeItem(nullValue);
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = new ArrayList<>();
@@ -389,23 +416,23 @@ public class CustomSpinner extends androidx.appcompat.widget.AppCompatSpinner im
 
     }
 
-    public static class DropDownValue extends WidgetValue{
-        public String selected;
-        public DropDownValue(String selected){
+    public static class DropDownValue extends WidgetValue {
+        public DataTreeItem selected;
+        public DropDownValue(DataTreeItem selected){
             this.selected = selected;
 
         }
     }
 
-    public static class StaticDropDownParameters extends WidgetParams{
+    public static class StaticDropDownParameters extends WidgetParam {
         DropDownPage page;
         public StaticDropDownParameters(DropDownPage page){
-            this.widgetClass = CustomSpinner.className;
+            this.widgetClass = DropDown.className;
             this.page = page;
         }
 
         public StaticDropDownParameters(ArrayList<String> options){
-            this.widgetClass = CustomSpinner.className;
+            this.widgetClass = DropDown.className;
             page = new DropDownPage("static paramters");
             for(String s: options)
                 page.add(new DropDownPage(s));
