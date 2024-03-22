@@ -63,6 +63,11 @@ public class TextSlider extends SliderWithLabels implements Widget {
     }
 
     @Override
+    public DataTree getDataTree() {
+        return null;
+    }
+
+    @Override
     public void setData(WidgetParam params){
         TextSliderParam casted = (TextSliderParam) params;
         String data = casted.selected;

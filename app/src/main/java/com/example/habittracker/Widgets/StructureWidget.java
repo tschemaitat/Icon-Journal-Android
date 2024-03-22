@@ -151,6 +151,11 @@ public class StructureWidget implements Widget {
         return null;
     }
 
+    @Override
+    public DataTree getDataTree() {
+        return null;
+    }
+
 
     @Override
     public void setData(WidgetParam params){

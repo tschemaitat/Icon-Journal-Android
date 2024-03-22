@@ -21,6 +21,7 @@ import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DropDown extends androidx.appcompat.widget.AppCompatSpinner implements Widget {
 
@@ -334,6 +335,11 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
     }
 
     @Override
+    public DataTree getDataTree() {
+        return new DataTree(selectedValuePath.getName());
+    }
+
+    @Override
     public void setData(WidgetParam params){
 
         if(params instanceof DropDownParam){
@@ -451,6 +457,14 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         }
 
         public StaticDropDownParameters(ArrayList<String> options){
+            this.widgetClass = DropDown.className;
+            page = new DropDownPage("static paramters");
+            for(String s: options)
+                page.add(new DropDownPage(s));
+        }
+
+        public StaticDropDownParameters(String[] optionsArray){
+            ArrayList<String> options = new ArrayList<>(Arrays.asList(optionsArray));
             this.widgetClass = DropDown.className;
             page = new DropDownPage("static paramters");
             for(String s: options)

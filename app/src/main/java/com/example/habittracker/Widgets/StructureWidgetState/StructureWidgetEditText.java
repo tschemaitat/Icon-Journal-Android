@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets.StructureWidgetState;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.DataTree;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
@@ -38,6 +39,11 @@ public class StructureWidgetEditText implements Widget {
 
     @Override
     public WidgetValue value() {
+        return null;
+    }
+
+    @Override
+    public DataTree getDataTree() {
         return null;
     }
 

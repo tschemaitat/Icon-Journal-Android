@@ -30,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     LinearLayout buttonInflateBufferLayout;
     static LinearLayout inflateLayout;
+    public static MainActivity mainActivity;
 
     static Inflatable currentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivity = this;
 
         MainActivity.context = this;
         setContentView(R.layout.activity_main);
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setupLayoutButtons();
         //setOptions(dropDown);
         inflateLayout(new TestPage(context));
+
+
     }
 
     public static void inflateLayout(Inflatable newLayout){

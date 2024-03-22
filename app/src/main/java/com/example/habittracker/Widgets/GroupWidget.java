@@ -10,6 +10,7 @@ import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.CustomLinearLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GroupWidget implements Widget {
     Context context;
@@ -83,6 +84,10 @@ public class GroupWidget implements Widget {
         return values;
     }
 
+    public void onDataChange(){
+        onDataChangedListener.run();
+    }
+
 
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
@@ -100,9 +105,20 @@ public class GroupWidget implements Widget {
     }
 
     @Override
+    public DataTree getDataTree() {
+        DataTree tree = new DataTree();
+        for(Widget widget: widgets){
+            tree.add(widget.getDataTree());
+        }
+        return tree;
+    }
+
+    @Override
     public void setData(WidgetParam params) {
         GroupWidgetParam groupParams = (GroupWidgetParam) params;
         inflateAll(groupParams.params);
+        for(Widget widget: widgets)
+            widget.setOnDataChangedListener(()->onDataChange());
     }
 
     @Override
@@ -114,6 +130,11 @@ public class GroupWidget implements Widget {
         ArrayList<WidgetParam> params;
         public GroupWidgetParam(ArrayList<WidgetParam> params){
             this.params = params;
+            this.widgetClass = className;
+        }
+
+        public GroupWidgetParam(WidgetParam[] params){
+            this.params = new ArrayList<>(Arrays.asList(params));
             this.widgetClass = className;
         }
 

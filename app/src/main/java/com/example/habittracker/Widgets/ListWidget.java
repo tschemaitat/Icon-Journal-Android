@@ -7,7 +7,6 @@ import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
-import com.example.habittracker.CustomLinearLayout;
 
 import java.util.ArrayList;
 
@@ -49,6 +48,11 @@ public class ListWidget extends GroupWidget implements Widget {
         return value;
     }
 
+    @Override
+    public DataTree getDataTree(){
+        return super.getDataTree();
+    }
+
 
     @Override
     public void setData(WidgetParam params){
@@ -60,17 +64,18 @@ public class ListWidget extends GroupWidget implements Widget {
 
 
         for(int i = 0; i < widgets().size(); i++){
-            widgets().get(i).setOnDataChangedListener(new Runnable() {
-                @Override
-                public void run() {
-                    onDataChangedListener.run();
-                }
-            });
+            widgets().get(i).setOnDataChangedListener(()->onDataChange());
         }
 
         System.out.println("data finished set for list");
         System.out.println(getData());
     }
+
+    public void onDataChange(){
+        onDataChangedListener.run();
+    }
+
+
 
     public void makeButton(){
         insertButton(new View.OnClickListener() {

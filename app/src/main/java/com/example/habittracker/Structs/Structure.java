@@ -23,6 +23,10 @@ public class Structure {
         type = null;
     }
 
+    public ArrayList<DataTree> getEntries(){
+        return null;
+    }
+
     public String getName(){
         return name;
     }

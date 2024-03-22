@@ -89,6 +89,11 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     @Override
+    public DataTree getDataTree() {
+        return new DataTree(text);
+    }
+
+    @Override
     public void setData(WidgetParam params){
         EditTextParam casted = ((EditTextParam) params);
         if( ! casted.text.equals(nullText) )

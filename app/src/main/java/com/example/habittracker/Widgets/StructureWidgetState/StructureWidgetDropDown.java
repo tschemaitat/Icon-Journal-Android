@@ -242,6 +242,11 @@ public class StructureWidgetDropDown implements Widget{
     }
 
     @Override
+    public DataTree getDataTree() {
+        return null;
+    }
+
+    @Override
     public void setData(WidgetParam params) {
 
     }
