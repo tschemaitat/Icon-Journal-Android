@@ -2,11 +2,14 @@ package com.example.habittracker.Inflatables;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
 import java.util.ArrayList;
@@ -31,43 +34,42 @@ public class EditorSelectionPage implements Inflatable {
     public void createFolders(){
         System.out.println("create folders");
         ArrayList<String> items = new ArrayList<>();
-        items.add("new category");
-        items.add("new journal");
-        System.out.println("items = " + items);
-        ListView list = MainActivity.createList(items, (parent, view, position, id) -> {
-            String selectedItem = items.get(position);
-            if(selectedItem.equals("new category")){
-                setListItems(Dictionary.getCategoryKeys());
-                return;
-            }
-            if(selectedItem.equals("new journal")){
-                setListItems(Dictionary.getJournalKeys());
-                return;
-            }
+        items.add("category");
+        items.add("journal");
+        SelectionView folderSelection = new SelectionView(context, items, (value, position) -> {
+            createSelectionAfterFolder(value);
         });
-        parentLayout.addView(list);
+        parentLayout.addView(folderSelection.getView());
     }
 
-    public void setListItems(ArrayList<String> items){
-        items.add("add");
-        System.out.println("items = " + items);
-
-        View list = MainActivity.createList(items, (parent, view, position, id) -> {
-            String selectedItem = items.get(position);
-            Structure structure;
-            if(selectedItem.equals("add")){
-                structure = new Structure();
-            }
-            structure = Dictionary.getStructure(selectedItem);
-
-            MainActivity.inflateLayout(new StructureEditor(context, structure));
+    public void createSelectionAfterFolder(String structureType){
+        ArrayList<String> structureKeys = Dictionary.getStructureKeys(structureType);
+        parentLayout.removeAllViews();
+        SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position) -> {
+            inflateStructureEditor(value);
+        }, () -> {
+            inflateStructureEditor("null");
         });
-        parentLayout.removeViewAt(0);
-        parentLayout.addView(list);
     }
+
+    public void inflateStructureEditor(String structureKey){
+        MainActivity.inflateLayout(new StructureEditor(context, structureKey));
+    }
+
+
 
     @Override
     public View getView() {
         return parentLayout;
+    }
+
+    @Override
+    public void onRemoved() {
+
+    }
+
+    @Override
+    public void onOpened() {
+
     }
 }

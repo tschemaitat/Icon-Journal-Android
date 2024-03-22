@@ -7,10 +7,9 @@ import com.example.habittracker.Structs.KeyPair;
 import java.util.ArrayList;
 
 public class DataTree {
-    public String name;
-    ArrayList list = new ArrayList<>();
+    private String name;
+    private ArrayList<DataTree> list = new ArrayList<>();
     public DataTree(){
-
     }
 
     public DataTree(String name){
@@ -18,11 +17,15 @@ public class DataTree {
     }
 
     public void add(String string){
-        list.add(string);
+        list.add(new DataTree(string));
     }
 
     public void add(DataTree tree){
         list.add(tree);
+    }
+
+    public String getName(){
+        return name;
     }
 
     public DataTree addTree(){
@@ -32,7 +35,7 @@ public class DataTree {
     }
 
     public String getString(int index){
-        return ((String) list.get(index));
+        return (list.get(index).name);
     }
 
     public DataTree getTree(int index){
@@ -41,23 +44,16 @@ public class DataTree {
 
     public int indexOf(String value){
         int i = 0;
-        for(Object obj: list){
-            if(obj instanceof DataTree){
-                if(((DataTree) obj).name.equals(value))
-                    return i;
-            }else{
-                if(obj.equals(value)){
-                    return i;
-                }
-            }
-
+        for(DataTree tree: list){
+            if(tree.name.equals(value))
+                return i;
             i++;
         }
         return -1;
     }
 
     public ArrayList<Integer> indexOf(ArrayList<String> values){
-        System.out.println("index of method: " + values);
+        //System.out.println("index of method: " + values);
         //System.out.println("get index for group: " + values);
         ArrayList<Integer> indexes = new ArrayList<>();
         DataTree temp = this;
@@ -70,8 +66,8 @@ public class DataTree {
             temp = temp.getTree(index);
         }
         String lastValue = values.get(values.size() - 1);
-        System.out.println("lastValue = " + lastValue);
-        System.out.println("temp = " + temp);
+        //System.out.println("lastValue = " + lastValue);
+        //System.out.println("temp = " + temp);
         if(temp.size() > 1){
             indexes.add(temp.indexOf(lastValue));
             indexes.add(-1);
@@ -82,14 +78,13 @@ public class DataTree {
         return indexes;
     }
 
-    public boolean isTree(String name){
+    public boolean hasChildren(String name){
         int index = indexOf(name);
-        return isTree(index);
+        return hasChildren(index);
     }
 
-    public boolean isTree(int index){
-        Object object = list.get(index);
-        if(object instanceof DataTree)
+    public boolean hasChildren(int index){
+        if(list.get(index).size() > 0)
             return true;
         return false;
     }
@@ -123,7 +118,7 @@ public class DataTree {
     }
 
     public ArrayList<String> gatherStringFromArray(ArrayList<DataTree> currentTrees){
-        System.out.println("\ngathering array: " + currentTrees + " \n");
+        //System.out.println("\ngathering array: " + currentTrees + " \n");
         ArrayList<String> gatheredStrings = new ArrayList<>();
         for(DataTree tree: currentTrees){
             for(int gatherIndex = 0; gatherIndex < tree.size(); gatherIndex++){
@@ -142,9 +137,9 @@ public class DataTree {
 
     //get values from group indexes. The indexes are the key for the location
     public ArrayList<String> getFromIndexes(ArrayList<Integer> indexes){
-        System.out.println("get values from indexes");
-        System.out.println(this.hierarchy());
-        System.out.println("indexes = " + indexes);
+        //System.out.println("get values from indexes");
+        //System.out.println(this.hierarchy());
+        //System.out.println("indexes = " + indexes);
         int lastIsTreeNum = indexes.get
                 (indexes.size() - 1);
         boolean lastIsTree = false;
@@ -157,9 +152,9 @@ public class DataTree {
 
         for(int i = 0; i < indexes.size() - 2; i++){
             int treeIndex = indexes.get(i);
-            System.out.println("("+i+")current tree index: " + treeIndex);
+            //System.out.println("("+i+")current tree index: " + treeIndex);
             parentTrees = processList(parentTrees, treeIndex);
-            System.out.println(parentTrees.get(0).hierarchy());
+            //System.out.println(parentTrees.get(0).hierarchy());
         }
         int lastIndex = indexes.get(indexes.size() - 2);
         DataTree testTree = parentTrees.get(0);
@@ -169,11 +164,11 @@ public class DataTree {
             values = gatherStringFromArray(lastTrees);
         }else
             values = iterateThroughTreeForString(parentTrees, lastIndex);
-        System.out.println("values = " + values);
+        //System.out.println("values = " + values);
         return values;
     }
 
-    private int size() {
+    public int size() {
         return list.size();
     }
 
@@ -215,8 +210,8 @@ public class DataTree {
     }
 
     private static DataTree convertHeader(String name, Object[] header){
-        System.out.println("converting header");
-        System.out.println("header.length = " + header.length);
+        //System.out.println("converting header");
+        //System.out.println("header.length = " + header.length);
         DataTree tree = new DataTree(name);
         for(Object obj: header){
             if(obj instanceof String){
@@ -228,8 +223,8 @@ public class DataTree {
                 continue;
             }
         }
-        System.out.println("tree = \n" + tree.hierarchy());
-        System.out.println("converting header finished");
+        //System.out.println("tree = \n" + tree.hierarchy());
+        //System.out.println("converting header finished");
         return tree;
     }
 
@@ -247,7 +242,7 @@ public class DataTree {
     public static void gatherItems(ArrayList<ItemPath> items, DataTree tree, ArrayList<String> stack){
         for(int i = 0; i < tree.list.size(); i++){
             ArrayList<String> copy = (ArrayList<String>)stack.clone();
-            if(tree.isTree(i)){
+            if(tree.hasChildren(i)){
                 DataTree newTree = tree.getTree(i);
                 copy.add(newTree.name);
                 gatherItems(items, newTree, copy);

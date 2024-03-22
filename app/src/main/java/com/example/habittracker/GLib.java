@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
 import com.example.habittracker.Widgets.Widget;
@@ -124,6 +126,15 @@ public class GLib {
                 widget = new StructureWidget(context);
                 widget.setData(params);
                 break;
+            case GroupWidget.className:
+                widget = new GroupWidget(context);
+                widget.setData(params);
+                break;
+            case CustomEditText.className:
+                widget = new CustomEditText(context);
+                widget.setData(params);
+                break;
+
             default:
 
                 throw new RuntimeException("unknown widget class: " + className);
@@ -132,6 +143,15 @@ public class GLib {
 
         }
         return widget;
+    }
+
+
+    public static String tabs(int num){
+        String singleTab = "\t";
+        String tabs = "";
+        for(int i = 0; i < num; i++)
+            tabs += singleTab;
+        return tabs;
     }
 
 

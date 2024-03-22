@@ -58,12 +58,12 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/EntryButton"
+                        android:id="@+id/JournalButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
                         android:layout_weight="1"
-                        android:text="Entry"
+                        android:text="Journal"
                         android:textAlignment="center"
                         android:textSize="18sp" />
 

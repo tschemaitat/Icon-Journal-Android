@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.habittracker.DataTree;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.DropDownPage;
@@ -213,9 +214,9 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
 //    }
 
     private void processSelectedItem(AdapterView<?> adapterView, View view, int i, long l){
-        System.out.println("drop down slected item: " + i);
-        System.out.println("parent page: " + parentPage);
-        System.out.println("current page: " + currentPage);
+        //System.out.println("drop down slected item: " + i);
+        //System.out.println("parent page: " + parentPage);
+        //System.out.println("current page: " + currentPage);
 
         //adapterView.clearAnimation();
         //System.out.println("currentPage = " + currentPage);
@@ -260,7 +261,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         setOptions(formatOptions(currentPage));
 
         dummy_selection_zero = true;
-        System.out.println("dummy_selection_zero = " + dummy_selection_zero);
+        //System.out.println("dummy_selection_zero = " + dummy_selection_zero);
         doDelayedClick(adapterView);
     }
 
@@ -379,6 +380,7 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
         public String structureKey;
         public String valueKey;
         public ArrayList<ItemPath> groups;
+        public String name = "null";
 
         public DropDownParam(ItemPath selected, String structureKey, String valueKey, ArrayList<ItemPath> groups){
             if(structureKey == null)
@@ -410,6 +412,23 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
             this.groups = new ArrayList<>();
         }
 
+        @Override
+        public String hierarchyString(int numTabs){
+            String singleTab = "\t";
+            String tabs = "";
+            for(int i = 0; i < numTabs; i++)
+                tabs += singleTab;
+            return tabs + "drop down\n"
+                    + tabs + "\tstructure: " + structureKey + "\n"
+                    + tabs + "\tvalue: " + valueKey + "\n"
+                    + tabs + "\tgroups: " + groups + "\n";
+        }
+
+        @Override
+        public DataTree header() {
+            return new DataTree(name);
+        }
+
         public String toString(){
             return "{" + className + ", " + selected + ", " +structureKey + ", " +valueKey + ", " +groups + "}";
         }
@@ -436,6 +455,17 @@ public class DropDown extends androidx.appcompat.widget.AppCompatSpinner impleme
             page = new DropDownPage("static paramters");
             for(String s: options)
                 page.add(new DropDownPage(s));
+        }
+
+
+        @Override
+        public String hierarchyString(int numTabs) {
+            return null;
+        }
+
+        @Override
+        public DataTree header() {
+            throw new RuntimeException();
         }
     }
 }

@@ -3,16 +3,17 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
-import com.example.habittracker.WidgetLinearLayout;
+import com.example.habittracker.CustomLinearLayout;
 
 import java.util.ArrayList;
 
-public class ListWidget extends WidgetLinearLayout implements Widget {
+public class ListWidget extends GroupWidget implements Widget {
 
-    private WidgetParam cloneParams = null;
+    private GroupWidgetParam cloneParams = null;
     public static final String className = "list";
     private Context context;
 
@@ -32,7 +33,11 @@ public class ListWidget extends WidgetLinearLayout implements Widget {
 
     @Override
     public WidgetParam getData(){
-        ListParam params = new ListParam(cloneParams, getDataWidgets());
+        ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
+        for(WidgetParam widgetParam: getDataWidgets())
+            groupWidgetParam.add((GroupWidgetParam) widgetParam);
+
+        ListParam params = new ListParam(cloneParams, groupWidgetParam);
 
         return params;
     }
@@ -50,7 +55,7 @@ public class ListWidget extends WidgetLinearLayout implements Widget {
         System.out.println("setting data for list");
         ListParam listParams = (ListParam) params;
         cloneParams = listParams.cloneableWidget;
-        setWidgetsInLayout(listParams.currentWidgets);
+        inflateAll(new ArrayList<>(listParams.currentWidgets));
         makeButton();
 
 
@@ -93,23 +98,37 @@ public class ListWidget extends WidgetLinearLayout implements Widget {
     }
 
     public static class ListParam extends WidgetParam {
-        public WidgetParam cloneableWidget;
-        public ArrayList<WidgetParam> currentWidgets;
+        public String name = "null";
+        public GroupWidgetParam cloneableWidget;
+        public ArrayList<GroupWidgetParam> currentWidgets;
 
-        public ListParam(WidgetParam cloneableWidget, ArrayList<WidgetParam> currentWidgets){
+        public ListParam(GroupWidgetParam cloneableWidget, ArrayList<GroupWidgetParam> currentWidgets){
             this.widgetClass = "list";
             this.cloneableWidget = cloneableWidget;
             this.currentWidgets = currentWidgets;
         }
 
-        public ListParam(WidgetParam cloneableWidget){
+        public ListParam(GroupWidgetParam cloneableWidget){
             this.widgetClass = "list";
             this.cloneableWidget = cloneableWidget;
             this.widgetClass = widgetClass;
             currentWidgets = new ArrayList<>();
         }
         public String toString(){
-            return "{list" + ", " + cloneableWidget + ", " +currentWidgets + "}";
+            return hierarchyString(0);
+        }
+
+        public String hierarchyString(int numTabs){
+
+            return GLib.tabs(numTabs) + "list\n"
+                    + cloneableWidget.hierarchyString(numTabs + 1);
+        }
+
+        @Override
+        public DataTree header() {
+            DataTree tree = cloneableWidget.header();
+
+            return tree;
         }
     }
 

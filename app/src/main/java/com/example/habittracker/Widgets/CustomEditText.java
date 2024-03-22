@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Widgets;
 
 import android.content.Context;
 import android.text.Editable;
@@ -6,13 +6,19 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.habittracker.DataTree;
+import com.example.habittracker.GLib;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
 
+import java.util.Objects;
+
 public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText implements Widget {
-    String text = "null";
+    private String text = "null";
     public static final String className = "edit text";
+    public static final String nullText = "null";
+    public Runnable onDataChangedListener = null;
     public CustomEditText(Context context) {
         super(context);
         init();
@@ -26,6 +32,9 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+    public String text(){
+        return text;
     }
 
     public void setValue(String newValue){
@@ -57,24 +66,10 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
                 }
             }
         });
-
-        // Responding to the user focusing on the EditText
-        setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                // EditText is focused
-            } else {
-                // EditText lost focus
-            }
-        });
-
-        // Responding to the user changing the text (using TextWatcher)
-
-        // Responding to the user exiting focus from the EditText (using OnFocusChangeListener)
-
     }
 
 
-    public Runnable onDataChangedListener = null;
+
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
         onDataChangedListener = runnable;
@@ -96,7 +91,8 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     @Override
     public void setData(WidgetParam params){
         EditTextParam casted = ((EditTextParam) params);
-        setValue(casted.text);
+        if( ! casted.text.equals(nullText) )
+            setValue(casted.text);
     }
 
     @Override
@@ -105,10 +101,20 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     public static class EditTextParam extends WidgetParam {
+        public String name = "null";
         public String text;
         public EditTextParam(String text){
             this.widgetClass = "edit text";
             this.text = text;
+        }
+
+        public String hierarchyString(int numTabs){
+            return GLib.tabs(numTabs) + "text\n";
+        }
+
+        @Override
+        public DataTree header() {
+            return new DataTree(name);
         }
     }
 

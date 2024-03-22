@@ -10,6 +10,7 @@ import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +25,43 @@ public class Dictionary {
     private static HashMap<String, Structure> templateStructures = new HashMap<>();
     private static HashMap<String, Structure> structures = new HashMap<>();
 
+
+    public static void addStructure(Structure structure){
+        if(structure.getName().equals("null"))
+            throw new RuntimeException("structure name not set");
+        ifSwitch:{
+            if(structure.getType().equals("category")) {
+                categoryStructures.put(structure.getName(), structure);
+                break ifSwitch;
+            }
+            if(structure.getType().equals("journal")) {
+                journalStructures.put(structure.getName(), structure);
+                break ifSwitch;
+            }
+            if(structure.getType().equals("template")) {
+                templateStructures.put(structure.getName(), structure);
+                break ifSwitch;
+            }
+            throw new RuntimeException("structure type wrong: " + structure.getType());
+        }
+        structures.put(structure.getName(), structure);
+    }
+
     static{
         generateDeepStructure();
         generateShowGenreStructure();
+        generateStructure();
+    }
+
+    public static void saveStructure(Structure structure){
+        if(structure == null)
+            throw new RuntimeException("try to save null structure");
+        structures.put(structure.getName(), structure);
+    }
+
+    private static void generateStructure() {
+        Structure structure = new Structure("test structure", new GroupWidget.GroupWidgetParam(new ArrayList<>()), "journal");
+        addStructure(structure);
     }
 
     public static ArrayList<String> getCategoryKeys(){
@@ -35,9 +70,28 @@ public class Dictionary {
     public static ArrayList<String> getJournalKeys(){
         return new ArrayList<>(journalStructures.keySet());
     }
+    public static ArrayList<String> getTemplateKeys(){
+        return new ArrayList<>(templateStructures.keySet());
+    }
+
+    public static ArrayList<String> getStructureKeys(String structureType){
+        switch(structureType){
+            case "category":
+                return getCategoryKeys();
+            case "journal":
+                return getJournalKeys();
+            case "template":
+                return getTemplateKeys();
+            default:
+                throw new RuntimeException("unknown structure type: " + structureType);
+        }
+    }
 
     public static Structure getStructure(String key){
-        return structures.get(key);
+        Structure structure = structures.get(key);
+        if(structure == null)
+            throw new RuntimeException("structure key unknown: " + key);
+        return structure;
     }
 
 
@@ -75,7 +129,7 @@ public class Dictionary {
             throw new RuntimeException("structureKey wrong: " + structureKey);
         }
         DataTree header = dictEntry.header;
-        System.out.println("header = " + header);
+        //System.out.println("header = " + header);
         ArrayList<DataTree> data = dictEntry.entries;
         ArrayList<ArrayList<Integer>> groupToValue = getGroupIndexes(header, groups);
 
@@ -90,7 +144,7 @@ public class Dictionary {
             currentPages.add(parentPage);
             String entryValue = tree.getString(valueIndex);
             ArrayList<ArrayList<String>> valuesOfGroups = tree.entryGroupValues(groupToValue);
-            System.out.println("valuesOfGroups = " + valuesOfGroups);
+            //System.out.println("valuesOfGroups = " + valuesOfGroups);
 
             for(int groupIndex = 0; groupIndex < groups.size(); groupIndex++){
 
@@ -111,14 +165,14 @@ public class Dictionary {
             for(DropDownPage page: currentPages)
                 page.add(entryValue);
         }
-        System.out.println("parentPage = " + parentPage);
+        //System.out.println("parentPage = " + parentPage);
         return parentPage;
     }
 
     public static ArrayList<ArrayList<Integer>> getGroupIndexes(DataTree header, ArrayList<ItemPath> groups){
         ArrayList<ArrayList<Integer>> groupToValue = new ArrayList<>();
         for(int i = 0; i < groups.size(); i++){
-            System.out.println("finding ");
+            //System.out.println("finding ");
             groupToValue.add(header.indexOf(groups.get(i).getPath()));
         }
         return groupToValue;

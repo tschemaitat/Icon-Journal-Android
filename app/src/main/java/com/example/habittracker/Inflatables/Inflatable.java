@@ -4,4 +4,6 @@ import android.view.View;
 
 public interface Inflatable {
     public View getView();
+    public void onRemoved();
+    public void onOpened();
 }

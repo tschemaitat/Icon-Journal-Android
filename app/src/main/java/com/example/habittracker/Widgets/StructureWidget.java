@@ -3,132 +3,97 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.CustomEditText;
+import com.example.habittracker.DataTree;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.GLib;
-import com.example.habittracker.StructureWidgetDropDown;
-import com.example.habittracker.WidgetLinearLayout;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
-import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetEditText;
+import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetList;
 
-public class StructureWidget extends WidgetLinearLayout implements Widget {
+public class StructureWidget implements Widget {
     private CustomEditText name = null;
     private DropDown typeDropDown = null;
     //used for slider and drop down
 
     //used for type list
-    private ListWidget structureWidgets = null;
+    private StructureWidgetList structureWidgetList = null;
 
     //used for drop down
     private StructureWidgetDropDown structureWidgetDropDown = null;
 
+    private StructureWidgetEditText structureWidgetEditText = null;
+
 
     private String currentType = DropDown.nullValue;
-    private Runnable onDataChangedListener;
     private Context context;
-    public Runnable parentListener;
+
+    private GroupWidget groupWidget;
 
     public StructureWidget(Context context) {
-        super(context);
         this.context = context;
+        groupWidget = new GroupWidget(context);
 
-        onDataChangedListener = new Runnable() {
-            @Override
-            public void run() {
-                onDataChange();
-                parentListener.run();
-            }
-        };
+
 
         name = new CustomEditText(context);
-        addWidget(name);
-        name.setOnDataChangedListener(onDataChangedListener);
+        groupWidget.addWidget(name);
+        name.setOnDataChangedListener(()->{});
 
         typeDropDown = new DropDown(context);
-        addWidget(typeDropDown);
+        groupWidget.addWidget(typeDropDown);
         DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(Dictionary.getTypes());
         typeDropDown.setData(params);
-        System.out.println("onDataChangedListener = " + onDataChangedListener);
-        typeDropDown.setOnDataChangedListener(onDataChangedListener);
+
+        typeDropDown.setOnDataChangedListener(() -> onTypeChange());
         typeDropDown.setName("typeDropDown");
     }
 
-    public void onDataChange(){
-        System.out.println("<StructureWidget>data changed");
+    public void onTypeChange(){
+        //System.out.println("<StructureWidget>data changed");
         String type = typeDropDown.value().selected.getName();
-        System.out.println("type = " + type);
+        //System.out.println("type = " + type);
 
-        if(!currentType.equals(type)){
-            resetType(type);
-        }
+        if( ! currentType.equals(type) )
+            setType(type);
+
         currentType = type;
-
-        if(parentListener != null)
-            parentListener.run();
     }
 
-    public void setType(WidgetParam widgetParam){
-        System.out.println("set type");
 
-        String type = widgetParam.widgetClass;
-        if(type.equals(DropDown.nullValue)){
-            System.out.println("structure type null");
-            return;
-        }
-        if(type.equals("list")){
-            resetType("list");
-            ListWidget.ListParam listParams = (ListWidget.ListParam) widgetParam;
 
-            return;
-        }
-        if(type.equals("drop down")){
-            resetType("drop down");
-            return;
-        }
-        if(type.equals("edit text")){
-            resetType("edit text");
-
-            return;
-        }
-    }
-
-    public void resetType(String type){
-        System.out.println("reset type");
+    public void setType(String type){
+        //System.out.println("reset type");
         clearWidgets();
         typeSwitch:{
             if(type.equals(DropDown.nullValue)){
-                System.out.println("structure type null");
+                //System.out.println("structure type null");
                 return;
             }
             if(type.equals("list")){
-                StructureWidgetParam params = new StructureWidgetParam(null);
-                ListWidget.ListParam listParams = new ListWidget.ListParam(params);
-                structureWidgets = (ListWidget) GLib.inflateWidget(context, listParams);
-                addWidget(structureWidgets);
-                structureWidgets.setOnDataChangedListener(onDataChangedListener);
+                structureWidgetList = new StructureWidgetList(context, groupWidget);
                 return;
             }
             if(type.equals("drop down")){
-                structureWidgetDropDown = new StructureWidgetDropDown(context, this);
+                structureWidgetDropDown = new StructureWidgetDropDown(context, groupWidget);
                 return;
             }
 
 
             if(type.equals("edit text")){
-
+                structureWidgetEditText = new StructureWidgetEditText(context, groupWidget);
                 return;
             }
         }
     }
 
     public void clearWidgets(){
-        removeWidget(structureWidgets);
-        structureWidgets = null;
+        if(structureWidgetList != null)
+            groupWidget.removeWidget(structureWidgetList);
+        structureWidgetList = null;
         if(structureWidgetDropDown != null)
-            structureWidgetDropDown.clear();
+            groupWidget.removeWidget(structureWidgetDropDown);
         structureWidgetDropDown = null;
     }
 
@@ -151,11 +116,33 @@ public class StructureWidget extends WidgetLinearLayout implements Widget {
 
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
-        parentListener = runnable;
     }
 
     @Override
-    public StructureWidgetParam getData(){
+    public WidgetParam getData(){
+        String type = typeDropDown.value().selected.getName();
+        typeSwitch:{
+            if(type.equals(DropDown.nullValue)){
+                //System.out.println("structure type null");
+                return null;
+            }
+            if(type.equals("list")){
+                ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getData();
+                param.name = name.text();
+                return param;
+            }
+            if(type.equals("drop down")){
+                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetList.getData();
+                param.name = name.text();
+                return param;
+            }
+
+            if(type.equals("edit text")){
+                CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getData();
+                param.name = name.text();
+                return param;
+            }
+        }
         return null;
     }
 
@@ -174,7 +161,7 @@ public class StructureWidget extends WidgetLinearLayout implements Widget {
 
     @Override
     public View getView() {
-        return super.getView();
+        return groupWidget.getView();
     }
 
     public static class StructureWidgetParam extends WidgetParam {
@@ -183,6 +170,16 @@ public class StructureWidget extends WidgetLinearLayout implements Widget {
         public StructureWidgetParam(WidgetParam widgetParam) {
             widgetClass = "structure widget";
             this.widgetParam = widgetParam;
+        }
+
+        @Override
+        public String hierarchyString(int numTabs) {
+            return GLib.tabs(numTabs) + "structure widget\n" + widgetParam.hierarchyString(numTabs+1);
+        }
+
+        @Override
+        public DataTree header() {
+            throw new RuntimeException();
         }
     }
 

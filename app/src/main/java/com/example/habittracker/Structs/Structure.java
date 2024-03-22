@@ -1,22 +1,41 @@
 package com.example.habittracker.Structs;
 
+import com.example.habittracker.DataTree;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Structs.WidgetParam;
 
 import java.util.ArrayList;
 
 public class Structure {
-    public String name;
-    public WidgetParam params;
-    public String type;
-    public Structure(String name, WidgetParam params, String type){
+    private String name;
+    private WidgetParam param;
+    private String type;
+    private ArrayList<DataTree> entries;
+
+
+    public Structure(String name, WidgetParam param, String type){
         this.name = name;
-        this.params = params;
+        this.param = param;
         this.type = type;
     }
     public Structure(){
-        name = null;
-        params = new GroupWidget.GroupWidgetParam(new ArrayList<>());
+        name = "null";
+        param = new GroupWidget.GroupWidgetParam(new ArrayList<>());
         type = null;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getType(){
+        return type;
+    }
+
+    public DataTree getHeader(){
+        return param.header();
+    }
+
+    public WidgetParam getParam(){
+        return param;
     }
 }

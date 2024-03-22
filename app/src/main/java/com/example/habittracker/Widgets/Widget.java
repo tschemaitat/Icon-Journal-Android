@@ -13,4 +13,6 @@ public interface Widget {
     void setData(WidgetParam params);
 
     View getView();
+
+
 }

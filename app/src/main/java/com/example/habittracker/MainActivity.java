@@ -15,7 +15,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.Inflatables.Inflatable;
 import com.example.habittracker.Inflatables.EditorSelectionPage;
+import com.example.habittracker.Inflatables.JournalPage;
+import com.example.habittracker.Inflatables.StructureEditor;
 import com.example.habittracker.Inflatables.TestPage;
+import com.example.habittracker.Structs.Structure;
 
 import java.util.ArrayList;
 
@@ -50,10 +53,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void inflateLayout(Inflatable newLayout){
-        if(currentLayout != null)
+        if(currentLayout != null){
             inflateLayout.removeView(currentLayout.getView());
+            currentLayout.onRemoved();
+        }
+
         inflateLayout.addView(newLayout.getView());
         currentLayout = newLayout;
+        currentLayout.onOpened();
     }
 
     public void setupLayoutButtons(){
@@ -63,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         categoryButton.setOnClickListener(view -> {
 
         });
-        TextView entryButton = findViewById(R.id.EntryButton);
-        entryButton.setOnClickListener(view -> {
-
+        TextView journalButton = findViewById(R.id.JournalButton);
+        journalButton.setOnClickListener(view -> {
+            inflateLayout(new JournalPage(context, "test structure"));
         });
         TextView testButton = findViewById(R.id.TestButton);
         testButton.setOnClickListener(view -> inflateLayout(new TestPage(context)));
@@ -79,33 +86,7 @@ public class MainActivity extends AppCompatActivity {
         return linearLayout;
     }
 
-    public static ListView createList(ArrayList<String> items, AdapterView.OnItemClickListener listener){
-        ListView listView = new ListView(context);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
-        listView.setLayoutParams(params);
-        System.out.println("listView.getDividerHeight() = " + listView.getDividerHeight());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-                android.R.layout.simple_expandable_list_item_1, items);
-        listView.setAdapter(adapter);
-        System.out.println("listView.getDividerHeight() = " + listView.getDividerHeight());
-        listView.post(new Runnable() {
-            @Override
-            public void run() {
 
-                int childHeight = listView.getChildAt(0).getHeight();
-                System.out.println("child height = " + childHeight);
-                System.out.println("listView.getDividerHeight() = " + listView.getDividerHeight());
-                int listHeight = childHeight * listView.getDividerHeight();
-                //listView.getLayoutParams().height = listHeight;
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, listHeight);
-                listView.setLayoutParams(params);
-            }
-        });
-
-        // Set the click listener for the list items
-        listView.setOnItemClickListener(listener);
-        return listView;
-    }
 
 
 

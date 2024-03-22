@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.habittracker.DataTree;
+import com.example.habittracker.GLib;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Structs.WidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
@@ -79,6 +81,16 @@ public class TextSlider extends SliderWithLabels implements Widget {
         String selected;
         public TextSliderParam(String selected){
             this.selected = selected;
+        }
+
+        @Override
+        public String hierarchyString(int numTabs) {
+            return GLib.tabs(numTabs) + "slider\n";
+        }
+
+        @Override
+        public DataTree header() {
+            return null;
         }
     }
 

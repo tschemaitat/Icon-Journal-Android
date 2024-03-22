@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.StructureWidget;
 
 public class TestPage implements Inflatable {
@@ -22,9 +23,23 @@ public class TestPage implements Inflatable {
         return linearLayout;
     }
 
+    @Override
+    public void onRemoved() {
+
+    }
+
+    @Override
+    public void onOpened() {
+
+    }
+
 
     public void setupTestLayout(){
         StructureWidget structureWidget = new StructureWidget(context);
+        structureWidget.setOnDataChangedListener(()->{});
         linearLayout.addView(structureWidget.getView());
+
+        CustomEditText editText = new CustomEditText(context);
+        linearLayout.addView(editText.getView());
     }
 }
