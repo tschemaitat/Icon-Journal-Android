@@ -3,43 +3,37 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.R;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
-import com.example.habittracker.Widgets.Widget;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Objects;
-
-public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText implements Widget {
+public class CustomEditText extends EntryWidget {
     private String text = "null";
     public static final String className = "edit text";
     public static final String nullText = "null";
     public Runnable onDataChangedListener = null;
+    private TextInputLayout editTextLayout;
     public CustomEditText(Context context) {
         super(context);
+        editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
+        editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
+        //editText.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        setChild(editTextLayout);
         init();
     }
 
-    public CustomEditText(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
 
-    public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
     public String text(){
         return text;
     }
 
     public void setValue(String newValue){
         text = newValue;
-        this.setText(newValue);
+        editTextLayout.getEditText().setText(newValue);
     }
 
 
@@ -48,7 +42,7 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
         int MAX_CHARACTERS = 50;
 
         // Error handling from too many characters
-        addTextChangedListener(new TextWatcher() {
+        editTextLayout.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -60,9 +54,9 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
                 text = s.toString();
                 onDataChangedListener.run();
                 if (s.length() > MAX_CHARACTERS) {
-                    setError("Maximum character limit exceeded");
+                    editTextLayout.setError("Maximum character limit exceeded");
                 } else {
-                    setError(null);
+                    editTextLayout.setError(null);
                 }
             }
         });
@@ -76,16 +70,10 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     @Override
-    public WidgetParam getData(){
-        EditTextParam params = new EditTextParam(text);
+    public EntryWidgetParam getParam(){
+        EditTextParam params = new EditTextParam(name, text);
 
         return params;
-    }
-
-    @Override
-    public WidgetValue value(){
-        EditTextValue value = new EditTextValue(text);
-        return value;
     }
 
     @Override
@@ -94,22 +82,16 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText 
     }
 
     @Override
-    public void setData(WidgetParam params){
+    public void setParamCustom(EntryWidgetParam params){
         EditTextParam casted = ((EditTextParam) params);
         if( ! casted.text.equals(nullText) )
             setValue(casted.text);
     }
 
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    public static class EditTextParam extends WidgetParam {
-        public String name = "null";
+    public static class EditTextParam extends EntryWidgetParam {
         public String text;
-        public EditTextParam(String text){
-            this.widgetClass = "edit text";
+        public EditTextParam(String name, String text){
+            super(name, CustomEditText.className);
             this.text = text;
         }
 

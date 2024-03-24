@@ -60,7 +60,7 @@ public class Dictionary {
     }
 
     private static void generateStructure() {
-        Structure structure = new Structure("test structure", new GroupWidget.GroupWidgetParam(new ArrayList<>()), "journal");
+        Structure structure = new Structure("test structure", new GroupWidget.GroupWidgetParam(null, new ArrayList<>()), "journal");
         addStructure(structure);
     }
 

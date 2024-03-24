@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.Structs.Structure;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidget;
 
@@ -43,7 +43,7 @@ public class StructureEditor implements Inflatable {
     @Override
     public void onRemoved() {
         System.out.println("structure editor being removed");
-        WidgetParam widgetParam = groupWidget.getData();
+        EntryWidgetParam widgetParam = groupWidget.getParam();
         System.out.println("exporting widgetParams: \n" + widgetParam.hierarchyString(0));
         Structure newStructure = new Structure(structure.getName(), widgetParam, structure.getType());
         Dictionary.saveStructure(newStructure);

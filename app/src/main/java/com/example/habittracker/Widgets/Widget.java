@@ -2,19 +2,11 @@ package com.example.habittracker.Widgets;
 
 import android.view.View;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.Structs.WidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.Structs.EntryWidgetParam;
 
 public interface Widget {
-
-    void setOnDataChangedListener(Runnable runnable);
-    WidgetParam getData();
-    WidgetValue value();
-    DataTree getDataTree();
-    void setData(WidgetParam params);
-
-    View getView();
-
-
+    public EntryWidgetParam getParam();
+    public void setParam(EntryWidgetParam param);
+    public View getView();
+    public void setOnDataChangedListener(Runnable runnable);
 }

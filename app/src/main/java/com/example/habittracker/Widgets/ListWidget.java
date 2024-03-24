@@ -5,118 +5,113 @@ import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
 
-public class ListWidget extends GroupWidget implements Widget {
+public class ListWidget extends EntryWidget {
 
     private GroupWidgetParam cloneParams = null;
     public static final String className = "list";
     private Context context;
+    private GroupWidget groupWidget;
+    private String name;
 
     public ListWidget(Context context){
         super(context);
         this.context = context;
-
+        groupWidget = new GroupWidget(context);
+        setChild(groupWidget.getView());
 
 
     }
-    public Runnable onDataChangedListener;
-    @Override
-    public void setOnDataChangedListener(Runnable runnable) {
-        onDataChangedListener = runnable;
-    }
 
 
-    @Override
-    public WidgetParam getData(){
+
+    public EntryWidgetParam getParam(){
         ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
-        for(WidgetParam widgetParam: getDataWidgets())
-            groupWidgetParam.add((GroupWidgetParam) widgetParam);
+        for(EntryWidgetParam widgetParam: groupWidget.getDataWidgets())
+            groupWidgetParam.add((GroupWidget.GroupWidgetParam) widgetParam);
 
-        ListParam params = new ListParam(cloneParams, groupWidgetParam);
+        ListParam params = new ListParam(name, cloneParams, groupWidgetParam);
 
         return params;
     }
 
     @Override
-    public WidgetValue value(){
-        ListValue value = new ListValue(getValueWidgets());
-
-        return value;
-    }
-
-    @Override
-    public DataTree getDataTree(){
-        return super.getDataTree();
+    public DataTree getDataTree() {
+        return groupWidget.getDataTree();
     }
 
 
-    @Override
-    public void setData(WidgetParam params){
+    public void setParamCustom(EntryWidgetParam params){
         System.out.println("setting data for list");
         ListParam listParams = (ListParam) params;
+        name = listParams.name;
         cloneParams = listParams.cloneableWidget;
-        inflateAll(new ArrayList<>(listParams.currentWidgets));
+        groupWidget.inflateAll(new ArrayList<>(listParams.currentWidgets));
         makeButton();
 
 
-        for(int i = 0; i < widgets().size(); i++){
-            widgets().get(i).setOnDataChangedListener(()->onDataChange());
+        for(Widget widget: groupWidget.widgets()){
+            GroupWidget groupChild = (GroupWidget)widget;
+            setNewGruop(groupChild);
+
         }
 
+
         System.out.println("data finished set for list");
-        System.out.println(getData());
+        System.out.println(this.getParam());
     }
 
     public void onDataChange(){
-        onDataChangedListener.run();
+        onDataChangedListener().run();
     }
 
-
+    public void setNewGruop(GroupWidget groupChild){
+        groupChild.setOnDataChangedListener(()->onDataChange());
+        System.out.println("<list> add border");
+        groupChild.addBorder();
+        groupChild.setMargin(5, 10);
+    }
 
     public void makeButton(){
-        insertButton(new View.OnClickListener() {
+        groupWidget.insertButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Widget newWidget = null;
+                GroupWidget newWidget = null;
 
-                newWidget = GLib.inflateWidget(context, cloneParams);
-                newWidget.setOnDataChangedListener(new Runnable() {
-                    @Override
-                    public void run() {
-                        onDataChangedListener.run();
-                    }
-                });
+                newWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams);
+                setNewGruop(newWidget);
 
-
-                addWidget(newWidget);
+                groupWidget.addWidget(newWidget);
             }
         });
     }
 
-    @Override
-    public View getView() {
-        return super.getView();
-    }
 
-    public static class ListParam extends WidgetParam {
+    public static class ListParam extends EntryWidgetParam {
         public String name = "null";
-        public GroupWidgetParam cloneableWidget;
+        public GroupWidget.GroupWidgetParam cloneableWidget;
         public ArrayList<GroupWidgetParam> currentWidgets;
 
-        public ListParam(GroupWidgetParam cloneableWidget, ArrayList<GroupWidgetParam> currentWidgets){
-            this.widgetClass = "list";
+        public ListParam(String name, GroupWidgetParam cloneableWidget, ArrayList<GroupWidgetParam> currentWidgets){
+            super(name, ListWidget.className);
             this.cloneableWidget = cloneableWidget;
             this.currentWidgets = currentWidgets;
         }
 
-        public ListParam(GroupWidgetParam cloneableWidget){
-            this.widgetClass = "list";
+        public ListParam(String name, GroupWidgetParam cloneableWidget){
+            super(name, ListWidget.className);
             this.cloneableWidget = cloneableWidget;
-            this.widgetClass = widgetClass;
+            currentWidgets = new ArrayList<>();
+        }
+
+        public ListParam(String name, EntryWidgetParam[] entryWidgetParams){
+            super(name, ListWidget.className);
+            this.cloneableWidget = new GroupWidgetParam(null, entryWidgetParams);
             currentWidgets = new ArrayList<>();
         }
         public String toString(){

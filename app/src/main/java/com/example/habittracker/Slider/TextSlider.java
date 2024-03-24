@@ -1,33 +1,24 @@
 package com.example.habittracker.Slider;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
-import com.example.habittracker.Widgets.Widget;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Widgets.EntryWidget;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 
 import java.util.ArrayList;
 
-public class TextSlider extends SliderWithLabels implements Widget {
+public class TextSlider extends EntryWidget {
+    public static final String className = "text slider";
     Context context;
+    SliderWithLabels sliderWithLabels;
     public TextSlider(Context context) {
         super(context);
-        this.context = context;
-        init();
-    }
-
-    public TextSlider(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
-        init();
-    }
-
-    public TextSlider(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        sliderWithLabels = new SliderWithLabels(context);
+        setChild(sliderWithLabels);
         this.context = context;
         init();
     }
@@ -42,7 +33,7 @@ public class TextSlider extends SliderWithLabels implements Widget {
         for(int i = 0; i < values.size(); i++)
             labelIndex.add(i);
 
-        setValues(values, labelIndex);
+        sliderWithLabels.setValues(values, labelIndex);
     }
 
 
@@ -52,15 +43,9 @@ public class TextSlider extends SliderWithLabels implements Widget {
         onDataChangedListener = runnable;
     }
 
-    @Override
-    public TextSliderParam getData(){
-        return new TextSliderParam(selectedValue());
-    }
 
-    @Override
-    public WidgetValue value() {
-        return new TextSliderValue(selectedValue());
-    }
+
+
 
     @Override
     public DataTree getDataTree() {
@@ -68,23 +53,24 @@ public class TextSlider extends SliderWithLabels implements Widget {
     }
 
     @Override
-    public void setData(WidgetParam params){
-        TextSliderParam casted = (TextSliderParam) params;
-        String data = casted.selected;
-        int index = valueArray.indexOf(data);
-
-        float value = ((float)index) / valueArray.size();
-        slider.setValue(value);
+    public EntryWidgetParam getParam() {
+        return null;
     }
 
     @Override
-    public View getView() {
-        return this;
+    public void setParamCustom(EntryWidgetParam params){
+        TextSliderParam casted = (TextSliderParam) params;
+        String data = casted.selected;
+        int index =  sliderWithLabels.valueArray.indexOf(data);
+
+        float value = ((float)index) /  sliderWithLabels.valueArray.size();
+        sliderWithLabels.slider.setValue(value);
     }
 
-    public static class TextSliderParam extends WidgetParam {
+    public static class TextSliderParam extends EntryWidgetParam {
         String selected;
-        public TextSliderParam(String selected){
+        public TextSliderParam(String name, String selected){
+            super(name, TextSlider.className);
             this.selected = selected;
         }
 

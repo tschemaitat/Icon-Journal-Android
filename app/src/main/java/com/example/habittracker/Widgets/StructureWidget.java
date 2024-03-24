@@ -5,28 +5,23 @@ import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.Dictionary;
-import com.example.habittracker.GLib;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
-import com.example.habittracker.Structs.WidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetEditText;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetList;
 
 public class StructureWidget implements Widget {
     private CustomEditText name = null;
+
     private DropDown typeDropDown = null;
-    //used for slider and drop down
+    private String currentType = DropDown.nullValue;
 
-    //used for type list
     private StructureWidgetList structureWidgetList = null;
-
-    //used for drop down
     private StructureWidgetDropDown structureWidgetDropDown = null;
-
     private StructureWidgetEditText structureWidgetEditText = null;
 
+    Runnable onDataChangeListener;
 
-    private String currentType = DropDown.nullValue;
     private Context context;
 
     private GroupWidget groupWidget;
@@ -43,8 +38,8 @@ public class StructureWidget implements Widget {
 
         typeDropDown = new DropDown(context);
         groupWidget.addWidget(typeDropDown);
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(Dictionary.getTypes());
-        typeDropDown.setData(params);
+        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("type", Dictionary.getTypes());
+        typeDropDown.setParam(params);
 
         typeDropDown.setOnDataChangedListener(() -> onTypeChange());
         typeDropDown.setName("typeDropDown");
@@ -52,13 +47,17 @@ public class StructureWidget implements Widget {
 
     public void onTypeChange(){
         //System.out.println("<StructureWidget>data changed");
-        String type = typeDropDown.value().selected.getName();
+        String type = typeDropDown.getSelectedString();
         //System.out.println("type = " + type);
 
         if( ! currentType.equals(type) )
             setType(type);
 
         currentType = type;
+    }
+
+    public void onDataChange(){
+        onDataChangeListener.run();
     }
 
 
@@ -97,48 +96,27 @@ public class StructureWidget implements Widget {
         structureWidgetDropDown = null;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
-    public void setOnDataChangedListener(Runnable runnable) {
-    }
-
-    @Override
-    public WidgetParam getData(){
-        String type = typeDropDown.value().selected.getName();
+    public EntryWidgetParam getParam(){
+        String type = typeDropDown.getSelectedString();
         typeSwitch:{
             if(type.equals(DropDown.nullValue)){
                 //System.out.println("structure type null");
                 return null;
             }
             if(type.equals("list")){
-                ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getData();
+                ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getParam();
                 param.name = name.text();
                 return param;
             }
             if(type.equals("drop down")){
-                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetList.getData();
+                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetList.getParam();
                 param.name = name.text();
                 return param;
             }
 
             if(type.equals("edit text")){
-                CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getData();
+                CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getParam();
                 param.name = name.text();
                 return param;
             }
@@ -146,22 +124,11 @@ public class StructureWidget implements Widget {
         return null;
     }
 
-    @Override
-    public WidgetValue value(){
-        return null;
-    }
-
-    @Override
-    public DataTree getDataTree() {
-        return null;
-    }
 
 
     @Override
-    public void setData(WidgetParam params){
-        StructureWidgetParam structureWidgetParams = (StructureWidgetParam) params;
-        if(structureWidgetParams.widgetParam == null)
-            return;
+    public void setParam(EntryWidgetParam params){
+
     }
 
     @Override
@@ -169,30 +136,10 @@ public class StructureWidget implements Widget {
         return groupWidget.getView();
     }
 
-    public static class StructureWidgetParam extends WidgetParam {
-        public WidgetParam widgetParam;
-
-        public StructureWidgetParam(WidgetParam widgetParam) {
-            widgetClass = "structure widget";
-            this.widgetParam = widgetParam;
-        }
-
-        @Override
-        public String hierarchyString(int numTabs) {
-            return GLib.tabs(numTabs) + "structure widget\n" + widgetParam.hierarchyString(numTabs+1);
-        }
-
-        @Override
-        public DataTree header() {
-            throw new RuntimeException();
-        }
+    @Override
+    public void setOnDataChangedListener(Runnable runnable) {
+        onDataChangeListener = runnable;
     }
 
-    public static class StructureWidgetValue extends WidgetValue{
 
-
-        public StructureWidgetValue(String name, String type, ListWidget list, String structureKey) {
-
-        }
-    }
 }

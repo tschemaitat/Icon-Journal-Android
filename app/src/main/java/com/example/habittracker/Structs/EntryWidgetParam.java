@@ -2,8 +2,16 @@ package com.example.habittracker.Structs;
 
 import com.example.habittracker.DataTree;
 
-public abstract class WidgetParam {
-    public String widgetClass;
+public abstract class EntryWidgetParam {
+
+    public String name;
+    public String className;
+
+    public EntryWidgetParam(String name, String className){
+        this.name = name;
+        this.className = className;
+    }
+
     public String hierarchyString(){
         return hierarchyString(0);
     }

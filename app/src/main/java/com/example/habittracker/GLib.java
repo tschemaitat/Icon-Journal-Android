@@ -6,14 +6,14 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.DropDown;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -78,61 +78,55 @@ public class GLib {
         return (int)(dp * (context.getResources().getDisplayMetrics().densityDpi / 160f));
     }
 
-    public static ConstraintLayout createOutlinedMarginedLayout(Context context){
-        int margin = GLib.dpToPx(context, 5);
-        ConstraintLayout layout = (ConstraintLayout)GLib.inflate(context, R.layout.widget_group_layout);
+    public void setMargin(int dp){
 
-        //layoutParams.setMargins(margin, margin, margin, margin);
-
-        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(-2, -2);
-        layoutParams2.setMargins(margin, margin, margin, margin);
-
-
-        layout.setLayoutParams(layoutParams2);
-
-
-        return layout;
     }
 
     public static void outlinedLayoutAddView(ConstraintLayout outlinedLayout, View child){
         ((ConstraintLayout)(outlinedLayout.getChildAt(0))).addView(child);
     }
 
-    public static ConstraintLayout insertAddButton(View.OnClickListener listener, ViewGroup parent, Context context){
-        ConstraintLayout addView = (ConstraintLayout) GLib.inflate(context, R.layout.add_layout);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
-        addView.setLayoutParams(layoutParams);
+    public static View getButton(View.OnClickListener listener, Context context){
+        ConstraintLayout layout = new ConstraintLayout(context);
+        Button button = (Button) (((ConstraintLayout) MainActivity.mainActivity.getLayoutInflater().inflate(R.layout.button_layout, layout)).getChildAt(0));
+        layout.removeView(button);
 
-        addView.setOnClickListener(listener);
-        parent.addView(addView);
-        return addView;
+        button.setOnClickListener(listener);
+        return button;
     }
 
-    public static Widget inflateWidget(Context context, WidgetParam params){
+    public static View inflate(int id){
+        ConstraintLayout layout = new ConstraintLayout(MainActivity.mainActivity);
+        View view = ((ConstraintLayout) MainActivity.mainActivity.getLayoutInflater().inflate(id, layout)).getChildAt(0);
+        layout.removeView(view);
+        return view;
+    }
 
-        String className = params.widgetClass;
+    public static Widget inflateWidget(Context context, EntryWidgetParam params){
+
+        String className = params.className;
         System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className){
             case DropDown.className:
                 widget = new DropDown(context);
-                widget.setData(params);
+                widget.setParam(params);
                 break;
             case "list":
                 widget = new ListWidget(context);
-                widget.setData(params);
+                widget.setParam(params);
                 break;
             case "structure widget":
                 widget = new StructureWidget(context);
-                widget.setData(params);
+                widget.setParam(params);
                 break;
             case GroupWidget.className:
                 widget = new GroupWidget(context);
-                widget.setData(params);
+                widget.setParam(params);
                 break;
             case CustomEditText.className:
                 widget = new CustomEditText(context);
-                widget.setData(params);
+                widget.setParam(params);
                 break;
 
             default:

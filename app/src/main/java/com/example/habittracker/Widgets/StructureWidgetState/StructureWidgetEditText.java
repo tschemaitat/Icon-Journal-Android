@@ -5,9 +5,10 @@ import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Widgets.Widget;
 
 public class StructureWidgetEditText implements Widget {
@@ -32,23 +33,16 @@ public class StructureWidgetEditText implements Widget {
     }
 
     @Override
-    public WidgetParam getData() {
-        CustomEditText.EditTextParam editTextParam = new CustomEditText.EditTextParam("null");
+    public EntryWidgetParam getParam() {
+        CustomEditText.EditTextParam editTextParam = new CustomEditText.EditTextParam(null, "null");
         return editTextParam;
     }
 
-    @Override
-    public WidgetValue value() {
-        return null;
-    }
+
+
 
     @Override
-    public DataTree getDataTree() {
-        return null;
-    }
-
-    @Override
-    public void setData(WidgetParam params) {
+    public void setParam(EntryWidgetParam params) {
 
     }
 

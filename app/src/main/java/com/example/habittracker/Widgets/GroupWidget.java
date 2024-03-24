@@ -5,24 +5,87 @@ import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
-import com.example.habittracker.Structs.WidgetParam;
+import com.example.habittracker.R;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.CustomLinearLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GroupWidget implements Widget {
+public class GroupWidget extends EntryWidget {
     Context context;
     ArrayList<Widget> widgets = new ArrayList<>();
+
     public static final String className = "group widget";
+    private CustomLinearLayout customLinearLayout;
     public GroupWidget(Context context){
+        super(context);
         this.context = context;
         customLinearLayout = new CustomLinearLayout(context);
+        customLinearLayout.getView().setId(R.id.groupWidgetOuterLayout);
+        setChild(customLinearLayout.getView());
     }
 
-    private Runnable onDataChangedListener = null;
-    private CustomLinearLayout customLinearLayout;
+    public void setMargin(int hor, int vert){
+        customLinearLayout.setMargin(hor, vert);
+    }
+
+    @Override
+    public DataTree getDataTree() {
+        DataTree tree = new DataTree();
+        for(Widget widget: widgets()){
+            tree.add(((EntryWidget) widget).getDataTree());
+        }
+        return tree;
+    }
+
+
+    public ArrayList<Widget> widgets(){
+        return ((ArrayList<Widget>) widgets.clone());
+    }
+
+    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params){
+        System.out.println("setting widgets: " + params.size());
+        for(int i = 0; i < params.size(); i++){
+            System.out.println("\tadding widget and inflating: ");
+            addWidget(GLib.inflateWidget(context, params.get(i)));
+        }
+        return widgets();
+    }
+
+    public Widget inflate(EntryWidgetParam widgetParam){
+        Widget widget = GLib.inflateWidget(context, widgetParam);
+        addWidget(widget);
+        return widget;
+    }
+
+    public ArrayList<EntryWidgetParam> getDataWidgets(){
+        System.out.println("getting group widget data numWidget: " + widgets.size());
+        ArrayList<EntryWidgetParam> params = new ArrayList<>();
+        for(int i = 0; i < widgets.size(); i++){
+            params.add(widgets.get(i).getParam());
+        }
+
+        return params;
+    }
+
+    @Override
+    public EntryWidgetParam getParam() {
+        return new GroupWidgetParam(null, getDataWidgets());
+    }
+
+
+
+    @Override
+    public void setParamCustom(EntryWidgetParam params) {
+        GroupWidgetParam groupParams = (GroupWidgetParam) params;
+        inflateAll(groupParams.params);
+        for(Widget widget: widgets)
+            widget.setOnDataChangedListener(()->onDataChangedListener());
+    }
+
+    //region wrapper
 
     public void addWidget(Widget widget){
         widgets.add(widget);
@@ -45,97 +108,18 @@ public class GroupWidget implements Widget {
     public void insertButton(View.OnClickListener listener){
         customLinearLayout.insertButton(listener);
     }
+    //endregion
 
-    public ArrayList<Widget> widgets(){
-        return ((ArrayList<Widget>) widgets.clone());
-    }
-
-    public ArrayList<Widget> inflateAll(ArrayList<WidgetParam> params){
-        System.out.println("setting widgets: " + params.size());
-        for(int i = 0; i < params.size(); i++){
-            System.out.println("\tadding widget and inflating: ");
-            addWidget(GLib.inflateWidget(context, params.get(i)));
-        }
-        return widgets();
-    }
-
-    public Widget inflate(WidgetParam widgetParam){
-        Widget widget = GLib.inflateWidget(context, widgetParam);
-        addWidget(widget);
-        return widget;
-    }
-
-    public ArrayList<WidgetParam> getDataWidgets(){
-        System.out.println("getting group widget data numWidget: " + widgets.size());
-        ArrayList<WidgetParam> params = new ArrayList<>();
-        for(int i = 0; i < widgets.size(); i++){
-            params.add(widgets.get(i).getData());
-        }
-
-        return params;
-    }
-
-    public ArrayList<WidgetValue> getValueWidgets(){
-        ArrayList<WidgetValue> values = new ArrayList<>();
-        for(int i = 0; i < widgets.size(); i++){
-            values.add(widgets.get(i).value());
-        }
-
-        return values;
-    }
-
-    public void onDataChange(){
-        onDataChangedListener.run();
-    }
-
-
-    @Override
-    public void setOnDataChangedListener(Runnable runnable) {
-        onDataChangedListener = runnable;
-    }
-
-    @Override
-    public WidgetParam getData() {
-        return new GroupWidgetParam(getDataWidgets());
-    }
-
-    @Override
-    public WidgetValue value() {
-        return new GroupWidgetValue(getValueWidgets());
-    }
-
-    @Override
-    public DataTree getDataTree() {
-        DataTree tree = new DataTree();
-        for(Widget widget: widgets){
-            tree.add(widget.getDataTree());
-        }
-        return tree;
-    }
-
-    @Override
-    public void setData(WidgetParam params) {
-        GroupWidgetParam groupParams = (GroupWidgetParam) params;
-        inflateAll(groupParams.params);
-        for(Widget widget: widgets)
-            widget.setOnDataChangedListener(()->onDataChange());
-    }
-
-    @Override
-    public View getView() {
-        return customLinearLayout.getView();
-    }
-
-    public static class GroupWidgetParam extends WidgetParam {
-        ArrayList<WidgetParam> params;
-        public GroupWidgetParam(ArrayList<WidgetParam> params){
+    public static class GroupWidgetParam extends EntryWidgetParam {
+        ArrayList<EntryWidgetParam> params;
+        public GroupWidgetParam(String name, ArrayList<EntryWidgetParam> params){
+            super(name, GroupWidget.className);
             this.params = params;
-            this.widgetClass = className;
         }
 
-        public GroupWidgetParam(WidgetParam[] params){
+        public GroupWidgetParam(String name, EntryWidgetParam[] params){
+            super(name, GroupWidget.className);
             this.params = new ArrayList<>(Arrays.asList(params));
-            this.widgetClass = className;
         }
 
         public String toString(){
@@ -149,7 +133,7 @@ public class GroupWidget implements Widget {
             for(int i = 0; i < numTabs; i++)
                 tabs += singleTab;
             String result = tabs + "group widget\n";
-            for(WidgetParam widgetParam: params){
+            for(EntryWidgetParam widgetParam: params){
                 result += widgetParam.hierarchyString(numTabs + 1);
             }
             return result;
@@ -158,16 +142,10 @@ public class GroupWidget implements Widget {
         @Override
         public DataTree header() {
             DataTree header = new DataTree("null");
-            for(WidgetParam param: params){
+            for(EntryWidgetParam param: params){
                 header.add(param.header());
             }
             return null;
-        }
-    }
-    public static class GroupWidgetValue extends WidgetValue{
-        ArrayList<WidgetValue> values;
-        public GroupWidgetValue(ArrayList<WidgetValue> values){
-            this.values = values;
         }
     }
 }
