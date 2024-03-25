@@ -1,6 +1,7 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 
 import com.example.habittracker.CustomLinearLayout;
@@ -10,7 +11,7 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 
 public abstract class EntryWidget implements Widget{
     private Runnable onDataChanged;
-    public String name;
+    private String name;
     private CustomLinearLayout entryWidgetWrapper;
 
     public EntryWidget(Context context){
@@ -29,7 +30,7 @@ public abstract class EntryWidget implements Widget{
         entryWidgetWrapper.addBorder();
     }
 
-    public final void setChild(View view){
+    protected final void setChild(View view){
         entryWidgetWrapper.add(view);
     }
 
@@ -44,6 +45,20 @@ public abstract class EntryWidget implements Widget{
         System.out.println("set name: " + name);
         entryWidgetWrapper.addName(name);
         this.name = name;
+    }
+
+    public final void setNameRed(){
+        int colorRed = Color.RED;
+        entryWidgetWrapper.setNameColor(colorRed);
+    }
+
+    public final void resetNameColor(){
+        int colorWhite = Color.WHITE;
+        entryWidgetWrapper.setNameColor(colorWhite);
+    }
+
+    public final String getName(){
+        return name;
     }
 
     public final void setParam(EntryWidgetParam param){

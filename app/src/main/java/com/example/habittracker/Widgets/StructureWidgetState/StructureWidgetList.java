@@ -3,13 +3,10 @@ package com.example.habittracker.Widgets.StructureWidgetState;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.DataTree;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
-import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ public class StructureWidgetList implements Widget {
     }
 
     private void init(){
-        groupWidget.insertButton(view -> {
+        groupWidget.addButton(view -> {
             StructureWidget structureWidget = new StructureWidget(context);
             structureWidgets.add(structureWidget);
             groupWidget.addWidget(structureWidget);

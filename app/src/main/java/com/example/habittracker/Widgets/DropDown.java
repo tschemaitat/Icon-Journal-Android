@@ -224,16 +224,23 @@ public class DropDown extends EntryWidget {
         if(!dataSet){
             throw new RuntimeException();
         }
-        DropDownParam params = new DropDownParam(name, selectedValuePath, structureKey, valueKey, groups);
+        DropDownParam params = new DropDownParam(getName(), selectedValuePath, structureKey, valueKey, groups);
         return params;
     }
 
     public String getSelectedString(){
-        return selectedValuePath.getName();
+        String selected = selectedValuePath.getName();
+        if(selected.equals(nullValue))
+            return null;
+        return selected;
     }
 
     public ItemPath getSelectedPath(){
-        return selectedValuePath;
+        ItemPath itemPath = selectedValuePath;
+        ItemPath copy = new ItemPath((ArrayList<String>) itemPath.getPath().clone());
+        if(getSelectedString() == null)
+            return null;
+        return copy;
     }
 
     @Override

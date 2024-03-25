@@ -7,7 +7,6 @@ import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.CustomLinearLayout;
 
 import java.util.ArrayList;
@@ -40,6 +39,10 @@ public class GroupWidget extends EntryWidget {
         return tree;
     }
 
+    public void setNameColor(int color){
+        customLinearLayout.setNameColor(color);
+    }
+
 
     public ArrayList<Widget> widgets(){
         return ((ArrayList<Widget>) widgets.clone());
@@ -64,7 +67,8 @@ public class GroupWidget extends EntryWidget {
         System.out.println("getting group widget data numWidget: " + widgets.size());
         ArrayList<EntryWidgetParam> params = new ArrayList<>();
         for(int i = 0; i < widgets.size(); i++){
-            params.add(widgets.get(i).getParam());
+            EntryWidgetParam entryWidgetParam = widgets.get(i).getParam();
+            params.add(entryWidgetParam);
         }
 
         return params;
@@ -83,6 +87,10 @@ public class GroupWidget extends EntryWidget {
         inflateAll(groupParams.params);
         for(Widget widget: widgets)
             widget.setOnDataChangedListener(()->onDataChangedListener());
+    }
+
+    public void addNameEditor(View view){
+        customLinearLayout.addNameEditor(view);
     }
 
     //region wrapper
@@ -105,15 +113,24 @@ public class GroupWidget extends EntryWidget {
         customLinearLayout.removeButton();
     }
 
-    public void insertButton(View.OnClickListener listener){
-        customLinearLayout.insertButton(listener);
+    public void addButton(View.OnClickListener listener){
+        customLinearLayout.addButton(listener);
+    }
+
+    public void addDeleteButton(){
+        customLinearLayout.addDeleteButton();
     }
     //endregion
 
     public static class GroupWidgetParam extends EntryWidgetParam {
-        ArrayList<EntryWidgetParam> params;
+        private ArrayList<EntryWidgetParam> params;
         public GroupWidgetParam(String name, ArrayList<EntryWidgetParam> params){
             super(name, GroupWidget.className);
+            if(params == null)
+                throw new RuntimeException("array is null");
+            for(EntryWidgetParam param: params)
+                if(param == null)
+                    throw new RuntimeException("param in array is null");
             this.params = params;
         }
 
@@ -141,7 +158,7 @@ public class GroupWidget extends EntryWidget {
 
         @Override
         public DataTree header() {
-            DataTree header = new DataTree("null");
+            DataTree header = new DataTree(null);
             for(EntryWidgetParam param: params){
                 header.add(param.header());
             }

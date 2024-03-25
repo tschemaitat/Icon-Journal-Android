@@ -77,8 +77,8 @@ public class TestPage implements Inflatable {
                 })
 
         });
-        GroupWidget groupWidget = (GroupWidget) GLib.inflateWidget(context, groupWidgetParam);
-        groupWidget.setMargin(20, 10);
+        GroupWidget groupWidget = GLib.createInitialGroupWidget(context);
+        groupWidget.setParam(groupWidgetParam);
 
         linearLayout.addView(groupWidget.getView());
         groupWidget.setOnDataChangedListener(()->{

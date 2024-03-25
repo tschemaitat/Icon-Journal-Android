@@ -78,7 +78,7 @@ public class ListWidget extends EntryWidget {
     }
 
     public void makeButton(){
-        groupWidget.insertButton(new View.OnClickListener() {
+        groupWidget.addButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GroupWidget newWidget = null;

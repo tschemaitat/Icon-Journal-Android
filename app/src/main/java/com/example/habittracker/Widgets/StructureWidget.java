@@ -29,12 +29,15 @@ public class StructureWidget implements Widget {
     public StructureWidget(Context context) {
         this.context = context;
         groupWidget = new GroupWidget(context);
-
+        groupWidget.addBorder();
 
 
         name = new CustomEditText(context);
-        groupWidget.addWidget(name);
+        groupWidget.addNameEditor(name.getView());
+        groupWidget.setMargin(5, 10);
+        //groupWidget.addWidget(name);
         name.setOnDataChangedListener(()->{});
+        name.setName("widget name");
 
         typeDropDown = new DropDown(context);
         groupWidget.addWidget(typeDropDown);
@@ -42,10 +45,15 @@ public class StructureWidget implements Widget {
         typeDropDown.setParam(params);
 
         typeDropDown.setOnDataChangedListener(() -> onTypeChange());
-        typeDropDown.setName("typeDropDown");
+        typeDropDown.setName("attribute type");
+    }
+
+    public void disableNameEditor(){
+        name.disableEdit();
     }
 
     public void onTypeChange(){
+        typeDropDown.resetNameColor();
         //System.out.println("<StructureWidget>data changed");
         String type = typeDropDown.getSelectedString();
         //System.out.println("type = " + type);
@@ -67,6 +75,7 @@ public class StructureWidget implements Widget {
         clearWidgets();
         typeSwitch:{
             if(type.equals(DropDown.nullValue)){
+
                 //System.out.println("structure type null");
                 return;
             }
@@ -98,30 +107,44 @@ public class StructureWidget implements Widget {
 
     @Override
     public EntryWidgetParam getParam(){
+        EntryWidgetParam result = null;
+
         String type = typeDropDown.getSelectedString();
         typeSwitch:{
-            if(type.equals(DropDown.nullValue)){
+            if(type == null){
+                typeDropDown.setNameRed();
                 //System.out.println("structure type null");
-                return null;
+                break typeSwitch;
             }
+
             if(type.equals("list")){
                 ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getParam();
-                param.name = name.text();
-                return param;
+                if(param != null)
+                    param.name = name.text();
+                result = param;
+                break typeSwitch;
             }
             if(type.equals("drop down")){
-                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetList.getParam();
-                param.name = name.text();
-                return param;
+                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetDropDown.getParam();
+                if(param != null)
+                    param.name = name.text();
+                result = param;
+                break typeSwitch;
             }
 
             if(type.equals("edit text")){
                 CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getParam();
-                param.name = name.text();
-                return param;
+                if(param != null)
+                    param.name = name.text();
+                result = param;
+                break typeSwitch;
             }
         }
-        return null;
+        if(name.text() == null){
+            name.setNameRed();
+            return null;
+        }
+        return result;
     }
 
 
@@ -142,4 +165,7 @@ public class StructureWidget implements Widget {
     }
 
 
+    public void addDeleteButton() {
+        groupWidget.addDeleteButton();
+    }
 }

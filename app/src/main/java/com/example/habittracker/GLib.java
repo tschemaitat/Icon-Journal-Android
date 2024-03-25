@@ -23,6 +23,16 @@ public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
     public static final int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
 
+    public static final int initialHorMargin = 15;
+    public static final int initialVertMargin = 10;
+
+    public static GroupWidget createInitialGroupWidget(Context context){
+        GroupWidget groupWidget = new GroupWidget(context);
+        groupWidget.setMargin(initialHorMargin, initialVertMargin);
+        return groupWidget;
+    }
+
+
     public static int calculateTextWidth(String text, float textSize, Typeface typeface) {
 
 

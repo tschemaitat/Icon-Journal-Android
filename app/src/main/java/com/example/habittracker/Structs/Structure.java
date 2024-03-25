@@ -18,7 +18,7 @@ public class Structure {
         this.type = type;
     }
     public Structure(){
-        name = "null";
+        name = null;
         param = new GroupWidget.GroupWidgetParam(null, new ArrayList<>());
         type = null;
     }

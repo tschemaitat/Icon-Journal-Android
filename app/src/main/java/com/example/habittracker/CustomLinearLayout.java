@@ -2,8 +2,11 @@ package com.example.habittracker;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -18,6 +21,7 @@ public class CustomLinearLayout {
     private ConstraintLayout outlineLayout;
     private LinearLayout widgetLayout;
     private LinearLayout buttonAndWidgetLayout;
+    private RelativeLayout nameLayout;
     private View addButton = null;
     private TextView nameTextView;
     ArrayList<View> views = new ArrayList<>();
@@ -50,14 +54,16 @@ public class CustomLinearLayout {
     }
 
     public void addName(String name){
+        addNameLayout();
         if(nameTextView == null){
             nameTextView = new TextView(context);
             nameTextView.setText(name);
-            buttonAndWidgetLayout.addView(nameTextView, 0);
+            nameLayout.addView(nameTextView, 0);
 
             int margin = GLib.dpToPx(context, 20);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
             layoutParams.setMargins(40, 0, 0, 10);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             nameTextView.setLayoutParams(layoutParams);
             return;
         }
@@ -66,11 +72,35 @@ public class CustomLinearLayout {
 
     }
 
+    public void setNameColor(int color){
+        nameTextView.setTextColor(color);
+    }
+
+    private View nameEditor;
+    public static final int nameEditorRightMargin = 120;
+    public void addNameEditor(View view){
+        addNameLayout();
+
+        nameLayout.addView(view, 0);
+
+        int margin = GLib.dpToPx(context, 20);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        view.setLayoutParams(layoutParams);
+        view.setPadding(1000, verticalMargin, nameEditorRightMargin, verticalMargin);
+        nameEditor = view;
+        return;
+
+    }
+
     public void setMargin(int dpHor, int dpVert){
-        verticalMargin = dpVert;
-        horizontalMargin = dpHor;
+
+        verticalMargin =  GLib.dpToPx(context, dpVert);;
+        horizontalMargin =  GLib.dpToPx(context, dpHor);;
         for(View view: views){
             setLayoutParams(view);
+        }
+        if(nameEditor != null){
+            nameEditor.setPadding(horizontalMargin, verticalMargin, nameEditorRightMargin, verticalMargin);
         }
     }
 
@@ -89,13 +119,35 @@ public class CustomLinearLayout {
     }
 
     public void setLayoutParams(View view){
-        view.setLayoutParams(linearLayoutParams(verticalMargin, horizontalMargin));
+        view.setLayoutParams(linearLayoutParams());
     }
 
-    public void insertButton(View.OnClickListener listener){
+    public void addButton(View.OnClickListener listener){
+        addNameLayout();
         hasButton = true;
         addButton = GLib.getButton(listener, context);
+        setLayoutParams(addButton);
         buttonAndWidgetLayout.addView(addButton);
+    }
+
+    public void addDeleteButton(){
+        addNameLayout();
+        ImageButton deleteButton = (ImageButton) GLib.inflate(R.layout.delete_button);
+        //deleteButton.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+        nameLayout.addView(deleteButton);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
+        layoutParams.setMargins(20,20,20,20);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        deleteButton.setLayoutParams(layoutParams);
+    }
+
+    public void addNameLayout(){
+        if(nameLayout == null){
+            nameLayout = new RelativeLayout(context);
+            nameLayout.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+            nameLayout.setMinimumWidth(2000);
+            buttonAndWidgetLayout.addView(nameLayout, 0);
+        }
     }
 
     public void removeButton(){
@@ -109,7 +161,7 @@ public class CustomLinearLayout {
 
     private LinearLayout createWidgetLayout(){
         LinearLayout linearLayout = new LinearLayout(context);
-        linearLayout.setLayoutParams(linearLayoutParams(0, 0));
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
     }
@@ -130,11 +182,10 @@ public class CustomLinearLayout {
         return layoutParams;
     }
 
-    public LinearLayout.LayoutParams linearLayoutParams(int dpVert, int dpHor){
-        int vert = GLib.dpToPx(context, dpVert);
-        int hor = GLib.dpToPx(context, dpHor);
+    public LinearLayout.LayoutParams linearLayoutParams(){
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
-        layoutParams.setMargins(hor, vert, rightMargin, vert);
+        layoutParams.setMargins(horizontalMargin, verticalMargin, rightMargin, verticalMargin);
         return layoutParams;
     }
 

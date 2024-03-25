@@ -48,8 +48,9 @@ public class EditorSelectionPage implements Inflatable {
         SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position) -> {
             inflateStructureEditor(value);
         }, () -> {
-            inflateStructureEditor("null");
+            inflateStructureEditor(null);
         });
+        parentLayout.addView(structureSelection.getView());
     }
 
     public void inflateStructureEditor(String structureKey){
