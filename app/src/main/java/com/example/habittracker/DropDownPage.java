@@ -55,6 +55,8 @@ public class DropDownPage {
     }
 
     public DropDownPage getOrAdd(String name){
+        if(name == null)
+            throw new RuntimeException("null name in getOrAdd function");
         for(DropDownPage page: children){
             if(page.name.equals(name))
                 return page;

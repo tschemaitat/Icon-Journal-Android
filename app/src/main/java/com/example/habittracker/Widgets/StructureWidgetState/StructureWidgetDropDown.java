@@ -79,7 +79,6 @@ public class StructureWidgetDropDown implements Widget {
         System.out.println("resetting gorup key widget");
         groupWidget.removeWidget(groupKeyDropDowns);
         groupKeyDropDowns = null;
-        selectedGroupKeys = null;
     }
 
     private void onValueKeyChange(){
@@ -103,7 +102,7 @@ public class StructureWidgetDropDown implements Widget {
 
 
 
-    private ArrayList<ItemPath> selectedGroupKeys = null;
+
 
     private void createValueKeyDropDown(){
         //System.out.println("creating value key drop down");
@@ -136,8 +135,17 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void addGroupBy(){
+
+        ArrayList<ItemPath> groupValues = getGroupValues();
+        validateGroupValues(groupValues);
+        System.out.println("adding group by: " + groupValues);
+        while(groupValues.remove(null)){
+
+        }
+
+
         //System.out.println("adding groupBy");
-        DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
+        DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(groupValues));
         //System.out.println("group by page: \n" + page);
         DropDownSpinner dropDown = (DropDownSpinner)GLib.inflateWidget(context, new DropDownSpinner.StaticDropDownParameters("group by", page));
         dropDown.setOnDataChangedListener(() -> processGroupItemSelected());
@@ -148,10 +156,23 @@ public class StructureWidgetDropDown implements Widget {
             groupKeyDropDowns.removeButton();
     }
 
+    private void validateGroupValues(ArrayList<ItemPath> groupValues){
+        //this is called by addGroupBy and checks for if there is a value after a null value just for debugging
+        boolean nullFound = false;
+        for(ItemPath itemPath: groupValues){
+            if(itemPath != null){
+                if(nullFound)
+                    throw new RuntimeException("group values are messed up: " + groupValues);
+                continue;
+            }
+            nullFound = true;
+        }
+    }
+
     private void processGroupItemSelected(){
         groupKeyDropDowns.resetNameColor();
         ArrayList<DropDownSpinner> dropDowns = getGroupDropDownList();
-        selectedGroupKeys = new ArrayList<>();
+        ArrayList<ItemPath> selectedGroupKeys = getGroupValues();
         int removeIndex = dropDowns.size();
         for(int i = 0; i < dropDowns.size(); i++){
             DropDownSpinner dropDown = dropDowns.get(i);
@@ -183,7 +204,6 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void makeGroupKeyDropDowns(){
-        selectedGroupKeys = new ArrayList<>();
         //System.out.println("groupby widget group is null, making group key drop downs");
         groupKeyDropDowns = new GroupWidget(context);
         groupKeyDropDowns.setName("group by");
@@ -204,7 +224,8 @@ public class StructureWidgetDropDown implements Widget {
         ArrayList<DropDownSpinner> dropDowns = getGroupDropDownList();
         ArrayList<ItemPath> items = new ArrayList<>();
         for(DropDownSpinner dropDown: dropDowns){
-            items.add(dropDown.getSelectedPath());
+            ItemPath item = dropDown.getSelectedPath();
+            items.add(item);
         }
         return items;
     }
@@ -213,6 +234,7 @@ public class StructureWidgetDropDown implements Widget {
     private ArrayList<ItemPath> getGroupKeyList(){
         //System.out.println("getting group key list");
         ArrayList<ItemPath> items = DataTree.gatherItems(Dictionary.header(structureKey()));
+        System.out.println("DataTree.gatherItems(Dictionary.header(structureKey())) = " + DataTree.gatherItems(Dictionary.header(structureKey())));
         items.remove(valueKeyDropDown.getSelectedPath());
         return items;
     }
@@ -225,6 +247,8 @@ public class StructureWidgetDropDown implements Widget {
     }
     private ArrayList<String> valueKeyList(String structureKey){
         DataTree header = Dictionary.header(structureKey);
+        if(header == null)
+            throw new RuntimeException("header null key: " + structureKey);
         ArrayList<String> headerList = new ArrayList<>();
         for(int i = 0; i < header.size(); i++){
             if(!header.hasChildren(i))

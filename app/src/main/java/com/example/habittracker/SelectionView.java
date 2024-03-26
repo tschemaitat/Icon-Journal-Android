@@ -2,7 +2,6 @@ package com.example.habittracker;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,6 +17,9 @@ public class SelectionView {
     OnSelected onSelected;
     OnAdd onAdd;
     ListView listView;
+    int textViewResource;
+
+    public static final String addString = "add";
     public SelectionView(Context context, ArrayList<String> options, OnSelected onSelected, OnAdd onAdd){
         this.context = context;
         this.options = (ArrayList<String>) options.clone();
@@ -56,7 +58,7 @@ public class SelectionView {
 
 
     public View getView(){
-        return relativeLayout;
+        return listView;
     }
 
 
@@ -84,27 +86,31 @@ public class SelectionView {
 
         int numItems = options.size();
         listView = new ListView(context);
-        //listView.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+
 
         relativeLayout = new RelativeLayout(context);
-        RelativeLayout.LayoutParams listViewLayoutParam = new RelativeLayout.LayoutParams(-2, -2);
-        listViewLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT);
-        listView.setLayoutParams(listViewLayoutParam);
-        relativeLayout.addView(listView);
-        listView.setMinimumHeight(600);
+        //RelativeLayout.LayoutParams listViewLayoutParam = new RelativeLayout.LayoutParams(-2, -2);
+        //listViewLayoutParam.addRule(RelativeLayout.CENTER_IN_PARENT);
+        //listView.setLayoutParams(listViewLayoutParam);
+        //relativeLayout.addView(listView);
+        listView.setMinimumHeight(1000);
 
+        if(onAdd != null)
+            options.add(addString);
+
+        textViewResource = android.R.layout.simple_list_item_1;
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-                android.R.layout.simple_expandable_list_item_1, options);
+                textViewResource, options);
         listView.setAdapter(adapter);
-        if(onAdd != null)
-            options.add("add");
+        int textViewHeight = 0;
+        if(options.size() > 0)
+            textViewHeight = getTextHeight(options.get(0));
+        System.out.println("predicted textView hiehgt: " + textViewHeight);
+
+        listView.setLayoutParams(new LinearLayout.LayoutParams(-1, textViewHeight * options.size()));
+
         listView.post(() -> {
-            if(listView.getAdapter().getCount() == 0)
-                return;
-            int childHeight = listView.getChildAt(0).getHeight();
-            int listHeight = childHeight * listView.getDividerHeight();
-            listView.setMinimumHeight(listHeight);
             for(int i = 0; i < listView.getChildCount(); i++){
                 TextView child = (TextView) listView.getChildAt(i);
                 child.setTextColor(context.getColor(R.color.purple));
@@ -113,18 +119,43 @@ public class SelectionView {
 
         // Set the click listener for the list items
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
-            if(i < numItems){
-                onSelected.onSelected(options.get(i), i);
-            }else{
-                if(onAdd == null)
-                    throw new IndexOutOfBoundsException("no add but but index out of bounds size: " + numItems + ", index: " + i);
+            System.out.println("item selected in list: " + i);
+            TextView textView = (TextView) view;
+            String value = (String) textView.getText();
+            int numOptions = getOptions().size();
+            if(value.equals(addString)){
                 onAdd.onAdd();
+                return;
             }
+            if(onAdd != null)
+                numOptions = numOptions - 1;
+
+            if(i < numOptions) {
+                onSelected.onSelected(getOptions().get(i), i);
+                return;
+            }
+            throw new RuntimeException("list error index selected:  " + i + " value: " + value + ", options: " + getOptions());
+
+
         });
-        System.out.println("finsihed creating list: " + listView.getAdapter().getCount());
+        System.out.println("finsihed creating list num views: " + listView.getChildCount() + " array: " + options);
+    }
+
+    private ArrayList<String> getOptions(){
+        return options;
     }
 
     public View getChild(int index){
         return listView.getChildAt(index);
+    }
+
+    public int getTextHeight(String s){
+        TextView textView = (TextView) GLib.inflate(textViewResource);
+        textView.setText(s);
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(1000, View.MeasureSpec.AT_MOST); // Specify the parent width if known, or a default width
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(2000, View.MeasureSpec.UNSPECIFIED); // Unspecified for height
+        textView.measure(widthMeasureSpec, heightMeasureSpec);
+        int desiredHeight = textView.getMeasuredHeight();
+        return desiredHeight;
     }
 }

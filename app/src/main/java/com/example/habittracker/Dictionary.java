@@ -6,11 +6,16 @@ package com.example.habittracker;
 
 
 
+import android.content.Context;
+
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.DropDownSpinner;
 import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ListWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +25,8 @@ public class Dictionary {
     public static final String category = "category";
     public static final String journal = "journal";
     public static final String template = "template";
+
+
 
 
     //static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
@@ -35,9 +42,14 @@ public class Dictionary {
     }
 
     static{
-        //generateDeepStructure();
-        //generateShowGenreStructure();
+
+
+    }
+
+    public static void generate(Context context){
         generateStructure();
+        //generateDeepStructure();
+        generateShowGenreStructure(context);
     }
 
     public static void saveStructure(Structure structure){
@@ -48,6 +60,10 @@ public class Dictionary {
         if(structure.getType() == null)
             throw new RuntimeException("saved structure with null type");
         System.out.println("saving structure with name: " + structure.getName());
+
+        if(structure.getHeader() == null)
+            throw new RuntimeException("saved structure couldn't make a header");
+
         structures.put(structure.getName(), structure);
     }
 
@@ -97,7 +113,10 @@ public class Dictionary {
         Structure entry = structures.get(structureKey);
         if(entry == null)
             throw new NullPointerException("structureKey wrong: " + structureKey);
-        return entry.getHeader();
+        DataTree header = entry.getHeader();
+        if(header == null)
+            throw new RuntimeException("header null structure key: " + structureKey);
+        return header;
     }
 
     public static DropDownPage getTypes(){
@@ -105,7 +124,7 @@ public class Dictionary {
                 "edit text",
                 "list",
                 DropDownSpinner.className,
-                "slider"
+                "sliderfds"
         };
 
         return new DropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
@@ -170,113 +189,47 @@ public class Dictionary {
         return groupToValue;
     }
 
-    public static void generateShowGenreStructure(){
-        Object[] reLife = new Object[]{
-                "ReLIFE",
-                new Object[]{
-                        "romance",
+    public static void generateShowGenreStructure(Context context){
+
+
+        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+                new CustomEditText.EditTextParam("name", null),
+                new ListWidget.ListParam("genres", new EntryWidgetParam[]{
+                        new CustomEditText.EditTextParam("genre", null)     }),
+                new ListWidget.ListParam("attributes", new EntryWidgetParam[]{
+                        new CustomEditText.EditTextParam("attribute", null)     })
+        });
+
+        DataTree dataTree1 = new DataTree().put(
+                new DataTree().put("ReLIFE"),
+                new DataTree().put("romance",
                         "isekai",
-                        "working together"
-                },
-                new Object[]{
-                        "composition",
+                        "working together"),
+                new DataTree().put("composition",
                         "character progression",
                         "character",
-                        "story"
-                }
-        };
-
-        Object[] newGame = new Object[]{
-                "NEW GAME!",
-                new Object[]{
-                        "working together",
-                        "girls doing cute things"
-                },
-                new Object[]{
+                        "story")
+        );
+        DataTree dataTree2 = new DataTree().put(
+                new DataTree().put("NEW GAME!"),
+                new DataTree().put("working together",
+                        "girls doing cute things"),
+                new DataTree().put("composition",
                         "character",
-                        "dialogue"
-                }
-        };
+                        "dialogue")
+        );
+        DataTree dataTree3 = new DataTree().put(
+                new DataTree().put("The Rising of the Shield Hero"),
+                new DataTree().put("isekai"),
+                new DataTree().put("character")
+        );
 
-        Object[] shield = new Object[]{
-                "The Rising of the Shield Hero",
-                new Object[]{
-                        "isekai"
-                },
-                new Object[]{
-                        "character"
-                }
-        };
-        Object[][] objects = new Object[][]{reLife, newGame, shield};
-        ArrayList<DataTree> trees = DataTree.convert(objects);
 
-        Object[] header = new Object[]{
-                "name",
-                new KeyPair("genres",new Object[]{"genre"}),
-                new KeyPair("attributes",new Object[]{"attribute"})
-        };
-        DataTree showHeader = DataTree.convertHeader(header);
-        DictEntry shows = new DictEntry("shows", showHeader, trees, DictEntry.dictionary);
-        //dictEntryMap.put(shows.key, shows);
+        Structure structure = new Structure("shows", groupWidgetParam, category, new ArrayList<>(Arrays.asList(dataTree1, dataTree2, dataTree3)));
+        System.out.println(groupWidgetParam.hierarchyString());
+        saveStructure(structure);
 
 
 
-
-    }
-
-    public static void generateDeepStructure(){
-        // ReLIFE
-
-        Object[][] specificGenres = new Object[][]{
-                new Object[]{
-                        "if new game and isekai combined",
-                        new Object[]{//array of specific genres
-                                new Object[]{//one specific genre
-                                        "isekai comedy",
-                                        new Object[]{//array of sub genres
-                                                new Object[]{
-                                                        "isekai",
-                                                        "0.4"
-                                                },
-                                                new Object[]{
-                                                        "comedy",
-                                                        "0.6"
-                                                },
-                                        },
-                                        "0.5"
-                                },
-                                new Object[]{
-                                        "slice of girls making games",
-                                        new Object[]{
-                                                new Object[]{
-                                                        "slice of life",
-                                                        "0.4"
-                                                },
-                                                new Object[]{
-                                                        "girls doing cute things",
-                                                        "0.6"
-                                                },
-                                                new Object[]{
-                                                        "video games",
-                                                        "0.6"
-                                                },
-                                        },
-                                        "0.5"
-                                }
-                        }
-                }};
-        Object[] header = new Object[]{
-                "name",
-                new KeyPair("specific genres",new Object[]{
-                        "specific genre name",
-                        new KeyPair("sub genres", new Object[]{
-                                "sub genre",
-                                "weight"
-                        }),
-                        "weight"
-                })
-        };
-        DictEntry shows = new DictEntry("specific genres", DataTree.convertHeader(header), DataTree.convert(specificGenres), DictEntry.dictionary);
-        //dictEntryMap.put(shows.key, shows);
     }
 }

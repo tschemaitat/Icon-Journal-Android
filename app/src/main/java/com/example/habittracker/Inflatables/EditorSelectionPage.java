@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.R;
 import com.example.habittracker.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
@@ -26,6 +27,8 @@ public class EditorSelectionPage implements Inflatable {
         parentLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
         parentLayout.setLayoutParams(params);
+        parentLayout.setId(R.id.editorSelectionLayout);
+        parentLayout.setMinimumHeight(1000);
     }
 
     public void createFolders(){

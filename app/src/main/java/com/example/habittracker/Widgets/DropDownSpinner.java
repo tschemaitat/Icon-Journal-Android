@@ -1,22 +1,16 @@
 package com.example.habittracker.Widgets;
 
-import android.content.Context;
-import android.graphics.Typeface;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.habittracker.DataTree;
+import com.example.habittracker.SelectionView;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.DropDownPage;
-import com.example.habittracker.Structs.Pair;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 
@@ -28,7 +22,6 @@ public class DropDownSpinner extends EntryWidget {
     public static final String className = "drop down";
     private boolean dataSet = false;
     private Context context;
-    private ArrayList<ArrayList<Pair<Integer, String>>> optionPages;
     private String structureKey = null;
     private String valueKey = null;
     private ArrayList<ItemPath> groups = new ArrayList<>();
@@ -41,7 +34,9 @@ public class DropDownSpinner extends EntryWidget {
 
     public static String nullValue = "select option";
 
-    AppCompatSpinner spinner;
+    CustomPopup customPopup;
+
+    SelectionView buttonSelectionView;
 
 
 
@@ -49,8 +44,6 @@ public class DropDownSpinner extends EntryWidget {
     private ItemPath selectedValuePath = null;
     public DropDownSpinner(Context context) {
         super(context);
-        spinner = new AppCompatSpinner(context);
-        setChild(spinner);
         this.context = context;
         init();
     }
@@ -58,153 +51,104 @@ public class DropDownSpinner extends EntryWidget {
 
 
     private void init(){
-        setListener();
-        selectedValuePath = new ItemPath(nullValue);
 
-        //super.performClick();
-//        setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                System.out.println("spinner got clicked!");
-//            }
-//        });
+        selectedValuePath = new ItemPath(nullValue);
+        createButton();
+
     }
 
-    private void setOptions(ArrayList<String> spinnerOptions){
-        //System.out.println("setting options");
-        //ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerOptions);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerOptions) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                TextView view = (TextView) super.getView(position, convertView, parent);
-                // Customize your item here (for the selected item shown in the spinner)
-                //view.setTextColor(Color.BLUE); // Set text color
-                //view.setTypeface(view.getTypeface(), Typeface.BOLD); // Make text bold
-                return view;
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                TextView view = (TextView) super.getDropDownView(position, convertView, parent);
-                // Customize your dropdown item here
-                // Example: Set different colors for odd and even rows
-//                if (position % 2 == 0) {
-//                    view.setTextColor(Color.RED); // Set text color for even rows
-//                } else {
-//                    view.setTextColor(Color.GREEN); // Set text color for odd rows
-//                }
-                int numberSpecialOptions = 1;
-                if(currentPage != parentPage)
-                    numberSpecialOptions = 2;
-                if(position < numberSpecialOptions)
-                    view.setTypeface(view.getTypeface(), Typeface.BOLD); // Make text bold
-                return view;
-            }
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        selectedValuePath = new ItemPath(nullValue);
-
-        //System.out.println("super.getAdapter().getCount() = " + super.getAdapter().getCount());
+    private void setOptions(String title, ArrayList<String> spinnerOptions){
+        if(currentPage == parentPage){
+            customPopup.setText("select option", spinnerOptions);
+        }else
+            customPopup.setText(title, spinnerOptions);
+        selectedValuePath = null;
 
     }
-    boolean dummy_selection_zero = true;
+
+    private void setOptionsOfPage(){
+        setOptions(currentPage.name, formatOptions(currentPage));
+    }
+
+    private void createButton(){
+        buttonSelectionView = new SelectionView(context, new String[]{"select option"}, (stringValue, position) -> {
+            //on button pressed
+            createPopUp();
+        }, null);
+        setChild(buttonSelectionView.getView());
+    }
 
 
-    private void setListener(){
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //System.out.println("Item selected: " + i);
-                processSelectedItem(adapterView, view, i, l);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                currentPage = parentPage;
-                setOptions(formatOptions(parentPage));
-                spinner.setSelection(0);
-                selectedValuePath = new ItemPath(nullValue);
-
-                //System.out.println("Nothing selected");
-            }
+    private void createPopUp(){
+        customPopup = new CustomPopup(context, "", new ArrayList<>(), (stringValue, position) -> {
+            onItemSelected(position);
+            }, () -> {
+            onBackSelected();
+        }, ()->{
+            //on nothing selected
+            dataChanged(null);
         });
+        setOptionsOfPage();
+        customPopup.enableBack();
+        customPopup.showPopupWindow(this.getView());
     }
 
-    private void processSelectedItem(AdapterView<?> adapterView, View view, int i, long l){
-        if(i == 0){
-            selectedValuePath = new ItemPath(nullValue);
 
+
+    private void onItemSelected(int position){
+        DropDownPage clickedPage = currentPage.get(position);
+        if(!clickedPage.hasChildren()){
+            //System.out.println("got final value: " + clickedPage.name);
+            //System.out.println("option: \n" + clickedPage.name + "\n is not a folder, leaving");
+
+            dataChanged(clickedPage.name);
             return;
         }
-        //if user pressed back button
-        if( currentPage != parentPage && i == 1){
-            currentPage = currentPage.parent;
-            //System.out.println("going back from " + currentPage + "to " + currentPage);
+        if(currentPage == parentPage){
+            customPopup.addBackIcon();
         }
-        //if user press a value
-        else{
-            int numberNotOptions = 1;
-            if(currentPage != parentPage)
-                numberNotOptions = 2;
-            //set option selected to the index of the page's options
-            DropDownPage clickedPage = currentPage.get(i - numberNotOptions);
-            //System.out.printf("selected: " + clickedPage.name);
-            if(!clickedPage.hasChildren()){
-                //option chosen is not a folder
-                //System.out.println("option: \n" + clickedPage.name + "\n is not a folder, leaving");
-                dataChanged(clickedPage.name);
-                return;
-            }
-            //add new page to page stack
-
-            //set currentpage
-            currentPage = clickedPage;
-
-            //System.out.println("new current page: " + currentPage);
-        }
-        int numSpecialButton = 1;
-        if(currentPage != parentPage){
-            numSpecialButton = 2;
-        }
-
-        //set options to new page
-        setOptions(formatOptions(currentPage));
-
-        dummy_selection_zero = true;
-        //System.out.println("dummy_selection_zero = " + dummy_selection_zero);
-        doDelayedClick(adapterView);
+        currentPage = clickedPage;
+        setOptionsOfPage();
     }
 
-    private void doDelayedClick(AdapterView<?> adapterView){
-        adapterView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("performing click");
-                adapterView.performClick();
-            }
-        }, 0);
+    private void onBackSelected() {
+        //System.out.println("back button");
+        if(currentPage == parentPage){
+            dataChanged(null);
+            return;
+        }
+        if(currentPage.parent == parentPage){
+            customPopup.removeBackIcon();
+        }
+        //on back button
+        currentPage = currentPage.parent;
+        setOptionsOfPage();
     }
 
     private void dataChanged(String newValue){
-        System.out.println("<drop down>data changed: " + newValue);
+        //System.out.println("<drop down>data changed: " + newValue);
         ArrayList<String> path = currentPage.getPath();
         path.add(newValue);
         selectedValuePath = new ItemPath(path);
 
         onDataChangedListener().run();
 
+        if(newValue == null)
+            buttonSelectionView.setText(new String[]{"select option"});
+        else
+            buttonSelectionView.setText(new String[]{getSelectedString()});
+
+        customPopup.close();
+        customPopup = null;
     }
 
 
     public ArrayList<String> formatOptions(DropDownPage page){
         ArrayList<String> result = new ArrayList<>();
+        if(!page.hasChildren())
+            throw new RuntimeException("page doesn't have children");
 
-
-        result.add(nullValue);
-        if(currentPage != parentPage)
-            result.add("Back");
         for(DropDownPage option: page.children){
             if(!option.hasChildren()){
                 result.add(option.name);
@@ -214,7 +158,8 @@ public class DropDownSpinner extends EntryWidget {
         }
 
         //System.out.println("formatted page: \n\t" + result);
-
+        if(result.size() == 0)
+            throw new RuntimeException("result doesn't have any values");
         return result;
     }
 
@@ -238,10 +183,9 @@ public class DropDownSpinner extends EntryWidget {
     }
 
     public String getSelectedString(){
-        String selected = selectedValuePath.getName();
-        if(selected.equals(nullValue))
+        if(selectedValuePath == null)
             return null;
-        return selected;
+        return selectedValuePath.getName();
     }
 
     public ItemPath getSelectedPath(){
@@ -274,7 +218,7 @@ public class DropDownSpinner extends EntryWidget {
             selectedValuePath = dropDownParams.selected;
             int specialOptions = 1;
             //System.out.println("setting data for spinner: \n" + parentPage);
-            setOptions(formatOptions(currentPage));
+            //setOptionsOfPage();
             return;
         }
         StaticDropDownParameters staticParams = (StaticDropDownParameters) params;
@@ -282,12 +226,12 @@ public class DropDownSpinner extends EntryWidget {
         parentPage = staticParams.page;
         currentPage = parentPage;
         selectedValuePath = new ItemPath(nullValue);
-        setOptions(formatOptions(currentPage));
+        //setOptionsOfPage();
 
     }
 
     public void resetValue(){
-        selectedValuePath = new ItemPath(nullValue);
+        selectedValuePath = null;
         currentPage = parentPage;
     }
 

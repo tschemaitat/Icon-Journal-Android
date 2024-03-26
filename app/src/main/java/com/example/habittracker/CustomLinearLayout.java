@@ -41,7 +41,7 @@ public class CustomLinearLayout {
         outlineLayout.addView(buttonAndWidgetLayout);
 
         widgetLayout = createWidgetLayout();
-        widgetLayout.setId(R.id.widgetLayout);
+        widgetLayout.setId(R.id.editorSelectionLayout);
         buttonAndWidgetLayout.addView(widgetLayout);
 
 

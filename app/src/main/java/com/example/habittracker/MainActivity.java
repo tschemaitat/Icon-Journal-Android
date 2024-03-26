@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
 
         MainActivity.context = this;
+        Dictionary.generate(context);
         setContentView(R.layout.activity_main);
         scrollView = findViewById(R.id.scrollView);
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         buttonInflateBufferLayout = findViewById(R.id.ButtonInflateBufferLayout);
 
         inflateLayout = findViewById(R.id.inflateLayout);
+        inflateLayout.setMinimumHeight(1000);
 
         //currentLayout = testWidgetGroup;
         setupLayoutButtons();

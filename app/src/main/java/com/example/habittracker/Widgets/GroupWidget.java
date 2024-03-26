@@ -144,15 +144,9 @@ public class GroupWidget extends EntryWidget {
         }
 
         public String hierarchyString(int numTabs){
-            String singleTab = "\t";
-            String tabs = "";
-
-            for(int i = 0; i < numTabs; i++)
-                tabs += singleTab;
-            String result = tabs + "group widget\n";
-            for(EntryWidgetParam widgetParam: params){
-                result += widgetParam.hierarchyString(numTabs + 1);
-            }
+            String tabs = GLib.tabs(numTabs);
+            String result = tabs + "group widget ("+name+") \n";
+            result += hierarchyStringFromList(numTabs);
             return result;
         }
 
@@ -162,7 +156,15 @@ public class GroupWidget extends EntryWidget {
             for(EntryWidgetParam param: params){
                 header.add(param.header());
             }
-            return null;
+            return header;
+        }
+
+        public String hierarchyStringFromList(int numTabs){
+            String result = "";
+            for(EntryWidgetParam widgetParam: params){
+                result += widgetParam.hierarchyString(numTabs + 1);
+            }
+            return result;
         }
     }
 }

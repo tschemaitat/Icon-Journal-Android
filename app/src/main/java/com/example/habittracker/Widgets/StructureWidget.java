@@ -55,12 +55,22 @@ public class StructureWidget implements Widget {
         typeDropDown.resetNameColor();
         //System.out.println("<StructureWidget>data changed");
         String type = typeDropDown.getSelectedString();
-        //System.out.println("type = " + type);
+        //System.out.println("type = " + type)
+        if(type == null){
+            if(currentType == null)
+                return;
+            currentType = type;
+            setType();
+            return;
+        }
 
-        if( ! currentType.equals(type) )
-            setType(type);
+        if( ! type.equals(currentType) ){
+            currentType = type;
+            setType();
+        }
 
-        currentType = type;
+
+
     }
 
     public void onDataChange(){
@@ -69,26 +79,26 @@ public class StructureWidget implements Widget {
 
 
 
-    public void setType(String type){
+    public void setType(){
         //System.out.println("reset type");
         clearWidgets();
         typeSwitch:{
-            if(type.equals(DropDownSpinner.nullValue)){
+            if(currentType == null){
 
                 //System.out.println("structure type null");
                 return;
             }
-            if(type.equals("list")){
+            if(currentType.equals("list")){
                 structureWidgetList = new StructureWidgetList(context, groupWidget);
                 return;
             }
-            if(type.equals("drop down")){
+            if(currentType.equals("drop down")){
                 structureWidgetDropDown = new StructureWidgetDropDown(context, groupWidget);
                 return;
             }
 
 
-            if(type.equals("edit text")){
+            if(currentType.equals("edit text")){
                 structureWidgetEditText = new StructureWidgetEditText(context, groupWidget);
                 return;
             }
@@ -153,7 +163,8 @@ public class StructureWidget implements Widget {
         String type = param.className;
         nameEditor.setText(param.name);
         typeDropDown.setSelected(type);
-        setType(type);
+        currentType = type;
+        setType();
         typeSwitch:{
 
             if(type.equals(ListWidget.className)){

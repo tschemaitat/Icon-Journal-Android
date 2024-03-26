@@ -5,6 +5,7 @@ import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DataTree {
     private String name;
@@ -12,8 +13,35 @@ public class DataTree {
     public DataTree(){
     }
 
+    public DataTree put(ArrayList<DataTree> dataTrees){
+        for(DataTree dataTree: dataTrees){
+            list.add(dataTree);
+        }
+        return this;
+    }
+
+    public DataTree put(DataTree ... dataTrees){
+        put(new ArrayList<>(Arrays.asList(dataTrees)));
+        return this;
+    }
+
     public DataTree(String name){
         this.name = name;
+    }
+
+
+
+    public DataTree put(String ... strings){
+        for(String s: strings){
+            DataTree dataTree = new DataTree();
+            dataTree.name = s;
+            list.add(dataTree);
+        }
+        return this;
+    }
+
+    public ArrayList<DataTree> getList(){
+        return (ArrayList<DataTree>) list.clone();
     }
 
     public void add(String string){

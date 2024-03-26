@@ -16,15 +16,24 @@ public class Structure {
         this.name = name;
         this.param = param;
         this.type = type;
+        entries = new ArrayList<>();
+    }
+
+    public Structure(String name, EntryWidgetParam param, String type, ArrayList<DataTree> entries){
+        this.name = name;
+        this.param = param;
+        this.type = type;
+        this.entries = entries;
     }
     public Structure(){
         name = null;
         param = new GroupWidget.GroupWidgetParam(null, new ArrayList<>());
         type = null;
+        entries = new ArrayList<>();
     }
 
     public ArrayList<DataTree> getEntries(){
-        return null;
+        return entries;
     }
 
     public String getName(){

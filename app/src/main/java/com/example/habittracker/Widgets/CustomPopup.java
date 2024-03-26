@@ -62,6 +62,7 @@ public class CustomPopup {
         //relative layout with LinearLayout params added to linearLayout
         nameLayout = new RelativeLayout(context);
         nameLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        nameLayout.setBackgroundColor(context.getColor(R.color.dark2));
         linearLayout.addView(nameLayout);
 
         //name with RelativeLayout params added to nameLayout
@@ -89,7 +90,13 @@ public class CustomPopup {
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                onNothingSelected.run();
+                if(closed){
+                    //System.out.println("pop was manually dismissed");
+                }else{
+                    //System.out.println("pop up was dismissed");
+                    onNothingSelected.run();
+                }
+
             }
         });
         //popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -98,14 +105,16 @@ public class CustomPopup {
 
 
     }
-    boolean closed = false;
+    private boolean closed = false;
 
     public void close(){
+        //System.out.println("manually closing pop up");
         closed = true;
         popupWindow.dismiss();
     }
 
     public void onSelection(String value, int index){
+        //System.out.println("value selected of popup");
         if(!closed)
             onItemSelected.onSelected(value, index);
     }
@@ -116,25 +125,30 @@ public class CustomPopup {
     }
 
     public void setText(String title, ArrayList<String> options){
+        System.out.println("popup: setting text. title: " + title + ", options: " + options);
         name.setText(new String[]{title});
         optionsSelectionView.setText(options);
     }
 
     public void enableBack(){
         backEnabled = true;
-        nameLayout.addView(backIcon);
 
-        backIcon.post(()->{
-            TextView textView = (TextView) name.getChild(0);
-            int startOfTextView = textView.getLeft(); // Relative to parent
-            int startOfTextInTextView = startOfTextView + textView.getPaddingLeft(); // Assuming text starts after padding
-            backIcon.setLayoutParams(RelParam.alignLeft(100,100).margins(startOfTextInTextView - backIcon.getDrawable().getMinimumWidth() - 10, 0, 0, 0));
-
-        });
     }
 
     public void disableBack(){
         backEnabled = false;
+    }
+
+    public void addBackIcon(){
+        System.out.println("addBackIcon");
+        nameLayout.addView(backIcon);
+        TextView textView = (TextView) name.getChild(0);
+        int startOfTextView = textView.getLeft(); // Relative to parent
+        int startOfTextInTextView = startOfTextView + textView.getPaddingLeft(); // Assuming text starts after padding
+        backIcon.setLayoutParams(RelParam.alignLeft(100,100).margins(startOfTextInTextView - backIcon.getDrawable().getMinimumWidth() - 10, 0, 0, 0));
+    }
+
+    public void removeBackIcon(){
         nameLayout.removeView(backIcon);
     }
 

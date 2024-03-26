@@ -93,7 +93,6 @@ public class ListWidget extends EntryWidget {
 
 
     public static class ListParam extends EntryWidgetParam {
-        public String name = "null";
         public GroupWidget.GroupWidgetParam cloneableWidget;
         public ArrayList<GroupWidgetParam> currentWidgets;
 
@@ -120,13 +119,14 @@ public class ListWidget extends EntryWidget {
 
         public String hierarchyString(int numTabs){
 
-            return GLib.tabs(numTabs) + "list\n"
-                    + cloneableWidget.hierarchyString(numTabs + 1);
+            return GLib.tabs(numTabs) + "list ("+name+")\n"
+                    + cloneableWidget.hierarchyStringFromList(numTabs + 1);
         }
 
         @Override
         public DataTree header() {
             DataTree tree = cloneableWidget.header();
+            tree = new DataTree(name).put(tree.getList());
 
             return tree;
         }
