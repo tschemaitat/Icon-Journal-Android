@@ -9,7 +9,7 @@ package com.example.habittracker;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.KeyPair;
 import com.example.habittracker.Structs.Structure;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.DropDownSpinner;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
@@ -17,45 +17,37 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Dictionary {
+    public static final String category = "category";
+    public static final String journal = "journal";
+    public static final String template = "template";
 
-    static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
 
-    private static HashMap<String, Structure> categoryStructures = new HashMap<>();
-    private static HashMap<String, Structure> journalStructures = new HashMap<>();
-    private static HashMap<String, Structure> templateStructures = new HashMap<>();
+    //static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
+
     private static HashMap<String, Structure> structures = new HashMap<>();
 
 
     public static void addStructure(Structure structure){
-        if(structure.getName().equals("null"))
+        if(structure.getName() == null)
             throw new RuntimeException("structure name not set");
-        ifSwitch:{
-            if(structure.getType().equals("category")) {
-                categoryStructures.put(structure.getName(), structure);
-                break ifSwitch;
-            }
-            if(structure.getType().equals("journal")) {
-                journalStructures.put(structure.getName(), structure);
-                break ifSwitch;
-            }
-            if(structure.getType().equals("template")) {
-                templateStructures.put(structure.getName(), structure);
-                break ifSwitch;
-            }
-            throw new RuntimeException("structure type wrong: " + structure.getType());
-        }
+
         structures.put(structure.getName(), structure);
     }
 
     static{
-        generateDeepStructure();
-        generateShowGenreStructure();
+        //generateDeepStructure();
+        //generateShowGenreStructure();
         generateStructure();
     }
 
     public static void saveStructure(Structure structure){
         if(structure == null)
             throw new RuntimeException("try to save null structure");
+        if(structure.getName() == null)
+            throw new RuntimeException("saved structure with null name");
+        if(structure.getType() == null)
+            throw new RuntimeException("saved structure with null type");
+        System.out.println("saving structure with name: " + structure.getName());
         structures.put(structure.getName(), structure);
     }
 
@@ -65,26 +57,32 @@ public class Dictionary {
     }
 
     public static ArrayList<String> getCategoryKeys(){
-        return new ArrayList<>(categoryStructures.keySet());
+
+        return getStructureKeys(category);
     }
     public static ArrayList<String> getJournalKeys(){
-        return new ArrayList<>(journalStructures.keySet());
+        return getStructureKeys(journal);
     }
     public static ArrayList<String> getTemplateKeys(){
-        return new ArrayList<>(templateStructures.keySet());
+        return getStructureKeys(template);
     }
 
     public static ArrayList<String> getStructureKeys(String structureType){
-        switch(structureType){
-            case "category":
-                return getCategoryKeys();
-            case "journal":
-                return getJournalKeys();
-            case "template":
-                return getTemplateKeys();
-            default:
-                throw new RuntimeException("unknown structure type: " + structureType);
+        ArrayList<String> keys = new ArrayList<>();
+        for(Structure structure: structures.values()){
+            if(structure.getType() == null)
+                throw new RuntimeException("structure: " + structure.getName() + " has null type");
+            if(structure.getType().equals(structureType)){
+                keys.add(structure.getName());
+            }
+
         }
+        return keys;
+    }
+
+    public static ArrayList<String> getStructureKeys(){
+        ArrayList<String> keys = new ArrayList<>(structures.keySet());
+        return keys;
     }
 
     public static Structure getStructure(String key){
@@ -96,41 +94,35 @@ public class Dictionary {
 
 
     public static DataTree header(String structureKey){
-        DictEntry entry = dictEntryMap.get(structureKey);
+        Structure entry = structures.get(structureKey);
         if(entry == null)
             throw new NullPointerException("structureKey wrong: " + structureKey);
-        return entry.header;
+        return entry.getHeader();
     }
 
     public static DropDownPage getTypes(){
         String[] numbers = new String[]{
                 "edit text",
                 "list",
-                DropDown.className,
+                DropDownSpinner.className,
                 "slider"
         };
 
         return new DropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
     }
 
-    public static DropDownPage getStructureKeys(){
-        DropDownPage page = new DropDownPage("keys");
-        for(String s: dictEntryMap.keySet()){
-            page.add(s);
-        }
-        return page;
-    }
+
 
 
     public static DropDownPage getGroupedPages(String structureKey, String valueKey, ArrayList<ItemPath> groups){
-        DictEntry dictEntry = dictEntryMap.get(structureKey);
+        Structure structure = structures.get(structureKey);
 
-        if(dictEntry == null){
+        if(structure == null){
             throw new RuntimeException("structureKey wrong: " + structureKey);
         }
-        DataTree header = dictEntry.header;
+        DataTree header = structure.getHeader();
         //System.out.println("header = " + header);
-        ArrayList<DataTree> data = dictEntry.entries;
+        ArrayList<DataTree> data = structure.getEntries();
         ArrayList<ArrayList<Integer>> groupToValue = getGroupIndexes(header, groups);
 
         int valueIndex = header.indexOf(valueKey);
@@ -225,7 +217,7 @@ public class Dictionary {
         };
         DataTree showHeader = DataTree.convertHeader(header);
         DictEntry shows = new DictEntry("shows", showHeader, trees, DictEntry.dictionary);
-        dictEntryMap.put(shows.key, shows);
+        //dictEntryMap.put(shows.key, shows);
 
 
 
@@ -285,21 +277,6 @@ public class Dictionary {
                 })
         };
         DictEntry shows = new DictEntry("specific genres", DataTree.convertHeader(header), DataTree.convert(specificGenres), DictEntry.dictionary);
-        dictEntryMap.put(shows.key, shows);
-    }
-
-
-
-
-    public static DictEntry entry(String key){
-        return dictEntryMap.get(key);
-    }
-
-    public static DropDownPage structureKeys(){
-        DropDownPage page = new DropDownPage("keys");
-        for(String key: dictEntryMap.keySet()){
-            page.add(new DropDownPage(key));
-        }
-        return page;
+        //dictEntryMap.put(shows.key, shows);
     }
 }

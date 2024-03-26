@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.DropDownSpinner;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
@@ -118,8 +118,8 @@ public class GLib {
         System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className){
-            case DropDown.className:
-                widget = new DropDown(context);
+            case DropDownSpinner.className:
+                widget = new DropDownSpinner(context);
                 widget.setParam(params);
                 break;
             case "list":

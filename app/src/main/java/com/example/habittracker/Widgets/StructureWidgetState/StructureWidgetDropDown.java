@@ -9,7 +9,7 @@ import com.example.habittracker.DropDownPage;
 import com.example.habittracker.GLib;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.DropDownSpinner;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 
@@ -28,21 +28,20 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void init(){
-        //System.out.println("setting structureWidget to drop down");
+        createStructureKeyDropDown();
+    }
 
-        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters("structure name", Dictionary.getStructureKeys());
-        structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams);
+    private void createStructureKeyDropDown(){
+        DropDownSpinner.StaticDropDownParameters structureKeyParams = new DropDownSpinner.StaticDropDownParameters("structure name", new DropDownPage(null, Dictionary.getStructureKeys()));
+        structureKeyDropDown = (DropDownSpinner) GLib.inflateWidget(context, structureKeyParams);
         groupWidget.addWidget(structureKeyDropDown);
-        //System.out.println("\n\n\nsetting structure key listener --------------");
         structureKeyDropDown.setOnDataChangedListener(() -> onStructureKeyChange());
         structureKeyDropDown.setName("spreadsheet name");
-        //System.out.println("finished setting structure key listener --------------");
-
     }
 
     //used for drop down
-    DropDown structureKeyDropDown = null;
-    DropDown valueKeyDropDown = null;
+    DropDownSpinner structureKeyDropDown = null;
+    DropDownSpinner valueKeyDropDown = null;
     GroupWidget groupKeyDropDowns = null;
 
     //used for state management when structure key changes and views need to be reset
@@ -112,27 +111,27 @@ public class StructureWidgetDropDown implements Widget {
         ArrayList<String> headerList = valueKeyList(structureKey);
         DropDownPage valuePage = new DropDownPage("value keys", headerList);
         //System.out.println("value key drop down is null");
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("desired value name", valuePage);
-        valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params);
+        DropDownSpinner.StaticDropDownParameters params = new DropDownSpinner.StaticDropDownParameters("desired value name", valuePage);
+        valueKeyDropDown = (DropDownSpinner) GLib.inflateWidget(context, params);
         valueKeyDropDown.setName("item to be selected");
         groupWidget.addWidget(valueKeyDropDown);
         valueKeyDropDown.setOnDataChangedListener(()->onValueKeyChange());
     }
 
     private void tryAddButton(){
-        ArrayList<DropDown> groups = getGroupDropDownList();
-        DropDown lastGroup = groups.get(groups.size() - 1);
+        ArrayList<DropDownSpinner> groups = getGroupDropDownList();
+        DropDownSpinner lastGroup = groups.get(groups.size() - 1);
         boolean lastNull = lastGroup.getSelectedString() == null;
         if(!groupKeyDropDowns.hasButton() && groupKeyDropDowns.widgets().size() < maxNumGroups() && ! lastNull){
             addGroupKeyDropDownAdd();
         }
     }
 
-    private ArrayList<DropDown> getGroupDropDownList(){
+    private ArrayList<DropDownSpinner> getGroupDropDownList(){
 
-        ArrayList<DropDown> groupDropDowns = new ArrayList<>();
+        ArrayList<DropDownSpinner> groupDropDowns = new ArrayList<>();
         for(Widget widget: groupKeyDropDowns.widgets())
-            groupDropDowns.add((DropDown) widget);
+            groupDropDowns.add((DropDownSpinner) widget);
         return groupDropDowns;
     }
 
@@ -140,7 +139,7 @@ public class StructureWidgetDropDown implements Widget {
         //System.out.println("adding groupBy");
         DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
         //System.out.println("group by page: \n" + page);
-        DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters("group by", page));
+        DropDownSpinner dropDown = (DropDownSpinner)GLib.inflateWidget(context, new DropDownSpinner.StaticDropDownParameters("group by", page));
         dropDown.setOnDataChangedListener(() -> processGroupItemSelected());
         groupKeyDropDowns.addWidget(dropDown);
         //System.out.println("groupKeyDropDowns.widgetsInLayout.size() = " + groupKeyDropDowns.widgets().size());
@@ -151,11 +150,11 @@ public class StructureWidgetDropDown implements Widget {
 
     private void processGroupItemSelected(){
         groupKeyDropDowns.resetNameColor();
-        ArrayList<DropDown> dropDowns = getGroupDropDownList();
+        ArrayList<DropDownSpinner> dropDowns = getGroupDropDownList();
         selectedGroupKeys = new ArrayList<>();
         int removeIndex = dropDowns.size();
         for(int i = 0; i < dropDowns.size(); i++){
-            DropDown dropDown = dropDowns.get(i);
+            DropDownSpinner dropDown = dropDowns.get(i);
             ItemPath item = dropDown.getSelectedPath();
             if(item == null){
                 removeIndex = i + 1;
@@ -164,13 +163,13 @@ public class StructureWidgetDropDown implements Widget {
             selectedGroupKeys.add(item);
         }
         for(int i = removeIndex; i < dropDowns.size(); i++){
-            DropDown dropDown = dropDowns.get(i);
+            DropDownSpinner dropDown = dropDowns.get(i);
             dropDown.resetValue();
         }
         DropDownPage reducedPage = DropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
         for(int i = removeIndex; i < dropDowns.size(); i++) {
-            DropDown dropDown = dropDowns.get(i);
-            dropDown.setParam(new DropDown.StaticDropDownParameters("group by", reducedPage));
+            DropDownSpinner dropDown = dropDowns.get(i);
+            dropDown.setParam(new DropDownSpinner.StaticDropDownParameters("group by", reducedPage));
         }
     }
 
@@ -202,9 +201,9 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private ArrayList<ItemPath> getGroupValues(){
-        ArrayList<DropDown> dropDowns = getGroupDropDownList();
+        ArrayList<DropDownSpinner> dropDowns = getGroupDropDownList();
         ArrayList<ItemPath> items = new ArrayList<>();
-        for(DropDown dropDown: dropDowns){
+        for(DropDownSpinner dropDown: dropDowns){
             items.add(dropDown.getSelectedPath());
         }
         return items;
@@ -239,7 +238,7 @@ public class StructureWidgetDropDown implements Widget {
     private String structureKey(){
         return structureKeyDropDown.getSelectedString();
     }
-
+    //endregion
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
 
@@ -268,11 +267,28 @@ public class StructureWidgetDropDown implements Widget {
             }
         }
 
-        return new DropDown.DropDownParam(null, null, structureKey(), valueKeyDropDown.getSelectedString(), getGroupValues());
+        return new DropDownSpinner.DropDownParam(null, null, structureKey(), valueKeyDropDown.getSelectedString(), getGroupValues());
     }
 
     @Override
-    public void setParam(EntryWidgetParam params) {
+    public void setParam(EntryWidgetParam param) {
+        DropDownSpinner.DropDownParam dropDownParam = ((DropDownSpinner.DropDownParam) param);
+        structureKeyDropDown.setSelected(dropDownParam.structureKey);
+        onStructureKeyChange();
+        valueKeyDropDown.setSelected(dropDownParam.valueKey);
+        ArrayList<ItemPath> groups = dropDownParam.groups;
+        onValueKeyChange();
+        if(groups == null){
+            return;
+        }
+        if(groups.size() == 0){
+            return;
+        }
+        for(int i = 0; i < groups.size(); i++){
+            addGroupBy();
+            DropDownSpinner dropDown = (DropDownSpinner) groupKeyDropDowns.widgets().get(i);
+            dropDown.setSelected(groups.get(i));
+        }
 
     }
 
@@ -282,5 +298,5 @@ public class StructureWidgetDropDown implements Widget {
     }
 
 
-    //endregion
+
 }

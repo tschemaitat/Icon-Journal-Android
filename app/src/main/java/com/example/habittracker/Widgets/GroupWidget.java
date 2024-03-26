@@ -117,13 +117,13 @@ public class GroupWidget extends EntryWidget {
         customLinearLayout.addButton(listener);
     }
 
-    public void addDeleteButton(){
-        customLinearLayout.addDeleteButton();
+    public void addDeleteButton(Runnable runnable){
+        customLinearLayout.addDeleteButton(runnable);
     }
     //endregion
 
     public static class GroupWidgetParam extends EntryWidgetParam {
-        private ArrayList<EntryWidgetParam> params;
+        public ArrayList<EntryWidgetParam> params;
         public GroupWidgetParam(String name, ArrayList<EntryWidgetParam> params){
             super(name, GroupWidget.className);
             if(params == null)

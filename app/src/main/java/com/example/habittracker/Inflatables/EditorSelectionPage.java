@@ -2,10 +2,7 @@ package com.example.habittracker.Inflatables;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.MainActivity;
@@ -48,13 +45,13 @@ public class EditorSelectionPage implements Inflatable {
         SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position) -> {
             inflateStructureEditor(value);
         }, () -> {
-            inflateStructureEditor(null);
+            MainActivity.inflateLayout(new StructureEditor(context, new Structure(null, null, structureType)));
         });
         parentLayout.addView(structureSelection.getView());
     }
 
     public void inflateStructureEditor(String structureKey){
-        MainActivity.inflateLayout(new StructureEditor(context, structureKey));
+        MainActivity.inflateLayout(new StructureEditor(context, Dictionary.getStructure(structureKey)));
     }
 
 

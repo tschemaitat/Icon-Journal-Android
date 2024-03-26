@@ -3,4 +3,25 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="outline">#2F54C5</color>
+
+    <color name="blue1">#B1D4E0</color>
+    <color name="blue2">#2E8BC0</color>
+    <color name="blue3">#145DA0</color>
+    <color name="blue4">#0C2D48</color>
+    <color name="blue5">#001F3D</color>
+
+    <color name="gray4">#091235</color>
+    <color name="gray3">#14202E</color>
+    <color name="gray2">#2B4257</color>
+    <color name="gray1">#88A9C3</color>
+
+    <color name="dark1">#121212</color>
+    <color name="dark2">#1E1E1E</color>
+    <color name="dark3">#2E2E2E</color>
+
+
+    <color name="green">#03DAC6</color>
+    <color name="purple">#BB86FC</color>
+    <color name="darkPurple">#664B86</color>
+
 </resources>

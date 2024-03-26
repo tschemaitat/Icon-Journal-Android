@@ -3,7 +3,6 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.DataTree;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -11,10 +10,10 @@ import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetEdit
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetList;
 
 public class StructureWidget implements Widget {
-    private CustomEditText name = null;
+    private CustomEditText nameEditor = null;
 
-    private DropDown typeDropDown = null;
-    private String currentType = DropDown.nullValue;
+    private DropDownSpinner typeDropDown = null;
+    private String currentType = DropDownSpinner.nullValue;
 
     private StructureWidgetList structureWidgetList = null;
     private StructureWidgetDropDown structureWidgetDropDown = null;
@@ -32,16 +31,16 @@ public class StructureWidget implements Widget {
         groupWidget.addBorder();
 
 
-        name = new CustomEditText(context);
-        groupWidget.addNameEditor(name.getView());
+        nameEditor = new CustomEditText(context);
+        groupWidget.addNameEditor(nameEditor.getView());
         groupWidget.setMargin(5, 10);
         //groupWidget.addWidget(name);
-        name.setOnDataChangedListener(()->{});
-        name.setName("widget name");
+        nameEditor.setOnDataChangedListener(()->{});
+        nameEditor.setName("widget name");
 
-        typeDropDown = new DropDown(context);
+        typeDropDown = new DropDownSpinner(context);
         groupWidget.addWidget(typeDropDown);
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("type", Dictionary.getTypes());
+        DropDownSpinner.StaticDropDownParameters params = new DropDownSpinner.StaticDropDownParameters("type", Dictionary.getTypes());
         typeDropDown.setParam(params);
 
         typeDropDown.setOnDataChangedListener(() -> onTypeChange());
@@ -49,7 +48,7 @@ public class StructureWidget implements Widget {
     }
 
     public void disableNameEditor(){
-        name.disableEdit();
+        nameEditor.disableEdit();
     }
 
     public void onTypeChange(){
@@ -74,7 +73,7 @@ public class StructureWidget implements Widget {
         //System.out.println("reset type");
         clearWidgets();
         typeSwitch:{
-            if(type.equals(DropDown.nullValue)){
+            if(type.equals(DropDownSpinner.nullValue)){
 
                 //System.out.println("structure type null");
                 return;
@@ -120,14 +119,14 @@ public class StructureWidget implements Widget {
             if(type.equals("list")){
                 ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getParam();
                 if(param != null)
-                    param.name = name.text();
+                    param.name = nameEditor.text();
                 result = param;
                 break typeSwitch;
             }
             if(type.equals("drop down")){
-                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetDropDown.getParam();
+                DropDownSpinner.DropDownParam param = (DropDownSpinner.DropDownParam) structureWidgetDropDown.getParam();
                 if(param != null)
-                    param.name = name.text();
+                    param.name = nameEditor.text();
                 result = param;
                 break typeSwitch;
             }
@@ -135,13 +134,13 @@ public class StructureWidget implements Widget {
             if(type.equals("edit text")){
                 CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getParam();
                 if(param != null)
-                    param.name = name.text();
+                    param.name = nameEditor.text();
                 result = param;
                 break typeSwitch;
             }
         }
-        if(name.text() == null){
-            name.setNameRed();
+        if(nameEditor.text() == null){
+            nameEditor.setNameRed();
             return null;
         }
         return result;
@@ -150,8 +149,24 @@ public class StructureWidget implements Widget {
 
 
     @Override
-    public void setParam(EntryWidgetParam params){
+    public void setParam(EntryWidgetParam param){
+        String type = param.className;
+        nameEditor.setText(param.name);
+        typeDropDown.setSelected(type);
+        setType(type);
+        typeSwitch:{
 
+            if(type.equals(ListWidget.className)){
+                structureWidgetList.setParam(param);
+            }
+            if(type.equals(DropDownSpinner.className)){
+                structureWidgetDropDown.setParam(param);
+            }
+
+            if(type.equals(CustomEditText.className)){
+                structureWidgetEditText.setParam(param);
+            }
+        }
     }
 
     @Override
@@ -165,7 +180,7 @@ public class StructureWidget implements Widget {
     }
 
 
-    public void addDeleteButton() {
-        groupWidget.addDeleteButton();
+    public void addDeleteButton(Runnable runnable) {
+        groupWidget.addDeleteButton(runnable);
     }
 }

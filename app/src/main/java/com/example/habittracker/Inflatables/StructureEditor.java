@@ -29,13 +29,15 @@ public class StructureEditor implements Inflatable {
     CustomEditText nameEditor;
 
 
-    public StructureEditor(Context context, String structureKey){
+    public StructureEditor(Context context, Structure structure){
         this.context = context;
-        if(structureKey == null){
-            structure = new Structure();
-        }else{
-            structure = Dictionary.getStructure(structureKey);
-        }
+        if(structure == null)
+            throw new RuntimeException("structure null");
+
+        if(structure.getType() == null)
+            throw new RuntimeException("structure type null");
+
+        this.structure = structure;
 
         linearLayout = new LinearLayout(context);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
@@ -44,7 +46,7 @@ public class StructureEditor implements Inflatable {
 
         Button saveButton = (Button) GLib.inflate(R.layout.button_layout);
         saveButton.setOnClickListener(view -> onSave());
-        saveButton.setText("save");
+        saveButton.setText("save template");
         linearLayout.addView(saveButton);
         LinearLayout.LayoutParams buttonLayoutParam = new LinearLayout.LayoutParams(-2, -2);
         buttonLayoutParam.gravity = Gravity.RIGHT;
@@ -60,6 +62,16 @@ public class StructureEditor implements Inflatable {
         nameEditor.setOnDataChangedListener(()->{});
         nameEditor.setName("spreadsheet name");
         groupWidget.addWidget(nameEditor);
+        if(structure.getParam() != null){
+            GroupWidget.GroupWidgetParam groupWidgetParam = (GroupWidget.GroupWidgetParam) structure.getParam();
+            ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
+            for(EntryWidgetParam param: entryWidgetParams){
+                StructureWidget structureWidget = new StructureWidget(context);
+                structureWidget.setParam(param);
+                groupWidget.addWidget(structureWidget);
+            }
+        }
+
 
 
 
@@ -67,12 +79,14 @@ public class StructureEditor implements Inflatable {
             StructureWidget structureWidget = new StructureWidget(context);
             structureWidget.setOnDataChangedListener(()->{});
             groupWidget.addWidget(structureWidget);
-            structureWidget.addDeleteButton();
+            structureWidget.addDeleteButton(()->{
+                groupWidget.removeWidget(structureWidget);
+            });
         });
     }
 
     public void onSave(){
-        System.out.println("structure editor being removed");
+        System.out.println("on save: " + nameEditor.text());
 
         boolean error = false;
 
@@ -82,7 +96,10 @@ public class StructureEditor implements Inflatable {
         }
 
         ArrayList<EntryWidgetParam> entryWidgetParamArrayList = new ArrayList<>();
-        for(Widget widget: groupWidget.widgets()){
+        for(int i = 0; i < groupWidget.widgets().size(); i++){
+            if(i == 0)
+                continue;
+            Widget widget = groupWidget.widgets().get(i);
             EntryWidgetParam entryWidgetParam = widget.getParam();
             if(entryWidgetParam == null){
                 error = true;
@@ -92,10 +109,17 @@ public class StructureEditor implements Inflatable {
         }
         if(error)
             return;
-        EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(null, entryWidgetParamArrayList);
-        System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString(0));
-        Structure newStructure = new Structure(structure.getName(), groupParam, structure.getType());
+
+        //System.out.println("starting save");
+
+        EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(nameEditor.text(), entryWidgetParamArrayList);
+        System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString());
+        Structure newStructure = new Structure(nameEditor.text(), groupParam, structure.getType());
         Dictionary.saveStructure(newStructure);
+
+        //System.out.println("new set of structures: " + Dictionary.getStructureKeys());
+
+        //System.out.println("set of categories: " + Dictionary.getStructureKeys("category"));
     }
 
 

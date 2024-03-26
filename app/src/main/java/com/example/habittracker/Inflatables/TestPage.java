@@ -1,11 +1,14 @@
 package com.example.habittracker.Inflatables;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.BorderView;
@@ -16,11 +19,15 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.CustomPopup;
+import com.example.habittracker.Widgets.DropDownSpinner;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TestPage implements Inflatable {
     private LinearLayout linearLayout;
@@ -32,6 +39,8 @@ public class TestPage implements Inflatable {
         //setupTestLayout();
         testDataTreeValueExport();
         //testNewEditText();
+        //testCard();
+        //testPopup();
     }
 
     @Override
@@ -49,6 +58,45 @@ public class TestPage implements Inflatable {
 
     }
 
+    public void testCard(){
+        MainActivity.constraintLayout.setBackgroundColor(Color.WHITE);
+
+        CardView cardView = (CardView) GLib.inflate(R.layout.card_view);
+        RelativeLayout.LayoutParams cardViewLayoutParams = new RelativeLayout.LayoutParams(200, 400);
+        cardViewLayoutParams.setMargins(100, 100, 100, 100);
+        cardViewLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        cardView.setLayoutParams(cardViewLayoutParams);
+        //cardView.setCardElevation(-10);
+        //cardView.setCardBackgroundColor(context.getColor(R.color.gray3));
+        //cardView.setCardBackgroundColor(Color.WHITE);
+        //cardView.setRadius(20);
+        linearLayout.addView(cardView);
+        cardView.setCardElevation(0);
+        cardView.setBackground(context.getDrawable(R.drawable.background_of_card));
+        cardView.setPadding(20, 20, 20, 20);
+    }
+
+    public void testPopup(){
+        int blue1 = context.getColor(R.color.blue1);
+        int blue2 = context.getColor(R.color.blue2);
+        int blue3 = context.getColor(R.color.blue3);
+        int blue4 = context.getColor(R.color.blue4);
+        int blue5 = context.getColor(R.color.blue5);
+        MainActivity.constraintLayout.setBackgroundColor(context.getColor(R.color.dark1));
+        //linearLayout.setBackground(new ColorDrawable(Color.WHITE));
+
+        GroupWidget groupWidget = new GroupWidget(context);
+        linearLayout.addView(groupWidget.getView());
+        CustomEditText customEditText = new CustomEditText(context);
+        groupWidget.addWidget(customEditText);
+        CustomPopup customPopup = new CustomPopup(context, "title", new ArrayList<>(Arrays.asList("hi", "hello")), null, null, null);
+
+
+        linearLayout.post(()->{
+            customPopup.showPopupWindow(customEditText.getView());
+        });
+    }
+
 
     public void setupTestLayout(){
         StructureWidget structureWidget = new StructureWidget(context);
@@ -62,12 +110,12 @@ public class TestPage implements Inflatable {
     public void testDataTreeValueExport(){
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
                 new CustomEditText.EditTextParam("show", "null"),
-                new DropDown.StaticDropDownParameters("genre", new String[]{
+                new DropDownSpinner.StaticDropDownParameters("genre", new String[]{
                         "comedy",
                         "romance"
                 }),
                 new ListWidget.ListParam("tropes", new EntryWidgetParam[]{
-                        new DropDown.StaticDropDownParameters("trope", new String[]{
+                        new DropDownSpinner.StaticDropDownParameters("trope", new String[]{
                                 "isekai",
                                 "philosophers",
                                 "working together",
@@ -88,6 +136,9 @@ public class TestPage implements Inflatable {
     }
 
     public void testNewEditText(){
+
+
+
         View view = MainActivity.mainActivity.getLayoutInflater().inflate(R.layout.edit_text_with_border, linearLayout);
         TextInputLayout textInputLayout = view.findViewById(R.id.editTextLayout);
         EditText editText = textInputLayout.getEditText();

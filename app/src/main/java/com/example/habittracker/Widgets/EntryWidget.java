@@ -42,7 +42,7 @@ public abstract class EntryWidget implements Widget{
     public abstract EntryWidgetParam getParam();
 
     public final void setName(String name){
-        System.out.println("set name: " + name);
+        //System.out.println("set name: " + name);
         entryWidgetWrapper.addName(name);
         this.name = name;
     }

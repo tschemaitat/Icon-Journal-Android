@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 
-import com.example.habittracker.CustomLinearLayout;
 import com.example.habittracker.DataTree;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Dictionary;
@@ -24,7 +23,7 @@ import com.example.habittracker.Structs.WidgetValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DropDown extends EntryWidget {
+public class DropDownSpinner extends EntryWidget {
 
     public static final String className = "drop down";
     private boolean dataSet = false;
@@ -48,7 +47,7 @@ public class DropDown extends EntryWidget {
 
 
     private ItemPath selectedValuePath = null;
-    public DropDown(Context context) {
+    public DropDownSpinner(Context context) {
         super(context);
         spinner = new AppCompatSpinner(context);
         setChild(spinner);
@@ -228,6 +227,16 @@ public class DropDown extends EntryWidget {
         return params;
     }
 
+    public void setSelected(String value){
+        ArrayList<String> pathStack = new ArrayList<>();
+
+        selectedValuePath = new ItemPath(value);
+    }
+
+    public void setSelected(ItemPath itemPath){
+        selectedValuePath = itemPath;
+    }
+
     public String getSelectedString(){
         String selected = selectedValuePath.getName();
         if(selected.equals(nullValue))
@@ -291,7 +300,7 @@ public class DropDown extends EntryWidget {
         public String name = "null";
 
         public DropDownParam(String name, ItemPath selected, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = selected;
@@ -301,7 +310,7 @@ public class DropDown extends EntryWidget {
         }
 
         public DropDownParam(String name, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = new ItemPath(nullValue);
@@ -311,7 +320,7 @@ public class DropDown extends EntryWidget {
         }
 
         public DropDownParam(String name, String structureKey, String valueKey){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = new ItemPath(nullValue);
@@ -354,19 +363,19 @@ public class DropDown extends EntryWidget {
     public static class StaticDropDownParameters extends EntryWidgetParam {
         DropDownPage page;
         public StaticDropDownParameters(String name, DropDownPage page){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             this.page = page;
         }
 
         public StaticDropDownParameters(String name, ArrayList<String> options){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             page = new DropDownPage("static paramters");
             for(String s: options)
                 page.add(new DropDownPage(s));
         }
 
         public StaticDropDownParameters(String name, String[] optionsArray){
-            super(name, DropDown.className);
+            super(name, DropDownSpinner.className);
             ArrayList<String> options = new ArrayList<>(Arrays.asList(optionsArray));
             page = new DropDownPage("static paramters");
             for(String s: options)

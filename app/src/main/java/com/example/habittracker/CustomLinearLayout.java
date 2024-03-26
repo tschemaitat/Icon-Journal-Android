@@ -2,7 +2,6 @@ package com.example.habittracker;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -130,7 +129,7 @@ public class CustomLinearLayout {
         buttonAndWidgetLayout.addView(addButton);
     }
 
-    public void addDeleteButton(){
+    public void addDeleteButton(Runnable runnable){
         addNameLayout();
         ImageButton deleteButton = (ImageButton) GLib.inflate(R.layout.delete_button);
         //deleteButton.setScaleType(ImageButton.ScaleType.FIT_CENTER);
@@ -139,6 +138,7 @@ public class CustomLinearLayout {
         layoutParams.setMargins(20,20,20,20);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         deleteButton.setLayoutParams(layoutParams);
+        deleteButton.setOnClickListener((view)->runnable.run());
     }
 
     public void addNameLayout(){

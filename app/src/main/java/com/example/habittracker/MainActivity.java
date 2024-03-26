@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
     public static Context context;
     ScrollView scrollView;
     LinearLayout scrollLinearLayout;
-    ConstraintLayout constraintLayout;
+    public static ConstraintLayout constraintLayout;
     LinearLayout buttonInflateBufferLayout;
-    static LinearLayout inflateLayout;
+    public static LinearLayout inflateLayout;
     public static MainActivity mainActivity;
 
     static Inflatable currentLayout;
