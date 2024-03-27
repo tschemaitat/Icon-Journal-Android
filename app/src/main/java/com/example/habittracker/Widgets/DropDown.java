@@ -3,8 +3,6 @@ package com.example.habittracker.Widgets;
 
 
 import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.SelectionView;
@@ -17,7 +15,7 @@ import com.example.habittracker.Structs.WidgetValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DropDownSpinner extends EntryWidget {
+public class DropDown extends EntryWidget {
 
     public static final String className = "drop down";
     private boolean dataSet = false;
@@ -42,7 +40,7 @@ public class DropDownSpinner extends EntryWidget {
 
 
     private ItemPath selectedValuePath = null;
-    public DropDownSpinner(Context context) {
+    public DropDown(Context context) {
         super(context);
         this.context = context;
         init();
@@ -87,7 +85,9 @@ public class DropDownSpinner extends EntryWidget {
             onBackSelected();
         }, ()->{
             //on nothing selected
-            dataChanged(null);
+            //dataChanged(null);
+            customPopup.close();
+            customPopup = null;
         });
         setOptionsOfPage();
         customPopup.enableBack();
@@ -173,12 +173,12 @@ public class DropDownSpinner extends EntryWidget {
     }
 
     public void setSelected(String value){
-        ArrayList<String> pathStack = new ArrayList<>();
-
-        selectedValuePath = new ItemPath(value);
+        setSelected(new ItemPath(value));
     }
 
     public void setSelected(ItemPath itemPath){
+        System.out.println("setting value of drop to: " + itemPath.getName());
+        buttonSelectionView.setText(new String[]{itemPath.getName()});
         selectedValuePath = itemPath;
     }
 
@@ -244,7 +244,7 @@ public class DropDownSpinner extends EntryWidget {
         public String name = "null";
 
         public DropDownParam(String name, ItemPath selected, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = selected;
@@ -254,7 +254,7 @@ public class DropDownSpinner extends EntryWidget {
         }
 
         public DropDownParam(String name, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = new ItemPath(nullValue);
@@ -264,7 +264,7 @@ public class DropDownSpinner extends EntryWidget {
         }
 
         public DropDownParam(String name, String structureKey, String valueKey){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             if(structureKey == null)
                 throw new RuntimeException();
             this.selected = new ItemPath(nullValue);
@@ -307,19 +307,19 @@ public class DropDownSpinner extends EntryWidget {
     public static class StaticDropDownParameters extends EntryWidgetParam {
         DropDownPage page;
         public StaticDropDownParameters(String name, DropDownPage page){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             this.page = page;
         }
 
         public StaticDropDownParameters(String name, ArrayList<String> options){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             page = new DropDownPage("static paramters");
             for(String s: options)
                 page.add(new DropDownPage(s));
         }
 
         public StaticDropDownParameters(String name, String[] optionsArray){
-            super(name, DropDownSpinner.className);
+            super(name, DropDown.className);
             ArrayList<String> options = new ArrayList<>(Arrays.asList(optionsArray));
             page = new DropDownPage("static paramters");
             for(String s: options)
@@ -336,5 +336,7 @@ public class DropDownSpinner extends EntryWidget {
         public DataTree header() {
             throw new RuntimeException();
         }
+
+
     }
 }

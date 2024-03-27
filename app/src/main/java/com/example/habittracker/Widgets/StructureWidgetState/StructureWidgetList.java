@@ -26,10 +26,15 @@ public class StructureWidgetList implements Widget {
 
     private void init(){
         groupWidget.addButton(view -> {
-            StructureWidget structureWidget = new StructureWidget(context);
-            structureWidgets.add(structureWidget);
-            groupWidget.addWidget(structureWidget);
+            addStructureWidget();
         });
+    }
+
+    public StructureWidget addStructureWidget(){
+        StructureWidget structureWidget = new StructureWidget(context);
+        structureWidgets.add(structureWidget);
+        groupWidget.addWidget(structureWidget);
+        return structureWidget;
     }
 
     @Override
@@ -44,7 +49,12 @@ public class StructureWidgetList implements Widget {
 
     @Override
     public void setParam(EntryWidgetParam params) {
-
+        ListWidget.ListParam listParam = (ListWidget.ListParam) params;
+        ArrayList<EntryWidgetParam> children = listParam.cloneableWidget.params;
+        for(EntryWidgetParam entryWidgetParam: children){
+            StructureWidget structureWidget = addStructureWidget();
+            structureWidget.setParam(entryWidgetParam);
+        }
     }
 
     @Override

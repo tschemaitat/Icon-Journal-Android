@@ -20,7 +20,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.CustomPopup;
-import com.example.habittracker.Widgets.DropDownSpinner;
+import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -110,12 +110,12 @@ public class TestPage implements Inflatable {
     public void testDataTreeValueExport(){
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
                 new CustomEditText.EditTextParam("show", "null"),
-                new DropDownSpinner.StaticDropDownParameters("genre", new String[]{
+                new DropDown.StaticDropDownParameters("genre", new String[]{
                         "comedy",
                         "romance"
                 }),
                 new ListWidget.ListParam("tropes", new EntryWidgetParam[]{
-                        new DropDownSpinner.StaticDropDownParameters("trope", new String[]{
+                        new DropDown.StaticDropDownParameters("trope", new String[]{
                                 "isekai",
                                 "philosophers",
                                 "working together",

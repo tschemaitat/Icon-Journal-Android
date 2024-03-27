@@ -12,8 +12,8 @@ import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetList
 public class StructureWidget implements Widget {
     private CustomEditText nameEditor = null;
 
-    private DropDownSpinner typeDropDown = null;
-    private String currentType = DropDownSpinner.nullValue;
+    private DropDown typeDropDown = null;
+    private String currentType = DropDown.nullValue;
 
     private StructureWidgetList structureWidgetList = null;
     private StructureWidgetDropDown structureWidgetDropDown = null;
@@ -38,9 +38,9 @@ public class StructureWidget implements Widget {
         nameEditor.setOnDataChangedListener(()->{});
         nameEditor.setName("widget name");
 
-        typeDropDown = new DropDownSpinner(context);
+        typeDropDown = new DropDown(context);
         groupWidget.addWidget(typeDropDown);
-        DropDownSpinner.StaticDropDownParameters params = new DropDownSpinner.StaticDropDownParameters("type", Dictionary.getTypes());
+        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("type", Dictionary.getTypes());
         typeDropDown.setParam(params);
 
         typeDropDown.setOnDataChangedListener(() -> onTypeChange());
@@ -134,7 +134,7 @@ public class StructureWidget implements Widget {
                 break typeSwitch;
             }
             if(type.equals("drop down")){
-                DropDownSpinner.DropDownParam param = (DropDownSpinner.DropDownParam) structureWidgetDropDown.getParam();
+                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetDropDown.getParam();
                 if(param != null)
                     param.name = nameEditor.text();
                 result = param;
@@ -160,23 +160,33 @@ public class StructureWidget implements Widget {
 
     @Override
     public void setParam(EntryWidgetParam param){
+        System.out.println("setting param: " + param);
         String type = param.className;
         nameEditor.setText(param.name);
         typeDropDown.setSelected(type);
         currentType = type;
         setType();
         typeSwitch:{
+            if(type == null)
+                throw new RuntimeException();
 
             if(type.equals(ListWidget.className)){
+                System.out.println("type is list");
                 structureWidgetList.setParam(param);
+                break typeSwitch;
             }
-            if(type.equals(DropDownSpinner.className)){
+            if(type.equals(DropDown.className)){
+                System.out.println("type is drop down");
                 structureWidgetDropDown.setParam(param);
+                break typeSwitch;
             }
 
             if(type.equals(CustomEditText.className)){
+                System.out.println("type is edit text");
                 structureWidgetEditText.setParam(param);
+                break typeSwitch;
             }
+            throw new RuntimeException("invalid type: " + type);
         }
     }
 

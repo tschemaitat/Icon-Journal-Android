@@ -72,8 +72,8 @@ public class SelectionView {
 
     public void setText(ArrayList<String> strings){
         options = strings;
-        listView.setAdapter(new ArrayAdapter<>(context,
-                android.R.layout.simple_expandable_list_item_1, strings));
+        listView.setAdapter(new ArrayAdapter<>(context, textViewResource, strings));
+        listView.setMinimumWidth(1000);
     }
 
     public void setText(String[] strings){
@@ -82,7 +82,7 @@ public class SelectionView {
 
     RelativeLayout relativeLayout;
     private void createList(){
-        System.out.println("creating list: " + options);
+        //System.out.println("creating list: " + options);
 
         int numItems = options.size();
         listView = new ListView(context);
@@ -94,6 +94,7 @@ public class SelectionView {
         //listView.setLayoutParams(listViewLayoutParam);
         //relativeLayout.addView(listView);
         listView.setMinimumHeight(1000);
+        listView.setMinimumWidth(1000);
 
         if(onAdd != null)
             options.add(addString);
@@ -106,7 +107,7 @@ public class SelectionView {
         int textViewHeight = 0;
         if(options.size() > 0)
             textViewHeight = getTextHeight(options.get(0));
-        System.out.println("predicted textView hiehgt: " + textViewHeight);
+        //System.out.println("predicted textView hiehgt: " + textViewHeight);
 
         listView.setLayoutParams(new LinearLayout.LayoutParams(-1, textViewHeight * options.size()));
 
@@ -119,7 +120,7 @@ public class SelectionView {
 
         // Set the click listener for the list items
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
-            System.out.println("item selected in list: " + i);
+            //System.out.println("item selected in list: " + i);
             TextView textView = (TextView) view;
             String value = (String) textView.getText();
             int numOptions = getOptions().size();
@@ -138,7 +139,7 @@ public class SelectionView {
 
 
         });
-        System.out.println("finsihed creating list num views: " + listView.getChildCount() + " array: " + options);
+        //System.out.println("finsihed creating list num views: " + listView.getChildCount() + " array: " + options);
     }
 
     private ArrayList<String> getOptions(){
