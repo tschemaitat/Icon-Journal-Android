@@ -57,7 +57,7 @@ public class DropDown extends EntryWidget {
 
     private void setOptions(String title, ArrayList<String> spinnerOptions){
         if(currentPage == parentPage){
-            customPopup.setText("select option", spinnerOptions);
+            customPopup.setText(nullValue, spinnerOptions);
         }else
             customPopup.setText(title, spinnerOptions);
         selectedValuePath = null;
@@ -172,6 +172,11 @@ public class DropDown extends EntryWidget {
         return params;
     }
 
+    @Override
+    public void setValue(DataTree dataTree) {
+        setSelected(dataTree.getItemPath());
+    }
+
     public void setSelected(String value){
         setSelected(new ItemPath(value));
     }
@@ -198,7 +203,7 @@ public class DropDown extends EntryWidget {
 
     @Override
     public DataTree getDataTree() {
-        return new DataTree(selectedValuePath.getName());
+        return new DataTree(selectedValuePath);
     }
 
     @Override
@@ -233,6 +238,11 @@ public class DropDown extends EntryWidget {
     public void resetValue(){
         selectedValuePath = null;
         currentPage = parentPage;
+    }
+
+    public void setHint(String select_type) {
+        nullValue = select_type;
+        buttonSelectionView.setText(new String[]{select_type});
     }
 
 

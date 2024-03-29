@@ -1,16 +1,21 @@
 package com.example.habittracker.Inflatables;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.ColorPalette;
 import com.example.habittracker.Dictionary;
 import com.example.habittracker.GLib;
+import com.example.habittracker.LinLayout;
+import com.example.habittracker.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.WidgetLayout;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -22,9 +27,9 @@ public class StructureEditor implements Inflatable {
 
 
     Context context;
-    GroupWidget groupWidget;
+    WidgetLayout widgetLayout;
     Structure structure;
-    LinearLayout linearLayout;
+    LinLayout layout;
 
     CustomEditText nameEditor;
 
@@ -39,67 +44,74 @@ public class StructureEditor implements Inflatable {
 
         this.structure = structure;
 
-        linearLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
-        layoutParams.setMargins(GLib.initialHorMargin, GLib.initialVertMargin, GLib.initialHorMargin, GLib.initialVertMargin);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        layout = new LinLayout(context);
+        layout.setPadding(Margin.initialPagePadding());
+        layout.getView().setId(R.id.pageLayout);
 
         Button saveButton = (Button) GLib.inflate(R.layout.button_layout);
         saveButton.setOnClickListener(view -> onSave());
         saveButton.setText("save template");
-        linearLayout.addView(saveButton);
+        layout.add(saveButton);
         LinearLayout.LayoutParams buttonLayoutParam = new LinearLayout.LayoutParams(-2, -2);
         buttonLayoutParam.gravity = Gravity.RIGHT;
         buttonLayoutParam.setMargins(0, 0, 40, 0);
         saveButton.setLayoutParams(buttonLayoutParam);
-
-        groupWidget = GLib.createInitialGroupWidget(context);
-        linearLayout.addView(groupWidget.getView());
 
         nameEditor = new CustomEditText(context);
         String name = structure.getName();
         nameEditor.setText(name);
         nameEditor.setOnDataChangedListener(()->{});
         nameEditor.setName("spreadsheet name");
-        groupWidget.addWidget(nameEditor);
+        layout.add(nameEditor.getView());
+
+        widgetLayout = new WidgetLayout(context);
+        layout.add(widgetLayout.getView());
+
+
         if(structure.getParam() != null){
             GroupWidget.GroupWidgetParam groupWidgetParam = (GroupWidget.GroupWidgetParam) structure.getParam();
             ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
             for(EntryWidgetParam param: entryWidgetParams){
                 StructureWidget structureWidget = new StructureWidget(context);
                 structureWidget.setParam(param);
-                groupWidget.addWidget(structureWidget);
+                widgetLayout.add(structureWidget);
             }
         }
 
 
 
 
-        groupWidget.addButton(view -> {
+        widgetLayout.getLinLayout().addButton(view -> {
             StructureWidget structureWidget = new StructureWidget(context);
             structureWidget.setOnDataChangedListener(()->{});
-            groupWidget.addWidget(structureWidget);
+            widgetLayout.add(structureWidget);
             structureWidget.addDeleteButton(()->{
-                groupWidget.removeWidget(structureWidget);
+                widgetLayout.remove(structureWidget);
             });
         });
+
+        widgetLayout.getLinLayout().setChildMargin(Margin.listChildMargin());
+
+        for(Widget widget: widgetLayout.widgets()){
+            StructureWidget structureWidget = (StructureWidget) widget;
+
+        }
     }
 
     public void onSave(){
-        System.out.println("on save: " + nameEditor.text());
+        System.out.println("on save: " + nameEditor.getText());
 
         boolean error = false;
 
-        if(nameEditor.text() == null){
-            nameEditor.setNameRed();
+        if(nameEditor.getText() == null){
+            nameEditor.getViewWrapper().setNameRed();
             error = true;
         }
 
         ArrayList<EntryWidgetParam> entryWidgetParamArrayList = new ArrayList<>();
-        for(int i = 0; i < groupWidget.widgets().size(); i++){
-            if(i == 0)
-                continue;
-            Widget widget = groupWidget.widgets().get(i);
+        for(int i = 0; i < widgetLayout.widgets().size(); i++){
+
+            Widget widget = widgetLayout.widgets().get(i);
             EntryWidgetParam entryWidgetParam = widget.getParam();
             if(entryWidgetParam == null){
                 error = true;
@@ -112,9 +124,9 @@ public class StructureEditor implements Inflatable {
 
         //System.out.println("starting save");
 
-        EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(nameEditor.text(), entryWidgetParamArrayList);
+        EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(nameEditor.getText(), entryWidgetParamArrayList);
         System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString());
-        Structure newStructure = new Structure(nameEditor.text(), groupParam, structure.getType());
+        Structure newStructure = new Structure(nameEditor.getText(), groupParam, structure.getType());
         Dictionary.saveStructure(newStructure);
 
         //System.out.println("new set of structures: " + Dictionary.getStructureKeys());
@@ -125,7 +137,7 @@ public class StructureEditor implements Inflatable {
 
     @Override
     public View getView() {
-        return linearLayout;
+        return layout.getView();
     }
 
     @Override

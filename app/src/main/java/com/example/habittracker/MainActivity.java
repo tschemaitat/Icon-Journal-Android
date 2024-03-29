@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.habittracker.Inflatables.CategorySelectionPage;
 import com.example.habittracker.Inflatables.Inflatable;
 import com.example.habittracker.Inflatables.EditorSelectionPage;
 import com.example.habittracker.Inflatables.JournalPage;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivity.context = this;
         Dictionary.generate(context);
+        ColorPalette.setColors(context);
         setContentView(R.layout.activity_main);
         scrollView = findViewById(R.id.scrollView);
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         editorButton.setOnClickListener(view -> inflateLayout(new EditorSelectionPage(context)));
         TextView categoryButton = findViewById(R.id.CategoriesButton);
         categoryButton.setOnClickListener(view -> {
-
+            inflateLayout(new CategorySelectionPage(context));
         });
         TextView journalButton = findViewById(R.id.JournalButton);
         journalButton.setOnClickListener(view -> {
@@ -87,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout createVerticalLayout(){
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
-        linearLayout.setLayoutParams(params);
         return linearLayout;
     }
 

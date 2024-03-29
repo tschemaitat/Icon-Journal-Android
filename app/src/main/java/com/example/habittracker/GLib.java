@@ -2,7 +2,12 @@ package com.example.habittracker;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +30,6 @@ public class GLib {
 
     public static final int initialHorMargin = 15;
     public static final int initialVertMargin = 10;
-
-    public static GroupWidget createInitialGroupWidget(Context context){
-        GroupWidget groupWidget = new GroupWidget(context);
-        groupWidget.setMargin(initialHorMargin, initialVertMargin);
-        return groupWidget;
-    }
 
 
     public static int calculateTextWidth(String text, float textSize, Typeface typeface) {
@@ -147,6 +146,25 @@ public class GLib {
 
         }
         return widget;
+    }
+
+    public static Drawable setBackgroundColorForView(Context context, int color) {
+        //System.out.println("setting color");
+        Drawable background = context.getDrawable(R.drawable.background_of_card);
+        if (background instanceof LayerDrawable) {
+            LayerDrawable layerDrawable = (LayerDrawable) background;
+//            int numLayers = layerDrawable.getNumberOfLayers();
+//            for(int i = 0; i < numLayers; i++){
+//                Drawable layer = layerDrawable.getDrawable(i);
+//                System.out.println(layer);
+//            }
+            Drawable colorLayer = layerDrawable.getDrawable(7);
+            colorLayer.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            //colorLayer.getPaint().setColor(color);
+        }else{
+            throw new RuntimeException();
+        }
+        return background;
     }
 
 

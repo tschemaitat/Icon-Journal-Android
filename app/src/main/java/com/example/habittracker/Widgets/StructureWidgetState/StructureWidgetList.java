@@ -3,6 +3,9 @@ package com.example.habittracker.Widgets.StructureWidgetState;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.ColorPalette;
+import com.example.habittracker.GLib;
+import com.example.habittracker.LinLayout;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
@@ -14,26 +17,25 @@ import java.util.ArrayList;
 public class StructureWidgetList implements Widget {
     private Context context;
     private GroupWidget groupWidget;
-    private ArrayList<StructureWidget> structureWidgets = new ArrayList<>();
-    private GroupWidget parent;
-    public StructureWidgetList(Context context, GroupWidget parent) {
+    private LinLayout parent;
+    public StructureWidgetList(Context context, LinLayout parent) {
         this.context = context;
         this.parent = parent;
         groupWidget = new GroupWidget(context);
-        parent.addWidget(groupWidget);
+        parent.add(groupWidget.getView());
         init();
     }
 
     private void init(){
-        groupWidget.addButton(view -> {
+        groupWidget.getWidgetLayout().getLinLayout().addButton(view -> {
             addStructureWidget();
         });
+        groupWidget.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
     }
 
     public StructureWidget addStructureWidget(){
         StructureWidget structureWidget = new StructureWidget(context);
-        structureWidgets.add(structureWidget);
-        groupWidget.addWidget(structureWidget);
+        groupWidget.getWidgetLayout().add(structureWidget);
         return structureWidget;
     }
 

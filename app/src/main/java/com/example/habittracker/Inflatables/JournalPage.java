@@ -40,7 +40,6 @@ public class JournalPage implements Inflatable{
         EntryWidgetParam params = structure.getParam();
         System.out.println("journal params: \n" + params.hierarchyString(0));
         System.out.println(params);
-        GroupWidget widget = (GroupWidget)GLib.inflateWidget(context, params);
-        groupWidget.addWidget(widget);
+        groupWidget = (GroupWidget)GLib.inflateWidget(context, params);
     }
 }

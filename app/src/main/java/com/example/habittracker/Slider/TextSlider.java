@@ -58,6 +58,11 @@ public class TextSlider extends EntryWidget {
     }
 
     @Override
+    public void setValue(DataTree dataTree) {
+
+    }
+
+    @Override
     public void setParamCustom(EntryWidgetParam params){
         TextSliderParam casted = (TextSliderParam) params;
         String data = casted.selected;

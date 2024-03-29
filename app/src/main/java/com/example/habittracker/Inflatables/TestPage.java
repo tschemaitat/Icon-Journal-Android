@@ -15,6 +15,7 @@ import com.example.habittracker.BorderView;
 import com.example.habittracker.CustomTextInputLayout;
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
+import com.example.habittracker.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -36,11 +37,13 @@ public class TestPage implements Inflatable {
     public TestPage(Context context){
         this.context = context;
         linearLayout = MainActivity.createVerticalLayout();
+        linearLayout.setId(R.id.pageLayout);
         //setupTestLayout();
-        testDataTreeValueExport();
+        //testDataTreeValueExport();
         //testNewEditText();
         //testCard();
         //testPopup();
+        testLinLayoutButton();
     }
 
     @Override
@@ -76,6 +79,16 @@ public class TestPage implements Inflatable {
         cardView.setPadding(20, 20, 20, 20);
     }
 
+    public void testLinLayoutButton(){
+        LinLayout linLayout = new LinLayout(context);
+        linearLayout.addView(linLayout.getView());
+        linLayout.addButton((view)->{});
+        TextView textView = new TextView(context);
+        textView.setText("hello");
+        linLayout.add(textView);
+
+    }
+
     public void testPopup(){
         int blue1 = context.getColor(R.color.blue1);
         int blue2 = context.getColor(R.color.blue2);
@@ -85,10 +98,10 @@ public class TestPage implements Inflatable {
         MainActivity.constraintLayout.setBackgroundColor(context.getColor(R.color.dark1));
         //linearLayout.setBackground(new ColorDrawable(Color.WHITE));
 
-        GroupWidget groupWidget = new GroupWidget(context);
-        linearLayout.addView(groupWidget.getView());
+        LinLayout layout = new LinLayout(context);
+        linearLayout.addView(layout.getView());
         CustomEditText customEditText = new CustomEditText(context);
-        groupWidget.addWidget(customEditText);
+        layout.add(customEditText.getView());
         CustomPopup customPopup = new CustomPopup(context, "title", new ArrayList<>(Arrays.asList("hi", "hello")), null, null, null);
 
 
@@ -125,7 +138,7 @@ public class TestPage implements Inflatable {
                 })
 
         });
-        GroupWidget groupWidget = GLib.createInitialGroupWidget(context);
+        GroupWidget groupWidget = new GroupWidget(context);
         groupWidget.setParam(groupWidgetParam);
 
         linearLayout.addView(groupWidget.getView());

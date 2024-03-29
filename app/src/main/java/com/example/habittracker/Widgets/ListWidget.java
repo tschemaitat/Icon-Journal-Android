@@ -7,6 +7,7 @@ import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
+import com.example.habittracker.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
@@ -16,33 +17,58 @@ public class ListWidget extends EntryWidget {
     private GroupWidgetParam cloneParams = null;
     public static final String className = "list";
     private Context context;
-    private GroupWidget groupWidget;
+    private WidgetLayout layout;
     private String name;
 
     public ListWidget(Context context){
         super(context);
         this.context = context;
-        groupWidget = new GroupWidget(context);
-        setChild(groupWidget.getView());
+        layout = new WidgetLayout(context);
+        setChild(layout.getView());
 
 
     }
 
-
+    public ArrayList<GroupWidget> getGroupWidgets(){
+        ArrayList<GroupWidget> groupWidgets = new ArrayList<>();
+        for(Widget widget: layout.widgets()){
+            groupWidgets.add((GroupWidget) widget);
+        }
+        return groupWidgets;
+    }
 
     public EntryWidgetParam getParam(){
+        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
-        for(EntryWidgetParam widgetParam: groupWidget.getDataWidgets())
-            groupWidgetParam.add((GroupWidget.GroupWidgetParam) widgetParam);
-
+        for(GroupWidget groupWidget: groupWidgets){
+            groupWidgetParam.add((GroupWidgetParam) groupWidget.getParam());
+        }
         ListParam params = new ListParam(name, cloneParams, groupWidgetParam);
 
         return params;
     }
 
     @Override
+    public void setValue(DataTree dataTree) {
+        System.out.println("list setting value: " + dataTree.hierarchy());
+        ArrayList<Widget> widgets = layout.widgets();
+        for(DataTree tree: dataTree.getList()){
+            GroupWidget entryWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams);
+            setNewGruop(entryWidget);
+            entryWidget.setValue(tree);
+            layout.add(entryWidget);
+        }
+
+    }
+
+    @Override
     public DataTree getDataTree() {
-        return groupWidget.getDataTree();
+        DataTree dataTree = new DataTree();
+        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
+        for(GroupWidget groupWidget: groupWidgets){
+            dataTree.put(groupWidget.getDataTree());
+        }
+        return dataTree;
     }
 
 
@@ -51,11 +77,11 @@ public class ListWidget extends EntryWidget {
         ListParam listParams = (ListParam) params;
         name = listParams.name;
         cloneParams = listParams.cloneableWidget;
-        groupWidget.inflateAll(new ArrayList<>(listParams.currentWidgets));
+        layout.inflateAll(new ArrayList<>(listParams.currentWidgets));
         makeButton();
 
 
-        for(Widget widget: groupWidget.widgets()){
+        for(Widget widget: layout.widgets()){
             GroupWidget groupChild = (GroupWidget)widget;
             setNewGruop(groupChild);
 
@@ -73,12 +99,10 @@ public class ListWidget extends EntryWidget {
     public void setNewGruop(GroupWidget groupChild){
         groupChild.setOnDataChangedListener(()->onDataChange());
         System.out.println("<list> add border");
-        groupChild.addBorder();
-        groupChild.setMargin(5, 10);
     }
 
     public void makeButton(){
-        groupWidget.addButton(new View.OnClickListener() {
+        layout.getLinLayout().addButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GroupWidget newWidget = null;
@@ -86,7 +110,7 @@ public class ListWidget extends EntryWidget {
                 newWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams);
                 setNewGruop(newWidget);
 
-                groupWidget.addWidget(newWidget);
+                layout.add(newWidget);
             }
         });
     }

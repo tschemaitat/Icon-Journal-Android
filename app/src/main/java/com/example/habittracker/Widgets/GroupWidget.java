@@ -1,73 +1,55 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
-import android.view.View;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
+import com.example.habittracker.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.CustomLinearLayout;
+import com.example.habittracker.WidgetLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GroupWidget extends EntryWidget {
     Context context;
-    ArrayList<Widget> widgets = new ArrayList<>();
+    WidgetLayout layout;
 
     public static final String className = "group widget";
-    private CustomLinearLayout customLinearLayout;
     public GroupWidget(Context context){
         super(context);
         this.context = context;
-        customLinearLayout = new CustomLinearLayout(context);
-        customLinearLayout.getView().setId(R.id.groupWidgetOuterLayout);
-        setChild(customLinearLayout.getView());
-    }
-
-    public void setMargin(int hor, int vert){
-        customLinearLayout.setMargin(hor, vert);
+        layout = new WidgetLayout(context);
+        setChild(layout.getView());
+        getView().setId(R.id.groupWidget);
     }
 
     @Override
     public DataTree getDataTree() {
         DataTree tree = new DataTree();
-        for(Widget widget: widgets()){
-            tree.add(((EntryWidget) widget).getDataTree());
+        for(EntryWidget widget: entryWidgets()){
+            tree.add(widget.getDataTree());
         }
         return tree;
     }
 
-    public void setNameColor(int color){
-        customLinearLayout.setNameColor(color);
-    }
-
-
-    public ArrayList<Widget> widgets(){
-        return ((ArrayList<Widget>) widgets.clone());
-    }
-
-    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params){
-        System.out.println("setting widgets: " + params.size());
-        for(int i = 0; i < params.size(); i++){
-            System.out.println("\tadding widget and inflating: ");
-            addWidget(GLib.inflateWidget(context, params.get(i)));
+    public ArrayList<EntryWidget> entryWidgets(){
+        ArrayList<EntryWidget> entryWidgets = new ArrayList<>();
+        for(Widget widget: layout.widgets()){
+            entryWidgets.add((EntryWidget) widget);
         }
-        return widgets();
+        return entryWidgets;
     }
 
-    public Widget inflate(EntryWidgetParam widgetParam){
-        Widget widget = GLib.inflateWidget(context, widgetParam);
-        addWidget(widget);
-        return widget;
-    }
+
 
     public ArrayList<EntryWidgetParam> getDataWidgets(){
-        System.out.println("getting group widget data numWidget: " + widgets.size());
+        ArrayList<EntryWidget> entryWidgets = entryWidgets();
+        System.out.println("getting group widget data numWidget: " + entryWidgets.size());
         ArrayList<EntryWidgetParam> params = new ArrayList<>();
-        for(int i = 0; i < widgets.size(); i++){
-            EntryWidgetParam entryWidgetParam = widgets.get(i).getParam();
+        for(EntryWidget entryWidget: entryWidgets){
+            EntryWidgetParam entryWidgetParam = entryWidget.getParam();
             params.add(entryWidgetParam);
         }
 
@@ -79,48 +61,31 @@ public class GroupWidget extends EntryWidget {
         return new GroupWidgetParam(null, getDataWidgets());
     }
 
+    @Override
+    public void setValue(DataTree dataTree) {
+        ArrayList<EntryWidget> entryWidgets = entryWidgets();
+        System.out.println("group widget setting value: " + dataTree.hierarchy());
+        for(int i = 0; i < entryWidgets.size(); i++){
 
+            EntryWidget entryWidget = entryWidgets.get(i);
+            System.out.println("setting value for entry widget: " + entryWidget);
+            entryWidget.setValue(dataTree.getTree(i));
+        }
+    }
 
     @Override
     public void setParamCustom(EntryWidgetParam params) {
         GroupWidgetParam groupParams = (GroupWidgetParam) params;
-        inflateAll(groupParams.params);
-        for(Widget widget: widgets)
-            widget.setOnDataChangedListener(()->onDataChangedListener());
+        layout.inflateAll(groupParams.params);
     }
 
-    public void addNameEditor(View view){
-        customLinearLayout.addNameEditor(view);
+    public WidgetLayout getWidgetLayout(){
+        return layout;
     }
 
-    //region wrapper
-
-    public void addWidget(Widget widget){
-        widgets.add(widget);
-        customLinearLayout.add(widget.getView());
+    public LinLayout getLinLayout() {
+        return getWidgetLayout().getLinLayout();
     }
-
-    public void removeWidget(Widget widget){
-        widgets.remove(widget);
-        customLinearLayout.remove(widget.getView());
-    }
-
-    public boolean hasButton(){
-        return customLinearLayout.hasButton();
-    }
-
-    public void removeButton(){
-        customLinearLayout.removeButton();
-    }
-
-    public void addButton(View.OnClickListener listener){
-        customLinearLayout.addButton(listener);
-    }
-
-    public void addDeleteButton(Runnable runnable){
-        customLinearLayout.addDeleteButton(runnable);
-    }
-    //endregion
 
     public static class GroupWidgetParam extends EntryWidgetParam {
         public ArrayList<EntryWidgetParam> params;
@@ -152,7 +117,7 @@ public class GroupWidget extends EntryWidget {
 
         @Override
         public DataTree header() {
-            DataTree header = new DataTree(null);
+            DataTree header = new DataTree();
             for(EntryWidgetParam param: params){
                 header.add(param.header());
             }

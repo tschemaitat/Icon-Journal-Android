@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.LinearLayout;
 
 import com.example.habittracker.DataTree;
 import com.example.habittracker.GLib;
@@ -10,8 +11,6 @@ import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Objects;
 
 public class CustomEditText extends EntryWidget {
     private String currentText = "";
@@ -22,16 +21,9 @@ public class CustomEditText extends EntryWidget {
         super(context);
         editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
         editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
-        //editText.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         setChild(editTextLayout);
         init();
-    }
-
-
-    public String text(){
-        if(currentText.equals(nullText))
-            return null;
-        return currentText;
     }
 
     public void setText(String newText){
@@ -43,13 +35,23 @@ public class CustomEditText extends EntryWidget {
         editTextLayout.getEditText().setText(newText);
     }
 
+    public String getText(){
+        Editable editable = editTextLayout.getEditText().getText();
+        if(editable == null)
+            return null;
+        String result = editable.toString();
+        if(result.equals(""))
+            return null;
+        return result;
+    }
+
     public void setValue(String newValue){
         currentText = newValue;
         editTextLayout.getEditText().setText(newValue);
     }
 
     public void onTextChange(){
-        resetNameColor();
+        getViewWrapper().resetNameColor();
         onDataChangedListener().run();
 //        if (currentText.length() > 50) {
 //            editTextLayout.setError("Maximum character limit exceeded");
@@ -94,6 +96,11 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
+    public void setValue(DataTree dataTree) {
+        setText(dataTree.getName());
+    }
+
+    @Override
     public DataTree getDataTree() {
         return new DataTree(currentText);
     }
@@ -101,7 +108,7 @@ public class CustomEditText extends EntryWidget {
     @Override
     public void setParamCustom(EntryWidgetParam params){
         EditTextParam casted = ((EditTextParam) params);
-        if( ! casted.text.equals(nullText) )
+        if( casted.text != null )
             setValue(casted.text);
     }
 

@@ -9,9 +9,19 @@ import java.util.Arrays;
 
 public class DataTree {
     private String name;
+    private ItemPath itemPath;
     private ArrayList<DataTree> list = new ArrayList<>();
     public DataTree(){
     }
+
+    public DataTree(ItemPath itemPath){
+        this.itemPath = itemPath;
+    }
+
+    public ItemPath getItemPath(){
+        return itemPath;
+    }
+
 
     public DataTree put(ArrayList<DataTree> dataTrees){
         for(DataTree dataTree: dataTrees){

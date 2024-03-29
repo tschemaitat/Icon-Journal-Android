@@ -140,7 +140,7 @@ public class Dictionary {
         }
         DataTree header = structure.getHeader();
         //System.out.println("header = " + header);
-        ArrayList<DataTree> data = structure.getEntries();
+        ArrayList<DataTree> data = structure.getData();
         ArrayList<ArrayList<Integer>> groupToValue = getGroupIndexes(header, groups);
 
         int valueIndex = header.indexOf(valueKey);
@@ -200,27 +200,33 @@ public class Dictionary {
         });
 
         DataTree dataTree1 = new DataTree().put(
-                new DataTree().put("ReLIFE"),
-                new DataTree().put("romance",
-                        "isekai",
-                        "working together"),
-                new DataTree().put("composition",
-                        "character progression",
-                        "character",
-                        "story")
+                new DataTree("ReLIFE"),
+                new DataTree().put(
+                        new DataTree().put("romance"),
+                        new DataTree().put("isekai"),
+                        new DataTree().put("working together")),
+                new DataTree().put(
+                        new DataTree().put("composition"),
+                        new DataTree().put("character progression"),
+                        new DataTree().put("character"),
+                        new DataTree().put("story"))
         );
         DataTree dataTree2 = new DataTree().put(
-                new DataTree().put("NEW GAME!"),
-                new DataTree().put("working together",
-                        "girls doing cute things"),
-                new DataTree().put("composition",
-                        "character",
-                        "dialogue")
+                new DataTree("NEW GAME!"),
+                new DataTree().put(
+                        new DataTree().put("working together"),
+                        new DataTree().put("girls doing cute things")),
+                new DataTree().put(
+                        new DataTree().put("composition"),
+                        new DataTree().put("character"),
+                        new DataTree().put("dialogue"))
         );
         DataTree dataTree3 = new DataTree().put(
-                new DataTree().put("The Rising of the Shield Hero"),
-                new DataTree().put("isekai"),
-                new DataTree().put("character")
+                new DataTree("The Rising of the Shield Hero"),
+                new DataTree().put(
+                        new DataTree().put("isekai")),
+                new DataTree().put(
+                        new DataTree().put("character"))
         );
 
 
