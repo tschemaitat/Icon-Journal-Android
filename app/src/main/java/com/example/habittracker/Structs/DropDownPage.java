@@ -97,9 +97,9 @@ public class DropDownPage {
     }
 
     public static DropDownPage fromItems(ArrayList<ItemPath> items){
-        System.out.println("getting page from items");
-        for(ItemPath item: items)
-            System.out.println("item = " + item);
+        //System.out.println("getting page from items");
+//        for(ItemPath item: items)
+//            System.out.println("item = " + item);
         DropDownPage page = new DropDownPage("default");
         DropDownPage currentParent;
         for(ItemPath item: items){

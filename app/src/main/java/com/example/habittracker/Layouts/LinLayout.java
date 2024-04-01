@@ -3,6 +3,7 @@ package com.example.habittracker.Layouts;
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
@@ -49,9 +50,9 @@ public class LinLayout {
     }
 
     public void add(View view){
-        System.out.println("adding view");
-        System.out.println("hasButton() = " + hasButton());
-        System.out.println("(views.size() - 1) = " + (views.size() - 1));
+        //System.out.println("adding view");
+        //System.out.println("hasButton() = " + hasButton());
+        //System.out.println("(views.size() - 1) = " + (views.size() - 1));
         if(view == null)
             throw new RuntimeException();
         if(hasButton())
@@ -62,6 +63,18 @@ public class LinLayout {
         views.add(view);
         view.setLayoutParams(childParams());
 
+    }
+
+    public void add(View view, int i) {
+        if(view == null)
+            throw new RuntimeException();
+        if(hasButton())
+            layout.addView(view, i);
+        else
+            layout.addView(view, i);
+
+        views.add(i, view);
+        view.setLayoutParams(childParams());
     }
 
     public void remove(View view){
@@ -88,4 +101,6 @@ public class LinLayout {
     public View getView() {
         return layout;
     }
+
+
 }

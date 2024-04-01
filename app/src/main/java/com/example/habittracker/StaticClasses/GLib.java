@@ -114,7 +114,7 @@ public class GLib {
     public static Widget inflateWidget(Context context, EntryWidgetParam params, Runnable onDataChange){
 
         String className = params.className;
-        System.out.println("inflating widget: " + className);
+        //System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className){
             case DropDown.className:

@@ -20,7 +20,7 @@ public class StructureWidget implements Widget {
     private StructureWidgetHeaderView headerView = null;
 
     private DropDown typeDropDown = null;
-    private String currentType = DropDown.nullValue;
+    private String currentType = null;
 
     private StructureWidgetList structureWidgetList = null;
     private StructureWidgetDropDown structureWidgetDropDown = null;

@@ -15,6 +15,8 @@ public class ColorPalette {
         primary = context.getColor(R.color.dark1);
         secondary = context.getColor(R.color.dark2);
         tertiary = context.getColor(R.color.dark3);
+
+        groupColor = context.getColor(R.color.groupColor);
     }
 
     public static int text;
@@ -24,4 +26,5 @@ public class ColorPalette {
     public static int primary;
     public static int secondary;
     public static int tertiary;
+    public static int groupColor;
 }

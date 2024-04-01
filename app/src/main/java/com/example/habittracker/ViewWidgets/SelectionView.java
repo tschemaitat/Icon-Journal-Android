@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class SelectionView {
     OnAdd onAdd;
     ListView listView;
     int textViewResource;
+    int color = -1;
 
     public static final String addString = "add";
     public SelectionView(Context context, ArrayList<String> options, OnSelected onSelected, OnAdd onAdd){
@@ -64,6 +66,10 @@ public class SelectionView {
         return listView;
     }
 
+    public void setColor(int textPurple) {
+        color = textPurple;
+    }
+
 
     public interface OnSelected {
         public void onSelected(String stringValue, int position);
@@ -77,6 +83,17 @@ public class SelectionView {
         options = strings;
         listView.setAdapter(new ArrayAdapter<>(context, textViewResource, strings));
         listView.setMinimumWidth(1000);
+        setColor();
+    }
+
+    private void setColor(){
+        int color = ColorPalette.textPurple;
+        listView.post(() -> {
+            for(int i = 0; i < listView.getChildCount(); i++){
+                TextView child = (TextView) listView.getChildAt(i);
+                child.setTextColor(ColorPalette.textPurple);
+            }
+        });
     }
 
     public void setText(String[] strings){
@@ -114,12 +131,7 @@ public class SelectionView {
 
         listView.setLayoutParams(new LinearLayout.LayoutParams(-1, textViewHeight * options.size()));
 
-        listView.post(() -> {
-            for(int i = 0; i < listView.getChildCount(); i++){
-                TextView child = (TextView) listView.getChildAt(i);
-                child.setTextColor(context.getColor(R.color.purple));
-            }
-        });
+        setColor();
 
         // Set the click listener for the list items
         listView.setOnItemClickListener((adapterView, view, i, l) -> {

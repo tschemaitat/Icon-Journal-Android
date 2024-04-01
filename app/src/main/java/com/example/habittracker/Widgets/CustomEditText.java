@@ -3,9 +3,12 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
@@ -17,14 +20,14 @@ public class CustomEditText extends EntryWidget {
     private String currentText = "";
     public static final String className = "edit text";
     public static final String nullText = "";
-    private TextInputLayout editTextLayout;
+    private LinLayout linLayout;
+    private EditText editTextLayout;
+    private Context context;
     public CustomEditText(Context context) {
         super(context);
-        editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
-        editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
-        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        editTextLayout.getEditText().setTextColor(ColorPalette.textPurple);
-        setChild(editTextLayout);
+        this.context = context;
+
+
         init();
     }
 
@@ -34,11 +37,11 @@ public class CustomEditText extends EntryWidget {
         if(newText.equals("null"))
             throw new RuntimeException();
         currentText = newText;
-        editTextLayout.getEditText().setText(newText);
+        editTextLayout.setText(newText);
     }
 
     public String getText(){
-        Editable editable = editTextLayout.getEditText().getText();
+        Editable editable = editTextLayout.getText();
         if(editable == null)
             return null;
         String result = editable.toString();
@@ -49,26 +52,39 @@ public class CustomEditText extends EntryWidget {
 
     public void setValue(String newValue){
         currentText = newValue;
-        editTextLayout.getEditText().setText(newValue);
+        editTextLayout.setText(newValue);
     }
 
-    public void onTextChange(){
-        getViewWrapper().resetNameColor();
-        onDataChangedListener().run();
-//        if (currentText.length() > 50) {
-//            editTextLayout.setError("Maximum character limit exceeded");
-//        } else {
-//            editTextLayout.setError(null);
-//        }
-    }
+
 
 
     private void init(){
+        linLayout = new LinLayout(context);
+        setChild(linLayout.getView());
+        //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
+        editTextLayout = new EditText(context);
+        linLayout.add(editTextLayout);
+
+        editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
+        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        editTextLayout.setTextColor(ColorPalette.textPurple);
+        editTextLayout.setBackground(null);
+        Margin.setEditTextLayout(linLayout);
+
         setValue(nullText);
         int MAX_CHARACTERS = 50;
 
         // Error handling from too many characters
-        editTextLayout.getEditText().addTextChangedListener(new TextWatcher() {
+
+    }
+
+    public void onTextChange(String before, String newText){
+        getViewWrapper().resetNameColor();
+        onDataChangedListener().run();
+    }
+
+    private void setTextListener(){
+        editTextLayout.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -77,11 +93,13 @@ public class CustomEditText extends EntryWidget {
 
             @Override
             public void afterTextChanged(Editable s) {
-                boolean textChanged = !currentText.equals(s.toString());
+                String newText = s.toString();
+                boolean textChanged = !currentText.equals(newText);
                 if(!textChanged)
                     return;
-                currentText = s.toString();
-                onTextChange();
+                String before = currentText;
+                currentText = newText;
+                onTextChange(before, newText);
             }
         });
     }
@@ -115,7 +133,11 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void disableEdit() {
-        editTextLayout.getEditText().setEnabled(false);
+        editTextLayout.setEnabled(false);
+    }
+
+    public void setHint(String widget_name) {
+        editTextLayout.setHint(widget_name);
     }
 
     public static class EditTextParam extends EntryWidgetParam {

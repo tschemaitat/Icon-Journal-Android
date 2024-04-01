@@ -13,9 +13,9 @@ public class Margin {
     public static final int initialLeftMargin = 20;
     public static final int initialVertMargin = 20;
 
-    public static final int listLeftPadding = 20;
+    public static final int listLeftPadding = 10;
     public static final int listVertMargin = 20;
-    public static final int listRightPadding = 10;
+    public static final int listRightPadding = 0;
 
     public static final int listChildMargin = 15;
 
@@ -29,6 +29,13 @@ public class Margin {
         this.top = top;
         this.right = right;
         this.bottom = bottom;
+    }
+
+    public Margin(){
+        this.left = 0;
+        this.top = 0;
+        this.right = 0;
+        this.bottom = 0;
     }
 
     public Margin subtract(Margin margin){
@@ -79,8 +86,19 @@ public class Margin {
 
     public static void setListLayout(LinLayout linLayout){
         Margin padding = listPadding();
-        setPaddingAndBackground(linLayout.getView(), tertiary, padding);
+        setPaddingAndBackground(linLayout.getView(), groupColor, padding);
         linLayout.setChildMargin(Margin.listChildMargin());
+    }
+
+    public static void setEditTextLayout(LinLayout linLayout){
+        setPaddingAndBackground(linLayout.getView(), tertiary, new Margin());
+        linLayout.setChildMargin(Margin.listChildMargin());
+    }
+
+    public static void setStructureWidgetGroupLayout(LinLayout linLayout){
+        setPaddingAndBackground(linLayout.getView(), tertiary, new Margin());
+        linLayout.setChildMargin(Margin.listChildMargin());
+
     }
 
 

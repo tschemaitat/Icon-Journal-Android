@@ -20,9 +20,9 @@ public class StructureWidgetHeaderView {
 
     public void addNameEditor(String name){
         nameEditor = new CustomEditText(context);
-        nameEditor.setName("name editor");
-        nameEditor = new CustomEditText(context);
-        nameEditor.setText(name);
+        nameEditor.setHint("widget name");
+        if(name != null)
+            nameEditor.setText(name);
         nameEditor.getView().setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
         relativeLayout.addView(nameEditor.getView());
     }

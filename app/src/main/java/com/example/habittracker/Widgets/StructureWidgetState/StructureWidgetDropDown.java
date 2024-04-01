@@ -44,16 +44,16 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void createStructureKeyDropDown(){
-        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters("structure name", new DropDownPage(null, Dictionary.getStructureKeys()));
+        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters(null, new DropDownPage(null, Dictionary.getStructureKeys()));
         structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams, () -> onStructureKeyChange());
+        structureKeyDropDown.setHint("select spreadsheet");
         customLinearLayout.add(structureKeyDropDown.getView());
-        structureKeyDropDown.setName("spreadsheet name");
     }
 
 
 
     private void onStructureKeyChange(){
-        //System.out.println("structure key change");
+        System.out.println("structure key change");
         String structureKey = structureKeyDropDown.getSelectedString();
         if(structureKey == null){
             if(valueKeyDropDown != null)
@@ -71,6 +71,18 @@ public class StructureWidgetDropDown implements Widget {
 
     }
 
+    private void createValueKeyDropDown(){
+        //System.out.println("creating value key drop down");
+        String structureKey = structureKeyDropDown.getSelectedString();
+        ArrayList<String> headerList = valueKeyList(structureKey);
+        DropDownPage valuePage = new DropDownPage("value keys", headerList);
+        //System.out.println("value key drop down is null");
+        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(null, valuePage);
+        valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params, ()->onValueKeyChange());
+        valueKeyDropDown.setHint("item to be selected");
+        customLinearLayout.add(valueKeyDropDown.getView());
+    }
+
     private void resetValueKeyWidget(){
         System.out.println("resetting value key widget");
         if(valueKeyDropDown == null)
@@ -80,14 +92,10 @@ public class StructureWidgetDropDown implements Widget {
         resetGroupKeyWidget();
     }
 
-    private void resetGroupKeyWidget(){
-        System.out.println("resetting gorup key widget");
-        customLinearLayout.remove(groupLayout.getView());
-        groupLayout = null;
-    }
+
 
     private void onValueKeyChange(){
-        //System.out.println("value key change");
+        System.out.println("value key change");
         String valueKey = valueKeyDropDown.getSelectedString();
         //System.out.println("valueKey = " + valueKey);
         if(valueKey == null){
@@ -109,32 +117,35 @@ public class StructureWidgetDropDown implements Widget {
 
 
 
-    private void createValueKeyDropDown(){
-        //System.out.println("creating value key drop down");
-        String structureKey = structureKeyDropDown.getSelectedString();
-        ArrayList<String> headerList = valueKeyList(structureKey);
-        DropDownPage valuePage = new DropDownPage("value keys", headerList);
-        //System.out.println("value key drop down is null");
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("desired value name", valuePage);
-        valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params, ()->onValueKeyChange());
-        valueKeyDropDown.setName("item to be selected");
-        customLinearLayout.add(valueKeyDropDown.getView());
-    }
+
 
     private void tryAddButton(){
         ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
         DropDown lastGroup = groupDropDowns.get(groupDropDowns.size() - 1);
         boolean lastNull = lastGroup.getSelectedString() == null;
+        //System.out.println("groupLayout.getLinLayout().hasButton() = " + groupLayout.getLinLayout().hasButton());
+        //System.out.println("maxNumGroups() = " + maxNumGroups());
         if(!groupLayout.getLinLayout().hasButton() && groupDropDowns.size() < maxNumGroups() && ! lastNull){
             addGroupKeyDropDownAdd();
         }
+    }
+
+    private void createGroupLayout(){
+        //System.out.println("groupby widget group is null, making group key drop downs");
+        groupLayout = new GroupWidget(context);
+        //groupLayout.getViewWrapper().setName("group by");
+        Margin.setStructureWidgetGroupLayout(groupLayout.getLinLayout());
+
+        customLinearLayout.add(groupLayout.getView());
+        //System.out.println("adding group add button");
+        addGroupKeyDropDownAdd();
     }
 
     private void addGroupBy(){
         ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
         ArrayList<ItemPath> groupValues = getGroupValues();
         validateGroupValues(groupValues);
-        System.out.println("adding group by: " + groupValues);
+        //System.out.println("adding group by: " + groupValues);
         while(groupValues.remove(null)){
 
         }
@@ -143,11 +154,13 @@ public class StructureWidgetDropDown implements Widget {
         //System.out.println("adding groupBy");
         DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(groupValues));
         //System.out.println("group by page: \n" + page);
-        DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters("group by", page), () -> processGroupItemSelected());
+        DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters(null, page), () -> processGroupItemSelected());
+        dropDown.setHint("select group");
         groupDropDowns.add(dropDown);
         groupLayout.getWidgetLayout().add(dropDown);
-        //System.out.println("groupKeyDropDowns.widgetsInLayout.size() = " + groupKeyDropDowns.widgets().size());
+        //System.out.println("groupKeyDropDowns.widgetsInLayout.size() = " + groupLayout.getWidgetLayout().widgets().size());
         //System.out.println("maxNumGroups() = " + maxNumGroups());
+
         if(groupDropDowns.size() >= maxNumGroups())
             groupLayout.getLinLayout().removeButton();
     }
@@ -166,26 +179,31 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void processGroupItemSelected(){
+        System.out.println("group value changed");
         ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
-        ArrayList<ItemPath> selectedGroupKeys = getGroupValues();
+        ArrayList<ItemPath> selectedGroupKeys = new ArrayList<>();
         int removeIndex = groupDropDowns.size();
         for(int i = 0; i < groupDropDowns.size(); i++){
             DropDown dropDown = groupDropDowns.get(i);
             ItemPath item = dropDown.getSelectedPath();
             if(item == null){
-                removeIndex = i + 1;
+                removeIndex = i;
                 break;
             }
             selectedGroupKeys.add(item);
         }
+
+
         for(int i = removeIndex; i < groupDropDowns.size(); i++){
             DropDown dropDown = groupDropDowns.get(i);
             dropDown.resetValue();
         }
         DropDownPage reducedPage = DropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
+        //System.out.println("setting reduced page to remaining drop downs: " + removeIndex);
+        //System.out.println("reducedPage = " + reducedPage);
         for(int i = removeIndex; i < groupDropDowns.size(); i++) {
             DropDown dropDown = groupDropDowns.get(i);
-            dropDown.setParam(new DropDown.StaticDropDownParameters("group by", reducedPage));
+            dropDown.setParam(new DropDown.StaticDropDownParameters(null, reducedPage));
         }
     }
 
@@ -198,13 +216,12 @@ public class StructureWidgetDropDown implements Widget {
         });
     }
 
-    private void createGroupLayout(){
-        //System.out.println("groupby widget group is null, making group key drop downs");
-        groupLayout = new GroupWidget(context);
-        groupLayout.getViewWrapper().setName("group by");
-        groupLayout.getLinLayout().setChildMargin(Margin.listChildMargin());
-        customLinearLayout.add(groupLayout.getView());
-        addGroupKeyDropDownAdd();
+
+
+    private void resetGroupKeyWidget(){
+        System.out.println("resetting gorup key widget");
+        customLinearLayout.remove(groupLayout.getView());
+        groupLayout = null;
     }
 
 
@@ -237,15 +254,19 @@ public class StructureWidgetDropDown implements Widget {
     private ArrayList<ItemPath> getGroupKeyList(){
         //System.out.println("getting group key list");
         ArrayList<ItemPath> items = DataTree.gatherItems(Dictionary.header(structureKey()));
-        System.out.println("DataTree.gatherItems(Dictionary.header(structureKey())) = " + DataTree.gatherItems(Dictionary.header(structureKey())));
+        //System.out.println("DataTree.gatherItems(Dictionary.header(structureKey())) = " + DataTree.gatherItems(Dictionary.header(structureKey())));
         items.remove(valueKeyDropDown.getSelectedPath());
         return items;
     }
     private ArrayList<ItemPath> getReducedGroupKeyList(ArrayList<ItemPath> selectedGroupKeys){
+        //System.out.println("getting reduced group key list");
+        //System.out.println("group keys selected: " + selectedGroupKeys);
         ArrayList<ItemPath> items = getGroupKeyList();
+        //System.out.println("getGroupKeyList() = " + items);
         for(ItemPath item: selectedGroupKeys){
             items.remove(item);
         }
+        //System.out.println("result: " + items);
         return items;
     }
     private ArrayList<String> valueKeyList(String structureKey){
@@ -260,7 +281,7 @@ public class StructureWidgetDropDown implements Widget {
         return headerList;
     }
     private int maxNumGroups(){
-        return getGroupKeyList().size() - 1;
+        return getGroupKeyList().size();
     }
     private String structureKey(){
         return structureKeyDropDown.getSelectedString();

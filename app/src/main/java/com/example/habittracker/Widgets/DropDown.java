@@ -4,6 +4,7 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
+import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.ViewWidgets.SelectionView;
@@ -31,7 +32,7 @@ public class DropDown extends EntryWidget {
     private DropDownPage parentPage = null;
     private DropDownPage currentPage = null;
 
-    public static String nullValue = "select option";
+    public String nullValue = "select option";
 
     CustomPopup customPopup;
 
@@ -61,7 +62,6 @@ public class DropDown extends EntryWidget {
             customPopup.setText(nullValue, spinnerOptions);
         }else
             customPopup.setText(title, spinnerOptions);
-        selectedValuePath = null;
 
     }
 
@@ -74,6 +74,8 @@ public class DropDown extends EntryWidget {
             //on button pressed
             createPopUp();
         }, null);
+        buttonSelectionView.setColor(ColorPalette.textPurple);
+
         setChild(buttonSelectionView.getView());
     }
 
@@ -133,7 +135,7 @@ public class DropDown extends EntryWidget {
         path.add(newValue);
         selectedValuePath = new ItemPath(path);
 
-        onDataChangedListener().run();
+
 
         if(newValue == null)
             buttonSelectionView.setText(new String[]{"select option"});
@@ -142,6 +144,8 @@ public class DropDown extends EntryWidget {
 
         customPopup.close();
         customPopup = null;
+
+        onDataChangedListener().run();
     }
 
 
@@ -196,8 +200,12 @@ public class DropDown extends EntryWidget {
 
     public ItemPath getSelectedPath(){
         ItemPath itemPath = selectedValuePath;
+        if(itemPath == null)
+            return null;
         ItemPath copy = new ItemPath((ArrayList<String>) itemPath.getPath().clone());
         if(getSelectedString() == null)
+            return null;
+        if(getSelectedString().equals(nullValue))
             return null;
         return copy;
     }
@@ -231,7 +239,7 @@ public class DropDown extends EntryWidget {
         dataSet = true;
         parentPage = staticParams.page;
         currentPage = parentPage;
-        selectedValuePath = new ItemPath(nullValue);
+        selectedValuePath = null;
         //setOptionsOfPage();
 
     }
@@ -268,7 +276,7 @@ public class DropDown extends EntryWidget {
             super(name, DropDown.className);
             if(structureKey == null)
                 throw new RuntimeException();
-            this.selected = new ItemPath(nullValue);
+            this.selected = null;
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = groups;
@@ -278,7 +286,7 @@ public class DropDown extends EntryWidget {
             super(name, DropDown.className);
             if(structureKey == null)
                 throw new RuntimeException();
-            this.selected = new ItemPath(nullValue);
+            this.selected = null;
             this.structureKey = structureKey;
             this.valueKey = valueKey;
             this.groups = new ArrayList<>();

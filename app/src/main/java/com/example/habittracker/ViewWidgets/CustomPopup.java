@@ -125,7 +125,7 @@ public class CustomPopup {
     }
 
     public void setText(String title, ArrayList<String> options){
-        System.out.println("popup: setting text. title: " + title + ", options: " + options);
+        //System.out.println("popup: setting text. title: " + title + ", options: " + options);
         name.setText(new String[]{title});
         optionsSelectionView.setText(options);
     }
@@ -140,7 +140,7 @@ public class CustomPopup {
     }
 
     public void addBackIcon(){
-        System.out.println("addBackIcon");
+        //System.out.println("addBackIcon");
         nameLayout.addView(backIcon);
         TextView textView = (TextView) name.getChild(0);
         int startOfTextView = textView.getLeft(); // Relative to parent

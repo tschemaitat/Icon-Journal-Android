@@ -13,15 +13,15 @@ import com.example.habittracker.StaticClasses.GLib;
 
 public class ViewWrapper {
     private Context context;
-    private LinearLayout linearLayout;
+    private LinLayout linearLayout;
     private TextView nameTextView;
     private View view;
 
     public ViewWrapper(Context context){
         this.context = context;
-        linearLayout = new LinearLayout(context);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout = new LinLayout(context);
+        linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        ((LinearLayout)linearLayout.getView()).setOrientation(LinearLayout.VERTICAL);
     }
     public void setName(String name){
         if(name == null)
@@ -32,7 +32,7 @@ public class ViewWrapper {
         nameTextView = new TextView(context);
         nameTextView.setText(name);
 
-        linearLayout.addView(nameTextView, 0);
+        linearLayout.add(nameTextView, 0);
 
         int margin = GLib.dpToPx(context, 20);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
@@ -45,28 +45,30 @@ public class ViewWrapper {
         nameTextView.setText(name);
     }
 
-    public void setBackGround(int color){
-        linearLayout.setBackground(new ColorDrawable(color));
+    public LinLayout getLinLayout(){
+        return linearLayout;
     }
 
     public void setChildView(View view){
         if(view == null)
             throw new RuntimeException();
         this.view = view;
-        linearLayout.addView(view);
+        linearLayout.add(view);
     }
 
     public View getView(){
-        return linearLayout;
+        return linearLayout.getView();
     }
 
     public void setNameRed(){
         int colorRed = Color.RED;
-        nameTextView.setTextColor(ColorPalette.redText);
+        if(nameTextView != null)
+            nameTextView.setTextColor(ColorPalette.redText);
     }
 
     public void resetNameColor(){
         int colorWhite = Color.WHITE;
-        nameTextView.setTextColor(ColorPalette.text);
+        if(nameTextView != null)
+            nameTextView.setTextColor(ColorPalette.text);
     }
 }
