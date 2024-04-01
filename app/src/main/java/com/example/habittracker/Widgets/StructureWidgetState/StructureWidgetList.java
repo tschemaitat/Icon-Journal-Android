@@ -1,11 +1,13 @@
 package com.example.habittracker.Widgets.StructureWidgetState;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.example.habittracker.ColorPalette;
-import com.example.habittracker.GLib;
-import com.example.habittracker.LinLayout;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
@@ -30,7 +32,10 @@ public class StructureWidgetList implements Widget {
         groupWidget.getWidgetLayout().getLinLayout().addButton(view -> {
             addStructureWidget();
         });
-        groupWidget.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
+        Margin.setListLayout(groupWidget.getLinLayout());
+
+//        groupWidget.getView().setBackground(new ColorDrawable(ColorPalette.tertiary));
+//        Margin.setPadding(groupWidget.getView(), Margin.listPadding());
     }
 
     public StructureWidget addStructureWidget(){

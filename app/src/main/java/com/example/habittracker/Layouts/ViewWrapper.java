@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Layouts;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,8 +6,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.GLib;
 
 public class ViewWrapper {
     private Context context;

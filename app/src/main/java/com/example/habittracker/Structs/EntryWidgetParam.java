@@ -1,7 +1,5 @@
 package com.example.habittracker.Structs;
 
-import com.example.habittracker.DataTree;
-
 public abstract class EntryWidgetParam {
 
     public String name;

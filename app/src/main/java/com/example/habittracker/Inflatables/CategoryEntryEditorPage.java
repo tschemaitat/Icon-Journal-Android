@@ -22,7 +22,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     public void onDataChanged(){
-        System.out.println("new data: \n" + groupWidget.getDataTree());
+        System.out.println("new data: \n" + groupWidget.getDataTree().hierarchy());
     }
 
 
@@ -46,4 +46,15 @@ public class CategoryEntryEditorPage implements Inflatable{
         if(entry != null)
             groupWidget.setValue(entry.dataTree);
     }
+
+
+
+
+
+
+
+
+
+
+
 }

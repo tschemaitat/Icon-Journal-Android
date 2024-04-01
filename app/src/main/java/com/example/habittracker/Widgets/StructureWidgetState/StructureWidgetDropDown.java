@@ -3,11 +3,12 @@ package com.example.habittracker.Widgets.StructureWidgetState;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.LinLayout;
-import com.example.habittracker.DataTree;
-import com.example.habittracker.Dictionary;
-import com.example.habittracker.DropDownPage;
-import com.example.habittracker.GLib;
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.DropDown;
@@ -44,9 +45,8 @@ public class StructureWidgetDropDown implements Widget {
 
     private void createStructureKeyDropDown(){
         DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters("structure name", new DropDownPage(null, Dictionary.getStructureKeys()));
-        structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams);
+        structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams, () -> onStructureKeyChange());
         customLinearLayout.add(structureKeyDropDown.getView());
-        structureKeyDropDown.setOnDataChangedListener(() -> onStructureKeyChange());
         structureKeyDropDown.setName("spreadsheet name");
     }
 
@@ -102,7 +102,7 @@ public class StructureWidgetDropDown implements Widget {
             return;
         }
         if(groupLayout == null)
-            makeGroupKeyDropDowns();
+            createGroupLayout();
     }
 
 
@@ -116,10 +116,9 @@ public class StructureWidgetDropDown implements Widget {
         DropDownPage valuePage = new DropDownPage("value keys", headerList);
         //System.out.println("value key drop down is null");
         DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters("desired value name", valuePage);
-        valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params);
+        valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params, ()->onValueKeyChange());
         valueKeyDropDown.setName("item to be selected");
         customLinearLayout.add(valueKeyDropDown.getView());
-        valueKeyDropDown.setOnDataChangedListener(()->onValueKeyChange());
     }
 
     private void tryAddButton(){
@@ -144,9 +143,8 @@ public class StructureWidgetDropDown implements Widget {
         //System.out.println("adding groupBy");
         DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(groupValues));
         //System.out.println("group by page: \n" + page);
-        DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters("group by", page));
+        DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters("group by", page), () -> processGroupItemSelected());
         groupDropDowns.add(dropDown);
-        dropDown.setOnDataChangedListener(() -> processGroupItemSelected());
         groupLayout.getWidgetLayout().add(dropDown);
         //System.out.println("groupKeyDropDowns.widgetsInLayout.size() = " + groupKeyDropDowns.widgets().size());
         //System.out.println("maxNumGroups() = " + maxNumGroups());
@@ -200,10 +198,11 @@ public class StructureWidgetDropDown implements Widget {
         });
     }
 
-    private void makeGroupKeyDropDowns(){
+    private void createGroupLayout(){
         //System.out.println("groupby widget group is null, making group key drop downs");
         groupLayout = new GroupWidget(context);
         groupLayout.getViewWrapper().setName("group by");
+        groupLayout.getLinLayout().setChildMargin(Margin.listChildMargin());
         customLinearLayout.add(groupLayout.getView());
         addGroupKeyDropDownAdd();
     }

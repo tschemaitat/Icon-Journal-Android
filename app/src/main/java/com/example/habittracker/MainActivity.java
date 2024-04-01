@@ -2,10 +2,7 @@ package com.example.habittracker;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -17,11 +14,9 @@ import com.example.habittracker.Inflatables.CategorySelectionPage;
 import com.example.habittracker.Inflatables.Inflatable;
 import com.example.habittracker.Inflatables.EditorSelectionPage;
 import com.example.habittracker.Inflatables.JournalPage;
-import com.example.habittracker.Inflatables.StructureEditor;
 import com.example.habittracker.Inflatables.TestPage;
-import com.example.habittracker.Structs.Structure;
-
-import java.util.ArrayList;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.Dictionary;
 
 
 public class MainActivity extends AppCompatActivity {

@@ -1,10 +1,12 @@
-package com.example.habittracker;
+package com.example.habittracker.ViewWidgets;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Widgets.CustomEditText;
 
 public class StructureWidgetHeaderView {

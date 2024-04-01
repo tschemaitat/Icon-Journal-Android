@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.Slider;
 
 import android.content.Context;
 import android.util.AttributeSet;

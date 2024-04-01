@@ -1,15 +1,16 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.example.habittracker.ColorPalette;
-import com.example.habittracker.GLib;
-import com.example.habittracker.LinLayout;
-import com.example.habittracker.Dictionary;
-import com.example.habittracker.Margin;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.StructureWidgetHeaderView;
+import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetEditText;
@@ -50,9 +51,7 @@ public class StructureWidget implements Widget {
         typeDropDown.setOnDataChangedListener(() -> onTypeChange());
 
 
-
-        getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.secondary));
-        layout.setPadding(Margin.listPadding());
+        Margin.setStructureWidgetLayout(layout);
     }
 
     public LinLayout getLinLayout(){

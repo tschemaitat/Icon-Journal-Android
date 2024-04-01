@@ -5,8 +5,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.LinearLayout;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.GLib;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
@@ -22,6 +23,7 @@ public class CustomEditText extends EntryWidget {
         editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
         editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
         editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        editTextLayout.getEditText().setTextColor(ColorPalette.textPurple);
         setChild(editTextLayout);
         init();
     }

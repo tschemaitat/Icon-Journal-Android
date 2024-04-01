@@ -1,13 +1,11 @@
-package com.example.habittracker;
+package com.example.habittracker.StaticClasses;
 
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.R;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -111,7 +111,7 @@ public class GLib {
         return view;
     }
 
-    public static Widget inflateWidget(Context context, EntryWidgetParam params){
+    public static Widget inflateWidget(Context context, EntryWidgetParam params, Runnable onDataChange){
 
         String className = params.className;
         System.out.println("inflating widget: " + className);
@@ -119,22 +119,27 @@ public class GLib {
         switch (className){
             case DropDown.className:
                 widget = new DropDown(context);
+                widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
             case "list":
                 widget = new ListWidget(context);
+                widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
             case "structure widget":
                 widget = new StructureWidget(context);
+                widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
             case GroupWidget.className:
                 widget = new GroupWidget(context);
+                widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
             case CustomEditText.className:
                 widget = new CustomEditText(context);
+                widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
 

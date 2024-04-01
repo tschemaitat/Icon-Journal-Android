@@ -3,10 +3,9 @@ package com.example.habittracker.Widgets.StructureWidgetState;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.LinLayout;
+import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 
 public class StructureWidgetEditText implements Widget {

@@ -3,29 +3,24 @@ package com.example.habittracker.Inflatables;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.habittracker.BorderView;
-import com.example.habittracker.CustomTextInputLayout;
-import com.example.habittracker.DataTree;
-import com.example.habittracker.GLib;
-import com.example.habittracker.LinLayout;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.CustomPopup;
+import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,34 +143,5 @@ public class TestPage implements Inflatable {
         });
     }
 
-    public void testNewEditText(){
 
-
-
-        View view = MainActivity.mainActivity.getLayoutInflater().inflate(R.layout.edit_text_with_border, linearLayout);
-        TextInputLayout textInputLayout = view.findViewById(R.id.editTextLayout);
-        EditText editText = textInputLayout.getEditText();
-        //editText.setFocusable(false);
-        //editText.setFocusableInTouchMode(false); // to prevent focus when touched
-        editText.setCursorVisible(false); // to hide the cursor
-        editText.setKeyListener(null);
-        editText.requestFocus();
-
-
-        ConstraintLayout constraintLayout = new ConstraintLayout(context);
-        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(-1, 400);
-        constraintLayout.setLayoutParams(linearLayoutParams);
-        linearLayout.addView(constraintLayout);
-        TextView textView = new TextView(context);
-        textView.setText("hello");
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(-1, -1);
-        BorderView borderWithName = new BorderView(context, constraintLayout);
-        //constraintLayout.addView(borderWithName);
-        constraintLayout.addView(textView);
-
-        //borderWithName.setLayoutParams(layoutParams);
-        //borderWithName.setMinimumHeight(100);
-
-        linearLayout.addView(new CustomTextInputLayout(context));
-    }
 }

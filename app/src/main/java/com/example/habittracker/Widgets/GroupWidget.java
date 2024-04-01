@@ -2,12 +2,12 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.GLib;
-import com.example.habittracker.LinLayout;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.WidgetLayout;
+import com.example.habittracker.Layouts.WidgetLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,7 +76,7 @@ public class GroupWidget extends EntryWidget {
     @Override
     public void setParamCustom(EntryWidgetParam params) {
         GroupWidgetParam groupParams = (GroupWidgetParam) params;
-        layout.inflateAll(groupParams.params);
+        layout.inflateAll(groupParams.params, onDataChangedListener());
     }
 
     public WidgetLayout getWidgetLayout(){

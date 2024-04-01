@@ -1,8 +1,5 @@
-package com.example.habittracker;
+package com.example.habittracker.Structs;
 
-
-import com.example.habittracker.Structs.ItemPath;
-import com.example.habittracker.Structs.KeyPair;
 
 import java.util.ArrayList;
 import java.util.Arrays;

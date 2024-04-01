@@ -3,8 +3,8 @@ package com.example.habittracker.Inflatables;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.Dictionary;
-import com.example.habittracker.GLib;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -40,6 +40,6 @@ public class JournalPage implements Inflatable{
         EntryWidgetParam params = structure.getParam();
         System.out.println("journal params: \n" + params.hierarchyString(0));
         System.out.println(params);
-        groupWidget = (GroupWidget)GLib.inflateWidget(context, params);
+        //groupWidget = (GroupWidget)GLib.inflateWidget(context, params, onDataChange);
     }
 }

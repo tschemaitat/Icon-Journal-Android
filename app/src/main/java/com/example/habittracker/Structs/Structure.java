@@ -1,6 +1,5 @@
 package com.example.habittracker.Structs;
 
-import com.example.habittracker.DataTree;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;

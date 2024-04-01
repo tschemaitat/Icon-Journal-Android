@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.ViewWidgets;
 
 import android.content.Context;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.GLib;
 
 import java.util.ArrayList;
 import java.util.Arrays;

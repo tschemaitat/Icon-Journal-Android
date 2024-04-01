@@ -4,11 +4,12 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.SelectionView;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.ViewWidgets.CustomPopup;
+import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.ItemPath;
-import com.example.habittracker.Dictionary;
-import com.example.habittracker.DropDownPage;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 

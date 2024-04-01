@@ -1,4 +1,4 @@
-package com.example.habittracker.Widgets;
+package com.example.habittracker.ViewWidgets;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,10 +14,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.habittracker.GLib;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
-import com.example.habittracker.RelParam;
-import com.example.habittracker.SelectionView;
+import com.example.habittracker.StaticClasses.RelParam;
+import com.example.habittracker.ViewWidgets.SelectionView;
 
 import java.util.ArrayList;
 

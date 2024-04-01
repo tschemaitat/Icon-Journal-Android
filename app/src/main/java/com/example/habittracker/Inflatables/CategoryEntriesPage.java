@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.habittracker.DataTree;
+import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.SelectionView;
+import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Entry;
 import com.example.habittracker.Structs.Structure;
 

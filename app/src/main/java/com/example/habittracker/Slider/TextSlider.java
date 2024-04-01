@@ -1,10 +1,9 @@
 package com.example.habittracker.Slider;
 
 import android.content.Context;
-import android.view.View;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.GLib;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;

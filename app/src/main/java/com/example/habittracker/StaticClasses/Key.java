@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.StaticClasses;
 
 public class Key {
     public static final String value = "value";

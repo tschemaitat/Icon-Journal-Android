@@ -17,7 +17,12 @@
 
     <color name="dark1">#121212</color>
     <color name="dark2">#1E1E1E</color>
-    <color name="dark3">#2E2E2E</color>
+    <color name="dark3">#282828</color>
+
+    <color name="darkText1">#D8D8D8</color>
+    <color name="darkText2">#9C9C9C</color>
+
+
 
 
     <color name="green">#03DAC6</color>

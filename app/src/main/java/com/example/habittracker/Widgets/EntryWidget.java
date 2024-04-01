@@ -3,8 +3,8 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.ViewWrapper;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Layouts.ViewWrapper;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 

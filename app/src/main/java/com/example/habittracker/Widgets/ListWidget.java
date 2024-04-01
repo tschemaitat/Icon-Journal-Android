@@ -3,11 +3,14 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.DataTree;
-import com.example.habittracker.GLib;
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
-import com.example.habittracker.WidgetLayout;
+import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
@@ -26,6 +29,8 @@ public class ListWidget extends EntryWidget {
         layout = new WidgetLayout(context);
         setChild(layout.getView());
 
+        layout.getLinLayout().getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.secondary));
+        Margin.setPadding(layout.getLinLayout().getView(), Margin.listPadding());
 
     }
 
@@ -53,12 +58,23 @@ public class ListWidget extends EntryWidget {
         System.out.println("list setting value: " + dataTree.hierarchy());
         ArrayList<Widget> widgets = layout.widgets();
         for(DataTree tree: dataTree.getList()){
-            GroupWidget entryWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams);
-            setNewGruop(entryWidget);
-            entryWidget.setValue(tree);
-            layout.add(entryWidget);
+            GroupWidget groupWidget = addGroup(cloneParams);
+            groupWidget.setValue(tree);
         }
 
+    }
+
+    public GroupWidget addGroup(GroupWidgetParam param){
+        GroupWidget groupWidget = new GroupWidget(context);
+        groupWidget.setOnDataChangedListener(onDataChangedListener());
+        groupWidget.setParam(param);
+
+        LinLayout linLayout = groupWidget.getLinLayout();
+        linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
+        Margin.setPadding(linLayout.getView(), Margin.listChildMargin());
+
+        layout.add(groupWidget);
+        return groupWidget;
     }
 
     @Override
@@ -77,28 +93,12 @@ public class ListWidget extends EntryWidget {
         ListParam listParams = (ListParam) params;
         name = listParams.name;
         cloneParams = listParams.cloneableWidget;
-        layout.inflateAll(new ArrayList<>(listParams.currentWidgets));
+        layout.inflateAll(new ArrayList<>(listParams.currentWidgets), onDataChangedListener());
         makeButton();
-
-
-        for(Widget widget: layout.widgets()){
-            GroupWidget groupChild = (GroupWidget)widget;
-            setNewGruop(groupChild);
-
-        }
 
 
         System.out.println("data finished set for list");
         System.out.println(this.getParam());
-    }
-
-    public void onDataChange(){
-        onDataChangedListener().run();
-    }
-
-    public void setNewGruop(GroupWidget groupChild){
-        groupChild.setOnDataChangedListener(()->onDataChange());
-        System.out.println("<list> add border");
     }
 
     public void makeButton(){
@@ -107,8 +107,7 @@ public class ListWidget extends EntryWidget {
             public void onClick(View view) {
                 GroupWidget newWidget = null;
 
-                newWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams);
-                setNewGruop(newWidget);
+                newWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams, onDataChangedListener());
 
                 layout.add(newWidget);
             }

@@ -1,21 +1,19 @@
 package com.example.habittracker.Inflatables;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.example.habittracker.ColorPalette;
-import com.example.habittracker.Dictionary;
-import com.example.habittracker.GLib;
-import com.example.habittracker.LinLayout;
-import com.example.habittracker.Margin;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.WidgetLayout;
+import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -45,7 +43,7 @@ public class StructureEditor implements Inflatable {
         this.structure = structure;
 
         layout = new LinLayout(context);
-        layout.setPadding(Margin.initialPagePadding());
+        Margin.setInitialLayout(layout.getView());
         layout.getView().setId(R.id.pageLayout);
 
         Button saveButton = (Button) GLib.inflate(R.layout.button_layout);

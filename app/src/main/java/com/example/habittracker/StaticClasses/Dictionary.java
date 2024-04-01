@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.StaticClasses;
 
 
 
@@ -8,6 +8,8 @@ package com.example.habittracker;
 
 import android.content.Context;
 
+import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.Structure;

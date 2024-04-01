@@ -1,7 +1,5 @@
 package com.example.habittracker.Structs;
 
-import com.example.habittracker.DataTree;
-
 public class Entry {
     public int id;
     public DataTree dataTree;

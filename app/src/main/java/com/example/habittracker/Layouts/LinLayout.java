@@ -1,8 +1,12 @@
-package com.example.habittracker;
+package com.example.habittracker.Layouts;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.GLib;
 
 import java.util.ArrayList;
 
@@ -30,13 +34,12 @@ public class LinLayout {
         setChildParams();
     }
 
-    public void setPadding(Margin margin){
-        this.padding = margin;
-        layout.setPadding(margin.left, margin.top, margin.right, margin.bottom);
-    }
+
 
     public LinearLayout.LayoutParams childParams() {
-        return margin.getLin(-1, -2);
+        if(margin != null)
+            return margin.getLin(-1, -2);
+        return new LinearLayout.LayoutParams(-1, -2);
     }
 
     public void setChildParams(){
@@ -57,6 +60,7 @@ public class LinLayout {
             layout.addView(view);
 
         views.add(view);
+        view.setLayoutParams(childParams());
 
     }
 

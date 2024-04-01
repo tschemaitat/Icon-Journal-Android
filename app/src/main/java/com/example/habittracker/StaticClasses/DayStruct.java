@@ -1,4 +1,4 @@
-package com.example.habittracker;
+package com.example.habittracker.StaticClasses;
 
 import java.util.Calendar;
 

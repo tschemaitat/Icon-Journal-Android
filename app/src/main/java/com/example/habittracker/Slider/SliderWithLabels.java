@@ -8,8 +8,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import com.example.habittracker.CustomSlider;
-import com.example.habittracker.GLib;
+import com.example.habittracker.StaticClasses.GLib;
 
 import java.util.ArrayList;
 

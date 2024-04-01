@@ -1,8 +1,11 @@
-package com.example.habittracker;
+package com.example.habittracker.Layouts;
 
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 
@@ -23,19 +26,13 @@ public class WidgetLayout {
     }
 
 
-    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params){
+    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, Runnable onDataChange){
         System.out.println("setting widgets: " + params.size());
         for(int i = 0; i < params.size(); i++){
             System.out.println("\tadding widget and inflating: ");
-            add(GLib.inflateWidget(context, params.get(i)));
+            add(GLib.inflateWidget(context, params.get(i), onDataChange));
         }
         return widgets;
-    }
-
-    public Widget inflate(EntryWidgetParam widgetParam){
-        Widget widget = GLib.inflateWidget(context, widgetParam);
-        add(widget);
-        return widget;
     }
 
     public void add(Widget widget){
