@@ -194,11 +194,11 @@ public class Dictionary {
 
 
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
-                new CustomEditText.EditTextParam("name", null),
+                new CustomEditText.EditTextParam("name"),
                 new ListWidget.ListParam("genres", new EntryWidgetParam[]{
-                        new CustomEditText.EditTextParam("genre", null)     }),
+                        new CustomEditText.EditTextParam("genre")     }),
                 new ListWidget.ListParam("attributes", new EntryWidgetParam[]{
-                        new CustomEditText.EditTextParam("attribute", null)     })
+                        new CustomEditText.EditTextParam("attribute")     })
         });
 
         DataTree dataTree1 = new DataTree().put(

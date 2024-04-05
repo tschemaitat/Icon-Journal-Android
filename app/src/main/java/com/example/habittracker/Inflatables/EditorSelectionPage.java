@@ -73,4 +73,9 @@ public class EditorSelectionPage implements Inflatable {
     public void onOpened() {
 
     }
+
+    @Override
+    public boolean tryToRemove() {
+        return true;
+    }
 }

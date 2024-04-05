@@ -47,6 +47,12 @@ public class CustomEditText extends EntryWidget {
         String result = editable.toString();
         if(result.equals(""))
             return null;
+        String spaceCharacter = " ";
+        String copy = result.replace(String.valueOf(spaceCharacter), "");
+        if(copy.equals("")){
+            System.out.println("text of widget only has spaces");
+            return null;
+        }
         return result;
     }
 
@@ -72,6 +78,8 @@ public class CustomEditText extends EntryWidget {
         Margin.setEditTextLayout(linLayout);
 
         setValue(nullText);
+
+        setTextListener();
         int MAX_CHARACTERS = 50;
 
         // Error handling from too many characters
@@ -79,6 +87,7 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void onTextChange(String before, String newText){
+        //System.out.println("\ttext changed: " + newText);
         getViewWrapper().resetNameColor();
         onDataChangedListener().run();
     }
@@ -93,7 +102,9 @@ public class CustomEditText extends EntryWidget {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 String newText = s.toString();
+                //System.out.println("\t\tafter text changed listener: " + newText);
                 boolean textChanged = !currentText.equals(newText);
                 if(!textChanged)
                     return;
@@ -110,8 +121,7 @@ public class CustomEditText extends EntryWidget {
 
     @Override
     public EntryWidgetParam getParam(){
-        EditTextParam params = new EditTextParam(getName(), currentText);
-
+        EditTextParam params = new EditTextParam(getName());
         return params;
     }
 
@@ -122,14 +132,15 @@ public class CustomEditText extends EntryWidget {
 
     @Override
     public DataTree getDataTree() {
+        System.out.println("returning data tree");
+        System.out.println("currentText = " + currentText);
+        System.out.println("getText() = " + getText());
         return new DataTree(currentText);
     }
 
     @Override
     public void setParamCustom(EntryWidgetParam params){
         EditTextParam casted = ((EditTextParam) params);
-        if( casted.text != null )
-            setValue(casted.text);
     }
 
     public void disableEdit() {
@@ -140,11 +151,27 @@ public class CustomEditText extends EntryWidget {
         editTextLayout.setHint(widget_name);
     }
 
+    public void showError() {
+        editTextLayout.setTextColor(ColorPalette.redText);
+    }
+
+    public void setError() {
+        String text = getText();
+        if(text == null){
+            editTextLayout.setHintTextColor(ColorPalette.redText);
+            return;
+        }
+        editTextLayout.setTextColor(ColorPalette.redText);
+    }
+
+    public void resetError(){
+        editTextLayout.setHintTextColor(ColorPalette.textPurple);
+        editTextLayout.setTextColor(ColorPalette.textPurple);
+    }
+
     public static class EditTextParam extends EntryWidgetParam {
-        public String text;
-        public EditTextParam(String name, String text){
+        public EditTextParam(String name){
             super(name, CustomEditText.className);
-            this.text = text;
         }
 
         public String hierarchyString(int numTabs){
@@ -154,13 +181,6 @@ public class CustomEditText extends EntryWidget {
         @Override
         public DataTree header() {
             return new DataTree(name);
-        }
-    }
-
-    public static class EditTextValue extends WidgetValue{
-        public String text;
-        public EditTextValue(String text){
-            this.text = text;
         }
     }
 }

@@ -56,6 +56,11 @@ public class TestPage implements Inflatable {
 
     }
 
+    @Override
+    public boolean tryToRemove() {
+        return true;
+    }
+
     public void testCard(){
         MainActivity.constraintLayout.setBackgroundColor(Color.WHITE);
 
@@ -117,7 +122,7 @@ public class TestPage implements Inflatable {
 
     public void testDataTreeValueExport(){
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
-                new CustomEditText.EditTextParam("show", "null"),
+                new CustomEditText.EditTextParam("show"),
                 new DropDown.StaticDropDownParameters("genre", new String[]{
                         "comedy",
                         "romance"
@@ -129,7 +134,7 @@ public class TestPage implements Inflatable {
                                 "working together",
                                 "video games"
                         }),
-                        new CustomEditText.EditTextParam("trope description", "null")
+                        new CustomEditText.EditTextParam("trope description")
                 })
 
         });

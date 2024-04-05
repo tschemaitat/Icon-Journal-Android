@@ -11,7 +11,7 @@ public class ColorPalette {
         text = context.getColor(R.color.darkText1);
         text = context.getColor(R.color.darkText2);
         textPurple = context.getColor(R.color.purple);
-        redText = Color.RED;
+        redText = context.getColor(R.color.errorTextColor);
         primary = context.getColor(R.color.dark1);
         secondary = context.getColor(R.color.dark2);
         tertiary = context.getColor(R.color.dark3);

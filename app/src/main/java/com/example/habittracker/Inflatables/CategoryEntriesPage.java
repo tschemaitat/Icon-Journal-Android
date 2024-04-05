@@ -48,6 +48,11 @@ public class CategoryEntriesPage implements Inflatable{
         linearLayout.addView(selectionView.getView());
     }
 
+    @Override
+    public boolean tryToRemove() {
+        return true;
+    }
+
     private ArrayList<String> getOptionsFromNames(ArrayList<ArrayList<String>> entryNames) {
         ArrayList<String> options = new ArrayList<>();
         for(ArrayList<String> name: entryNames){

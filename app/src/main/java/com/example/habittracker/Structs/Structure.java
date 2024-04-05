@@ -1,5 +1,6 @@
 package com.example.habittracker.Structs;
 
+import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
@@ -105,5 +106,11 @@ public class Structure {
 
     public EntryWidgetParam getParam(){
         return param;
+    }
+
+    public boolean isSpreadsheet() {
+        if(type.equals(Dictionary.category))
+            return true;
+        return false;
     }
 }

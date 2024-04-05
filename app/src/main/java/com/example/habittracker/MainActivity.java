@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         //currentLayout = testWidgetGroup;
         setupLayoutButtons();
+
+        UnitTests unitTests = new UnitTests(context);
         //setOptions(dropDown);
         inflateLayout(new TestPage(context));
 
@@ -56,7 +59,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void inflateLayout(Inflatable newLayout){
+        System.out.println("inflating: " + newLayout);
         if(currentLayout != null){
+
+            boolean removeSuccess = currentLayout.tryToRemove();
+            if(!removeSuccess){
+                System.out.println("remove: " + currentLayout + " failed");
+                return;
+            }
+
             inflateLayout.removeView(currentLayout.getView());
             currentLayout.onRemoved();
         }
@@ -64,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         inflateLayout.addView(newLayout.getView());
         currentLayout = newLayout;
         currentLayout.onOpened();
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     public void setupLayoutButtons(){

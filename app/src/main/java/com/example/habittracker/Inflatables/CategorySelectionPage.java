@@ -36,4 +36,9 @@ public class CategorySelectionPage implements Inflatable{
         });
         linearLayout.addView(selectionView.getView());
     }
+
+    @Override
+    public boolean tryToRemove() {
+        return true;
+    }
 }

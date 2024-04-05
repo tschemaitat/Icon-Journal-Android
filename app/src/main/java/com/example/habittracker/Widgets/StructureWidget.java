@@ -38,7 +38,9 @@ public class StructureWidget implements Widget {
         layout.getView().setId(R.id.structureWidget);
 
         headerView = new StructureWidgetHeaderView(context);
-        headerView.addNameEditor(null);
+        headerView.addNameEditor(null, ()->{
+            headerView.nameEditor.resetError();
+        });
         layout.add(headerView.getView());
         //groupWidget.addWidget(name);
 
@@ -67,7 +69,7 @@ public class StructureWidget implements Widget {
     }
 
     public void onTypeChange(){
-        typeDropDown.getViewWrapper().resetNameColor();
+        typeDropDown.resetError();
         //System.out.println("<StructureWidget>data changed");
         String type = typeDropDown.getSelectedString();
         //System.out.println("type = " + type)
@@ -136,7 +138,7 @@ public class StructureWidget implements Widget {
         String type = typeDropDown.getSelectedString();
         typeSwitch:{
             if(type == null){
-                typeDropDown.getViewWrapper().setNameRed();
+                typeDropDown.setError();
                 //System.out.println("structure type null");
                 break typeSwitch;
             }
@@ -165,7 +167,7 @@ public class StructureWidget implements Widget {
             }
         }
         if(headerView.nameEditor.getText() == null){
-            headerView.nameEditor.getViewWrapper().setNameRed();
+            headerView.nameEditor.setError();
             return null;
         }
         return result;
@@ -216,4 +218,7 @@ public class StructureWidget implements Widget {
     }
 
 
+    public String getType() {
+        return currentType;
+    }
 }

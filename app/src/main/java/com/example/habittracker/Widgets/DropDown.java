@@ -254,6 +254,15 @@ public class DropDown extends EntryWidget {
         buttonSelectionView.setText(new String[]{select_type});
     }
 
+    public void setError() {
+        System.out.println("<drop down> setting error");
+        buttonSelectionView.setColor(ColorPalette.redText);
+    }
+
+    public void resetError() {
+        buttonSelectionView.setColor(ColorPalette.textPurple);
+    }
+
 
     public static class DropDownParam extends EntryWidgetParam {
         public ItemPath selected;

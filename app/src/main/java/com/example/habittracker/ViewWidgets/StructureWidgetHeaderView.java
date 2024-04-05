@@ -18,13 +18,14 @@ public class StructureWidgetHeaderView {
         relativeLayout = new RelativeLayout(context);
     }
 
-    public void addNameEditor(String name){
+    public void addNameEditor(String name, Runnable onTextChange){
         nameEditor = new CustomEditText(context);
         nameEditor.setHint("widget name");
         if(name != null)
             nameEditor.setText(name);
         nameEditor.getView().setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
         relativeLayout.addView(nameEditor.getView());
+        nameEditor.setOnDataChangedListener(()->onTextChange.run());
     }
 
     public void addDeleteButton(Runnable runnable){

@@ -42,4 +42,9 @@ public class JournalPage implements Inflatable{
         System.out.println(params);
         //groupWidget = (GroupWidget)GLib.inflateWidget(context, params, onDataChange);
     }
+
+    @Override
+    public boolean tryToRemove() {
+        return true;
+    }
 }

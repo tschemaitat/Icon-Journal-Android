@@ -23,6 +23,9 @@
     <color name="darkText2">#9C9C9C</color>
 
 
+    <color name="errorTextColor">#D75050</color>
+
+
 
 
     <color name="green">#03DAC6</color>

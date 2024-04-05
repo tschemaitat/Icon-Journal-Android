@@ -57,6 +57,7 @@ public class SelectionView {
     }
 
     private void init(){
+        color = ColorPalette.textPurple;
         createList();
     }
 
@@ -67,7 +68,14 @@ public class SelectionView {
     }
 
     public void setColor(int textPurple) {
+        System.out.println("setting color: " + getOptions());
         color = textPurple;
+        setColor();
+    }
+
+    public void resetColor(){
+        color = ColorPalette.textPurple;
+        setColor();
     }
 
 
@@ -87,11 +95,10 @@ public class SelectionView {
     }
 
     private void setColor(){
-        int color = ColorPalette.textPurple;
         listView.post(() -> {
             for(int i = 0; i < listView.getChildCount(); i++){
                 TextView child = (TextView) listView.getChildAt(i);
-                child.setTextColor(ColorPalette.textPurple);
+                child.setTextColor(color);
             }
         });
     }

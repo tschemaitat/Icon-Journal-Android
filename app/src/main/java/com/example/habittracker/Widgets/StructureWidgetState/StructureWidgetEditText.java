@@ -31,7 +31,7 @@ public class StructureWidgetEditText implements Widget {
 
     @Override
     public EntryWidgetParam getParam() {
-        CustomEditText.EditTextParam editTextParam = new CustomEditText.EditTextParam(null, "null");
+        CustomEditText.EditTextParam editTextParam = new CustomEditText.EditTextParam(null);
         return editTextParam;
     }
 

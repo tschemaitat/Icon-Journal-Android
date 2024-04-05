@@ -53,6 +53,7 @@ public class StructureWidgetDropDown implements Widget {
 
 
     private void onStructureKeyChange(){
+        structureKeyDropDown.resetError();
         System.out.println("structure key change");
         String structureKey = structureKeyDropDown.getSelectedString();
         if(structureKey == null){
@@ -82,7 +83,6 @@ public class StructureWidgetDropDown implements Widget {
         valueKeyDropDown.setHint("item to be selected");
         customLinearLayout.add(valueKeyDropDown.getView());
     }
-
     private void resetValueKeyWidget(){
         System.out.println("resetting value key widget");
         if(valueKeyDropDown == null)
@@ -91,11 +91,9 @@ public class StructureWidgetDropDown implements Widget {
         valueKeyDropDown = null;
         resetGroupKeyWidget();
     }
-
-
-
     private void onValueKeyChange(){
-        System.out.println("value key change");
+        valueKeyDropDown.resetError();
+        System.out.println("<drop down structure widget> value key change");
         String valueKey = valueKeyDropDown.getSelectedString();
         //System.out.println("valueKey = " + valueKey);
         if(valueKey == null){
@@ -131,7 +129,7 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void createGroupLayout(){
-        //System.out.println("groupby widget group is null, making group key drop downs");
+        System.out.println("<drop down structure widget> creating group layout");
         groupLayout = new GroupWidget(context);
         //groupLayout.getViewWrapper().setName("group by");
         Margin.setStructureWidgetGroupLayout(groupLayout.getLinLayout());
@@ -140,7 +138,6 @@ public class StructureWidgetDropDown implements Widget {
         //System.out.println("adding group add button");
         addGroupKeyDropDownAdd();
     }
-
     private void addGroupBy(){
         ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
         ArrayList<ItemPath> groupValues = getGroupValues();
@@ -164,7 +161,6 @@ public class StructureWidgetDropDown implements Widget {
         if(groupDropDowns.size() >= maxNumGroups())
             groupLayout.getLinLayout().removeButton();
     }
-
     private void validateGroupValues(ArrayList<ItemPath> groupValues){
         //this is called by addGroupBy and checks for if there is a value after a null value just for debugging
         boolean nullFound = false;
@@ -177,7 +173,6 @@ public class StructureWidgetDropDown implements Widget {
             nullFound = true;
         }
     }
-
     private void processGroupItemSelected(){
         System.out.println("group value changed");
         ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
@@ -185,6 +180,7 @@ public class StructureWidgetDropDown implements Widget {
         int removeIndex = groupDropDowns.size();
         for(int i = 0; i < groupDropDowns.size(); i++){
             DropDown dropDown = groupDropDowns.get(i);
+            dropDown.resetError();
             ItemPath item = dropDown.getSelectedPath();
             if(item == null){
                 removeIndex = i;
@@ -206,7 +202,6 @@ public class StructureWidgetDropDown implements Widget {
             dropDown.setParam(new DropDown.StaticDropDownParameters(null, reducedPage));
         }
     }
-
     private void addGroupKeyDropDownAdd(){
         groupLayout.getLinLayout().addButton(new View.OnClickListener() {
             @Override
@@ -245,6 +240,8 @@ public class StructureWidgetDropDown implements Widget {
 
     private ArrayList<DropDown> getGroupDropDownList() {
         ArrayList<DropDown> dropDowns = new ArrayList<>();
+        if(groupLayout == null)
+            return dropDowns;
         for(Widget widget: groupLayout.getWidgetLayout().widgets())
             dropDowns.add(((DropDown) widget));
         return dropDowns;
@@ -295,24 +292,34 @@ public class StructureWidgetDropDown implements Widget {
     @Override
     public EntryWidgetParam getParam() {
         if(structureKey() == null){
-            structureKeyDropDown.getViewWrapper().setNameRed();
+            structureKeyDropDown.setError();
             return null;
         }
 
         if(valueKeyDropDown.getSelectedString() == null){
-            valueKeyDropDown.getViewWrapper().setNameRed();
+            valueKeyDropDown.setError();
             return null;
         }
         checkingGroup:
         if(groupLayout != null){
+            boolean error = false;
+            ArrayList<DropDown> groupDropDowns = getGroupDropDownList();
             ArrayList<ItemPath> groupValues = getGroupValues();
             if(groupValues.size() == 0)
                 break checkingGroup;
+            for(DropDown dropDown: groupDropDowns){
+                if(dropDown.getSelectedString() == null) {
+                    dropDown.setError();
+                    error = true;
+                }
+            }
             if(groupValues.get(groupValues.size() - 1) == null) {
                 System.out.println("last group value is null");
                 groupLayout.getViewWrapper().setNameRed();
                 return null;
             }
+            if(error)
+                return null;
         }
 
         return new DropDown.DropDownParam(null, null, structureKey(), valueKeyDropDown.getSelectedString(), getGroupValues());
