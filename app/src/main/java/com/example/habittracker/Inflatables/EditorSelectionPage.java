@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
+import com.example.habittracker.Structs.IntStringPair;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
@@ -36,25 +37,25 @@ public class EditorSelectionPage implements Inflatable {
         ArrayList<String> items = new ArrayList<>();
         items.add("category");
         items.add("journal");
-        SelectionView folderSelection = new SelectionView(context, items, (value, position) -> {
+        SelectionView folderSelection = new SelectionView(context, (String[]) items.toArray(), (value, position, key) -> {
             createSelectionAfterFolder(value);
         });
         parentLayout.addView(folderSelection.getView());
     }
 
     public void createSelectionAfterFolder(String structureType){
-        ArrayList<String> structureKeys = Dictionary.getStructureKeys(structureType);
+        ArrayList<IntStringPair> structureKeys = Dictionary.getStructureOptions();
         parentLayout.removeAllViews();
-        SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position) -> {
-            inflateStructureEditor(value);
+        SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position, key) -> {
+            inflateStructureEditor((int)key);
         }, () -> {
-            MainActivity.inflateLayout(new StructureEditor(context, new Structure(null, null, structureType)));
+            MainActivity.changePage(new StructureEditor(context, new Structure(null, null, structureType)));
         });
         parentLayout.addView(structureSelection.getView());
     }
 
-    public void inflateStructureEditor(String structureKey){
-        MainActivity.inflateLayout(new StructureEditor(context, Dictionary.getStructure(structureKey)));
+    public void inflateStructureEditor(int structureKey){
+        MainActivity.changePage(new StructureEditor(context, Dictionary.getStructure(structureKey)));
     }
 
 
@@ -75,7 +76,7 @@ public class EditorSelectionPage implements Inflatable {
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         return true;
     }
 }

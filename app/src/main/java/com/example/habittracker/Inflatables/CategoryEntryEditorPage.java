@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.Structs.Entry;
 import com.example.habittracker.Structs.Structure;
@@ -11,12 +12,16 @@ import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class CategoryEntryEditorPage implements Inflatable{
     private Context context;
     private Structure structure;
     private Entry entry;
     private GroupWidget groupWidget;
     private LinearLayout linearLayout;
+    boolean discarding = false;
     public CategoryEntryEditorPage(Context context, Structure spreadsheet, Entry entry){
         this.context = context;
         this.structure = spreadsheet;
@@ -28,25 +33,46 @@ public class CategoryEntryEditorPage implements Inflatable{
         System.out.println("new data: \n" + groupWidget.getDataTree().hierarchy());
     }
 
-    public boolean trySave(){
+    private boolean checkValidForSave(Inflatable page){
         EntryWidget firstWidget = groupWidget.entryWidgets().get(0);
         CustomEditText uniqueAttributeEditor = (CustomEditText) firstWidget;
         String uniqueAttribute = uniqueAttributeEditor.getText();
         if(uniqueAttribute == null){
             uniqueAttributeEditor.showError();
             System.out.println("saving entry error: missing unique attribute");
+            createSaveErrorDialog(page);
             return false;
         }
+
+        return true;
+    }
+
+    private void save(){
         DataTree data = groupWidget.getDataTree();
         if(entry == null){
-            System.out.println("new entry, adding entry to structure");
+            MainActivity.log("new entry, adding entry to structure");
             structure.addEntry(data);
         }else{
-            System.out.println("editing entry, changing dataTree");
+            MainActivity.log("editing entry, changing dataTree");
             entry.dataTree = data;
         }
         System.out.println("saving entry successful: \n" + data.hierarchy());
-        return true;
+    }
+
+
+
+    private void createSaveErrorDialog(Inflatable page) {
+        ArrayList<String> options = new ArrayList<>(Collections.singleton("discard"));
+        ArrayList<Runnable> listener = new ArrayList<>(Collections.singleton(()->{
+            discardEntry(page);
+        }));
+        MainActivity.showPopup(context, "entry cannot be saved", options, listener);
+    }
+
+    private void discardEntry(Inflatable page){
+        System.out.println("discarding entry, changing page");
+        discarding = true;
+        MainActivity.changePage(page);
     }
 
 
@@ -72,9 +98,15 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         System.out.println("trying to remove category entry editor");
-        return trySave();
+        if(discarding)
+            return true;
+        boolean valid = checkValidForSave(page);
+        if(!valid)
+            return false;
+        save();
+        return true;
     }
 
 

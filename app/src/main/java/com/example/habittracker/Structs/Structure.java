@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Structure {
+    private static int structureKeyCount = 0;
     private int idCount = 0;
+    private Integer key;
     private String name;
     private EntryWidgetParam param;
     private String type;
@@ -15,13 +17,26 @@ public class Structure {
 
 
     public Structure(String name, EntryWidgetParam param, String type){
+        this.key = null;
         this.name = name;
         this.param = param;
         this.type = type;
         entries = new ArrayList<>();
     }
 
+    public Integer getKey(){
+        return key;
+    }
+
+    public void setNewKey(){
+        if(key != null)
+            throw new RuntimeException("tried to set new key of structure twice");
+        this.key = structureKeyCount;
+        structureKeyCount++;
+    }
+
     public Structure(String name, EntryWidgetParam param, String type, ArrayList<DataTree> entries){
+        this.key = null;
         this.name = name;
         this.param = param;
         this.type = type;
@@ -30,10 +45,11 @@ public class Structure {
             addEntry(data);
     }
     public Structure(){
-        name = null;
-        param = new GroupWidget.GroupWidgetParam(null, new ArrayList<>());
-        type = null;
-        entries = new ArrayList<>();
+        this.key = null;
+        this.name = null;
+        this.param = new GroupWidget.GroupWidgetParam(null, new ArrayList<>());
+        this.type = null;
+        this.entries = new ArrayList<>();
     }
 
     public void addEntry(DataTree entryData){

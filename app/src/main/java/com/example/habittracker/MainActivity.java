@@ -1,7 +1,10 @@
 package com.example.habittracker;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -18,6 +21,9 @@ import com.example.habittracker.Inflatables.JournalPage;
 import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Dictionary;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
 
         UnitTests unitTests = new UnitTests(context);
         //setOptions(dropDown);
-        inflateLayout(new TestPage(context));
+        changePage(new TestPage(context));
 
 
     }
 
-    public static void inflateLayout(Inflatable newLayout){
-        System.out.println("inflating: " + newLayout);
+    public static void changePage(Inflatable newLayout){
+        log("inflating: " + newLayout.getClass().getName());
         if(currentLayout != null){
 
-            boolean removeSuccess = currentLayout.tryToRemove();
+            boolean removeSuccess = currentLayout.tryToRemove(newLayout);
             if(!removeSuccess){
-                System.out.println("remove: " + currentLayout + " failed");
+                log("remove: " + currentLayout.getClass().getName() + " failed");
                 return;
             }
 
@@ -83,23 +89,54 @@ public class MainActivity extends AppCompatActivity {
 
     public void setupLayoutButtons(){
         TextView editorButton = findViewById(R.id.EditorButton);
-        editorButton.setOnClickListener(view -> inflateLayout(new EditorSelectionPage(context)));
+        editorButton.setOnClickListener(view -> changePage(new EditorSelectionPage(context)));
         TextView categoryButton = findViewById(R.id.CategoriesButton);
         categoryButton.setOnClickListener(view -> {
-            inflateLayout(new CategorySelectionPage(context));
+            changePage(new CategorySelectionPage(context));
         });
         TextView journalButton = findViewById(R.id.JournalButton);
         journalButton.setOnClickListener(view -> {
-            inflateLayout(new JournalPage(context, "test structure"));
+            //changePage(new JournalPage(context, "test structure"));
         });
         TextView testButton = findViewById(R.id.TestButton);
-        testButton.setOnClickListener(view -> inflateLayout(new TestPage(context)));
+        testButton.setOnClickListener(view -> changePage(new TestPage(context)));
+    }
+
+    public static void showPopup(Context context, String prompt, ArrayList<String> optionNames, ArrayList<Runnable> onClickOptions) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(prompt);
+
+        CharSequence[] items = optionNames.toArray(new CharSequence[0]);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onClickOptions.get(which).run();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public static LinearLayout createVerticalLayout(){
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
+    }
+
+    public static void log(String message) {
+        // Getting the current stack trace element of this method call (log)
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        System.out.println("stackTraceElements = " + Arrays.toString(stackTraceElements));
+        // Adjust index as needed to find the correct caller info (might need fine-tuning)
+        StackTraceElement element = stackTraceElements[3];
+
+        String fullClassName = element.getClassName();
+        String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+        int lineNumber = element.getLineNumber();
+        String methodName = element.getMethodName();
+
+        Log.d(className + "." + methodName + "():" + lineNumber, "<CustLogzzz> " + message);
     }
 
 

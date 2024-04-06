@@ -46,7 +46,7 @@ public class GroupWidget extends EntryWidget {
 
     public ArrayList<EntryWidgetParam> getDataWidgets(){
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
-        System.out.println("getting group widget data numWidget: " + entryWidgets.size());
+        //System.out.println("getting group widget data numWidget: " + entryWidgets.size());
         ArrayList<EntryWidgetParam> params = new ArrayList<>();
         for(EntryWidget entryWidget: entryWidgets){
             EntryWidgetParam entryWidgetParam = entryWidget.getParam();
@@ -64,11 +64,11 @@ public class GroupWidget extends EntryWidget {
     @Override
     public void setValue(DataTree dataTree) {
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
-        System.out.println("group widget setting value: " + dataTree.hierarchy());
+        //System.out.println("group widget setting value: " + dataTree.hierarchy());
         for(int i = 0; i < entryWidgets.size(); i++){
 
             EntryWidget entryWidget = entryWidgets.get(i);
-            System.out.println("setting value for entry widget: " + entryWidget);
+            //System.out.println("setting value for entry widget: " + entryWidget);
             entryWidget.setValue(dataTree.getTree(i));
         }
     }

@@ -8,16 +8,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.IntStringPair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SelectionView {
     Context context;
-    ArrayList<String> options;
+    ArrayList<IntStringPair> options;
     OnSelected onSelected;
     OnAdd onAdd;
     ListView listView;
@@ -25,35 +25,41 @@ public class SelectionView {
     int color = -1;
 
     public static final String addString = "add";
-    public SelectionView(Context context, ArrayList<String> options, OnSelected onSelected, OnAdd onAdd){
+    public SelectionView(Context context, ArrayList<IntStringPair> options, OnSelected onSelected, OnAdd onAdd){
         this.context = context;
-        this.options = (ArrayList<String>) options.clone();
+        this.options = (ArrayList<IntStringPair>) options.clone();
         this.onSelected = onSelected;
         this.onAdd = onAdd;
         init();
     }
 
-    public SelectionView(Context context, ArrayList<String> options, OnSelected onSelected){
+    public SelectionView(Context context, ArrayList<IntStringPair> options, OnSelected onSelected){
         this.context = context;
-        this.options = (ArrayList<String>) options.clone();
+        this.options = (ArrayList<IntStringPair>) options.clone();
         this.onSelected = onSelected;
         this.onAdd = null;
         init();
     }
     public SelectionView(Context context, String[] options, OnSelected onSelected, OnAdd onAdd){
         this.context = context;
-        this.options = new ArrayList<>(Arrays.asList(options));
+        this.options = convert(new ArrayList<>(Arrays.asList(options)));
         this.onSelected = onSelected;
         this.onAdd = onAdd;
         init();
     }
-
     public SelectionView(Context context, String[] options, OnSelected onSelected){
         this.context = context;
-        this.options = new ArrayList<>(Arrays.asList(options));
+        this.options = convert(new ArrayList<>(Arrays.asList(options)));
         this.onSelected = onSelected;
         this.onAdd = null;
         init();
+    }
+
+    private static ArrayList<IntStringPair> convert(ArrayList<String> stringOptions){
+        ArrayList<IntStringPair> result = new ArrayList<>();
+        for(String string: stringOptions)
+            result.add(new IntStringPair(string, string));
+        return result;
     }
 
     private void init(){
@@ -78,16 +84,20 @@ public class SelectionView {
         setColor();
     }
 
+    public void setText(String[] strings) {
+        setText(convert(new ArrayList<>(Arrays.asList(strings))));
+    }
+
 
     public interface OnSelected {
-        public void onSelected(String stringValue, int position);
+        public void onSelected(String stringValue, int position, Object key);
     }
 
     public interface OnAdd{
         public void onAdd();
     }
 
-    public void setText(ArrayList<String> strings){
+    public void setText(ArrayList<IntStringPair> strings){
         options = strings;
         listView.setAdapter(new ArrayAdapter<>(context, textViewResource, strings));
         listView.setMinimumWidth(1000);
@@ -103,8 +113,23 @@ public class SelectionView {
         });
     }
 
-    public void setText(String[] strings){
+    public void setText(IntStringPair[] strings){
         setText(new ArrayList<>(Arrays.asList(strings)));
+    }
+
+    private ArrayList<String> getOptionNames(){
+        ArrayList<String> result = new ArrayList<>();
+        for(IntStringPair intStringPair : options)
+            result.add(intStringPair.getOption());
+        return result;
+    }
+
+    private Object getKeyOfOption(String optionName){
+        for(IntStringPair intStringPair : options){
+            if(intStringPair.getOption().equals(optionName))
+                return intStringPair.getKey();
+        }
+        throw new RuntimeException("no option pair matches option name");
     }
 
     RelativeLayout relativeLayout;
@@ -122,18 +147,19 @@ public class SelectionView {
         //relativeLayout.addView(listView);
         listView.setMinimumHeight(1000);
         listView.setMinimumWidth(1000);
-
-        if(onAdd != null)
-            options.add(addString);
+        ArrayList<String> optionNames = getOptionNames();
+        if(onAdd != null){
+            optionNames.add(addString);
+        }
 
         textViewResource = android.R.layout.simple_list_item_1;
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-                textViewResource, options);
+                textViewResource, optionNames);
         listView.setAdapter(adapter);
         int textViewHeight = 0;
         if(options.size() > 0)
-            textViewHeight = getTextHeight(options.get(0));
+            textViewHeight = getTextHeight(options.get(0).getOption());
         //System.out.println("predicted textView hiehgt: " + textViewHeight);
 
         listView.setLayoutParams(new LinearLayout.LayoutParams(-1, textViewHeight * options.size()));
@@ -154,7 +180,7 @@ public class SelectionView {
                 numOptions = numOptions - 1;
 
             if(i < numOptions) {
-                onSelected.onSelected(getOptions().get(i), i);
+                sendItemSelectedCall(i);
                 return;
             }
             throw new RuntimeException("list error index selected:  " + i + " value: " + value + ", options: " + getOptions());
@@ -164,7 +190,12 @@ public class SelectionView {
         //System.out.println("finsihed creating list num views: " + listView.getChildCount() + " array: " + options);
     }
 
-    private ArrayList<String> getOptions(){
+    private void sendItemSelectedCall(int position){
+        IntStringPair intStringPair = options.get(position);
+        onSelected.onSelected(intStringPair.getOption(), position, intStringPair.getKey());
+    }
+
+    private ArrayList<IntStringPair> getOptions(){
         return options;
     }
 

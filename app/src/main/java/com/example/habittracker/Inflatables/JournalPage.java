@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -12,10 +11,10 @@ import com.example.habittracker.Widgets.GroupWidget;
 public class JournalPage implements Inflatable{
     private Context context;
     private GroupWidget groupWidget;
-    private String structureKey;
+    private Integer structureKey;
 
 
-    public JournalPage(Context context, String structureKey){
+    public JournalPage(Context context, Integer structureKey){
         System.out.println("opening journal");
         this.context = context;
         this.structureKey = structureKey;
@@ -44,7 +43,7 @@ public class JournalPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         return true;
     }
 }

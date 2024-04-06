@@ -28,17 +28,17 @@ public class CategorySelectionPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        SelectionView selectionView = new SelectionView(context, Dictionary.getCategoryKeys(), (stringValue, position) -> {
-            Structure structure = Dictionary.getStructure(stringValue);
+        SelectionView selectionView = new SelectionView(context, Dictionary.getCategoryOptions(), (stringValue, position, key) -> {
+            Structure structure = Dictionary.getStructure((int) key);
             if( ! structure.getType().equals(Dictionary.category))
                 throw new RuntimeException();
-            MainActivity.inflateLayout(new CategoryEntriesPage(context, structure));
+            MainActivity.changePage(new CategoryEntriesPage(context, structure));
         });
         linearLayout.addView(selectionView.getView());
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         return true;
     }
 }

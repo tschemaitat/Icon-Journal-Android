@@ -39,17 +39,17 @@ public class CategoryEntriesPage implements Inflatable{
 
         ArrayList<ArrayList<String>> entryNames = structure.IdAttributes();
         ArrayList<String> options = getOptionsFromNames(entryNames);
-        SelectionView selectionView = new SelectionView(context, options, (stringValue, position) -> {
+        SelectionView selectionView = new SelectionView(context, (String[])options.toArray(), (stringValue, position, key) -> {
             Entry entry = structure.getEntry(entryNames.get(position));
-            MainActivity.inflateLayout(new CategoryEntryEditorPage(context, structure, entry));
+            MainActivity.changePage(new CategoryEntryEditorPage(context, structure, entry));
         },()->{
-            MainActivity.inflateLayout(new CategoryEntryEditorPage(context, structure, null));
+            MainActivity.changePage(new CategoryEntryEditorPage(context, structure, null));
         });
         linearLayout.addView(selectionView.getView());
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         return true;
     }
 

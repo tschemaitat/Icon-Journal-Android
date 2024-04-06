@@ -70,10 +70,10 @@ public class DropDown extends EntryWidget {
     }
 
     private void createButton(){
-        buttonSelectionView = new SelectionView(context, new String[]{"select option"}, (stringValue, position) -> {
+        buttonSelectionView = new SelectionView(context, new String[]{"select option"}, (stringValue, position, key) -> {
             //on button pressed
             createPopUp();
-        }, null);
+        });
         buttonSelectionView.setColor(ColorPalette.textPurple);
 
         setChild(buttonSelectionView.getView());
@@ -82,7 +82,7 @@ public class DropDown extends EntryWidget {
 
 
     private void createPopUp(){
-        customPopup = new CustomPopup(context, "", new ArrayList<>(), (stringValue, position) -> {
+        customPopup = new CustomPopup(context, "", new ArrayList<>(), (stringValue, position, key) -> {
             onItemSelected(position);
             }, () -> {
             onBackSelected();

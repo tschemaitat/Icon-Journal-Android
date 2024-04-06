@@ -57,7 +57,7 @@ public class TestPage implements Inflatable {
     }
 
     @Override
-    public boolean tryToRemove() {
+    public boolean tryToRemove(Inflatable page) {
         return true;
     }
 

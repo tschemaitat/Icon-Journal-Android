@@ -6,5 +6,5 @@ public interface Inflatable {
     public View getView();
     public void onRemoved();
     public void onOpened();
-    public boolean tryToRemove();
+    public boolean tryToRemove(Inflatable page);
 }

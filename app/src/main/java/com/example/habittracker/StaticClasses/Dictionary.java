@@ -11,6 +11,7 @@ import android.content.Context;
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.IntStringPair;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Widgets.CustomEditText;
@@ -32,14 +33,14 @@ public class Dictionary {
 
     //static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
 
-    private static HashMap<String, Structure> structures = new HashMap<>();
+    private static HashMap<Integer, Structure> structures = new HashMap<>();
 
 
     public static void addStructure(Structure structure){
         if(structure.getName() == null)
             throw new RuntimeException("structure name not set");
-
-        structures.put(structure.getName(), structure);
+        structure.setNewKey();
+        structures.put(structure.getKey(), structure);
     }
 
     static{
@@ -65,7 +66,7 @@ public class Dictionary {
         if(structure.getHeader() == null)
             throw new RuntimeException("saved structure couldn't make a header");
 
-        structures.put(structure.getName(), structure);
+        structures.put(structure.getKey(), structure);
     }
 
     private static void generateStructure() {
@@ -73,36 +74,49 @@ public class Dictionary {
         addStructure(structure);
     }
 
-    public static ArrayList<String> getCategoryKeys(){
-
-        return getStructureKeys(category);
+    public static ArrayList<IntStringPair> getCategoryOptions(){
+        return getStructureOptions(category);
     }
-    public static ArrayList<String> getJournalKeys(){
-        return getStructureKeys(journal);
-    }
-    public static ArrayList<String> getTemplateKeys(){
-        return getStructureKeys(template);
+    public static ArrayList<IntStringPair> getJournalOptions(){
+        return getStructureOptions(journal);
     }
 
-    public static ArrayList<String> getStructureKeys(String structureType){
-        ArrayList<String> keys = new ArrayList<>();
+    public static ArrayList<IntStringPair> getStructureOptions(String structureType){
+        ArrayList<IntStringPair> keyPairs = new ArrayList<>();
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
                 throw new RuntimeException("structure: " + structure.getName() + " has null type");
             if(structure.getType().equals(structureType)){
-                keys.add(structure.getName());
+                IntStringPair keyPair = new IntStringPair(structure.getKey(), structure.getName());
+                keyPairs.add(keyPair);
             }
-
         }
-        return keys;
+        return keyPairs;
     }
 
-    public static ArrayList<String> getStructureKeys(){
-        ArrayList<String> keys = new ArrayList<>(structures.keySet());
-        return keys;
+
+    public static ArrayList<IntStringPair> getStructureOptions(){
+        ArrayList<IntStringPair> keyPairs = new ArrayList<>();
+        for(Structure structure: structures.values()){
+            if(structure.getType() == null)
+                throw new RuntimeException("structure: " + structure.getName() + " has null type");
+            IntStringPair keyPair = new IntStringPair(structure.getKey(), structure.getName());
+            keyPairs.add(keyPair);
+        }
+        return keyPairs;
     }
 
-    public static Structure getStructure(String key){
+    public static ArrayList<String> getStructureNames(){
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<Structure> structureArrayList = (ArrayList<Structure>) structures.values();
+        for(Structure structure: structureArrayList)
+            names.add(structure.getName());
+        return names;
+    }
+
+
+
+    public static Structure getStructure(int key){
         Structure structure = structures.get(key);
         if(structure == null)
             throw new RuntimeException("structure key unknown: " + key);
@@ -110,7 +124,7 @@ public class Dictionary {
     }
 
 
-    public static DataTree header(String structureKey){
+    public static DataTree header(Integer structureKey){
         Structure entry = structures.get(structureKey);
         if(entry == null)
             throw new NullPointerException("structureKey wrong: " + structureKey);

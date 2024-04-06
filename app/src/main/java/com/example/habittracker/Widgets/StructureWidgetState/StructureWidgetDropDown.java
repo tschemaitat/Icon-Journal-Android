@@ -44,7 +44,7 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void createStructureKeyDropDown(){
-        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters(null, new DropDownPage(null, Dictionary.getStructureKeys()));
+        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters(null, new DropDownPage(null, Dictionary.getStructureNames()));
         structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams, () -> onStructureKeyChange());
         structureKeyDropDown.setHint("select spreadsheet");
         customLinearLayout.add(structureKeyDropDown.getView());
@@ -280,7 +280,7 @@ public class StructureWidgetDropDown implements Widget {
     private int maxNumGroups(){
         return getGroupKeyList().size();
     }
-    private String structureKey(){
+    private String structureKeyPair(){
         return structureKeyDropDown.getSelectedString();
     }
     //endregion

@@ -66,7 +66,7 @@ public class CustomPopup {
         linearLayout.addView(nameLayout);
 
         //name with RelativeLayout params added to nameLayout
-        name = new SelectionView(context, new String[]{title}, (stringValue, position) -> {titlePressed();});;
+        name = new SelectionView(context, new String[]{title}, (stringValue, position, key) -> {titlePressed();});;
         name.getView().setLayoutParams(RelParam.alignLeft(-2, -2));
         nameLayout.addView(name.getView());
 
@@ -79,7 +79,7 @@ public class CustomPopup {
 
 
         //options with LinearLayout params added to linearLayout
-        optionsSelectionView = new SelectionView(context, options, (value, index)->{onSelection(value, index);});
+        optionsSelectionView = new SelectionView(context, ((String[]) options.toArray()), (value, index, key)->{onSelection(value, index, key);});
         optionsSelectionView.getView().setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
         linearLayout.addView(optionsSelectionView.getView());
 
@@ -113,10 +113,10 @@ public class CustomPopup {
         popupWindow.dismiss();
     }
 
-    public void onSelection(String value, int index){
+    public void onSelection(String value, int index, Object key){
         //System.out.println("value selected of popup");
         if(!closed)
-            onItemSelected.onSelected(value, index);
+            onItemSelected.onSelected(value, index, null);
     }
 
     public void titlePressed(){
@@ -127,7 +127,7 @@ public class CustomPopup {
     public void setText(String title, ArrayList<String> options){
         //System.out.println("popup: setting text. title: " + title + ", options: " + options);
         name.setText(new String[]{title});
-        optionsSelectionView.setText(options);
+        optionsSelectionView.setText((String[])options.toArray());
     }
 
     public void enableBack(){
