@@ -7,7 +7,7 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Structs.StaticDropDownPage;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -44,7 +44,7 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private void createStructureKeyDropDown(){
-        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters(null, new DropDownPage(null, Dictionary.getStructureNames()));
+        DropDown.StaticDropDownParameters structureKeyParams = new DropDown.StaticDropDownParameters(null, new StaticDropDownPage(null, Dictionary.getStructureNames()));
         structureKeyDropDown = (DropDown) GLib.inflateWidget(context, structureKeyParams, () -> onStructureKeyChange());
         structureKeyDropDown.setHint("select spreadsheet");
         customLinearLayout.add(structureKeyDropDown.getView());
@@ -76,7 +76,7 @@ public class StructureWidgetDropDown implements Widget {
         //System.out.println("creating value key drop down");
         String structureKey = structureKeyDropDown.getSelectedString();
         ArrayList<String> headerList = valueKeyList(structureKey);
-        DropDownPage valuePage = new DropDownPage("value keys", headerList);
+        StaticDropDownPage valuePage = new StaticDropDownPage("value keys", headerList);
         //System.out.println("value key drop down is null");
         DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(null, valuePage);
         valueKeyDropDown = (DropDown) GLib.inflateWidget(context, params, ()->onValueKeyChange());
@@ -149,7 +149,7 @@ public class StructureWidgetDropDown implements Widget {
 
 
         //System.out.println("adding groupBy");
-        DropDownPage page = DropDownPage.fromItems(getReducedGroupKeyList(groupValues));
+        StaticDropDownPage page = StaticDropDownPage.fromItems(getReducedGroupKeyList(groupValues));
         //System.out.println("group by page: \n" + page);
         DropDown dropDown = (DropDown)GLib.inflateWidget(context, new DropDown.StaticDropDownParameters(null, page), () -> processGroupItemSelected());
         dropDown.setHint("select group");
@@ -194,7 +194,7 @@ public class StructureWidgetDropDown implements Widget {
             DropDown dropDown = groupDropDowns.get(i);
             dropDown.resetValue();
         }
-        DropDownPage reducedPage = DropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
+        StaticDropDownPage reducedPage = StaticDropDownPage.fromItems(getReducedGroupKeyList(selectedGroupKeys));
         //System.out.println("setting reduced page to remaining drop downs: " + removeIndex);
         //System.out.println("reducedPage = " + reducedPage);
         for(int i = removeIndex; i < groupDropDowns.size(); i++) {

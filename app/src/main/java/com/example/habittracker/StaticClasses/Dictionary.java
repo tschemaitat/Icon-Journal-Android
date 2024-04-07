@@ -10,6 +10,7 @@ import android.content.Context;
 
 import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Structs.StaticDropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.IntStringPair;
 import com.example.habittracker.Structs.ItemPath;
@@ -134,7 +135,7 @@ public class Dictionary {
         return header;
     }
 
-    public static DropDownPage getTypes(){
+    public static StaticDropDownPage getTypes(){
         String[] numbers = new String[]{
                 "edit text",
                 "list",
@@ -142,7 +143,7 @@ public class Dictionary {
                 "sliderfds"
         };
 
-        return new DropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
+        return new StaticDropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
     }
 
 
@@ -161,25 +162,24 @@ public class Dictionary {
 
         int valueIndex = header.indexOf(valueKey);
 
-        DropDownPage parentPage = new DropDownPage(structureKey +" page for " + valueKey);
+        StaticDropDownPage parentPage = new StaticDropDownPage(structureKey +" page for " + valueKey);
 
 
         for(DataTree tree: data){
 
-            ArrayList<DropDownPage> currentPages = new ArrayList<>();
+            ArrayList<StaticDropDownPage> currentPages = new ArrayList<>();
             currentPages.add(parentPage);
             String entryValue = tree.getString(valueIndex);
             ArrayList<ArrayList<String>> valuesOfGroups = tree.entryGroupValues(groupToValue);
-            //System.out.println("valuesOfGroups = " + valuesOfGroups);
 
             for(int groupIndex = 0; groupIndex < groups.size(); groupIndex++){
 
                 ArrayList<String> valuesOfCurrentGroup = valuesOfGroups.get(groupIndex);
-                ArrayList<DropDownPage> newPages = new ArrayList<>();
+                ArrayList<StaticDropDownPage> newPages = new ArrayList<>();
 
                 for(String groupValue: valuesOfCurrentGroup){
 
-                    for(DropDownPage page: currentPages){
+                    for(StaticDropDownPage page: currentPages){
                         newPages.add(page.getOrAdd(groupValue));
                     }
 
@@ -188,7 +188,7 @@ public class Dictionary {
                 currentPages = newPages;
 
             }
-            for(DropDownPage page: currentPages)
+            for(StaticDropDownPage page: currentPages)
                 page.add(entryValue);
         }
         //System.out.println("parentPage = " + parentPage);

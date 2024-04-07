@@ -6,16 +6,16 @@ import java.util.Arrays;
 
 public class DataTree {
     private String name;
-    private ItemPath itemPath;
+    private RefItemPath itemPath;
     private ArrayList<DataTree> list = new ArrayList<>();
     public DataTree(){
     }
 
-    public DataTree(ItemPath itemPath){
+    public DataTree(RefItemPath itemPath){
         this.itemPath = itemPath;
     }
 
-    public ItemPath getItemPath(){
+    public RefItemPath getItemPath(){
         return itemPath;
     }
 

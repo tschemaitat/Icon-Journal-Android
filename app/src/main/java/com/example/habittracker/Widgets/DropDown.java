@@ -6,11 +6,14 @@ import android.content.Context;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Structs.RefDropDownPage;
+import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Structs.StaticDropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 
@@ -66,7 +69,7 @@ public class DropDown extends EntryWidget {
     }
 
     private void setOptionsOfPage(){
-        setOptions(currentPage.name, formatOptions(currentPage));
+        setOptions(currentPage.getName(), formatOptions(currentPage));
     }
 
     private void createButton(){
@@ -100,12 +103,12 @@ public class DropDown extends EntryWidget {
 
 
     private void onItemSelected(int position){
-        DropDownPage clickedPage = currentPage.get(position);
+        DropDownPage clickedPage = currentPage.getByIndex(position);
         if(!clickedPage.hasChildren()){
             //System.out.println("got final value: " + clickedPage.name);
             //System.out.println("option: \n" + clickedPage.name + "\n is not a folder, leaving");
 
-            dataChanged(clickedPage.name);
+            dataChanged(clickedPage.getName());
             return;
         }
         if(currentPage == parentPage){
@@ -121,11 +124,11 @@ public class DropDown extends EntryWidget {
             dataChanged(null);
             return;
         }
-        if(currentPage.parent == parentPage){
+        if(currentPage.getParent() == parentPage){
             customPopup.removeBackIcon();
         }
         //on back button
-        currentPage = currentPage.parent;
+        currentPage = currentPage.getParent();
         setOptionsOfPage();
     }
 
@@ -154,12 +157,12 @@ public class DropDown extends EntryWidget {
         if(!page.hasChildren())
             throw new RuntimeException("page doesn't have children");
 
-        for(DropDownPage option: page.children){
+        for(DropDownPage option: page.getChildren()){
             if(!option.hasChildren()){
-                result.add(option.name);
+                result.add(option.getName());
                 continue;
             }
-            result.add(folder+" " + option.name);
+            result.add(folder+" " + option.getName());
         }
 
         //System.out.println("formatted page: \n\t" + result);
@@ -186,7 +189,7 @@ public class DropDown extends EntryWidget {
         setSelected(new ItemPath(value));
     }
 
-    public void setSelected(ItemPath itemPath){
+    public void setSelected(RefItemPath itemPath){
         System.out.println("setting value of drop to: " + itemPath.getName());
         buttonSelectionView.setText(new String[]{itemPath.getName()});
         selectedValuePath = itemPath;
@@ -212,7 +215,14 @@ public class DropDown extends EntryWidget {
 
     @Override
     public DataTree getDataTree() {
-        return new DataTree(selectedValuePath);
+        return new DataTree(getRefItemPath());
+    }
+
+    public RefItemPath getRefItemPath(){
+        RefDropDownPage dropDownPage = (RefDropDownPage) currentPage;
+        ArrayList<Integer> keyPath = dropDownPage.getKeyPath();
+        RefItemPath refItemPath = new RefItemPath(keyPath);
+        return refItemPath;
     }
 
     @Override
@@ -333,25 +343,25 @@ public class DropDown extends EntryWidget {
     }
 
     public static class StaticDropDownParameters extends EntryWidgetParam {
-        DropDownPage page;
-        public StaticDropDownParameters(String name, DropDownPage page){
+        StaticDropDownPage page;
+        public StaticDropDownParameters(String name, StaticDropDownPage page){
             super(name, DropDown.className);
             this.page = page;
         }
 
         public StaticDropDownParameters(String name, ArrayList<String> options){
             super(name, DropDown.className);
-            page = new DropDownPage("static paramters");
+            page = new StaticDropDownPage("static paramters");
             for(String s: options)
-                page.add(new DropDownPage(s));
+                page.add(new StaticDropDownPage(s));
         }
 
         public StaticDropDownParameters(String name, String[] optionsArray){
             super(name, DropDown.className);
             ArrayList<String> options = new ArrayList<>(Arrays.asList(optionsArray));
-            page = new DropDownPage("static paramters");
+            page = new StaticDropDownPage("static paramters");
             for(String s: options)
-                page.add(new DropDownPage(s));
+                page.add(new StaticDropDownPage(s));
         }
 
 
