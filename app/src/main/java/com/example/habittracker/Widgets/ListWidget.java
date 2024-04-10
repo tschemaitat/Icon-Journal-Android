@@ -6,9 +6,10 @@ import android.view.View;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.HeaderNode;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
@@ -54,10 +55,10 @@ public class ListWidget extends EntryWidget {
     }
 
     @Override
-    public void setValue(DataTree dataTree) {
-        System.out.println("list setting value: " + dataTree.hierarchy());
+    public void setValue(EntryValueTree entryValueTree) {
+        System.out.println("list setting value: " + entryValueTree.hierarchy());
         ArrayList<Widget> widgets = layout.widgets();
-        for(DataTree tree: dataTree.getList()){
+        for(EntryValueTree tree: entryValueTree.getList()){
             GroupWidget groupWidget = addGroup(cloneParams);
             groupWidget.setValue(tree);
         }
@@ -78,13 +79,13 @@ public class ListWidget extends EntryWidget {
     }
 
     @Override
-    public DataTree getDataTree() {
-        DataTree dataTree = new DataTree();
+    public EntryValueTree getEntryValueTree() {
+        EntryValueTree entryValueTree = new EntryValueTree();
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         for(GroupWidget groupWidget: groupWidgets){
-            dataTree.put(groupWidget.getDataTree());
+            entryValueTree.put(groupWidget.getEntryValueTree());
         }
-        return dataTree;
+        return entryValueTree;
     }
 
 
@@ -147,11 +148,13 @@ public class ListWidget extends EntryWidget {
         }
 
         @Override
-        public DataTree header() {
-            DataTree tree = cloneableWidget.header();
-            tree = new DataTree(name).put(tree.getList());
+        public HeaderNode createHeaderNode() {
+            HeaderNode tree = cloneableWidget.createHeaderNode();
+            HeaderNode result = new HeaderNode(name);
+            for(HeaderNode child: tree.getChildren())
+                result.add(child);
 
-            return tree;
+            return result;
         }
     }
 

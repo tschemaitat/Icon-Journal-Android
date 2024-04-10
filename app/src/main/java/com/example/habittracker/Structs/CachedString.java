@@ -1,19 +1,19 @@
 package com.example.habittracker.Structs;
 
-public class IntStringPair {
+public class CachedString {
     private int key;
     private String option;
 
 
-    public int getKeyInt(){
+    public int getKey(){
         return key;
     }
 
-    public String getOption() {
+    public String getString() {
         return option;
     }
 
-    public IntStringPair(int key, String option){
+    public CachedString(int key, String option){
         this.key = key;
         this.option = option;
     }

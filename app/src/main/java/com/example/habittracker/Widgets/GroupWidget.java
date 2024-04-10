@@ -2,12 +2,13 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.Structs.HeaderNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,10 +27,10 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
-    public DataTree getDataTree() {
-        DataTree tree = new DataTree();
+    public EntryValueTree getEntryValueTree() {
+        EntryValueTree tree = new EntryValueTree();
         for(EntryWidget widget: entryWidgets()){
-            tree.add(widget.getDataTree());
+            tree.add(widget.getEntryValueTree());
         }
         return tree;
     }
@@ -62,14 +63,14 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
-    public void setValue(DataTree dataTree) {
+    public void setValue(EntryValueTree entryValueTree) {
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
         //System.out.println("group widget setting value: " + dataTree.hierarchy());
         for(int i = 0; i < entryWidgets.size(); i++){
 
             EntryWidget entryWidget = entryWidgets.get(i);
             //System.out.println("setting value for entry widget: " + entryWidget);
-            entryWidget.setValue(dataTree.getTree(i));
+            entryWidget.setValue(entryValueTree.getTree(i));
         }
     }
 
@@ -116,10 +117,10 @@ public class GroupWidget extends EntryWidget {
         }
 
         @Override
-        public DataTree header() {
-            DataTree header = new DataTree();
+        public HeaderNode createHeaderNode() {
+            HeaderNode header = new HeaderNode(null);
             for(EntryWidgetParam param: params){
-                header.add(param.header());
+                header.add(param.createHeaderNode());
             }
             return header;
         }

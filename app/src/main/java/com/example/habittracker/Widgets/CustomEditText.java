@@ -9,15 +9,15 @@ import android.widget.LinearLayout;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.StaticClasses.StringMap;
+import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.habittracker.Structs.HeaderNode;
 
 public class CustomEditText extends EntryWidget {
-    private String currentText = "";
+    private CachedString currentText = null;
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinLayout linLayout;
@@ -31,13 +31,8 @@ public class CustomEditText extends EntryWidget {
         init();
     }
 
-    public void setText(String newText){
-        if(newText == null)
-            return;
-        if(newText.equals("null"))
-            throw new RuntimeException();
-        currentText = newText;
-        editTextLayout.setText(newText);
+    private void updateEditTextValue(){
+        editTextLayout.setText(currentText.getString());
     }
 
     public String getText(){
@@ -56,11 +51,6 @@ public class CustomEditText extends EntryWidget {
         return result;
     }
 
-    public void setValue(String newValue){
-        currentText = newValue;
-        editTextLayout.setText(newValue);
-    }
-
 
 
 
@@ -77,8 +67,6 @@ public class CustomEditText extends EntryWidget {
         editTextLayout.setBackground(null);
         Margin.setEditTextLayout(linLayout);
 
-        setValue(nullText);
-
         setTextListener();
         int MAX_CHARACTERS = 50;
 
@@ -87,7 +75,6 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void onTextChange(String before, String newText){
-        //System.out.println("\ttext changed: " + newText);
         getViewWrapper().resetNameColor();
         onDataChangedListener().run();
     }
@@ -108,8 +95,8 @@ public class CustomEditText extends EntryWidget {
                 boolean textChanged = !currentText.equals(newText);
                 if(!textChanged)
                     return;
-                String before = currentText;
-                currentText = newText;
+                String before = currentText.getString();
+                StringMap.editEntryValue(currentText.getKey(), newText);
                 onTextChange(before, newText);
             }
         });
@@ -126,16 +113,22 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
-    public void setValue(DataTree dataTree) {
-        setText(dataTree.getName());
+    public void setValue(EntryValueTree entryValueTree) {
+        if(entryValueTree == null){
+            currentText = StringMap.addEntryValue("");
+        }else{
+            currentText = entryValueTree.getString();
+        }
+
+        updateEditTextValue();
     }
 
     @Override
-    public DataTree getDataTree() {
+    public EntryValueTree getEntryValueTree() {
         System.out.println("returning data tree");
         System.out.println("currentText = " + currentText);
         System.out.println("getText() = " + getText());
-        return new DataTree(currentText);
+        return new EntryValueTree(currentText);
     }
 
     @Override
@@ -179,8 +172,8 @@ public class CustomEditText extends EntryWidget {
         }
 
         @Override
-        public DataTree header() {
-            return new DataTree(name);
+        public HeaderNode createHeaderNode() {
+            return new HeaderNode(name);
         }
     }
 }

@@ -9,17 +9,12 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
-import com.example.habittracker.Structs.DataTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.ViewWidgets.CustomPopup;
-import com.example.habittracker.Widgets.DropDown;
-import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
 
 import java.util.ArrayList;
@@ -118,34 +113,6 @@ public class TestPage implements Inflatable {
 
         CustomEditText editText = new CustomEditText(context);
         linearLayout.addView(editText.getView());
-    }
-
-    public void testDataTreeValueExport(){
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
-                new CustomEditText.EditTextParam("show"),
-                new DropDown.StaticDropDownParameters("genre", new String[]{
-                        "comedy",
-                        "romance"
-                }),
-                new ListWidget.ListParam("tropes", new EntryWidgetParam[]{
-                        new DropDown.StaticDropDownParameters("trope", new String[]{
-                                "isekai",
-                                "philosophers",
-                                "working together",
-                                "video games"
-                        }),
-                        new CustomEditText.EditTextParam("trope description")
-                })
-
-        });
-        GroupWidget groupWidget = new GroupWidget(context);
-        groupWidget.setParam(groupWidgetParam);
-
-        linearLayout.addView(groupWidget.getView());
-        groupWidget.setOnDataChangedListener(()->{
-            DataTree tree = groupWidget.getDataTree();
-            System.out.println("data changes tree: \n" + tree.hierarchy());
-        });
     }
 
 

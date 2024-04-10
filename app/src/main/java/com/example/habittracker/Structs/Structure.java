@@ -9,7 +9,7 @@ import java.util.Collections;
 public class Structure {
     private static int structureKeyCount = 0;
     private int idCount = 0;
-    private Integer key;
+    private StructureId id;
     private String name;
     private EntryWidgetParam param;
     private String type;
@@ -17,42 +17,42 @@ public class Structure {
 
 
     public Structure(String name, EntryWidgetParam param, String type){
-        this.key = null;
+        this.id = null;
         this.name = name;
         this.param = param;
         this.type = type;
         entries = new ArrayList<>();
     }
 
-    public Integer getKey(){
-        return key;
+    public StructureId getId(){
+        return id;
     }
 
     public void setNewKey(){
-        if(key != null)
+        if(id != null)
             throw new RuntimeException("tried to set new key of structure twice");
-        this.key = structureKeyCount;
+        this.id = new StructureId(structureKeyCount);
         structureKeyCount++;
     }
 
-    public Structure(String name, EntryWidgetParam param, String type, ArrayList<DataTree> entries){
-        this.key = null;
+    public Structure(String name, EntryWidgetParam param, String type, ArrayList<EntryValueTree> entries){
+        this.id = null;
         this.name = name;
         this.param = param;
         this.type = type;
         this.entries = new ArrayList<>();
-        for(DataTree data: entries)
+        for(EntryValueTree data: entries)
             addEntry(data);
     }
     public Structure(){
-        this.key = null;
+        this.id = null;
         this.name = null;
         this.param = new GroupWidget.GroupWidgetParam(null, new ArrayList<>());
         this.type = null;
         this.entries = new ArrayList<>();
     }
 
-    public void addEntry(DataTree entryData){
+    public void addEntry(EntryValueTree entryData){
         Entry entry = new Entry(entryData);
         entry.id = idCount;
         idCount++;
@@ -62,14 +62,14 @@ public class Structure {
     public Entry getEntry(ArrayList<String> attributes){
         String name = attributes.get(0);
         for(Entry entry: entries){
-            if(entry.dataTree.getString(0).equals(name)){
+            if(entry.entryValueTree.getCachedString(0).equals(name)){
                 return entry;
             }
         }
         throw new RuntimeException();
     }
 
-    public void setData(int id, DataTree data){
+    public void setData(int id, EntryValueTree data){
         Entry found = null;
         for(Entry entry: entries){
             if(entry.id == id){
@@ -77,7 +77,7 @@ public class Structure {
                 break;
             }
         }
-        found.dataTree = data;
+        found.entryValueTree = data;
     }
 
 
@@ -86,11 +86,11 @@ public class Structure {
         return entries;
     }
 
-    public ArrayList<DataTree> getData(){
-        ArrayList<DataTree> dataTrees = new ArrayList<>();
+    public ArrayList<EntryValueTree> getData(){
+        ArrayList<EntryValueTree> entryValueTrees = new ArrayList<>();
         for(Entry entry: entries)
-            dataTrees.add(entry.dataTree);
-        return dataTrees;
+            entryValueTrees.add(entry.entryValueTree);
+        return entryValueTrees;
     }
 
     public String getName(){
@@ -101,8 +101,9 @@ public class Structure {
         return type;
     }
 
-    public DataTree getHeader(){
-        return param.header();
+    public Header getHeader(){
+        Header header = new Header(param.createHeaderNode());
+        return header;
     }
 
     public ArrayList<ArrayList<String>> IdAttributes(){
@@ -117,7 +118,7 @@ public class Structure {
     }
 
     private ArrayList<String> getEntryName(Entry entry) {
-        return new ArrayList<>(Collections.singleton(entry.dataTree.getString(0)));
+        return new ArrayList<>(Collections.singleton(entry.entryValueTree.getCachedString(0)));
     }
 
     public EntryWidgetParam getParam(){

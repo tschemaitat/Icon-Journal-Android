@@ -5,9 +5,8 @@ import android.view.View;
 
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Structs.StaticDropDownPage;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -250,7 +249,7 @@ public class StructureWidgetDropDown implements Widget {
     //region type dropdown gather functions
     private ArrayList<ItemPath> getGroupKeyList(){
         //System.out.println("getting group key list");
-        ArrayList<ItemPath> items = DataTree.gatherItems(Dictionary.header(structureKey()));
+        ArrayList<ItemPath> items = EntryValueTree.gatherItems(Dictionary.header(structureKey()));
         //System.out.println("DataTree.gatherItems(Dictionary.header(structureKey())) = " + DataTree.gatherItems(Dictionary.header(structureKey())));
         items.remove(valueKeyDropDown.getSelectedPath());
         return items;
@@ -267,13 +266,13 @@ public class StructureWidgetDropDown implements Widget {
         return items;
     }
     private ArrayList<String> valueKeyList(String structureKey){
-        DataTree header = Dictionary.header(structureKey);
+        EntryValueTree header = Dictionary.header(structureKey);
         if(header == null)
             throw new RuntimeException("header null key: " + structureKey);
         ArrayList<String> headerList = new ArrayList<>();
         for(int i = 0; i < header.size(); i++){
             if(!header.hasChildren(i))
-                headerList.add(header.getString(i));
+                headerList.add(header.getCachedString(i));
         }
         return headerList;
     }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.RelParam;
+import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
 import java.util.ArrayList;
@@ -124,15 +125,14 @@ public class CustomPopup {
             onBack.run();
     }
 
-    public void setText(String title, ArrayList<String> options){
+    public void setText(String title, ArrayList<PayloadOption> options){
         //System.out.println("popup: setting text. title: " + title + ", options: " + options);
         name.setText(new String[]{title});
-        optionsSelectionView.setText((String[])options.toArray());
+        optionsSelectionView.setText(options);
     }
 
     public void enableBack(){
         backEnabled = true;
-
     }
 
     public void disableBack(){

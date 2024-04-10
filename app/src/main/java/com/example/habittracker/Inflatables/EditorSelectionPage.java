@@ -7,7 +7,9 @@ import android.widget.LinearLayout;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.IntStringPair;
+import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
@@ -44,18 +46,18 @@ public class EditorSelectionPage implements Inflatable {
     }
 
     public void createSelectionAfterFolder(String structureType){
-        ArrayList<IntStringPair> structureKeys = Dictionary.getStructureOptions();
+        ArrayList<PayloadOption> structureKeys = Dictionary.getStructureOptions();
         parentLayout.removeAllViews();
         SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position, key) -> {
-            inflateStructureEditor((int)key);
+            inflateStructureEditor((StructureId) key);
         }, () -> {
             MainActivity.changePage(new StructureEditor(context, new Structure(null, null, structureType)));
         });
         parentLayout.addView(structureSelection.getView());
     }
 
-    public void inflateStructureEditor(int structureKey){
-        MainActivity.changePage(new StructureEditor(context, Dictionary.getStructure(structureKey)));
+    public void inflateStructureEditor(StructureId id){
+        MainActivity.changePage(new StructureEditor(context, Dictionary.getStructure(id)));
     }
 
 

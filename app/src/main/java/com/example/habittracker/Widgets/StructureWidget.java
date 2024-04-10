@@ -1,15 +1,15 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
-import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.StringMap;
+import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -46,7 +46,7 @@ public class StructureWidget implements Widget {
 
         typeDropDown = new DropDown(context);
         layout.add(typeDropDown.getView());
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(null, Dictionary.getTypes());
+        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(null, DropDownPageFactory.getTypes());
         typeDropDown.setParam(params);
         typeDropDown.setHint("select type");
 
@@ -71,7 +71,7 @@ public class StructureWidget implements Widget {
     public void onTypeChange(){
         typeDropDown.resetError();
         //System.out.println("<StructureWidget>data changed");
-        String type = typeDropDown.getSelectedString();
+        String type = typeDropDown.getSelectedString().getString();
         //System.out.println("type = " + type)
         if(type == null){
             if(currentType == null)
@@ -135,7 +135,7 @@ public class StructureWidget implements Widget {
     public EntryWidgetParam getParam(){
         EntryWidgetParam result = null;
 
-        String type = typeDropDown.getSelectedString();
+        String type = typeDropDown.getSelectedString().getString();
         typeSwitch:{
             if(type == null){
                 typeDropDown.setError();
@@ -180,7 +180,7 @@ public class StructureWidget implements Widget {
         System.out.println("setting param: " + param);
         String type = param.className;
         headerView.nameEditor.setText(param.name);
-        typeDropDown.setSelected(type);
+        typeDropDown.setSelected(new RefItemPath(StringMap.addStaticValue(type)));
         currentType = type;
         setType();
         typeSwitch:{

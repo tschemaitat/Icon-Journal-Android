@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.Entry;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Widgets.CustomEditText;
@@ -30,7 +30,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     public void onDataChanged(){
-        System.out.println("new data: \n" + groupWidget.getDataTree().hierarchy());
+        System.out.println("new data: \n" + groupWidget.getEntryValueTree().hierarchy());
     }
 
     private boolean checkValidForSave(Inflatable page){
@@ -48,13 +48,13 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     private void save(){
-        DataTree data = groupWidget.getDataTree();
+        EntryValueTree data = groupWidget.getEntryValueTree();
         if(entry == null){
             MainActivity.log("new entry, adding entry to structure");
             structure.addEntry(data);
         }else{
             MainActivity.log("editing entry, changing dataTree");
-            entry.dataTree = data;
+            entry.entryValueTree = data;
         }
         System.out.println("saving entry successful: \n" + data.hierarchy());
     }
@@ -94,7 +94,7 @@ public class CategoryEntryEditorPage implements Inflatable{
         groupWidget.setParam(structure.getParam());
 
         if(entry != null)
-            groupWidget.setValue(entry.dataTree);
+            groupWidget.setValue(entry.entryValueTree);
     }
 
     @Override

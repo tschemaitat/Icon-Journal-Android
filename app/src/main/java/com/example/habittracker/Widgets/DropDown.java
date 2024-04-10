@@ -3,31 +3,24 @@ package com.example.habittracker.Widgets;
 
 
 import android.content.Context;
+import android.view.View;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.Structs.DataTree;
-import com.example.habittracker.Structs.DropDownPage;
-import com.example.habittracker.Structs.RefDropDownPage;
-import com.example.habittracker.Structs.RefItemPath;
+import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.Structs.DropDownPages.DropDownPage;
+import com.example.habittracker.Structs.ItemPath;
+import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.Structs.ItemPath;
-import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Structs.StaticDropDownPage;
-import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class DropDown extends EntryWidget {
+public class DropDown{
 
     public static final String className = "drop down";
-    private boolean dataSet = false;
+    public static final String defaultHintText = "select option";
     private Context context;
-    private String structureKey = null;
-    private String valueKey = null;
-    private ArrayList<ItemPath> groups = new ArrayList<>();
+
 
 
     private String folder = "\uD83D\uDCC1";
@@ -35,59 +28,43 @@ public class DropDown extends EntryWidget {
     private DropDownPage parentPage = null;
     private DropDownPage currentPage = null;
 
-    public String nullValue = "select option";
+    public String hint = defaultHintText;
 
-    CustomPopup customPopup;
+    private CustomPopup customPopup;
 
-    SelectionView buttonSelectionView;
+    private SelectionView buttonSelectionView;
+
+    private DropDownOnSelected onSelectedListener;
+
+    boolean setSelected = false;
 
 
-
-
-    private ItemPath selectedValuePath = null;
-    public DropDown(Context context) {
-        super(context);
+    public  ItemPath selectedValuePath = null;
+    public DropDown(Context context, DropDownOnSelected onSelected) {
         this.context = context;
+        this.onSelectedListener = onSelected;
         init();
     }
 
 
 
+
     private void init(){
-
-        selectedValuePath = new ItemPath(nullValue);
+        selectedValuePath = null;
         createButton();
-
     }
-
-    private void setOptions(String title, ArrayList<String> spinnerOptions){
-        if(currentPage == parentPage){
-            customPopup.setText(nullValue, spinnerOptions);
-        }else
-            customPopup.setText(title, spinnerOptions);
-
-    }
-
-    private void setOptionsOfPage(){
-        setOptions(currentPage.getName(), formatOptions(currentPage));
-    }
-
     private void createButton(){
         buttonSelectionView = new SelectionView(context, new String[]{"select option"}, (stringValue, position, key) -> {
             //on button pressed
             createPopUp();
         });
         buttonSelectionView.setColor(ColorPalette.textPurple);
-
-        setChild(buttonSelectionView.getView());
     }
-
-
-
+    //when drop down is initially pressed
     private void createPopUp(){
         customPopup = new CustomPopup(context, "", new ArrayList<>(), (stringValue, position, key) -> {
-            onItemSelected(position);
-            }, () -> {
+            onItemSelected(position, key);
+        }, () -> {
             onBackSelected();
         }, ()->{
             //on nothing selected
@@ -101,27 +78,38 @@ public class DropDown extends EntryWidget {
     }
 
 
+    private void setPopUpOptions(String title, ArrayList<PayloadOption> spinnerOptions){
+        customPopup.setText(title, spinnerOptions);
+    }
+    private void setOptionsOfPage(){
+        setPopUpOptions(currentPage.getName(), formatOptions(currentPage, folder));
+    }
 
-    private void onItemSelected(int position){
-        DropDownPage clickedPage = currentPage.getByIndex(position);
+
+
+
+
+
+
+
+    private void onItemSelected(int position, Object payload){
+        DropDownPage clickedPage = currentPage.getChildPage(position);
+        //if the page clicked is not a folder
         if(!clickedPage.hasChildren()){
-            //System.out.println("got final value: " + clickedPage.name);
-            //System.out.println("option: \n" + clickedPage.name + "\n is not a folder, leaving");
-
-            dataChanged(clickedPage.getName());
+            onDataChanged(clickedPage.getName(), payload);
             return;
         }
-        if(currentPage == parentPage){
+        //if we are going into a new page
+        if(currentPage == parentPage){//if we are leaving parent page
             customPopup.addBackIcon();
         }
         currentPage = clickedPage;
         setOptionsOfPage();
     }
-
     private void onBackSelected() {
         //System.out.println("back button");
         if(currentPage == parentPage){
-            dataChanged(null);
+            onDataChanged(null, null);
             return;
         }
         if(currentPage.getParent() == parentPage){
@@ -131,38 +119,38 @@ public class DropDown extends EntryWidget {
         currentPage = currentPage.getParent();
         setOptionsOfPage();
     }
-
-    private void dataChanged(String newValue){
-        //System.out.println("<drop down>data changed: " + newValue);
-        ArrayList<String> path = currentPage.getPath();
-        path.add(newValue);
-        selectedValuePath = new ItemPath(path);
-
-
-
-        if(newValue == null)
-            buttonSelectionView.setText(new String[]{"select option"});
-        else
-            buttonSelectionView.setText(new String[]{getSelectedString()});
+    private void onDataChanged(String newValue, Object payload){
+        //we didn't set the page clicked because its not a folder, so we have to add the name onto the end
+        handleStateOnDataChanged(newValue);
 
         customPopup.close();
         customPopup = null;
-
-        onDataChangedListener().run();
+        onSelectedListener.onSelected(selectedValuePath, payload);
     }
 
+    private void handleStateOnDataChanged(String newValue){
+        ItemPath newPath = currentPage.getPathToPageWithName();
+        selectedValuePath = newPath.createNewPathAdd(newValue);
+        if(newValue == null)
+            buttonSelectionView.setText(new String[]{hint});
+        else
+            buttonSelectionView.setText(new String[]{newValue});
+    }
 
-    public ArrayList<String> formatOptions(DropDownPage page){
-        ArrayList<String> result = new ArrayList<>();
+    private static ArrayList<PayloadOption> formatOptions(DropDownPage page, String folderString){
+        ArrayList<PayloadOption> payloadOptions = page.getOptions();
+        ArrayList<PayloadOption> result = new ArrayList<>();
         if(!page.hasChildren())
             throw new RuntimeException("page doesn't have children");
-
-        for(DropDownPage option: page.getChildren()){
-            if(!option.hasChildren()){
-                result.add(option.getName());
+        ArrayList<DropDownPage> children = page.getChildren();
+        for(int i = 0; i < children.size(); i++){
+            DropDownPage childPage = children.get(i);
+            Object payload = payloadOptions.get(i);
+            if(!childPage.hasChildren()){
+                result.add(new PayloadOption(childPage.getName(), payload));
                 continue;
             }
-            result.add(folder+" " + option.getName());
+            result.add(new PayloadOption(folderString+" " + childPage.getName(), payload));
         }
 
         //System.out.println("formatted page: \n\t" + result);
@@ -171,210 +159,48 @@ public class DropDown extends EntryWidget {
         return result;
     }
 
-    @Override
-    public DropDownParam getParam(){
-        if(!dataSet){
-            throw new RuntimeException();
-        }
-        DropDownParam params = new DropDownParam(getName(), selectedValuePath, structureKey, valueKey, groups);
-        return params;
+    public View getView(){
+        return buttonSelectionView.getView();
     }
-
-    @Override
-    public void setValue(DataTree dataTree) {
-        setSelected(dataTree.getItemPath());
-    }
-
-    public void setSelected(String value){
-        setSelected(new ItemPath(value));
-    }
-
-    public void setSelected(RefItemPath itemPath){
-        System.out.println("setting value of drop to: " + itemPath.getName());
-        buttonSelectionView.setText(new String[]{itemPath.getName()});
-        selectedValuePath = itemPath;
-    }
-
-    public String getSelectedString(){
-        if(selectedValuePath == null)
-            return null;
-        return selectedValuePath.getName();
-    }
-
-    public ItemPath getSelectedPath(){
-        ItemPath itemPath = selectedValuePath;
-        if(itemPath == null)
-            return null;
-        ItemPath copy = new ItemPath((ArrayList<String>) itemPath.getPath().clone());
-        if(getSelectedString() == null)
-            return null;
-        if(getSelectedString().equals(nullValue))
-            return null;
-        return copy;
-    }
-
-    @Override
-    public DataTree getDataTree() {
-        return new DataTree(getRefItemPath());
-    }
-
-    public RefItemPath getRefItemPath(){
-        RefDropDownPage dropDownPage = (RefDropDownPage) currentPage;
-        ArrayList<Integer> keyPath = dropDownPage.getKeyPath();
-        RefItemPath refItemPath = new RefItemPath(keyPath);
-        return refItemPath;
-    }
-
-    @Override
-    public void setParamCustom(EntryWidgetParam params){
-        if(params instanceof DropDownParam){
-            dataSet = true;
-            DropDownParam dropDownParams = ((DropDownParam) params);
-            parentPage = Dictionary.getGroupedPages(dropDownParams.structureKey, dropDownParams.valueKey, dropDownParams.groups);
-            structureKey = dropDownParams.structureKey;
-            valueKey = dropDownParams.valueKey;
-            groups = dropDownParams.groups;
-
-
-            //System.out.println("setting data: " + this);
-
-            currentPage = parentPage;
-            selectedValuePath = dropDownParams.selected;
-            int specialOptions = 1;
-            //System.out.println("setting data for spinner: \n" + parentPage);
-            //setOptionsOfPage();
-            return;
-        }
-        StaticDropDownParameters staticParams = (StaticDropDownParameters) params;
-        dataSet = true;
-        parentPage = staticParams.page;
+    public void setDropDownPage(DropDownPage dropDownPage){
+        this.parentPage = dropDownPage;
         currentPage = parentPage;
-        selectedValuePath = null;
-        //setOptionsOfPage();
-
     }
 
+    public void setSelected(ItemPath itemPath){
+        if(setSelected)
+            throw new RuntimeException("set selected shouldn't be called twice");
+        setSelected = true;
+        if(parentPage == null)
+            throw new RuntimeException("tried to set selected path with no page set");
+        if(currentPage != parentPage)
+            throw new RuntimeException("weird state, tried to set selected when current page isn't parent page");
+        EnumLoop.loop(itemPath.getStringPath(), (index, pageName)->{
+            DropDownPage newPage = currentPage.getChildPage(pageName);
+            currentPage = newPage;
+        });
+        handleStateOnDataChanged(itemPath.getName());
+    }
+    public ItemPath getSelectedPath(){
+        return selectedValuePath;
+    }
     public void resetValue(){
         selectedValuePath = null;
         currentPage = parentPage;
     }
-
     public void setHint(String select_type) {
-        nullValue = select_type;
+        hint = select_type;
         buttonSelectionView.setText(new String[]{select_type});
     }
-
     public void setError() {
         System.out.println("<drop down> setting error");
         buttonSelectionView.setColor(ColorPalette.redText);
     }
-
     public void resetError() {
         buttonSelectionView.setColor(ColorPalette.textPurple);
     }
 
-
-    public static class DropDownParam extends EntryWidgetParam {
-        public ItemPath selected;
-        public String structureKey;
-        public String valueKey;
-        public ArrayList<ItemPath> groups;
-        public String name = "null";
-
-        public DropDownParam(String name, ItemPath selected, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDown.className);
-            if(structureKey == null)
-                throw new RuntimeException();
-            this.selected = selected;
-            this.structureKey = structureKey;
-            this.valueKey = valueKey;
-            this.groups = groups;
-        }
-
-        public DropDownParam(String name, String structureKey, String valueKey, ArrayList<ItemPath> groups){
-            super(name, DropDown.className);
-            if(structureKey == null)
-                throw new RuntimeException();
-            this.selected = null;
-            this.structureKey = structureKey;
-            this.valueKey = valueKey;
-            this.groups = groups;
-        }
-
-        public DropDownParam(String name, String structureKey, String valueKey){
-            super(name, DropDown.className);
-            if(structureKey == null)
-                throw new RuntimeException();
-            this.selected = null;
-            this.structureKey = structureKey;
-            this.valueKey = valueKey;
-            this.groups = new ArrayList<>();
-        }
-
-        @Override
-        public String hierarchyString(int numTabs){
-            String singleTab = "\t";
-            String tabs = "";
-            for(int i = 0; i < numTabs; i++)
-                tabs += singleTab;
-            return tabs + "drop down\n"
-                    + tabs + "\tstructure: " + structureKey + "\n"
-                    + tabs + "\tvalue: " + valueKey + "\n"
-                    + tabs + "\tgroups: " + groups + "\n";
-        }
-
-        @Override
-        public DataTree header() {
-            return new DataTree(name);
-        }
-
-        public String toString(){
-            return "{" + className + ", " + selected + ", " +structureKey + ", " +valueKey + ", " +groups + "}";
-        }
-
-    }
-
-    public static class DropDownValue extends WidgetValue {
-        public ItemPath selected;
-        public DropDownValue(ItemPath selected){
-            this.selected = selected;
-
-        }
-    }
-
-    public static class StaticDropDownParameters extends EntryWidgetParam {
-        StaticDropDownPage page;
-        public StaticDropDownParameters(String name, StaticDropDownPage page){
-            super(name, DropDown.className);
-            this.page = page;
-        }
-
-        public StaticDropDownParameters(String name, ArrayList<String> options){
-            super(name, DropDown.className);
-            page = new StaticDropDownPage("static paramters");
-            for(String s: options)
-                page.add(new StaticDropDownPage(s));
-        }
-
-        public StaticDropDownParameters(String name, String[] optionsArray){
-            super(name, DropDown.className);
-            ArrayList<String> options = new ArrayList<>(Arrays.asList(optionsArray));
-            page = new StaticDropDownPage("static paramters");
-            for(String s: options)
-                page.add(new StaticDropDownPage(s));
-        }
-
-
-        @Override
-        public String hierarchyString(int numTabs) {
-            return null;
-        }
-
-        @Override
-        public DataTree header() {
-            throw new RuntimeException();
-        }
-
-
+    public interface DropDownOnSelected{
+        void onSelected(ItemPath itemPath, Object payload);
     }
 }

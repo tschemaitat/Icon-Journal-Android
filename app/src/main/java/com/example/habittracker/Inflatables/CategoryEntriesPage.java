@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Entry;
@@ -33,8 +33,8 @@ public class CategoryEntriesPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        ArrayList<DataTree> dataList = structure.getData();
-        for(DataTree data: dataList)
+        ArrayList<EntryValueTree> dataList = structure.getData();
+        for(EntryValueTree data: dataList)
             System.out.println(data.hierarchy());
 
         ArrayList<ArrayList<String>> entryNames = structure.IdAttributes();

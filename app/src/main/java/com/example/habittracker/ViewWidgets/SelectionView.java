@@ -10,14 +10,15 @@ import android.widget.TextView;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.IntStringPair;
+import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.PayloadOption;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SelectionView {
     Context context;
-    ArrayList<IntStringPair> options;
+    ArrayList<PayloadOption> options;
     OnSelected onSelected;
     OnAdd onAdd;
     ListView listView;
@@ -25,17 +26,17 @@ public class SelectionView {
     int color = -1;
 
     public static final String addString = "add";
-    public SelectionView(Context context, ArrayList<IntStringPair> options, OnSelected onSelected, OnAdd onAdd){
+    public SelectionView(Context context, ArrayList<PayloadOption> options, OnSelected onSelected, OnAdd onAdd){
         this.context = context;
-        this.options = (ArrayList<IntStringPair>) options.clone();
+        this.options = (ArrayList<PayloadOption>) options.clone();
         this.onSelected = onSelected;
         this.onAdd = onAdd;
         init();
     }
 
-    public SelectionView(Context context, ArrayList<IntStringPair> options, OnSelected onSelected){
+    public SelectionView(Context context, ArrayList<PayloadOption> options, OnSelected onSelected){
         this.context = context;
-        this.options = (ArrayList<IntStringPair>) options.clone();
+        this.options = (ArrayList<PayloadOption>) options.clone();
         this.onSelected = onSelected;
         this.onAdd = null;
         init();
@@ -55,10 +56,10 @@ public class SelectionView {
         init();
     }
 
-    private static ArrayList<IntStringPair> convert(ArrayList<String> stringOptions){
-        ArrayList<IntStringPair> result = new ArrayList<>();
+    private static ArrayList<PayloadOption> convert(ArrayList<String> stringOptions){
+        ArrayList<PayloadOption> result = new ArrayList<>();
         for(String string: stringOptions)
-            result.add(new IntStringPair(string, string));
+            result.add(new PayloadOption(string, null));
         return result;
     }
 
@@ -97,7 +98,7 @@ public class SelectionView {
         public void onAdd();
     }
 
-    public void setText(ArrayList<IntStringPair> strings){
+    public void setText(ArrayList<PayloadOption> strings){
         options = strings;
         listView.setAdapter(new ArrayAdapter<>(context, textViewResource, strings));
         listView.setMinimumWidth(1000);
@@ -113,21 +114,21 @@ public class SelectionView {
         });
     }
 
-    public void setText(IntStringPair[] strings){
+    public void setText(PayloadOption[] strings){
         setText(new ArrayList<>(Arrays.asList(strings)));
     }
 
     private ArrayList<String> getOptionNames(){
         ArrayList<String> result = new ArrayList<>();
-        for(IntStringPair intStringPair : options)
-            result.add(intStringPair.getOption());
+        for(PayloadOption cachedString : options)
+            result.add(cachedString.getString());
         return result;
     }
 
     private Object getKeyOfOption(String optionName){
-        for(IntStringPair intStringPair : options){
-            if(intStringPair.getOption().equals(optionName))
-                return intStringPair.getKey();
+        for(PayloadOption cachedString : options){
+            if(cachedString.getString().equals(optionName))
+                return cachedString.getPayload();
         }
         throw new RuntimeException("no option pair matches option name");
     }
@@ -159,7 +160,7 @@ public class SelectionView {
         listView.setAdapter(adapter);
         int textViewHeight = 0;
         if(options.size() > 0)
-            textViewHeight = getTextHeight(options.get(0).getOption());
+            textViewHeight = getTextHeight(options.get(0).getString());
         //System.out.println("predicted textView hiehgt: " + textViewHeight);
 
         listView.setLayoutParams(new LinearLayout.LayoutParams(-1, textViewHeight * options.size()));
@@ -191,11 +192,11 @@ public class SelectionView {
     }
 
     private void sendItemSelectedCall(int position){
-        IntStringPair intStringPair = options.get(position);
-        onSelected.onSelected(intStringPair.getOption(), position, intStringPair.getKey());
+        PayloadOption cachedString = options.get(position);
+        onSelected.onSelected(cachedString.getString(), position, cachedString.getPayload());
     }
 
-    private ArrayList<IntStringPair> getOptions(){
+    private ArrayList<PayloadOption> getOptions(){
         return options;
     }
 

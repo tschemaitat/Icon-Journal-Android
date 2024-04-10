@@ -14,5 +14,5 @@ public abstract class EntryWidgetParam {
         return hierarchyString(0);
     }
     public abstract String hierarchyString(int numTabs);
-    public abstract DataTree header();
+    public abstract HeaderNode createHeaderNode();
 }

@@ -2,8 +2,9 @@ package com.example.habittracker.Slider;
 
 import android.content.Context;
 
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.HeaderNode;
 import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
@@ -47,7 +48,7 @@ public class TextSlider extends EntryWidget {
 
 
     @Override
-    public DataTree getDataTree() {
+    public EntryValueTree getEntryValueTree() {
         return null;
     }
 
@@ -57,7 +58,7 @@ public class TextSlider extends EntryWidget {
     }
 
     @Override
-    public void setValue(DataTree dataTree) {
+    public void setValue(EntryValueTree entryValueTree) {
 
     }
 
@@ -84,7 +85,7 @@ public class TextSlider extends EntryWidget {
         }
 
         @Override
-        public DataTree header() {
+        public HeaderNode createHeaderNode() {
             return null;
         }
     }

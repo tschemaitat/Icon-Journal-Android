@@ -8,20 +8,12 @@ package com.example.habittracker.StaticClasses;
 
 import android.content.Context;
 
-import com.example.habittracker.Structs.DataTree;
-import com.example.habittracker.Structs.DropDownPage;
-import com.example.habittracker.Structs.StaticDropDownPage;
-import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.IntStringPair;
-import com.example.habittracker.Structs.ItemPath;
+import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.Structure;
-import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Dictionary {
@@ -41,7 +33,7 @@ public class Dictionary {
         if(structure.getName() == null)
             throw new RuntimeException("structure name not set");
         structure.setNewKey();
-        structures.put(structure.getKey(), structure);
+        structures.put(structure.getId().getId(), structure);
     }
 
     static{
@@ -52,7 +44,6 @@ public class Dictionary {
     public static void generate(Context context){
         generateStructure();
         //generateDeepStructure();
-        generateShowGenreStructure(context);
     }
 
     public static void saveStructure(Structure structure){
@@ -67,7 +58,7 @@ public class Dictionary {
         if(structure.getHeader() == null)
             throw new RuntimeException("saved structure couldn't make a header");
 
-        structures.put(structure.getKey(), structure);
+        structures.put(structure.getId().getId(), structure);
     }
 
     private static void generateStructure() {
@@ -75,20 +66,20 @@ public class Dictionary {
         addStructure(structure);
     }
 
-    public static ArrayList<IntStringPair> getCategoryOptions(){
+    public static ArrayList<PayloadOption> getCategoryOptions(){
         return getStructureOptions(category);
     }
-    public static ArrayList<IntStringPair> getJournalOptions(){
+    public static ArrayList<PayloadOption> getJournalOptions(){
         return getStructureOptions(journal);
     }
 
-    public static ArrayList<IntStringPair> getStructureOptions(String structureType){
-        ArrayList<IntStringPair> keyPairs = new ArrayList<>();
+    public static ArrayList<PayloadOption> getStructureOptions(String structureType){
+        ArrayList<PayloadOption> keyPairs = new ArrayList<>();
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
                 throw new RuntimeException("structure: " + structure.getName() + " has null type");
             if(structure.getType().equals(structureType)){
-                IntStringPair keyPair = new IntStringPair(structure.getKey(), structure.getName());
+                PayloadOption keyPair = new PayloadOption(structure.getName(), structure.getId());
                 keyPairs.add(keyPair);
             }
         }
@@ -96,12 +87,12 @@ public class Dictionary {
     }
 
 
-    public static ArrayList<IntStringPair> getStructureOptions(){
-        ArrayList<IntStringPair> keyPairs = new ArrayList<>();
+    public static ArrayList<PayloadOption> getStructureOptions(){
+        ArrayList<PayloadOption> keyPairs = new ArrayList<>();
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
                 throw new RuntimeException("structure: " + structure.getName() + " has null type");
-            IntStringPair keyPair = new IntStringPair(structure.getKey(), structure.getName());
+            PayloadOption keyPair = new PayloadOption(structure.getName(), structure.getId());
             keyPairs.add(keyPair);
         }
         return keyPairs;
@@ -117,7 +108,7 @@ public class Dictionary {
 
 
 
-    public static Structure getStructure(int key){
+    public static Structure getStructure(StructureId key){
         Structure structure = structures.get(key);
         if(structure == null)
             throw new RuntimeException("structure key unknown: " + key);
@@ -125,132 +116,61 @@ public class Dictionary {
     }
 
 
-    public static DataTree header(Integer structureKey){
-        Structure entry = structures.get(structureKey);
-        if(entry == null)
-            throw new NullPointerException("structureKey wrong: " + structureKey);
-        DataTree header = entry.getHeader();
-        if(header == null)
-            throw new RuntimeException("header null structure key: " + structureKey);
-        return header;
-    }
-
-    public static StaticDropDownPage getTypes(){
-        String[] numbers = new String[]{
-                "edit text",
-                "list",
-                DropDown.className,
-                "sliderfds"
-        };
-
-        return new StaticDropDownPage("types", new ArrayList<>(Arrays.asList(numbers)));
-    }
 
 
 
 
-    public static DropDownPage getGroupedPages(String structureKey, String valueKey, ArrayList<ItemPath> groups){
-        Structure structure = structures.get(structureKey);
-
-        if(structure == null){
-            throw new RuntimeException("structureKey wrong: " + structureKey);
-        }
-        DataTree header = structure.getHeader();
-        //System.out.println("header = " + header);
-        ArrayList<DataTree> data = structure.getData();
-        ArrayList<ArrayList<Integer>> groupToValue = getGroupIndexes(header, groups);
-
-        int valueIndex = header.indexOf(valueKey);
-
-        StaticDropDownPage parentPage = new StaticDropDownPage(structureKey +" page for " + valueKey);
-
-
-        for(DataTree tree: data){
-
-            ArrayList<StaticDropDownPage> currentPages = new ArrayList<>();
-            currentPages.add(parentPage);
-            String entryValue = tree.getString(valueIndex);
-            ArrayList<ArrayList<String>> valuesOfGroups = tree.entryGroupValues(groupToValue);
-
-            for(int groupIndex = 0; groupIndex < groups.size(); groupIndex++){
-
-                ArrayList<String> valuesOfCurrentGroup = valuesOfGroups.get(groupIndex);
-                ArrayList<StaticDropDownPage> newPages = new ArrayList<>();
-
-                for(String groupValue: valuesOfCurrentGroup){
-
-                    for(StaticDropDownPage page: currentPages){
-                        newPages.add(page.getOrAdd(groupValue));
-                    }
-
-                }
-
-                currentPages = newPages;
-
-            }
-            for(StaticDropDownPage page: currentPages)
-                page.add(entryValue);
-        }
-        //System.out.println("parentPage = " + parentPage);
-        return parentPage;
-    }
-
-    public static ArrayList<ArrayList<Integer>> getGroupIndexes(DataTree header, ArrayList<ItemPath> groups){
-        ArrayList<ArrayList<Integer>> groupToValue = new ArrayList<>();
-        for(int i = 0; i < groups.size(); i++){
-            //System.out.println("finding ");
-            groupToValue.add(header.indexOf(groups.get(i).getPath()));
-        }
-        return groupToValue;
-    }
-
-    public static void generateShowGenreStructure(Context context){
-
-
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
-                new CustomEditText.EditTextParam("name"),
-                new ListWidget.ListParam("genres", new EntryWidgetParam[]{
-                        new CustomEditText.EditTextParam("genre")     }),
-                new ListWidget.ListParam("attributes", new EntryWidgetParam[]{
-                        new CustomEditText.EditTextParam("attribute")     })
-        });
-
-        DataTree dataTree1 = new DataTree().put(
-                new DataTree("ReLIFE"),
-                new DataTree().put(
-                        new DataTree().put("romance"),
-                        new DataTree().put("isekai"),
-                        new DataTree().put("working together")),
-                new DataTree().put(
-                        new DataTree().put("composition"),
-                        new DataTree().put("character progression"),
-                        new DataTree().put("character"),
-                        new DataTree().put("story"))
-        );
-        DataTree dataTree2 = new DataTree().put(
-                new DataTree("NEW GAME!"),
-                new DataTree().put(
-                        new DataTree().put("working together"),
-                        new DataTree().put("girls doing cute things")),
-                new DataTree().put(
-                        new DataTree().put("composition"),
-                        new DataTree().put("character"),
-                        new DataTree().put("dialogue"))
-        );
-        DataTree dataTree3 = new DataTree().put(
-                new DataTree("The Rising of the Shield Hero"),
-                new DataTree().put(
-                        new DataTree().put("isekai")),
-                new DataTree().put(
-                        new DataTree().put("character"))
-        );
-
-
-        Structure structure = new Structure("shows", groupWidgetParam, category, new ArrayList<>(Arrays.asList(dataTree1, dataTree2, dataTree3)));
-        System.out.println(groupWidgetParam.hierarchyString());
-        saveStructure(structure);
 
 
 
-    }
+
+//    public static void generateShowGenreStructure(Context context){
+//
+//
+//        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+//                new CustomEditText.EditTextParam("name"),
+//                new ListWidget.ListParam("genres", new EntryWidgetParam[]{
+//                        new CustomEditText.EditTextParam("genre")     }),
+//                new ListWidget.ListParam("attributes", new EntryWidgetParam[]{
+//                        new CustomEditText.EditTextParam("attribute")     })
+//        });
+//
+//        DataTree dataTree1 = new DataTree().put(
+//                new DataTree("ReLIFE"),
+//                new DataTree().put(
+//                        new DataTree().put("romance"),
+//                        new DataTree().put("isekai"),
+//                        new DataTree().put("working together")),
+//                new DataTree().put(
+//                        new DataTree().put("composition"),
+//                        new DataTree().put("character progression"),
+//                        new DataTree().put("character"),
+//                        new DataTree().put("story"))
+//        );
+//        DataTree dataTree2 = new DataTree().put(
+//                new DataTree("NEW GAME!"),
+//                new DataTree().put(
+//                        new DataTree().put("working together"),
+//                        new DataTree().put("girls doing cute things")),
+//                new DataTree().put(
+//                        new DataTree().put("composition"),
+//                        new DataTree().put("character"),
+//                        new DataTree().put("dialogue"))
+//        );
+//        DataTree dataTree3 = new DataTree().put(
+//                new DataTree("The Rising of the Shield Hero"),
+//                new DataTree().put(
+//                        new DataTree().put("isekai")),
+//                new DataTree().put(
+//                        new DataTree().put("character"))
+//        );
+//
+//
+//        Structure structure = new Structure("shows", groupWidgetParam, category, new ArrayList<>(Arrays.asList(dataTree1, dataTree2, dataTree3)));
+//        System.out.println(groupWidgetParam.hierarchyString());
+//        saveStructure(structure);
+//
+//
+//
+//    }
 }

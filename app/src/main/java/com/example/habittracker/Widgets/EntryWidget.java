@@ -3,7 +3,7 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.Structs.DataTree;
+import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Layouts.ViewWrapper;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -32,11 +32,11 @@ public abstract class EntryWidget implements Widget{
     public final Runnable onDataChangedListener(){
         return onDataChanged;
     }
-    public abstract DataTree getDataTree();
+    public abstract EntryValueTree getEntryValueTree();
 
     public abstract EntryWidgetParam getParam();
 
-    public abstract void setValue(DataTree dataTree);
+    public abstract void setValue(EntryValueTree entryValueTree);
 
     public final void setName(String name){
         //System.out.println("set name: " + name);
