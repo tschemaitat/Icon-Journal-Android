@@ -47,7 +47,7 @@ public class StructureEditor implements Inflatable {
         layout.getView().setId(R.id.pageLayout);
 
         Button saveButton = setupSaveButton(layout, ()->onSave());
-        structureKeyEditor = setupStructureKeyEditor(structure.getName(), layout, context);
+        structureKeyEditor = setupStructureKeyEditor(structure.getCachedName().getString(), layout, context);
         widgetLayout = setupWidgetLayout(layout, structure, context, ()->addStructureWidget());
     }
 

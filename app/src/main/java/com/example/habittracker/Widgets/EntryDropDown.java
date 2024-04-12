@@ -34,12 +34,14 @@ public class EntryDropDown extends EntryWidget{
     }
 
     private void init(){
+
         dropDown = new DropDown(context, new DropDown.DropDownOnSelected() {
             @Override
             public void onSelected(ItemPath itemPath, Object payload) {
                 onDataChanged((RefItemPath)payload);
             }
         });
+        setChild(dropDown.getView());
     }
 
     private void onDataChanged(RefItemPath refItemPath){

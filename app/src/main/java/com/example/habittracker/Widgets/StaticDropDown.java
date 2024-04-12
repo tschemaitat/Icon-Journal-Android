@@ -14,21 +14,41 @@ public class StaticDropDown extends EntryWidget{
     boolean dataSet = false;
     private Context context;
     private DropDown dropDown;
+    private DropDown.DropDownOnSelected onSelected = null;
     public StaticDropDown(Context context) {
         super(context);
         this.context = context;
+        init();
     }
 
     public StaticDropDown(Context context, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
         super(context);
         this.context = context;
+        init();
+        this.onSelected = onSelected;
         setup(dropDownPage, onSelected);
     }
 
     public StaticDropDown(Context context, DropDownPage dropDownPage, Runnable onSelected){
         super(context);
         this.context = context;
+        this.onSelected = (itemPath, payload) -> onSelected.run();
+        init();
+
         setup(dropDownPage, (itemPath, payload) -> onSelected.run());
+    }
+
+    private void init(){
+        dropDown = new DropDown(context, (itemPath, payload) -> {
+            listenerWrapper(itemPath, payload);
+        });
+        setChild(dropDown.getView());
+
+    }
+
+    private void listenerWrapper(ItemPath itemPath, Object payload){
+        if(onSelected != null)
+            onSelected.onSelected(itemPath, payload);
     }
 
     @Override
@@ -53,9 +73,11 @@ public class StaticDropDown extends EntryWidget{
     }
 
     public void setup(DropDownPage page, DropDown.DropDownOnSelected onSelected){
-        dropDown = new DropDown(context, onSelected);
+        this.onSelected = onSelected;
         dropDown.setDropDownPage(page);
     }
+
+
 
     public DropDown getDropDown(){
         return dropDown;

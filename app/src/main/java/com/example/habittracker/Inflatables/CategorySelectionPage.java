@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
@@ -30,7 +29,7 @@ public class CategorySelectionPage implements Inflatable{
     @Override
     public void onOpened() {
         SelectionView selectionView = new SelectionView(context, Dictionary.getCategoryOptions(), (stringValue, position, key) -> {
-            Structure structure = Dictionary.getStructure((StructureId) key);
+            Structure structure = (Structure) key;
             if( ! structure.getType().equals(Dictionary.category))
                 throw new RuntimeException();
             MainActivity.changePage(new CategoryEntriesPage(context, structure));

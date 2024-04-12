@@ -6,19 +6,18 @@ import android.view.View;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.GroupWidget;
 
 public class JournalPage implements Inflatable{
     private Context context;
     private GroupWidget groupWidget;
-    private StructureId structureId;
+    private Structure structure;
 
 
-    public JournalPage(Context context, StructureId structureId){
+    public JournalPage(Context context, Structure structureId){
         System.out.println("opening journal");
         this.context = context;
-        this.structureId = structureId;
+        this.structure = structure;
         groupWidget = new GroupWidget(context);
 
 
@@ -36,7 +35,6 @@ public class JournalPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        Structure structure = Dictionary.getStructure(structureId);
         EntryWidgetParam params = structure.getParam();
         System.out.println("journal params: \n" + params.hierarchyString(0));
         System.out.println(params);

@@ -9,12 +9,14 @@ import java.util.ArrayList;
 public class CachedString {
     String literalString = null;
     boolean literalStringMode = false;
-    StructureId structureId = null;
+    Structure structure = null;
     WidgetId widgetId = null;
     Integer entryId = null;
     Integer listId = null;
-    public CachedString(StructureId structureId, WidgetId widgetId, int entryId, int listId){
-        this.structureId = structureId;
+    public CachedString(Structure structure, WidgetId widgetId, int entryId, int listId){
+        if(structure == null)
+            throw new RuntimeException();
+        this.structure = structure;
         this.widgetId = widgetId;
         this.entryId = entryId;
         this.listId = listId;
@@ -28,7 +30,6 @@ public class CachedString {
     public String getString(){
         if(literalStringMode)
             return literalString;
-        Structure structure = Dictionary.getStructure(structureId);
         Entry entry = structure.getEntry(entryId);
         ValueTreePath path = structure.getHeader().getPath(widgetId);
 
@@ -36,8 +37,8 @@ public class CachedString {
         return values.get(listId).getString();
     }
 
-    public StructureId getStructureId() {
-        return structureId;
+    public Structure getStructureId() {
+        return structure;
     }
 
     public WidgetId getWidgetId() {
@@ -65,7 +66,7 @@ public class CachedString {
                 return false;
             if(cachedString.isLiteral())
                 return cachedString.getString().equals(literalString);
-            if( ! structureId.equals(cachedString.structureId))
+            if( ! structure.equals(cachedString.structure))
                 return false;
             if( ! widgetId.equals(cachedString.widgetId))
                 return false;

@@ -11,7 +11,6 @@ import android.content.Context;
 import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.Structure;
-import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Dictionary {
         if(structure.getCachedName() == null)
             throw new RuntimeException("structure name not set");
         structure.setNewKey();
-        structures.put(structure.getId().getId(), structure);
+        structures.put(structure.getId(), structure);
     }
 
     static{
@@ -59,7 +58,7 @@ public class Dictionary {
         if(structure.getHeader() == null)
             throw new RuntimeException("saved structure couldn't make a header");
 
-        structures.put(structure.getId().getId(), structure);
+        structures.put(structure.getId(), structure);
     }
 
     private static void generateStructure() {
@@ -93,7 +92,7 @@ public class Dictionary {
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
                 throw new RuntimeException("structure: " + structure.getCachedName() + " has null type");
-            PayloadOption keyPair = new PayloadOption(structure.getCachedName(), structure.getId());
+            PayloadOption keyPair = new PayloadOption(structure.getCachedName(), structure);
             keyPairs.add(keyPair);
         }
         return keyPairs;
@@ -109,10 +108,12 @@ public class Dictionary {
 
 
 
-    public static Structure getStructure(StructureId key){
-        Structure structure = structures.get(key);
+    public static Structure getStructure(Integer id){
+        if(id == null)
+            throw new RuntimeException();
+        Structure structure = structures.get(id);
         if(structure == null)
-            throw new RuntimeException("structure key unknown: " + key);
+            throw new RuntimeException("structure key unknown: " + id);
         return structure;
     }
 

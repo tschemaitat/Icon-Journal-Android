@@ -7,9 +7,8 @@ import android.widget.LinearLayout;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
-import com.example.habittracker.Structs.StructureId;
+
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.Structs.Structure;
 
@@ -39,7 +38,7 @@ public class EditorSelectionPage implements Inflatable {
         ArrayList<String> items = new ArrayList<>();
         items.add("category");
         items.add("journal");
-        SelectionView folderSelection = new SelectionView(context, (String[]) items.toArray(), (value, position, key) -> {
+        SelectionView folderSelection = new SelectionView(context, items.toArray(new String[2]), (value, position, key) -> {
             createSelectionAfterFolder(value);
         });
         parentLayout.addView(folderSelection.getView());
@@ -49,15 +48,15 @@ public class EditorSelectionPage implements Inflatable {
         ArrayList<PayloadOption> structureKeys = Dictionary.getStructureOptions();
         parentLayout.removeAllViews();
         SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position, key) -> {
-            inflateStructureEditor((StructureId) key);
+            inflateStructureEditor((Structure) key);
         }, () -> {
             MainActivity.changePage(new StructureEditor(context, new Structure(null, null, structureType)));
         });
         parentLayout.addView(structureSelection.getView());
     }
 
-    public void inflateStructureEditor(StructureId id){
-        MainActivity.changePage(new StructureEditor(context, Dictionary.getStructure(id)));
+    public void inflateStructureEditor(Structure structure){
+        MainActivity.changePage(new StructureEditor(context, structure));
     }
 
 

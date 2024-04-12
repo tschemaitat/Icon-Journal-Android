@@ -26,7 +26,7 @@ public class HeaderNode{
         ArrayList<Integer> pathCopy = (ArrayList<Integer>) currentPath.clone();
         paths.add(new ValueTreePath(currentPath));
         for(HeaderNode child: children){
-            traverse(paths, pathCopy);
+            child.traverse(paths, pathCopy);
         }
     }
 

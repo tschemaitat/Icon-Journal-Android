@@ -17,7 +17,7 @@ import com.example.habittracker.Structs.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
 
 public class CustomEditText extends EntryWidget {
-    private String currentText = null;
+    private String currentText = "";
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinLayout linLayout;
@@ -76,6 +76,8 @@ public class CustomEditText extends EntryWidget {
 
     public void setText(String text){
         currentText = text;
+        if(text == null)
+            currentText = "";
         updateEditTextValue();
     }
 
@@ -94,8 +96,9 @@ public class CustomEditText extends EntryWidget {
 
             @Override
             public void afterTextChanged(Editable s) {
-
-                String newText = s.toString();
+                String newText = "";
+                if(s != null)
+                    newText = s.toString();
                 //System.out.println("\t\tafter text changed listener: " + newText);
                 boolean textChanged = !currentText.equals(newText);
                 if(!textChanged)
@@ -124,6 +127,8 @@ public class CustomEditText extends EntryWidget {
             if( ! entryValueTree.getCachedString().isLiteral())
                 throw new RuntimeException();
             currentText = entryValueTree.getCachedString().getString();
+            if(currentText == null)
+                currentText = "";
         }
 
         updateEditTextValue();

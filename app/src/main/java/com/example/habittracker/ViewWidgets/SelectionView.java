@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
@@ -118,13 +119,6 @@ public class SelectionView {
         setText(new ArrayList<>(Arrays.asList(strings)));
     }
 
-    private ArrayList<String> getOptionNames(){
-        ArrayList<String> result = new ArrayList<>();
-        for(PayloadOption cachedString : options)
-            result.add(cachedString.getString());
-        return result;
-    }
-
     private Object getKeyOfOption(String optionName){
         for(PayloadOption cachedString : options){
             if(cachedString.getString().equals(optionName))
@@ -148,11 +142,11 @@ public class SelectionView {
         //relativeLayout.addView(listView);
         listView.setMinimumHeight(1000);
         listView.setMinimumWidth(1000);
-        ArrayList<String> optionNames = getOptionNames();
-        if(onAdd != null){
-            optionNames.add(addString);
-        }
 
+        if(onAdd != null){
+            options.add(new PayloadOption(new CachedString(addString), null));
+        }
+        ArrayList<String> optionNames = EnumLoop.makeList(options, payloadOption -> payloadOption.getString());
         textViewResource = android.R.layout.simple_list_item_1;
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
@@ -184,7 +178,7 @@ public class SelectionView {
                 sendItemSelectedCall(i);
                 return;
             }
-            throw new RuntimeException("list error index selected:  " + i + " value: " + value + ", options: " + getOptions());
+            throw new RuntimeException("list error index selected:  \n" + i + " value: " + value + ", options: " + getOptions() + " num options: " + numOptions);
 
 
         });

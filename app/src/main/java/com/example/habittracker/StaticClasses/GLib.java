@@ -19,6 +19,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.DropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.StructureWidget;
@@ -118,7 +119,7 @@ public class GLib {
         Widget widget = null;
         switch (className){
             case DropDown.className:
-                widget = new DropDown(context);
+                widget = new EntryDropDown(context);
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;

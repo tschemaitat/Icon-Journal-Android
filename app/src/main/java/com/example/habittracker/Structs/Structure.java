@@ -136,4 +136,8 @@ public class Structure {
     public Entry getEntry(int entryId) {
         return entries.get(entryId);
     }
+
+    public Integer getId() {
+        return id;
+    }
 }

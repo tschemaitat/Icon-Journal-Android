@@ -28,4 +28,8 @@ public class PayloadOption {
         }
         return false;
     }
+
+    public String toString(){
+        return "payload option: {"+option + " -> "+payload+"}";
+    }
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Header {
     private HeaderNode parentNode;
-    HashMap<WidgetId, ValueTreePath> map;
+    HashMap<WidgetId, ValueTreePath> map = new HashMap<>();
     private Structure structure;
 
     public Header(HeaderNode headerNode, Structure structure){
