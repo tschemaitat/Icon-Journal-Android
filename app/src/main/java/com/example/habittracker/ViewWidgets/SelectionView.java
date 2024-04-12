@@ -59,7 +59,7 @@ public class SelectionView {
     private static ArrayList<PayloadOption> convert(ArrayList<String> stringOptions){
         ArrayList<PayloadOption> result = new ArrayList<>();
         for(String string: stringOptions)
-            result.add(new PayloadOption(string, null));
+            result.add(new PayloadOption(new CachedString(string), null));
         return result;
     }
 

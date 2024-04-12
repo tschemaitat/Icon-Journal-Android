@@ -2,7 +2,7 @@ package com.example.habittracker.Structs;
 
 import androidx.annotation.NonNull;
 
-import com.example.habittracker.StaticClasses.StringMap;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;

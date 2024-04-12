@@ -1,9 +1,13 @@
 package com.example.habittracker.Structs;
 
-public class TreeId {
+import java.util.ArrayList;
+
+public class WidgetId {
     private int id;
-    public TreeId(int id){
+    private Structure structure;
+    public WidgetId(int id, Structure structure){
         this.id = id;
+        this.structure = structure;
     }
 
     public int getId(){
@@ -20,11 +24,15 @@ public class TreeId {
     }
     @Override
     public boolean equals(Object object){
-        if(object instanceof TreeId){
-            TreeId treeId = ((TreeId) object);
-            if(treeId.id == id)
+        if(object instanceof WidgetId){
+            WidgetId widgetId = ((WidgetId) object);
+            if(widgetId.id == id)
                 return true;
         }
         return false;
+    }
+
+    public ItemPath getNameWithPath(){
+        return structure.getHeader().getWidgetNamePath(this);
     }
 }

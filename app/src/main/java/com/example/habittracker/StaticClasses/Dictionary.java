@@ -8,6 +8,7 @@ package com.example.habittracker.StaticClasses;
 
 import android.content.Context;
 
+import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.Structure;
 import com.example.habittracker.Structs.StructureId;
@@ -30,7 +31,7 @@ public class Dictionary {
 
 
     public static void addStructure(Structure structure){
-        if(structure.getName() == null)
+        if(structure.getCachedName() == null)
             throw new RuntimeException("structure name not set");
         structure.setNewKey();
         structures.put(structure.getId().getId(), structure);
@@ -49,11 +50,11 @@ public class Dictionary {
     public static void saveStructure(Structure structure){
         if(structure == null)
             throw new RuntimeException("try to save null structure");
-        if(structure.getName() == null)
+        if(structure.getCachedName() == null)
             throw new RuntimeException("saved structure with null name");
         if(structure.getType() == null)
             throw new RuntimeException("saved structure with null type");
-        System.out.println("saving structure with name: " + structure.getName());
+        System.out.println("saving structure with name: " + structure.getCachedName());
 
         if(structure.getHeader() == null)
             throw new RuntimeException("saved structure couldn't make a header");
@@ -77,9 +78,9 @@ public class Dictionary {
         ArrayList<PayloadOption> keyPairs = new ArrayList<>();
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
-                throw new RuntimeException("structure: " + structure.getName() + " has null type");
+                throw new RuntimeException("structure: " + structure.getCachedName() + " has null type");
             if(structure.getType().equals(structureType)){
-                PayloadOption keyPair = new PayloadOption(structure.getName(), structure.getId());
+                PayloadOption keyPair = new PayloadOption(structure.getCachedName(), structure);
                 keyPairs.add(keyPair);
             }
         }
@@ -91,18 +92,18 @@ public class Dictionary {
         ArrayList<PayloadOption> keyPairs = new ArrayList<>();
         for(Structure structure: structures.values()){
             if(structure.getType() == null)
-                throw new RuntimeException("structure: " + structure.getName() + " has null type");
-            PayloadOption keyPair = new PayloadOption(structure.getName(), structure.getId());
+                throw new RuntimeException("structure: " + structure.getCachedName() + " has null type");
+            PayloadOption keyPair = new PayloadOption(structure.getCachedName(), structure.getId());
             keyPairs.add(keyPair);
         }
         return keyPairs;
     }
 
-    public static ArrayList<String> getStructureNames(){
-        ArrayList<String> names = new ArrayList<>();
+    public static ArrayList<CachedString> getStructureNames(){
+        ArrayList<CachedString> names = new ArrayList<>();
         ArrayList<Structure> structureArrayList = (ArrayList<Structure>) structures.values();
         for(Structure structure: structureArrayList)
-            names.add(structure.getName());
+            names.add(structure.getCachedName());
         return names;
     }
 
@@ -115,13 +116,9 @@ public class Dictionary {
         return structure;
     }
 
-
-
-
-
-
-
-
+    public static ArrayList<Structure> getStructures() {
+        return new ArrayList<>(structures.values());
+    }
 
 
 //    public static void generateShowGenreStructure(Context context){

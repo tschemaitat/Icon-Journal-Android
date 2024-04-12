@@ -5,13 +5,14 @@ import java.util.HashMap;
 
 public class Header {
     private HeaderNode parentNode;
-    HashMap<TreeId, ValueTreePath> map;
+    HashMap<WidgetId, ValueTreePath> map;
+    private Structure structure;
 
-    public Header(HeaderNode headerNode){
+    public Header(HeaderNode headerNode, Structure structure){
         parentNode = headerNode;
         ArrayList<ValueTreePath> pathList = getPathListFromTraverse();
         for(int i = 0; i < pathList.size(); i++){
-            map.put(new TreeId(i), pathList.get(i));
+            map.put(new WidgetId(i, structure), pathList.get(i));
         }
     }
 
@@ -25,16 +26,30 @@ public class Header {
         return pathList;
     }
 
-    public ValueTreePath getPath(TreeId treeId){
-        return map.get(treeId);
+    public ValueTreePath getPath(WidgetId widgetId){
+        return map.get(widgetId);
     }
 
-    public ArrayList<ValueTreePath> getPathList(ArrayList<TreeId> treeIdList){
+    private void generatePathList(){
+
+    }
+
+    public ArrayList<ValueTreePath> getPathList(ArrayList<WidgetId> widgetIdList){
         ArrayList<ValueTreePath> pathList = new ArrayList<>();
-        for(TreeId treeId: treeIdList)
-            pathList.add(getPath(treeId));
+        for(WidgetId widgetId : widgetIdList)
+            pathList.add(getPath(widgetId));
         return pathList;
     }
 
 
+    public ItemPath getWidgetNamePath(WidgetId widgetId) {
+        ValueTreePath valueTreePath = getPath(widgetId);
+        ArrayList<String> namePath = new ArrayList<>();
+        parentNode.getPathName(namePath, valueTreePath, 0);
+        return new ItemPath(namePath);
+    }
+
+    public ArrayList<WidgetId> getWidgetIdList() {
+        return new ArrayList<>(map.keySet());
+    }
 }

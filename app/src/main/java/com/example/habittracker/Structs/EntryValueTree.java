@@ -59,7 +59,7 @@ public class EntryValueTree {
         list.add(tree);
     }
 
-    public CachedString getString(){
+    public CachedString getCachedString(){
         return string;
     }
 
@@ -147,7 +147,7 @@ public class EntryValueTree {
 
 
     //get values from group indexes. The indexes are the key for the location
-    public ArrayList<CachedString> gatherValuesFromPath(ValueTreePath indexes){
+    public ArrayList<CachedString> getValuesFromPath(ValueTreePath indexes){
         //System.out.println("get values from indexes");
         //System.out.println(this.hierarchy());
         //System.out.println("indexes = " + indexes);
@@ -184,10 +184,10 @@ public class EntryValueTree {
 
 
 
-    public ArrayList<ArrayList<CachedString>> gatherValueListFromPathList(ArrayList<ValueTreePath> indexes){
+    public ArrayList<ArrayList<CachedString>> getValueListFromPathList(ArrayList<ValueTreePath> indexes){
         ArrayList<ArrayList<CachedString>> values = new ArrayList<>();
         for(ValueTreePath index: indexes){
-            values.add(gatherValuesFromPath(index));
+            values.add(getValuesFromPath(index));
         }
         return values;
     }

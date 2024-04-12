@@ -7,7 +7,6 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.StaticClasses.StringMap;
 import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
@@ -19,7 +18,7 @@ import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetList
 public class StructureWidget implements Widget {
     private StructureWidgetHeaderView headerView = null;
 
-    private DropDown typeDropDown = null;
+    private StaticDropDown typeDropDown = null;
     private String currentType = null;
 
     private StructureWidgetList structureWidgetList = null;
@@ -42,17 +41,11 @@ public class StructureWidget implements Widget {
             headerView.nameEditor.resetError();
         });
         layout.add(headerView.getView());
-        //groupWidget.addWidget(name);
 
-        typeDropDown = new DropDown(context);
+        typeDropDown = new StaticDropDown(context);
         layout.add(typeDropDown.getView());
-        DropDown.StaticDropDownParameters params = new DropDown.StaticDropDownParameters(null, DropDownPageFactory.getTypes());
-        typeDropDown.setParam(params);
+        typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload) -> onTypeChange());
         typeDropDown.setHint("select type");
-
-        typeDropDown.setOnDataChangedListener(() -> onTypeChange());
-
-
         Margin.setStructureWidgetLayout(layout);
     }
 
@@ -71,7 +64,7 @@ public class StructureWidget implements Widget {
     public void onTypeChange(){
         typeDropDown.resetError();
         //System.out.println("<StructureWidget>data changed");
-        String type = typeDropDown.getSelectedString().getString();
+        String type = typeDropDown.getSelectedString();
         //System.out.println("type = " + type)
         if(type == null){
             if(currentType == null)
@@ -135,7 +128,7 @@ public class StructureWidget implements Widget {
     public EntryWidgetParam getParam(){
         EntryWidgetParam result = null;
 
-        String type = typeDropDown.getSelectedString().getString();
+        String type = typeDropDown.getSelectedString();
         typeSwitch:{
             if(type == null){
                 typeDropDown.setError();
@@ -151,7 +144,7 @@ public class StructureWidget implements Widget {
                 break typeSwitch;
             }
             if(type.equals("drop down")){
-                DropDown.DropDownParam param = (DropDown.DropDownParam) structureWidgetDropDown.getParam();
+                EntryDropDown.DropDownParam param = (EntryDropDown.DropDownParam) structureWidgetDropDown.getParam();
                 if(param != null)
                     param.name = headerView.nameEditor.getText();
                 result = param;
@@ -180,7 +173,7 @@ public class StructureWidget implements Widget {
         System.out.println("setting param: " + param);
         String type = param.className;
         headerView.nameEditor.setText(param.name);
-        typeDropDown.setSelected(new RefItemPath(StringMap.addStaticValue(type)));
+        typeDropDown.setSelected(new RefItemPath(new CachedString(type)));
         currentType = type;
         setType();
         typeSwitch:{

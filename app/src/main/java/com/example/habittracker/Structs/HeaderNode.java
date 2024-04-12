@@ -30,4 +30,8 @@ public class HeaderNode{
         }
     }
 
+    public void getPathName(ArrayList<String> result, ValueTreePath indexPath, int level) {
+        children.get(indexPath.get(level)).getPathName(result, indexPath, level + 1);
+        result.add(name);
+    }
 }

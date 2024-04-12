@@ -4,30 +4,30 @@ import android.content.Context;
 
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.DropDownPages.RefDropDownPage;
+import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
-import com.example.habittracker.Structs.StructureId;
-import com.example.habittracker.Structs.TreeId;
+import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
 
-public class RefDropDown extends EntryWidget{
+public class EntryDropDown extends EntryWidget{
     private boolean dataSet = false;
-    private StructureId structureId = null;
-    private TreeId valueId = null;
-    private ArrayList<TreeId> groupIdList = new ArrayList<>();
+    private Structure structure = null;
+    private WidgetId valueId = null;
+    private ArrayList<WidgetId> groupIdList = new ArrayList<>();
 
     private RefItemPath selectedValuePath = null;
 
     private DropDown dropDown;
 
-    private RefDropDownPage refDropDownPage = null;
+    private DropDownPage dropDownPage = null;
     private Context context;
 
-    public RefDropDown(Context context) {
+    public EntryDropDown(Context context) {
         super(context);
         this.context = context;
         init();
@@ -53,7 +53,7 @@ public class RefDropDown extends EntryWidget{
         if(!dataSet){
             throw new RuntimeException();
         }
-        DropDownParam params = new DropDownParam(getName(), selectedValuePath, structureId, valueId, groupIdList);
+        DropDownParam params = new DropDownParam(getName(), selectedValuePath, structure, valueId, groupIdList);
         return params;
     }
 
@@ -81,25 +81,25 @@ public class RefDropDown extends EntryWidget{
     public void setParamCustom(EntryWidgetParam params){
         dataSet = true;
         DropDownParam dropDownParams = ((DropDownParam) params);
-        refDropDownPage = DropDownPageFactory.getGroupedPages(dropDownParams.structureId, dropDownParams.valueKey, dropDownParams.groups);
-        structureId = dropDownParams.structureId;
+        dropDownPage = DropDownPageFactory.getGroupedPages(dropDownParams.structure, dropDownParams.valueKey, dropDownParams.groups);
+        structure = dropDownParams.structure;
         valueId = dropDownParams.valueKey;
         groupIdList = dropDownParams.groups;
     }
 
     public static class DropDownParam extends EntryWidgetParam {
         public RefItemPath selected;
-        public StructureId structureId;
-        public TreeId valueKey;
-        public ArrayList<TreeId> groups;
+        public Structure structure;
+        public WidgetId valueKey;
+        public ArrayList<WidgetId> groups;
         public String name = "null";
 
-        public DropDownParam(String name, RefItemPath selected, StructureId structureId, TreeId valueKey, ArrayList<TreeId> groups){
+        public DropDownParam(String name, RefItemPath selected, Structure structure, WidgetId valueKey, ArrayList<WidgetId> groups){
             super(name, DropDown.className);
-            if(structureId == null)
+            if(structure == null)
                 throw new RuntimeException();
             this.selected = selected;
-            this.structureId = structureId;
+            this.structure = structure;
             this.valueKey = valueKey;
             this.groups = groups;
         }
@@ -111,7 +111,7 @@ public class RefDropDown extends EntryWidget{
             for(int i = 0; i < numTabs; i++)
                 tabs += singleTab;
             return tabs + "drop down\n"
-                    + tabs + "\tstructure: " + structureId + "\n"
+                    + tabs + "\tstructure: " + structure + "\n"
                     + tabs + "\tvalue: " + valueKey + "\n"
                     + tabs + "\tgroups: " + groups + "\n";
         }
@@ -122,7 +122,7 @@ public class RefDropDown extends EntryWidget{
         }
 
         public String toString(){
-            return "{" + className + ", " + selected + ", " +structureId + ", " +valueKey + ", " +groups + "}";
+            return "{" + className + ", " + selected + ", " +structure + ", " +valueKey + ", " +groups + "}";
         }
 
     }

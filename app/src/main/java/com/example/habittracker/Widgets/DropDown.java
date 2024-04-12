@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.PayloadOption;
@@ -147,10 +148,10 @@ public class DropDown{
             DropDownPage childPage = children.get(i);
             Object payload = payloadOptions.get(i);
             if(!childPage.hasChildren()){
-                result.add(new PayloadOption(childPage.getName(), payload));
+                result.add(new PayloadOption(childPage.getCachedName(), payload));
                 continue;
             }
-            result.add(new PayloadOption(folderString+" " + childPage.getName(), payload));
+            result.add(new PayloadOption(new CachedString(folderString+" " + childPage.getName()), payload));
         }
 
         //System.out.println("formatted page: \n\t" + result);
@@ -198,6 +199,32 @@ public class DropDown{
     }
     public void resetError() {
         buttonSelectionView.setColor(ColorPalette.textPurple);
+    }
+
+    public void setByPayload(Object payload) {
+        DropDownPage page = searchTree(parentPage, payload);
+        CachedString cachedString = page.getCachedName();
+        if(page == null)
+            throw new RuntimeException("payload: " + payload + "pages: \n" + parentPage.hierarchyString());
+        currentPage = page.parent;
+        handleStateOnDataChanged(cachedString.getString());
+
+    }
+
+    public DropDownPage searchTree(DropDownPage page, Object payload){
+        if( ! page.hasChildren()){
+            if(page.getPayloadOption().equals(payload)){
+                return page;
+            }else{
+                return null;
+            }
+        }
+        for(DropDownPage child: page.getChildren()){
+            DropDownPage result = searchTree(child, payload);
+            if(result != null)
+                return result;
+        }
+        return null;
     }
 
     public interface DropDownOnSelected{
