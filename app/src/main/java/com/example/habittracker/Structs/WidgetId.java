@@ -1,6 +1,6 @@
 package com.example.habittracker.Structs;
 
-import java.util.ArrayList;
+import com.example.habittracker.structures.Structure;
 
 public class WidgetId {
     private int id;

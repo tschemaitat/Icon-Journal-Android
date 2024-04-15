@@ -9,7 +9,7 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.HeaderNode;
+import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
@@ -55,7 +55,7 @@ public class ListWidget extends EntryWidget {
     }
 
     @Override
-    public void setValue(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree) {
         System.out.println("list setting value: " + entryValueTree.hierarchy());
         ArrayList<Widget> widgets = layout.widgets();
         for(EntryValueTree tree: entryValueTree.getList()){
@@ -79,7 +79,7 @@ public class ListWidget extends EntryWidget {
     }
 
     @Override
-    public EntryValueTree getEntryValueTree() {
+    public EntryValueTree getEntryValueTreeCustom() {
         EntryValueTree entryValueTree = new EntryValueTree();
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         for(GroupWidget groupWidget: groupWidgets){

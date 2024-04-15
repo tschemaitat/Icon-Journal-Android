@@ -27,7 +27,7 @@ public class LinLayout {
         layout = new LinearLayout(context);
         layout.setId(R.id.linLayout);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        layout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
     }
 
     public void setChildMargin(Margin margin){

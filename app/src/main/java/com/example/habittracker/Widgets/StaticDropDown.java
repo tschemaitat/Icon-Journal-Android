@@ -2,11 +2,10 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
-import com.example.habittracker.Structs.CachedString;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.HeaderNode;
+import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
 
@@ -52,7 +51,7 @@ public class StaticDropDown extends EntryWidget{
     }
 
     @Override
-    public EntryValueTree getEntryValueTree() {
+    public EntryValueTree getEntryValueTreeCustom() {
         throw new RuntimeException();
     }
 
@@ -62,7 +61,7 @@ public class StaticDropDown extends EntryWidget{
     }
 
     @Override
-    public void setValue(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree) {
         throw new RuntimeException();
     }
 
@@ -84,7 +83,10 @@ public class StaticDropDown extends EntryWidget{
     }
 
     public String getSelectedString() {
-        return dropDown.getSelectedPath().getName();
+        ItemPath itemPath = dropDown.getSelectedPath();
+        if(itemPath == null)
+            return null;
+        return itemPath.getName();
     }
 
     public void setHint(String item_to_be_selected) {

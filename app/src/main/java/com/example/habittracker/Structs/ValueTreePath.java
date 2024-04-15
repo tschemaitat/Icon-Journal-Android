@@ -21,5 +21,18 @@ public class ValueTreePath {
         return intList.size();
     }
 
+    public String toString(){
+        return intList.toString();
+    }
+
+    public ArrayList<Integer> getChildren(){
+        return (ArrayList<Integer>) intList.clone();
+    }
+
+
+
+
+
+
 
 }

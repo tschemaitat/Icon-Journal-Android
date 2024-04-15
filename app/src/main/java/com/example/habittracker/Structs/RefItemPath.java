@@ -2,6 +2,8 @@ package com.example.habittracker.Structs;
 
 import androidx.annotation.NonNull;
 
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Spliterator;

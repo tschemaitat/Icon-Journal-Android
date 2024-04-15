@@ -10,7 +10,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.Structs.PayloadOption;
 
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class EditorSelectionPage implements Inflatable {
         SelectionView structureSelection = new SelectionView(context, structureKeys, (value, position, key) -> {
             inflateStructureEditor((Structure) key);
         }, () -> {
-            MainActivity.changePage(new StructureEditor(context, new Structure(null, null, structureType)));
+            MainActivity.changePage(new StructureEditor(context, structureType));
         });
         parentLayout.addView(structureSelection.getView());
     }

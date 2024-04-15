@@ -1,16 +1,26 @@
 package com.example.habittracker.Structs;
 
 
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class EntryValueTree {
     private CachedString string;
     private RefItemPath itemPath;
+    private ListItemId listItemId;
+    private EntryValueTree parent = null;
+    private boolean setIds = false;
     private ArrayList<EntryValueTree> list = new ArrayList<>();
     public EntryValueTree(){
     }
 
+    public ListItemId getListItemId(){
+        return listItemId;
+    }
     public EntryValueTree(RefItemPath itemPath){
         this.itemPath = itemPath;
     }
@@ -23,13 +33,13 @@ public class EntryValueTree {
     public EntryValueTree put(ArrayList<EntryValueTree> entryValueTrees){
         for(EntryValueTree entryValueTree : entryValueTrees){
             list.add(entryValueTree);
+            entryValueTree.parent = this;
         }
         return this;
     }
 
     public EntryValueTree put(EntryValueTree... entryValueTrees){
-        put(new ArrayList<>(Arrays.asList(entryValueTrees)));
-        return this;
+        return put(new ArrayList<>(Arrays.asList(entryValueTrees)));
     }
 
     public EntryValueTree(CachedString string){
@@ -38,10 +48,11 @@ public class EntryValueTree {
 
 
 
-    public EntryValueTree put(CachedString ... strings){
+    public EntryValueTree put(CachedString... strings){
         for(CachedString s: strings){
             EntryValueTree entryValueTree = new EntryValueTree();
             entryValueTree.string = s;
+            entryValueTree.parent = this;
             list.add(entryValueTree);
         }
         return this;
@@ -74,7 +85,16 @@ public class EntryValueTree {
     }
 
     public EntryValueTree getTree(int index){
-        return ((EntryValueTree) list.get(index));
+        return list.get(index);
+    }
+
+    public EntryValueTree getTree(ListItemId id){
+        for(EntryValueTree child: list){
+            if(child.getListItemId().equals(id)){
+                return child;
+            }
+        }
+        throw new RuntimeException();
     }
 
     public int indexOf(CachedString value){
@@ -147,35 +167,32 @@ public class EntryValueTree {
 
 
     //get values from group indexes. The indexes are the key for the location
-    public ArrayList<CachedString> getValuesFromPath(ValueTreePath indexes){
-        //System.out.println("get values from indexes");
-        //System.out.println(this.hierarchy());
-        //System.out.println("indexes = " + indexes);
-        int lastIsTreeNum = indexes.get(indexes.size() - 1);
-        boolean lastIsTree = false;
-        if(lastIsTreeNum == -2)
-            lastIsTree = true;
-        //System.out.println("getting value of data tree from indexes");
-        //System.out.println(this.hierarchy() + "\n\n");
+    public ArrayList<EntryValueTree> getValuesFromPath(ValueTreePath indexes){
+        MainActivity.log("indexes: \n" + indexes);
+        if(indexes.size() == 0){
+            MainActivity.log(this.hierarchy());
+            throw new RuntimeException();
+        }
+
+
+        if(indexes.size() == 1){
+            EntryValueTree cachedString = list.get(indexes.get(0));
+            if(cachedString == null){
+                MainActivity.log(indexes + "\n" + this.hierarchy());
+            }
+            return new ArrayList<>(Collections.singleton(cachedString));
+        }
+
+
         ArrayList<EntryValueTree> parentTrees = new ArrayList<>();
         parentTrees.add(this);
 
-        for(int i = 0; i < indexes.size() - 2; i++){
+        for(int i = 0; i < indexes.size(); i++){
             int treeIndex = indexes.get(i);
-            //System.out.println("("+i+")current tree index: " + treeIndex);
             parentTrees = processList(parentTrees, treeIndex);
-            //System.out.println(parentTrees.get(0).hierarchy());
         }
-        int lastIndex = indexes.get(indexes.size() - 2);
-        EntryValueTree testTree = parentTrees.get(0);
-        ArrayList<CachedString> values;
-        if(lastIsTree){
-            ArrayList<EntryValueTree> lastTrees = gatherChildren(parentTrees, lastIndex);
-            values = gatherStringFromArray(lastTrees);
-        }else
-            values = gatherValues(parentTrees, lastIndex);
-        //System.out.println("values = " + values);
-        return values;
+
+        return parentTrees;
     }
 
     public int size() {
@@ -184,8 +201,8 @@ public class EntryValueTree {
 
 
 
-    public ArrayList<ArrayList<CachedString>> getValueListFromPathList(ArrayList<ValueTreePath> indexes){
-        ArrayList<ArrayList<CachedString>> values = new ArrayList<>();
+    public ArrayList<ArrayList<EntryValueTree>> getValueListFromPathList(ArrayList<ValueTreePath> indexes){
+        ArrayList<ArrayList<EntryValueTree>> values = new ArrayList<>();
         for(ValueTreePath index: indexes){
             values.add(getValuesFromPath(index));
         }
@@ -195,11 +212,19 @@ public class EntryValueTree {
 
 
     public String nameAndLength(){
-        return "{ " + string + ", " + list.size() + " }";
+        String name;
+        if(string != null)
+            name = string.getString();
+        else if(itemPath != null)
+            name = itemPath.toString();
+        else
+            name = "null item";
+
+        return "{ " + name + ", " + list.size() + ", id: "+listItemId+" }";
     }
 
     public String toString(){
-        return "{ DataTree " + string + ", " + list.size() + " }";
+        return nameAndLength();
 
     }
 
@@ -228,4 +253,82 @@ public class EntryValueTree {
     }
 
 
+    public void setIdOfTree() {
+        if(setIds)
+            throw new RuntimeException();
+        setIdIteration();
+    }
+
+    private void setIdIteration(){
+        setIds = true;
+        int max = -1000;
+        for(EntryValueTree entryValueTree: list){
+            ListItemId id = entryValueTree.getListItemId();
+            if(id != null)
+                max = Math.max(max, id.getId());
+        }
+        max++;
+        for(EntryValueTree entryValueTree: list){
+            ListItemId id = entryValueTree.getListItemId();
+            if(id == null){
+                entryValueTree.listItemId = new ListItemId(max);
+                max++;
+            }
+        }
+        for(EntryValueTree entryValueTree: list)
+            entryValueTree.setIdIteration();
+    }
+
+    public ArrayList<ListItemId> getListItemIdList(){
+        ArrayList<ListItemId> list = new ArrayList<>();
+        getListItemIdListIteration(list);
+        return list;
+    }
+
+    private void getListItemIdListIteration(ArrayList<ListItemId> list){
+        if(parent != null)
+            parent.getListItemIdListIteration(list);
+        list.add(listItemId);
+    }
+
+    public EntryValueTree getValue(ValueTreePath path, ArrayList<ListItemId> listIdList) {
+        if(path.size() != listIdList.size()){
+            MainActivity.log(path + "\n" + listIdList);
+            throw new RuntimeException();
+        }
+        if(path.size() == 1){
+            return list.get(path.get(0));
+        }
+        EntryValueTree parentTree = this;
+        for(int i = 0; i < path.size(); i++){
+            parentTree = parentTree.getTree(path.get(i));
+            parentTree = parentTree.getTree(listIdList.get(i));
+        }
+        return parentTree;
+    }
+
+    public EntryValueTree getParent() {
+        return parent;
+    }
+
+    public void setId(ListItemId id) {
+        this.listItemId = id;
+    }
+
+    public static class ListItemId{
+        private Integer id;
+        public ListItemId(Integer id){
+            if(id == null)
+                throw new RuntimeException();
+            this.id = id;
+        }
+
+        public Integer getId(){
+            return id;
+        }
+
+        public String toString(){
+            return id.toString();
+        }
+    }
 }

@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
@@ -51,7 +52,13 @@ public class StructureWidgetList implements Widget {
 
     @Override
     public EntryWidgetParam getParam() {
-        return new ListWidget.ListParam(null, (GroupWidget.GroupWidgetParam) groupWidget.getParam(), new ArrayList<>());
+        ArrayList<StructureWidget> structureWidgets = EnumLoop.makeList(groupWidget.getWidgetLayout().widgets(), (widget) ->(StructureWidget) widget);
+        ArrayList<EntryWidgetParam> entryWidgetParams = EnumLoop.makeList(structureWidgets, (structureWidget)->structureWidget.getParam());
+        for(EntryWidgetParam entryWidgetParam: entryWidgetParams)
+            if(entryWidgetParam == null)
+                return null;
+
+        return new ListWidget.ListParam(null, new GroupWidget.GroupWidgetParam(null, entryWidgetParams));
     }
 
     @Override
@@ -66,6 +73,6 @@ public class StructureWidgetList implements Widget {
 
     @Override
     public View getView() {
-        return null;
+        return groupWidget.getView();
     }
 }

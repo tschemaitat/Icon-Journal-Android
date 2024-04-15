@@ -3,11 +3,13 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.StructureWidgetState.StructureWidgetDropDown;
@@ -32,6 +34,7 @@ public class StructureWidget implements Widget {
     private LinLayout layout;
 
     public StructureWidget(Context context) {
+        MainActivity.log("new structure widget");
         this.context = context;
         layout = new LinLayout(context);
         layout.getView().setId(R.id.structureWidget);
@@ -173,7 +176,7 @@ public class StructureWidget implements Widget {
         System.out.println("setting param: " + param);
         String type = param.className;
         headerView.nameEditor.setText(param.name);
-        typeDropDown.setSelected(new RefItemPath(new CachedString(type)));
+        typeDropDown.setSelected(new RefItemPath(new LiteralString(type)));
         currentType = type;
         setType();
         typeSwitch:{

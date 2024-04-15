@@ -1,5 +1,7 @@
 package com.example.habittracker.Structs;
 
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+
 public class PayloadOption {
     private Object payload;
     private CachedString option;
@@ -13,6 +15,8 @@ public class PayloadOption {
     }
 
     public String getString() {
+        if(option == null)
+            return null;
         return option.getString();
     }
 

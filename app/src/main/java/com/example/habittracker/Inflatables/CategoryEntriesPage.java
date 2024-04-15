@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.Structs.Entry;
-import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.structures.Entry;
+import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
 
@@ -37,10 +39,10 @@ public class CategoryEntriesPage implements Inflatable{
         for(EntryValueTree data: dataList)
             System.out.println(data.hierarchy());
 
-        ArrayList<ArrayList<String>> entryNames = structure.IdAttributes();
-        ArrayList<String> options = getOptionsFromNames(entryNames);
-        SelectionView selectionView = new SelectionView(context, (String[])options.toArray(), (stringValue, position, key) -> {
-            Entry entry = structure.getEntry(entryNames.get(position));
+        ArrayList<Entry> entryNames = structure.getEntryList();
+        ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(entryNames, entry -> new PayloadOption(entry.getCachedName(), entry));
+        SelectionView selectionView = new SelectionView(context, payloadOptionList, (stringValue, position, payload) -> {
+            Entry entry = (Entry)payload;
             MainActivity.changePage(new CategoryEntryEditorPage(context, structure, entry));
         },()->{
             MainActivity.changePage(new CategoryEntryEditorPage(context, structure, null));

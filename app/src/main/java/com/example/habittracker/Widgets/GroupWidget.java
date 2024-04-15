@@ -2,13 +2,14 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
-import com.example.habittracker.Structs.HeaderNode;
+import com.example.habittracker.structures.HeaderNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
-    public EntryValueTree getEntryValueTree() {
+    public EntryValueTree getEntryValueTreeCustom() {
         EntryValueTree tree = new EntryValueTree();
         for(EntryWidget widget: entryWidgets()){
             tree.add(widget.getEntryValueTree());
@@ -63,7 +64,8 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
-    public void setValue(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree) {
+        MainActivity.log("group setting values: \n" + entryValueTree.hierarchy());
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
         //System.out.println("group widget setting value: " + dataTree.hierarchy());
         for(int i = 0; i < entryWidgets.size(); i++){

@@ -32,11 +32,23 @@ public abstract class EntryWidget implements Widget{
     public final Runnable onDataChangedListener(){
         return onDataChanged;
     }
-    public abstract EntryValueTree getEntryValueTree();
+    protected abstract EntryValueTree getEntryValueTreeCustom();
+
+    EntryValueTree.ListItemId id = null;
+    public final EntryValueTree getEntryValueTree(){
+        EntryValueTree tree = getEntryValueTreeCustom();
+        tree.setId(id);
+        return tree;
+    }
 
     public abstract EntryWidgetParam getParam();
 
-    public abstract void setValue(EntryValueTree entryValueTree);
+    protected abstract void setValueCustom(EntryValueTree entryValueTree);
+
+    public final void setValue(EntryValueTree entryValueTree){
+        id = entryValueTree.getListItemId();
+        setValueCustom(entryValueTree);
+    }
 
     public final void setName(String name){
         //System.out.println("set name: " + name);

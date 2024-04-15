@@ -80,12 +80,12 @@ public class GLib {
 
     }
 
-    public static int pxToDp(Context context, int px) {
-        return (int)(px / (context.getResources().getDisplayMetrics().densityDpi / 160f));
+    public static int pxToDp(int px) {
+        return (int)(px / (MainActivity.context.getResources().getDisplayMetrics().densityDpi / 160f));
     }
 
-    public static int dpToPx(Context context, int dp){
-        return (int)(dp * (context.getResources().getDisplayMetrics().densityDpi / 160f));
+    public static int dpToPx(int dp){
+        return (int)(dp * (MainActivity.context.getResources().getDisplayMetrics().densityDpi / 160f));
     }
 
     public void setMargin(int dp){

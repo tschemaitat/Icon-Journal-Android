@@ -20,7 +20,7 @@ public class ViewWrapper {
     public ViewWrapper(Context context){
         this.context = context;
         linearLayout = new LinLayout(context);
-        linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
         ((LinearLayout)linearLayout.getView()).setOrientation(LinearLayout.VERTICAL);
     }
     public void setName(String name){
@@ -34,7 +34,7 @@ public class ViewWrapper {
 
         linearLayout.add(nameTextView, 0);
 
-        int margin = GLib.dpToPx(context, 20);
+        int margin = GLib.dpToPx(20);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
         layoutParams.setMargins(40, 0, 0, 10);
         layoutParams.gravity = Gravity.LEFT;

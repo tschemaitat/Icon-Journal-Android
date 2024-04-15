@@ -2,10 +2,13 @@ package com.example.habittracker.StaticClasses;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.widget.EditText;
 
 import com.example.habittracker.R;
 
 public class ColorPalette {
+
+
 
     public static void setColors(Context context){
         text = context.getColor(R.color.darkText1);
@@ -17,8 +20,10 @@ public class ColorPalette {
         tertiary = context.getColor(R.color.dark3);
 
         groupColor = context.getColor(R.color.groupColor);
-    }
 
+        hintText = context.getColor(R.color.hintText);
+    }
+    public static int hintText;
     public static int text;
     public static int text2;
     public static int textPurple;

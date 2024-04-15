@@ -14,6 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.RelParam;
@@ -80,7 +81,7 @@ public class CustomPopup {
 
 
         //options with LinearLayout params added to linearLayout
-        optionsSelectionView = new SelectionView(context, ((String[]) options.toArray()), (value, index, key)->{onSelection(value, index, key);});
+        optionsSelectionView = new SelectionView(context, options.toArray(new String[0]), (value, index, key)->{onSelection(value, index, key);});
         optionsSelectionView.getView().setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
         linearLayout.addView(optionsSelectionView.getView());
 
@@ -115,9 +116,10 @@ public class CustomPopup {
     }
 
     public void onSelection(String value, int index, Object key){
+        MainActivity.log("thing selected: " + value + ", " + key);
         //System.out.println("value selected of popup");
         if(!closed)
-            onItemSelected.onSelected(value, index, null);
+            onItemSelected.onSelected(value, index, key);
     }
 
     public void titlePressed(){

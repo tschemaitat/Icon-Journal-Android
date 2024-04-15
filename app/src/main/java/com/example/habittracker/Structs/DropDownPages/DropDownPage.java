@@ -1,7 +1,8 @@
 package com.example.habittracker.Structs.DropDownPages;
 
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.RefItemPath;
@@ -12,23 +13,25 @@ public class DropDownPage{
     public static int nameKeyForParent = -10;
     public DropDownPage parent = null;
     private PayloadOption payloadOption;
-    public ArrayList<DropDownPage> children;
+    public ArrayList<DropDownPage> children = new ArrayList<>();
 
     public DropDownPage(CachedString name, Object payload){
         this.payloadOption = new PayloadOption(name, payload);
-        children = new ArrayList<>();
+    }
+
+    public DropDownPage(){
+        this.payloadOption = null;
     }
 
     public DropDownPage(PayloadOption payloadOption){
         this.payloadOption = payloadOption;
-        children = new ArrayList<>();
     }
 
-    public DropDownPage(CachedString name, Object payload, ArrayList<PayloadOption> nameList){
-        this.payloadOption = new PayloadOption(name, payload);
-        children = new ArrayList<>();
-        for(PayloadOption option: nameList)
-            children.add(new DropDownPage(option));
+    public DropDownPage put(ArrayList<PayloadOption> nameList){
+        for(PayloadOption payloadOption: nameList){
+            children.add(new DropDownPage(payloadOption));
+        }
+        return this;
     }
 
     public static DropDownPage fromItemPathWithPayload(ArrayList<ItemPath> itemPathList, ArrayList<Object> payloadList) {
@@ -42,7 +45,7 @@ public class DropDownPage{
                 Object payload = null;
                 if(i == itemList.size() - 1)
                     payload = payloadList.get(itemPathIndex);
-                currentParentPage = currentParentPage.getOrAdd(new PayloadOption(new CachedString(item), payload));
+                currentParentPage = currentParentPage.getOrAdd(new PayloadOption(new LiteralString(item), payload));
             }
             itemPathIndex++;
         }
@@ -58,8 +61,8 @@ public class DropDownPage{
     public static DropDownPage makeFromLiteralStrings(String name, ArrayList<String> nameList){
         ArrayList<CachedString> cachedStringList = new ArrayList<>();
         for(String string: nameList)
-            cachedStringList.add(new CachedString(string));
-        return new DropDownPage(new CachedString(name), cachedStringList);
+            cachedStringList.add(new LiteralString(string));
+        return new DropDownPage(new LiteralString(name), cachedStringList);
     }
 
     public static DropDownPage fromItems(ArrayList<ArrayList<PayloadOption>> payloadOptionListList) {
@@ -189,6 +192,8 @@ public class DropDownPage{
     public CachedString getCachedName() {return payloadOption.getCachedString();}
 
     public String getName(){
+        if(payloadOption == null)
+            return null;
         return payloadOption.getString();
     }
 
@@ -206,18 +211,7 @@ public class DropDownPage{
         return children.get(index);
     }
 
-    public String hierarchyString(){
-        return hierarchyStringIteration(0);
-    }
 
-    private String hierarchyStringIteration(int numTabs){
-        String tabString = GLib.tabs(numTabs);
-        String result = tabString + getName() + "\n";
-        for(DropDownPage page: getChildren()){
-            result += page.hierarchyStringIteration(numTabs+1);
-        }
-        return result;
-    }
 
     public ArrayList<DropDownPage> getPagePath() {
         ArrayList<DropDownPage> result = new ArrayList<>();
@@ -229,5 +223,23 @@ public class DropDownPage{
         if(parent != null)
             getPagePathIteration(pages);
         pages.add(this);
+    }
+
+    public String hierarchyString(){
+        return hierarchyStringIteration(0);
+    }
+
+    private String hierarchyStringIteration(int numTabs){
+        String tabString = GLib.tabs(numTabs);
+        Object payload = null;
+        if(payloadOption != null)
+            payload = payloadOption.getPayload();
+        String result = tabString + "(" + getChildren().size() + ")" +getName() +
+                " -> " + payload+"\n";
+
+        for(DropDownPage page: getChildren()){
+            result += page.hierarchyStringIteration(numTabs+1);
+        }
+        return result;
     }
 }

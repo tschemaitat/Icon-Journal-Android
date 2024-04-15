@@ -3,36 +3,37 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.HeaderNode;
-import com.example.habittracker.Structs.RefItemPath;
+import com.example.habittracker.structures.HeaderNode;
 
 public class CustomEditText extends EntryWidget {
-    private String currentText = "";
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinLayout linLayout;
     private EditText editTextLayout;
     private Context context;
+
+    private String currentText = nullText;
+
     public CustomEditText(Context context) {
         super(context);
         this.context = context;
 
 
         init();
-    }
-
-    private void updateEditTextValue(){
-        editTextLayout.setText(currentText);
     }
 
     public String getText(){
@@ -51,21 +52,26 @@ public class CustomEditText extends EntryWidget {
         return result;
     }
 
-
-
+    private void setTextState(String newText){
+        currentText = newText;
+        editTextLayout.setText(newText);
+    }
 
     private void init(){
         linLayout = new LinLayout(context);
         setChild(linLayout.getView());
         //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
         editTextLayout = new EditText(context);
+        editTextLayout.setPadding(10,0,0,0);
+        editTextLayout.setGravity(Gravity.CENTER_VERTICAL);
         linLayout.add(editTextLayout);
 
-        editTextLayout.setMinWidth(GLib.dpToPx(context, 400));
-        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        editTextLayout.setMinWidth(GLib.dpToPx(400));
+        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
         editTextLayout.setTextColor(ColorPalette.textPurple);
         editTextLayout.setBackground(null);
-        Margin.setEditTextLayout(linLayout);
+        editTextLayout.setHintTextColor(ColorPalette.hintText);
+        Margin.setEditTextLayout(this);
 
         setTextListener();
         int MAX_CHARACTERS = 50;
@@ -75,10 +81,10 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void setText(String text){
-        currentText = text;
+        String temp = text;
         if(text == null)
-            currentText = "";
-        updateEditTextValue();
+            temp = "";
+        setTextState(temp);
     }
 
     public void onTextChange(String before, String newText){
@@ -99,11 +105,12 @@ public class CustomEditText extends EntryWidget {
                 String newText = "";
                 if(s != null)
                     newText = s.toString();
+                String before = currentText;
+                currentText = newText;
                 //System.out.println("\t\tafter text changed listener: " + newText);
-                boolean textChanged = !currentText.equals(newText);
+                boolean textChanged = !before.equals(newText);
                 if(!textChanged)
                     return;
-                String before = currentText;
                 onTextChange(before, newText);
             }
         });
@@ -120,26 +127,25 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
-    public void setValue(EntryValueTree entryValueTree) {
-        if(entryValueTree == null){
-            currentText = "";
-        }else{
-            if( ! entryValueTree.getCachedString().isLiteral())
-                throw new RuntimeException();
-            currentText = entryValueTree.getCachedString().getString();
-            if(currentText == null)
-                currentText = "";
-        }
+    public void setValueCustom(EntryValueTree entryValueTree) {
+        if(entryValueTree == null)
+            throw new RuntimeException();
 
-        updateEditTextValue();
+        if( ! (entryValueTree.getCachedString() instanceof LiteralString))
+            throw new RuntimeException();
+        String currentText = entryValueTree.getCachedString().getString();
+        if(currentText == null)
+            currentText = "";
+
+
+        setTextState(currentText);
     }
 
     @Override
-    public EntryValueTree getEntryValueTree() {
-        System.out.println("returning data tree");
-        System.out.println("currentText = " + currentText);
-        System.out.println("getText() = " + getText());
-        return new EntryValueTree(new CachedString(currentText));
+    public EntryValueTree getEntryValueTreeCustom() {
+        //MainActivity.log("returning data tree");
+        //MainActivity.log("getText() = " + getText());
+        return new EntryValueTree(new LiteralString(getText()));
     }
 
     @Override
@@ -169,8 +175,12 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void resetError(){
-        editTextLayout.setHintTextColor(ColorPalette.textPurple);
+        editTextLayout.setHintTextColor(ColorPalette.hintText);
         editTextLayout.setTextColor(ColorPalette.textPurple);
+    }
+
+    public EditText getEditText() {
+        return editTextLayout;
     }
 
     public static class EditTextParam extends EntryWidgetParam {

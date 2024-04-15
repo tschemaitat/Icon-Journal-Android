@@ -21,6 +21,7 @@ import com.example.habittracker.Inflatables.JournalPage;
 import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.Margin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,13 +40,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         mainActivity = this;
 
         MainActivity.context = this;
-        Dictionary.generate(context);
-        ColorPalette.setColors(context);
+
+        System.out.println("app starting");
+        log("app starting");
+
+
         setContentView(R.layout.activity_main);
+
+        ColorPalette.setColors(context);
+        Margin.setup(context);
+
         scrollView = findViewById(R.id.scrollView);
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);
         constraintLayout = findViewById(R.id.constraintLayoutParent);
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void changePage(Inflatable newLayout){
-        log("inflating: " + newLayout.getClass().getName());
+        log("inflating: " + newLayout.getClass().getSimpleName());
         if(currentLayout != null){
 
             boolean removeSuccess = currentLayout.tryToRemove(newLayout);

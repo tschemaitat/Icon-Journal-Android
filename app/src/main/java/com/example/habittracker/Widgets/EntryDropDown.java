@@ -2,14 +2,15 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.HeaderNode;
+import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
-import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class EntryDropDown extends EntryWidget{
     }
 
     private void onDataChanged(RefItemPath refItemPath){
+        MainActivity.log("on data changed: " + refItemPath);
         selectedValuePath = refItemPath;
         onDataChangedListener().run();
     }
@@ -60,7 +62,13 @@ public class EntryDropDown extends EntryWidget{
     }
 
     @Override
-    public void setValue(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree) {
+
+        if(entryValueTree.getItemPath() == null){
+            MainActivity.log(entryValueTree.getParent().hierarchy());
+            throw new RuntimeException();
+        }
+
         setSelected(entryValueTree.getItemPath());
     }
 
@@ -75,7 +83,8 @@ public class EntryDropDown extends EntryWidget{
     }
 
     @Override
-    public EntryValueTree getEntryValueTree() {
+    public EntryValueTree getEntryValueTreeCustom() {
+        MainActivity.log("saving value path: " + selectedValuePath);
         return new EntryValueTree(selectedValuePath);
     }
 
@@ -87,6 +96,7 @@ public class EntryDropDown extends EntryWidget{
         structure = dropDownParams.structure;
         valueId = dropDownParams.valueKey;
         groupIdList = dropDownParams.groups;
+        dropDown.setDropDownPage(dropDownPage);
     }
 
     public static class DropDownParam extends EntryWidgetParam {

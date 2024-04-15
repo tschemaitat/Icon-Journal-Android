@@ -12,7 +12,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.Structure;
+import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.CustomEditText;
@@ -27,35 +27,53 @@ public class StructureEditor implements Inflatable {
 
     Context context;
     WidgetLayout widgetLayout;
-    Structure structure;
+    Structure structure = null;
     LinLayout layout;
+
+    String structureType = null;
 
     CustomEditText structureKeyEditor;
 
+    boolean newStructure = false;
+
 
     public StructureEditor(Context context, Structure structure){
+
         this.context = context;
         if(structure == null)
             throw new RuntimeException("structure null");
 
         if(structure.getType() == null)
             throw new RuntimeException("structure type null");
+        MainActivity.log("editing structure: " + structure.getCachedName());
         this.structure = structure;
+        this.structureType = structure.getType();
 
+        init(structure.getCachedName().getString(), (GroupWidget.GroupWidgetParam)structure.getParam());
+    }
+
+    public StructureEditor(Context context, String structureType){
+        MainActivity.log("new structure: " + structureType);
+        this.context = context;
+        this.structureType = structureType;
+        init(null, null);
+    }
+
+    private void init(String name, GroupWidget.GroupWidgetParam groupWidgetParam){
         layout = new LinLayout(context);
         Margin.setInitialLayout(layout.getView());
         layout.getView().setId(R.id.pageLayout);
 
         Button saveButton = setupSaveButton(layout, ()->onSave());
-        structureKeyEditor = setupStructureKeyEditor(structure.getCachedName().getString(), layout, context);
-        widgetLayout = setupWidgetLayout(layout, structure, context, ()->addStructureWidget());
+        structureKeyEditor = setupStructureKeyEditor(name, layout, context);
+        widgetLayout = setupWidgetLayout(layout, groupWidgetParam, context, ()->addStructureWidget());
     }
 
-    private static WidgetLayout setupWidgetLayout(LinLayout layout, Structure structure, Context context, Runnable addStructureWidget) {
+    private static WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidget.GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
         WidgetLayout widgetLayout = new WidgetLayout(context);
         layout.add(widgetLayout.getView());
-        if(structure.getParam() != null)
-            inflateStructureUsingParam(structure, widgetLayout, context);
+        if(groupWidgetParam != null)
+            inflateStructureUsingParam(groupWidgetParam, widgetLayout, context);
         widgetLayout.getLinLayout().addButton(view -> addStructureWidget.run());
         widgetLayout.getLinLayout().setChildMargin(Margin.listChildMargin());
         return widgetLayout;
@@ -70,8 +88,7 @@ public class StructureEditor implements Inflatable {
         });
     }
 
-    private static void inflateStructureUsingParam(Structure structure, WidgetLayout widgetLayout, Context context) {
-        GroupWidget.GroupWidgetParam groupWidgetParam = (GroupWidget.GroupWidgetParam) structure.getParam();
+    private static void inflateStructureUsingParam(GroupWidget.GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
         ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
         for(EntryWidgetParam param: entryWidgetParams){
             StructureWidget structureWidget = new StructureWidget(context);
@@ -102,23 +119,31 @@ public class StructureEditor implements Inflatable {
     }
 
     public void onSave(){
-        System.out.println("on save: " + structureKeyEditor.getText());
+        MainActivity.log("on save: " + structureKeyEditor.getText());
 
         ArrayList<EntryWidgetParam> entryWidgetParams = checkForErrorBeforeSave();
         if(entryWidgetParams == null)
             return;
-        if(structure.isSpreadsheet()){
+        if(Structure.isSpreadsheet(structureType)){
             if( ! checkForUniqueAttribute()){
-                System.out.println("missing widget for unique attribute");
+                //System.out.println("missing widget for unique attribute");
                 MainActivity.showToast(context, "missing widget for unique attribute");
                 return;
             }
         }
+        saveAfterCheck(entryWidgetParams);
+        MainActivity.changePage(new EditorSelectionPage(context));
+    }
 
+    public void saveAfterCheck(ArrayList<EntryWidgetParam> entryWidgetParams){
         EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(structureKeyEditor.getText(), entryWidgetParams);
-        System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString());
-        Structure newStructure = new Structure(structureKeyEditor.getText(), groupParam, structure.getType());
-        Dictionary.saveStructure(newStructure);
+        //System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString());
+        if(structure == null){
+            Dictionary.addStructure(structureKeyEditor.getText(), groupParam, structureType);
+        }else{
+            Dictionary.editStructure(structure, groupParam);
+        }
+
 
         MainActivity.showToast(context, "saving " + structureKeyEditor.getText() + " successful");
     }

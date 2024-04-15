@@ -1,12 +1,16 @@
-package com.example.habittracker.Structs;
+package com.example.habittracker.structures;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
+import com.example.habittracker.Structs.EntryValueTree;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Structure {
     private static int structureKeyCount = 0;
@@ -19,7 +23,6 @@ public class Structure {
 
 
     public Structure(String name, EntryWidgetParam param, String type){
-        this.id = null;
         this.name = name;
         this.param = param;
         this.type = type;
@@ -51,48 +54,55 @@ public class Structure {
     }
 
     public void addEntry(EntryValueTree entryData){
-        Entry entry = new Entry(entryData);
-        entry.id = idCount;
+        Entry entry = new Entry(entryData, idCount, this);
         idCount++;
-        entries.put(entry.id, entry);
+        entries.put(entry.getId(), entry);
     }
 
     public Entry getEntry(ArrayList<String> attributes){
         String name = attributes.get(0);
         for(Entry entry: entries.values()){
-            if(entry.entryValueTree.getCachedString(0).equals(name)){
+            if(entry.getEntryValueTree().getCachedString(0).equals(name)){
                 return entry;
             }
         }
         throw new RuntimeException();
     }
 
-    public void setData(int id, EntryValueTree data){
+    public void setData(Entry entryToEdit, EntryValueTree data){
+        int entryId = entryToEdit.getId();
         Entry found = null;
         for(Entry entry: entries.values()){
-            if(entry.id == id){
+            if(entry.getId() == entryId){
                 found = entry;
                 break;
             }
         }
-        found.entryValueTree = data;
+        Entry newEntry = new Entry(data, entryId, this);
+        entries.put(entryId, newEntry);
     }
 
 
 
-    public HashMap<Integer, Entry> getEntries(){
-        return entries;
+    public ArrayList<Entry> getEntryList(){
+        return new ArrayList<>(entries.values());
     }
 
     public ArrayList<EntryValueTree> getData(){
         ArrayList<EntryValueTree> entryValueTrees = new ArrayList<>();
         for(Entry entry: entries.values())
-            entryValueTrees.add(entry.entryValueTree);
+            entryValueTrees.add(entry.getEntryValueTree());
         return entryValueTrees;
     }
 
+    public ArrayList<Entry> getEntries(){
+        return new ArrayList<>(entries.values());
+    }
+
+
+
     public CachedString getCachedName(){
-        return new CachedString(name);
+        return new LiteralString(name);
     }
 
     public String getType(){
@@ -104,8 +114,8 @@ public class Structure {
         return header;
     }
 
-    public ArrayList<ArrayList<String>> IdAttributes(){
-        ArrayList<ArrayList<String>> names = new ArrayList<>();
+    public ArrayList<ArrayList<CachedString>> IdAttributes(){
+        ArrayList<ArrayList<CachedString>> names = new ArrayList<>();
         for(Entry entry: entries.values()){
             if(entry == null)
                 throw new RuntimeException("entries: " + entries);
@@ -115,12 +125,11 @@ public class Structure {
         return names;
     }
 
-    private ArrayList<String> getEntryName(Entry entry) {
-        ArrayList<CachedString> cachedStringList = new ArrayList<>(Collections.singleton(entry.entryValueTree.getCachedString(0)));
-        ArrayList<String> result = new ArrayList<>();
-        for(CachedString cachedString: cachedStringList)
-            result.add(cachedString.getString());
-        return result;
+    protected ArrayList<CachedString> getEntryName(Entry entry) {
+        CachedString cachedString = entry.getEntryValueTree().getCachedString(0);
+        MainActivity.log("getting entry name: " + cachedString.getString() + ", class: " + cachedString.getClass());
+        MainActivity.log("entry valueTree: \n" + entry.getEntryValueTree().hierarchy());
+        return new ArrayList<>(Collections.singleton(cachedString));
     }
 
     public EntryWidgetParam getParam(){
@@ -133,11 +142,23 @@ public class Structure {
         return false;
     }
 
+    public static boolean isSpreadsheet(String type){
+        if(type.equals(Dictionary.category))
+            return true;
+        return false;
+    }
+
     public Entry getEntry(int entryId) {
         return entries.get(entryId);
     }
 
     public Integer getId() {
+        if(id == null)
+            throw new RuntimeException();
         return id;
+    }
+
+    public String toString(){
+        return "<structure> " + getCachedName().getString();
     }
 }

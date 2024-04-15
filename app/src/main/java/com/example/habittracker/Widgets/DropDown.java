@@ -5,9 +5,11 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.PayloadOption;
@@ -83,7 +85,10 @@ public class DropDown{
         customPopup.setText(title, spinnerOptions);
     }
     private void setOptionsOfPage(){
-        setPopUpOptions(currentPage.getName(), formatOptions(currentPage, folder));
+        String headerName = defaultHintText;
+        if(currentPage != parentPage)
+            headerName = currentPage.getName();
+        setPopUpOptions(headerName, formatOptions(currentPage, folder));
     }
 
 
@@ -130,6 +135,7 @@ public class DropDown{
     }
 
     private void handleStateOnDataChanged(String newValue){
+        MainActivity.log("handle state change: " + newValue);
         ItemPath newPath = currentPage.getPathToPageWithName();
         selectedValuePath = newPath.createNewPathAdd(newValue);
         if(newValue == null)
@@ -138,25 +144,27 @@ public class DropDown{
             buttonSelectionView.setText(new String[]{newValue});
     }
 
-    private static ArrayList<PayloadOption> formatOptions(DropDownPage page, String folderString){
+    private ArrayList<PayloadOption> formatOptions(DropDownPage page, String folderString){
+        if(page != parentPage && ! page.hasChildren()){
+            MainActivity.log("parent: \n" + parentPage.hierarchyString() + "\nthis page: \n" + page.hierarchyString());
+            throw new RuntimeException();
+        }
+
         ArrayList<PayloadOption> payloadOptions = page.getOptions();
         ArrayList<PayloadOption> result = new ArrayList<>();
-        if(!page.hasChildren())
-            throw new RuntimeException("page doesn't have children");
+
         ArrayList<DropDownPage> children = page.getChildren();
         for(int i = 0; i < children.size(); i++){
             DropDownPage childPage = children.get(i);
-            Object payload = payloadOptions.get(i);
+            Object payload = payloadOptions.get(i).getPayload();
             if(!childPage.hasChildren()){
                 result.add(new PayloadOption(childPage.getCachedName(), payload));
                 continue;
             }
-            result.add(new PayloadOption(new CachedString(folderString+" " + childPage.getName()), payload));
+            result.add(new PayloadOption(new LiteralString(folderString+" " + childPage.getName()), payload));
         }
 
         //System.out.println("formatted page: \n\t" + result);
-        if(result.size() == 0)
-            throw new RuntimeException("result doesn't have any values");
         return result;
     }
 
@@ -164,6 +172,8 @@ public class DropDown{
         return buttonSelectionView.getView();
     }
     public void setDropDownPage(DropDownPage dropDownPage){
+        if(dropDownPage == null)
+            throw new RuntimeException();
         this.parentPage = dropDownPage;
         currentPage = parentPage;
     }
@@ -190,6 +200,7 @@ public class DropDown{
         currentPage = parentPage;
     }
     public void setHint(String select_type) {
+        System.out.println("new hint: " + select_type);
         hint = select_type;
         buttonSelectionView.setText(new String[]{select_type});
     }

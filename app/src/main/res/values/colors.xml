@@ -32,5 +32,6 @@
     <color name="purple">#BB86FC</color>
     <color name="darkPurple">#664B86</color>
     <color name="groupColor">#2C213A</color>
+    <color name="hintText">#848484</color>
 
 </resources>

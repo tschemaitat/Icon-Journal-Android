@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedString;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.PayloadOption;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class SelectionView {
     private static ArrayList<PayloadOption> convert(ArrayList<String> stringOptions){
         ArrayList<PayloadOption> result = new ArrayList<>();
         for(String string: stringOptions)
-            result.add(new PayloadOption(new CachedString(string), null));
+            result.add(new PayloadOption(new LiteralString(string), null));
         return result;
     }
 
@@ -76,7 +77,7 @@ public class SelectionView {
     }
 
     public void setColor(int textPurple) {
-        System.out.println("setting color: " + getOptions());
+        //System.out.println("setting color: " + getOptions());
         color = textPurple;
         setColor();
     }
@@ -99,9 +100,12 @@ public class SelectionView {
         public void onAdd();
     }
 
-    public void setText(ArrayList<PayloadOption> strings){
-        options = strings;
-        listView.setAdapter(new ArrayAdapter<>(context, textViewResource, strings));
+    public void setText(ArrayList<PayloadOption> payloadOptionList){
+        options = payloadOptionList;
+        if(onAdd != null)
+            options.add(new PayloadOption(new LiteralString("add"), null));
+        ArrayList<String> stringList = EnumLoop.makeList(options, (input)->input.getString());
+        listView.setAdapter(new ArrayAdapter<>(context, textViewResource, stringList));
         listView.setMinimumWidth(1000);
         setColor();
     }
@@ -144,9 +148,10 @@ public class SelectionView {
         listView.setMinimumWidth(1000);
 
         if(onAdd != null){
-            options.add(new PayloadOption(new CachedString(addString), null));
+            options.add(new PayloadOption(new LiteralString(addString), null));
         }
         ArrayList<String> optionNames = EnumLoop.makeList(options, payloadOption -> payloadOption.getString());
+        //MainActivity.log("selection view optionNames: " + optionNames);
         textViewResource = android.R.layout.simple_list_item_1;
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
