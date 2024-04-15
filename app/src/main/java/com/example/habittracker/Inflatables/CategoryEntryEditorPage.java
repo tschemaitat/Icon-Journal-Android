@@ -23,6 +23,10 @@ public class CategoryEntryEditorPage implements Inflatable{
     private LinearLayout linearLayout;
     boolean discarding = false;
     public CategoryEntryEditorPage(Context context, Structure spreadsheet, Entry entry){
+        if(entry != null)
+            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entry.getId() +"\n"+ entry.getEntryValueTree().hierarchy());
+        else
+            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry: null");
         this.context = context;
         this.structure = spreadsheet;
         this.entry = entry;
@@ -96,8 +100,11 @@ public class CategoryEntryEditorPage implements Inflatable{
         MainActivity.log("settting param: \n" + structure.getParam());
         groupWidget.setParam(structure.getParam());
 
-        if(entry != null)
+        if(entry != null){
             groupWidget.setValue(entry.getEntryValueTree());
+            MainActivity.log("set from entry: " + entry.getEntryValueTree().hierarchy());
+        }
+
     }
 
     @Override

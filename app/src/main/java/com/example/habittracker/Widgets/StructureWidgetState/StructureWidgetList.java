@@ -17,7 +17,7 @@ import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
 
-public class StructureWidgetList implements Widget {
+public class StructureWidgetList implements Widget{
     private Context context;
     private GroupWidget groupWidget;
     private LinLayout parent;
@@ -40,7 +40,7 @@ public class StructureWidgetList implements Widget {
     }
 
     public StructureWidget addStructureWidget(){
-        StructureWidget structureWidget = new StructureWidget(context);
+        StructureWidget structureWidget = new StructureWidget(context, groupWidget.getWidgetLayout());
         groupWidget.getWidgetLayout().add(structureWidget);
         return structureWidget;
     }

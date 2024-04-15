@@ -3,12 +3,12 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
@@ -27,21 +27,33 @@ public class StructureWidget implements Widget {
     private StructureWidgetDropDown structureWidgetDropDown = null;
     private StructureWidgetEditText structureWidgetEditText = null;
 
+    private Runnable onDelete;
+
     Runnable onDataChangeListener;
 
     private Context context;
 
     private LinLayout layout;
+    private Runnable moveUp;
+    private Runnable moveDown;
 
-    public StructureWidget(Context context) {
+    public StructureWidget(Context context, WidgetLayout parent) {
         MainActivity.log("new structure widget");
         this.context = context;
         layout = new LinLayout(context);
         layout.getView().setId(R.id.structureWidget);
 
-        headerView = new StructureWidgetHeaderView(context);
-        headerView.addNameEditor(null, ()->{
+        headerView = new StructureWidgetHeaderView(context, ()->{
             headerView.nameEditor.resetError();
+        }, ()->{
+            MainActivity.log("deleting structureWidget");
+            parent.delete(this);
+        }, ()->{
+            MainActivity.log("moving up structureWidget");
+            parent.moveUp(this);
+        }, ()->{
+            MainActivity.log("moving down structureWidget");
+            parent.moveDown(this);
         });
         layout.add(headerView.getView());
 
@@ -52,12 +64,12 @@ public class StructureWidget implements Widget {
         Margin.setStructureWidgetLayout(layout);
     }
 
-    public LinLayout getLinLayout(){
-        return layout;
+    public void onDelete(){
+        onDataChangeListener.run();
     }
 
-    public void addDeleteButton(Runnable runnable) {
-        headerView.addDeleteButton(runnable);
+    public LinLayout getLinLayout(){
+        return layout;
     }
 
     public void disableNameEditor(){
@@ -216,5 +228,11 @@ public class StructureWidget implements Widget {
 
     public String getType() {
         return currentType;
+    }
+
+    public interface StructureWidgetLayout{
+        void delete(StructureWidget structureWidget);
+        void moveUp(StructureWidget structureWidget);
+        void moveDown(StructureWidget structureWidget);
     }
 }

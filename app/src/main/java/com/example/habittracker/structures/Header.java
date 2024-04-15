@@ -48,9 +48,9 @@ public class Header {
 
 
     public ItemPath getWidgetNamePath(WidgetId widgetId) {
-        MainActivity.log("getting widget name");
+        //MainActivity.log("getting widget name");
         ValueTreePath valueTreePath = getPath(widgetId);
-        MainActivity.log("path: " + valueTreePath);
+        //MainActivity.log("path: " + valueTreePath);
         ArrayList<String> namePath = new ArrayList<>();
         parentNode.getPathName(namePath, valueTreePath, 0);
         return new ItemPath(namePath);

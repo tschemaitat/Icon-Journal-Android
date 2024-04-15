@@ -21,6 +21,7 @@ import com.example.habittracker.Inflatables.JournalPage;
 import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         ColorPalette.setColors(context);
         Margin.setup(context);
+        GLib.generateDrawables(context);
 
         scrollView = findViewById(R.id.scrollView);
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);

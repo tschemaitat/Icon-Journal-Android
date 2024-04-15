@@ -7,6 +7,7 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.StructureWidget;
 import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
@@ -43,6 +44,34 @@ public class WidgetLayout {
     public void remove(Widget widget){
         widgets.remove(widget);
         layout.remove(widget.getView());
+    }
+
+    public void delete(Widget widget) {
+        int index = widgets.indexOf(widget);
+        this.remove(widget);
+        getLinLayout().remove(widget.getView());
+    }
+
+    public void moveUp(Widget widget) {
+        ArrayList<Widget> widgets = this.widgets();
+        int index = widgets.indexOf(widget);
+        if(index == 0)
+            return;
+        widgets.remove(widget);
+        getLinLayout().remove(widget.getView());
+        widgets.add(index - 1, widget);
+        getLinLayout().add(widget.getView(), index - 1);
+    }
+
+    public void moveDown(Widget widget) {
+        ArrayList<Widget> widgets = this.widgets();
+        int index = widgets.indexOf(widget);
+        if(index == widgets.size() - 1)
+            return;
+        widgets.remove(widget);
+        getLinLayout().remove(widget.getView());
+        widgets.add(index + 1, widget);
+        getLinLayout().add(widget.getView(), index + 1);
     }
 
 

@@ -14,6 +14,7 @@ public class EntryValueTree {
     private ListItemId listItemId;
     private EntryValueTree parent = null;
     private boolean setIds = false;
+    private boolean setIdFunction = false;
     private ArrayList<EntryValueTree> list = new ArrayList<>();
     public EntryValueTree(){
     }
@@ -168,7 +169,7 @@ public class EntryValueTree {
 
     //get values from group indexes. The indexes are the key for the location
     public ArrayList<EntryValueTree> getValuesFromPath(ValueTreePath indexes){
-        MainActivity.log("indexes: \n" + indexes);
+        //MainActivity.log("indexes: \n" + indexes);
         if(indexes.size() == 0){
             MainActivity.log(this.hierarchy());
             throw new RuntimeException();
@@ -178,7 +179,7 @@ public class EntryValueTree {
         if(indexes.size() == 1){
             EntryValueTree cachedString = list.get(indexes.get(0));
             if(cachedString == null){
-                MainActivity.log(indexes + "\n" + this.hierarchy());
+                //MainActivity.log(indexes + "\n" + this.hierarchy());
             }
             return new ArrayList<>(Collections.singleton(cachedString));
         }
@@ -312,6 +313,9 @@ public class EntryValueTree {
     }
 
     public void setId(ListItemId id) {
+        if(setIdFunction)
+            throw new RuntimeException();
+        setIdFunction = true;
         this.listItemId = id;
     }
 

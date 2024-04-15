@@ -20,20 +20,20 @@ import java.util.Arrays;
 
 public class DropDownPageFactory {
     public static DropDownPage getGroupedPages(Structure structure, WidgetId valueId, ArrayList<WidgetId> groupIdList){
-        MainActivity.log("getting grouped pages");
+        //MainActivity.log("getting grouped pages");
         Header header = structure.getHeader();
         ArrayList<Entry> entries = structure.getEntries();
         ArrayList<ValueTreePath> groupPathList = header.getPathList(groupIdList);
-        MainActivity.log("group paths: " + groupPathList);
+        //MainActivity.log("group paths: " + groupPathList);
 
         ValueTreePath valuePath = header.getPath(valueId);
         DropDownPage parentPage = new DropDownPage(null);
-        MainActivity.log("value path: " + valuePath);
+        //MainActivity.log("value path: " + valuePath);
 
         //iterate through the spreadsheet's entries
         for(Entry entry: entries){
             EntryValueTree tree = entry.getEntryValueTree();
-            MainActivity.log("data tree: \n" + tree.hierarchy());
+            //MainActivity.log("data tree: \n" + tree.hierarchy());
             //make list of pages, starting with the parent page
             ArrayList<DropDownPage> parentPages = new ArrayList<>();
             parentPages.add(parentPage);
@@ -44,19 +44,19 @@ public class DropDownPageFactory {
             //ArrayList<ArrayList<CachedString>> valuesOfGroups = tree.getValueListFromPathList(groupPathList);
             //the first index, we just add items to the parent page
             //at the end of the iteration, we set parentPages to the pages we just made
-            MainActivity.log("before group index loop: " + groupPathList.size() + ", " + groupIdList.size());
+            //MainActivity.log("before group index loop: " + groupPathList.size() + ", " + groupIdList.size());
             for(int groupIndex = 0; groupIndex < groupPathList.size(); groupIndex++){
                 //ArrayList<CachedString> valuesOfCurrentGroup = valuesOfGroups.get(groupIndex);
                 ArrayList<EntryValueTree> valuesOfCurrentGroup = tree.getValuesFromPath(groupPathList.get(groupIndex));
-                MainActivity.log("group index loop: " + groupIndex + "path: " + groupPathList.get(groupIndex) + "\nvalues: " + valuesOfCurrentGroup);
+                //MainActivity.log("group index loop: " + groupIndex + "path: " + groupPathList.get(groupIndex) + "\nvalues: " + valuesOfCurrentGroup);
                 //keep track of new pages so that we can set them as the parent later
                 ArrayList<DropDownPage> newPages = new ArrayList<>();
                 for(EntryValueTree groupValue: valuesOfCurrentGroup){
-                    MainActivity.log("group value loop: " + groupValue);
+                    //MainActivity.log("group value loop: " + groupValue);
                     for(DropDownPage page: parentPages){
                         //if there is already a page, get the page that matches the name
                         //if there is not a page, create it and add it to the list
-                        MainActivity.log("adding new page");
+                        //MainActivity.log("adding new page");
                         if(groupValue.getCachedString() instanceof LiteralString){
 
                         }

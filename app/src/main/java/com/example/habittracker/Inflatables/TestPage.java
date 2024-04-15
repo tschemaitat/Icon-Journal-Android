@@ -106,14 +106,7 @@ public class TestPage implements Inflatable {
     }
 
 
-    public void setupTestLayout(){
-        StructureWidget structureWidget = new StructureWidget(context);
-        structureWidget.setOnDataChangedListener(()->{});
-        linearLayout.addView(structureWidget.getView());
 
-        CustomEditText editText = new CustomEditText(context);
-        linearLayout.addView(editText.getView());
-    }
 
 
 }

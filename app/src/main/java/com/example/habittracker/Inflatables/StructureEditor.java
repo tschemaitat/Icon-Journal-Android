@@ -22,7 +22,7 @@ import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
 
-public class StructureEditor implements Inflatable {
+public class StructureEditor implements Inflatable{
 
 
     Context context;
@@ -69,7 +69,7 @@ public class StructureEditor implements Inflatable {
         widgetLayout = setupWidgetLayout(layout, groupWidgetParam, context, ()->addStructureWidget());
     }
 
-    private static WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidget.GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
+    private WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidget.GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
         WidgetLayout widgetLayout = new WidgetLayout(context);
         layout.add(widgetLayout.getView());
         if(groupWidgetParam != null)
@@ -80,18 +80,15 @@ public class StructureEditor implements Inflatable {
     }
 
     private void addStructureWidget() {
-        StructureWidget structureWidget = new StructureWidget(context);
+        StructureWidget structureWidget = new StructureWidget(context, widgetLayout);
         structureWidget.setOnDataChangedListener(()->{});
         widgetLayout.add(structureWidget);
-        structureWidget.addDeleteButton(()->{
-            widgetLayout.remove(structureWidget);
-        });
     }
 
-    private static void inflateStructureUsingParam(GroupWidget.GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
+    private void inflateStructureUsingParam(GroupWidget.GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
         ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
         for(EntryWidgetParam param: entryWidgetParams){
-            StructureWidget structureWidget = new StructureWidget(context);
+            StructureWidget structureWidget = new StructureWidget(context, widgetLayout);
             structureWidget.setParam(param);
             widgetLayout.add(structureWidget);
         }
@@ -208,4 +205,6 @@ public class StructureEditor implements Inflatable {
     public boolean tryToRemove(Inflatable page) {
         return true;
     }
+
+
 }

@@ -1,9 +1,13 @@
 package com.example.habittracker.StaticClasses;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
@@ -128,11 +132,6 @@ public class GLib {
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
                 break;
-            case "structure widget":
-                widget = new StructureWidget(context);
-                widget.setOnDataChangedListener(onDataChange);
-                widget.setParam(params);
-                break;
             case GroupWidget.className:
                 widget = new GroupWidget(context);
                 widget.setOnDataChangedListener(onDataChange);
@@ -180,6 +179,46 @@ public class GLib {
         for(int i = 0; i < num; i++)
             tabs += singleTab;
         return tabs;
+    }
+
+    private static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static Drawable upArrow;
+    public static Drawable downArrow;
+
+    public static void generateDrawables(Context context){
+        Drawable rightArrow = context.getResources().getDrawable(R.drawable.arrow_right);
+        Drawable leftArrow = context.getResources().getDrawable(R.drawable.arrow_left);
+        upArrow = rotateDrawable(leftArrow);
+        downArrow = rotateDrawable(rightArrow);
+    }
+
+    public static Drawable rotateDrawable(Drawable drawable) {
+        if (drawable == null) {
+            return null;
+        }
+
+        // Convert Drawable to Bitmap
+        Bitmap originalBitmap = drawableToBitmap(drawable);
+        // Create a Matrix for rotation
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90); // Rotate 90 degrees
+
+        // Create a new Bitmap from the original using the matrix for transformation
+        Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,
+                originalBitmap.getWidth(),
+                originalBitmap.getHeight(),
+                matrix, true);
+
+        // Convert the rotated Bitmap back to a Drawable
+        return new BitmapDrawable(rotatedBitmap);
     }
 
 

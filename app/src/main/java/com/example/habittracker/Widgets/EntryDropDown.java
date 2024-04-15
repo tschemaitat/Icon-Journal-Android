@@ -74,6 +74,7 @@ public class EntryDropDown extends EntryWidget{
 
     public void setSelected(RefItemPath itemPath){
         dropDown.setSelected(itemPath.getItemPath());
+        selectedValuePath = itemPath;
     }
 
 
