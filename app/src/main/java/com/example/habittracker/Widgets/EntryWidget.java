@@ -7,11 +7,15 @@ import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Layouts.ViewWrapper;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.structures.Structure;
 
 public abstract class EntryWidget implements Widget{
     private Runnable onDataChanged;
     private String name;
     private ViewWrapper viewWrapper;
+    private boolean dataSet = false;
+    private Integer widgetIdTracker;
+    private Structure structure;
 
     public EntryWidget(Context context){
 
@@ -34,19 +38,17 @@ public abstract class EntryWidget implements Widget{
     }
     protected abstract EntryValueTree getEntryValueTreeCustom();
 
-    EntryValueTree.ListItemId id = null;
+    EntryValueTree.ListItemId listId = null;
     public final EntryValueTree getEntryValueTree(){
         EntryValueTree tree = getEntryValueTreeCustom();
-        tree.setId(id);
+        tree.setId(listId);
         return tree;
     }
-
-    public abstract EntryWidgetParam getParam();
 
     protected abstract void setValueCustom(EntryValueTree entryValueTree);
 
     public final void setValue(EntryValueTree entryValueTree){
-        id = entryValueTree.getListItemId();
+        listId = entryValueTree.getListItemId();
         setValueCustom(entryValueTree);
     }
 
@@ -69,16 +71,40 @@ public abstract class EntryWidget implements Widget{
     }
 
     public final void setParam(EntryWidgetParam param){
+        if(dataSet)
+            throw new RuntimeException();
+        dataSet = true;
         if(param.name != null)
             setName(param.name);
+        this.widgetIdTracker = param.widgetIdTracker;
         setParamCustom(param);
     }
 
-    protected abstract void setParamCustom(EntryWidgetParam params);
+    protected abstract void setParamCustom(EntryWidgetParam param);
 
     public final View getView(){
         return viewWrapper.getView();
     }
 
 
+    protected Integer getWidgetIdTracker() {
+        return widgetIdTracker;
+    }
+
+    public final void setStructure(Structure structure) {
+        this.structure = structure;
+        setStructureCustom(structure);
+    }
+
+    public void setStructureCustom(Structure structure){
+
+    }
+
+    public Structure getStructure(){
+        return structure;
+    }
+
+    public int getValueId(){
+        return structure.getHeader().getValueId(widgetIdTracker).getLast();
+    }
 }

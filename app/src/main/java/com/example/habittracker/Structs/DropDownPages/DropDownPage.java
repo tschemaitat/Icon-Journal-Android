@@ -29,7 +29,9 @@ public class DropDownPage{
 
     public DropDownPage put(ArrayList<PayloadOption> nameList){
         for(PayloadOption payloadOption: nameList){
-            children.add(new DropDownPage(payloadOption));
+            DropDownPage page = new DropDownPage(payloadOption);
+            page.parent = this;
+            children.add(page);
         }
         return this;
     }
@@ -50,12 +52,6 @@ public class DropDownPage{
             itemPathIndex++;
         }
         return parentPage;
-    }
-
-    public DropDownPage putList(ArrayList<PayloadOption> nameList){
-        for(PayloadOption option: nameList)
-            children.add(new DropDownPage(option));
-        return this;
     }
 
     public static DropDownPage makeFromLiteralStrings(String name, ArrayList<String> nameList){
@@ -79,11 +75,14 @@ public class DropDownPage{
 
 
     public void add(DropDownPage page){
+        page.parent = this;
         children.add(page);
     }
 
     public void add(PayloadOption payloadOption){
-        children.add(new DropDownPage(payloadOption));
+        DropDownPage page = new DropDownPage(payloadOption);
+        page.parent = this;
+        children.add(page);
     }
 
     public void init(){
@@ -216,12 +215,13 @@ public class DropDownPage{
     public ArrayList<DropDownPage> getPagePath() {
         ArrayList<DropDownPage> result = new ArrayList<>();
         getPagePathIteration(result);
+        result.remove(0);
         return result;
     }
 
     private void getPagePathIteration(ArrayList<DropDownPage> pages){
         if(parent != null)
-            getPagePathIteration(pages);
+            parent.getPagePathIteration(pages);
         pages.add(this);
     }
 

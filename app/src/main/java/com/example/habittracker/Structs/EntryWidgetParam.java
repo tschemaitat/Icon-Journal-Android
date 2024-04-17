@@ -6,10 +6,16 @@ public abstract class EntryWidgetParam {
 
     public String name;
     public String className;
+    public Boolean isUniqueAttribute = false;
+    public Integer widgetIdTracker = null;
 
     public EntryWidgetParam(String name, String className){
         this.name = name;
         this.className = className;
+    }
+
+    public void setIsUniqueAttribute(Boolean isUniqueAttribute){
+        this.isUniqueAttribute = isUniqueAttribute;
     }
 
     public String hierarchyString(){

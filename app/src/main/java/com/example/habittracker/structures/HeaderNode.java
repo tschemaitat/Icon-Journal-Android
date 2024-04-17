@@ -2,15 +2,23 @@ package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HeaderNode{
     private String name;
     private ArrayList<HeaderNode> children;
-    public HeaderNode(String name){
+    private EntryWidgetParam widgetParam;
+    public HeaderNode(String name, EntryWidgetParam widgetParam){
+        if(widgetParam == null)
+            throw new RuntimeException();
+        //MainActivity.log("saving headerNode, name: " + name + ", widgetParam: " + widgetParam.name);
         this.name = name;
+        this.widgetParam = widgetParam;
         children = new ArrayList<>();
     }
 
@@ -26,18 +34,21 @@ public class HeaderNode{
         return children;
     }
 
-    public void traverse(ArrayList<ValueTreePath> paths, ArrayList<Integer> currentPath){
+    public void traverse(ArrayList<ValueTreePath> paths, ArrayList<EntryWidgetParam> paramList, ArrayList<Integer> currentPath){
 
-        String tabs = GLib.tabs(currentPath.size());
+        //String tabs = GLib.tabs(currentPath.size());
         //MainActivity.log(tabs+"currentPath:" + currentPath);
         ArrayList<Integer> pathCopy = (ArrayList<Integer>) currentPath.clone();
-        if(currentPath.size() != 0)
+        if(currentPath.size() != 0){
             paths.add(new ValueTreePath(currentPath));
+            paramList.add(widgetParam);
+        }
+
         for(int i = 0; i < children.size(); i++){
 
             pathCopy.add(i);
             HeaderNode child = children.get(i);
-            child.traverse(paths, pathCopy);
+            child.traverse(paths, paramList, pathCopy);
             pathCopy.remove(pathCopy.size() - 1);
         }
     }

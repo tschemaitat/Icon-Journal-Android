@@ -14,16 +14,69 @@ public class StructureWidgetHeaderView {
     public RelativeLayout relativeLayout;
     public CustomEditText nameEditor;
     public ImageButton deleteButton;
+    public View starButton;
     public View upButton;
     public View downButton;
+    private boolean starOn = false;
     private Context context;
-    public StructureWidgetHeaderView(Context context, Runnable onTextChange, Runnable onDelete, Runnable moveUp, Runnable moveDown){
+    public StructureWidgetHeaderView(Context context, Runnable onTextChange, Runnable onDelete, Runnable moveUp, Runnable moveDown, Runnable pressStar){
         this.context = context;
         relativeLayout = new RelativeLayout(context);
         Margin.setStructureWidgetHeader(this);
         addNameEditor(null, onTextChange);
         addDeleteButton(onDelete);
         addMoveButtons(moveUp, moveDown);
+        addStar(pressStar);
+        align(starButton, RelativeLayout.BELOW, downButton);
+        align(downButton, RelativeLayout.RIGHT_OF, starButton);
+        align(upButton, RelativeLayout.RIGHT_OF, downButton);
+
+        align(nameEditor.getView(), RelativeLayout.RIGHT_OF, starButton);
+        align(nameEditor.getView(), RelativeLayout.BELOW, downButton);
+    }
+
+    private void align(View first, int rule, View second){
+        RelativeLayout.LayoutParams param = ((RelativeLayout.LayoutParams) first.getLayoutParams());
+        param.addRule(rule, second.getId());
+        //first.setLayoutParams(param);
+
+    }
+    public boolean getStarOn(){
+        return starOn;
+    }
+    private boolean setStarOn = false;
+    public void setStarOn(boolean starOn){
+        if(setStarOn)
+            throw new RuntimeException();
+        setStarOn = true;
+        this.starOn = starOn;
+        setStarImage();
+    }
+
+    private void setStarImage(){
+        if(starOn)
+            starButton.setBackground(GLib.starOn);
+        else
+            starButton.setBackground(GLib.starOff);
+    }
+
+    private void addStar(Runnable pressStar){
+        int size = 100;
+        starButton = new View(context);
+        starButton.setBackground(GLib.starOff);
+        starButton.setId(View.generateViewId());
+        RelativeLayout.LayoutParams starParam = new RelativeLayout.LayoutParams(size, size);
+        starParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        starButton.setLayoutParams(starParam);
+        relativeLayout.addView(starButton);
+        starButton.setOnClickListener(view -> {
+            if(starOn)
+                starOn = false;
+            else
+                starOn = true;
+            setStarImage();
+            pressStar.run();
+        });
     }
 
     private void addMoveButtons(Runnable moveUp, Runnable moveDown) {
@@ -37,7 +90,7 @@ public class StructureWidgetHeaderView {
         downButton.setOnClickListener(view -> moveDown.run());
         RelativeLayout.LayoutParams downParam = new RelativeLayout.LayoutParams(size, size);
         //downParam.addRule(RelativeLayout.LEFT_OF, upButton.getId());
-        downParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        //downParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         downParam.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         downParam.setMargins(horMargin, 0, horMargin, 0);
         downButton.setLayoutParams(downParam);
@@ -49,7 +102,7 @@ public class StructureWidgetHeaderView {
         upButton.setOnClickListener(view -> moveUp.run());
         RelativeLayout.LayoutParams upParam = new RelativeLayout.LayoutParams(size, size);
         //upParam.addRule(RelativeLayout.LEFT_OF, deleteButton.getId());
-        upParam.addRule(RelativeLayout.RIGHT_OF, downButton.getId());
+
         upParam.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         upParam.setMargins(horMargin, 0, 2*horMargin, 0);
         upButton.setLayoutParams(upParam);

@@ -52,8 +52,8 @@ public class UnitTests {
     public Structure makeExerciseStructure(){
         String spreadSheetName = "exercises";
         CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
+        nameEditText.isUniqueAttribute = true;
         CustomEditText.EditTextParam bodyPartEditText = new CustomEditText.EditTextParam("body part");
-
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
                 bodyPartEditText
@@ -64,27 +64,31 @@ public class UnitTests {
     public void makeExerciseRoutineStructure(Structure exerciseStructure){
         String spreadSheetName = "exercise routine";
         CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
+        nameEditText.isUniqueAttribute = true;
         WidgetId exerciseName = getWidgetFromStructure("name", exerciseStructure);
         WidgetId bodyPart = getWidgetFromStructure("body part", exerciseStructure);
         EntryDropDown.DropDownParam exerciseDropDown = new EntryDropDown.DropDownParam("exercise", null,
                 exerciseStructure, exerciseName, new ArrayList<>(Collections.singleton(bodyPart)));
-        CustomEditText.EditTextParam repEditText = new CustomEditText.EditTextParam("name");
+        exerciseDropDown.isUniqueAttribute = true;
+        CustomEditText.EditTextParam repEditText = new CustomEditText.EditTextParam("reps");
         GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
                 exerciseDropDown,
                 repEditText
         });
         Dictionary.addStructure(spreadSheetName, groupWidgetParam, Dictionary.category);
+
     }
 
     public WidgetId getWidgetFromStructure(String widgetName, Structure structure){
         ArrayList<WidgetId> widgets = structure.getHeader().getWidgetIdList();
-        for(WidgetId widget: structure.getHeader().getWidgetIdList()){
+        for(WidgetId widget: widgets){
             if(widgetName.equals(widget.getNameWithPath().getName())){
                 return widget;
             }
         }
-        throw new RuntimeException();
+        MainActivity.log("name: " + widgetName + "widgets: \n" + widgets);
+        throw new RuntimeException("tried to find widget by name");
     }
 
 

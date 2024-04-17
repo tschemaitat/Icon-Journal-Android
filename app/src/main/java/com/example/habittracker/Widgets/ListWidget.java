@@ -9,12 +9,15 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
+import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ListWidget extends EntryWidget {
 
@@ -43,32 +46,41 @@ public class ListWidget extends EntryWidget {
         return groupWidgets;
     }
 
-    public EntryWidgetParam getParam(){
-        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
-        ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
-        for(GroupWidget groupWidget: groupWidgets){
-            groupWidgetParam.add((GroupWidgetParam) groupWidget.getParam());
-        }
-        ListParam params = new ListParam(name, cloneParams, groupWidgetParam);
+//    public EntryWidgetParam getParam(){
+//        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
+//        ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
+//        for(GroupWidget groupWidget: groupWidgets){
+//            groupWidgetParam.add((GroupWidgetParam) groupWidget.getParam());
+//        }
+//        ListParam params = new ListParam(name, cloneParams, groupWidgetParam);
+//
+//        return params;
+//    }
 
-        return params;
+    @Override
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
+        System.out.println("list setting value: " + entryValueTree.hierarchy());
+        ArrayList<Widget> widgets = layout.widgets();
+        int count = 0;
+        for(EntryValueTree tree: entryValueTree.getList()){
+            GroupWidget groupWidget = addGroup(cloneParams);
+            groupWidget.setValue(tree, valueTreePathMap);
+        }
+
     }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
-        System.out.println("list setting value: " + entryValueTree.hierarchy());
-        ArrayList<Widget> widgets = layout.widgets();
-        for(EntryValueTree tree: entryValueTree.getList()){
-            GroupWidget groupWidget = addGroup(cloneParams);
-            groupWidget.setValue(tree);
-        }
-
+    public void setStructureCustom(Structure structure){
+        for(GroupWidget groupWidget: getGroupWidgets())
+            groupWidget.setStructure(structure);
     }
 
     public GroupWidget addGroup(GroupWidgetParam param){
         GroupWidget groupWidget = new GroupWidget(context);
         groupWidget.setOnDataChangedListener(onDataChangedListener());
         groupWidget.setParam(param);
+
+        groupWidget.setStructure(getStructure());
 
         LinLayout linLayout = groupWidget.getLinLayout();
         linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
@@ -89,17 +101,16 @@ public class ListWidget extends EntryWidget {
     }
 
 
-    public void setParamCustom(EntryWidgetParam params){
-        System.out.println("setting data for list");
-        ListParam listParams = (ListParam) params;
+    public void setParamCustom(EntryWidgetParam param){
+        //System.out.println("setting data for list");
+        ListParam listParams = (ListParam) param;
         name = listParams.name;
         cloneParams = listParams.cloneableWidget;
         layout.inflateAll(new ArrayList<>(listParams.currentWidgets), onDataChangedListener());
         makeButton();
 
 
-        System.out.println("data finished set for list");
-        System.out.println(this.getParam());
+        //System.out.println("data finished set for list");
     }
 
     public void makeButton(){
@@ -150,7 +161,7 @@ public class ListWidget extends EntryWidget {
         @Override
         public HeaderNode createHeaderNode() {
             HeaderNode tree = cloneableWidget.createHeaderNode();
-            HeaderNode result = new HeaderNode(name);
+            HeaderNode result = new HeaderNode(name, this);
             for(HeaderNode child: tree.getChildren())
                 result.add(child);
 

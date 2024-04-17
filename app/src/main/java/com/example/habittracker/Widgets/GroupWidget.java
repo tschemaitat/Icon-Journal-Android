@@ -10,6 +10,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.structures.HeaderNode;
+import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,9 +30,13 @@ public class GroupWidget extends EntryWidget {
 
     @Override
     public EntryValueTree getEntryValueTreeCustom() {
+        ArrayList<EntryValueTree> unsorted = new ArrayList<>();
         EntryValueTree tree = new EntryValueTree();
         for(EntryWidget widget: entryWidgets()){
-            tree.add(widget.getEntryValueTree());
+            unsorted.add(widget.getEntryValueTree());
+        }
+        for(int i = 0; i < entryWidgets().size(); i++){
+
         }
         return tree;
     }
@@ -44,41 +49,49 @@ public class GroupWidget extends EntryWidget {
         return entryWidgets;
     }
 
-
-
-    public ArrayList<EntryWidgetParam> getDataWidgets(){
-        ArrayList<EntryWidget> entryWidgets = entryWidgets();
-        //System.out.println("getting group widget data numWidget: " + entryWidgets.size());
-        ArrayList<EntryWidgetParam> params = new ArrayList<>();
-        for(EntryWidget entryWidget: entryWidgets){
-            EntryWidgetParam entryWidgetParam = entryWidget.getParam();
-            params.add(entryWidgetParam);
-        }
-
-        return params;
-    }
-
     @Override
-    public EntryWidgetParam getParam() {
-        return new GroupWidgetParam(null, getDataWidgets());
+    public void setStructureCustom(Structure structure){
+        for(Widget widget: layout.widgets())
+            ((EntryWidget) widget).setStructure(structure);
     }
+
+
+
+//    public ArrayList<EntryWidgetParam> getDataWidgets(){
+//        ArrayList<EntryWidget> entryWidgets = entryWidgets();
+//        //System.out.println("getting group widget data numWidget: " + entryWidgets.size());
+//        ArrayList<EntryWidgetParam> params = new ArrayList<>();
+//        for(EntryWidget entryWidget: entryWidgets){
+//            EntryWidgetParam entryWidgetParam = entryWidget.getParam();
+//            params.add(entryWidgetParam);
+//        }
+//
+//        return params;
+//    }
+//
+//    @Override
+//    public EntryWidgetParam getParam() {
+//        return new GroupWidgetParam(null, getDataWidgets());
+//    }
 
     @Override
     public void setValueCustom(EntryValueTree entryValueTree) {
         MainActivity.log("group setting values: \n" + entryValueTree.hierarchy());
+
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
-        //System.out.println("group widget setting value: " + dataTree.hierarchy());
+
         for(int i = 0; i < entryWidgets.size(); i++){
 
             EntryWidget entryWidget = entryWidgets.get(i);
-            //System.out.println("setting value for entry widget: " + entryWidget);
-            entryWidget.setValue(entryValueTree.getTree(i));
+            int index = entryWidget.getValueId();
+            MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetIdTracker() + ", index of value: " + index);
+            entryWidget.setValue(entryValueTree.getTree(index));
         }
     }
 
     @Override
-    public void setParamCustom(EntryWidgetParam params) {
-        GroupWidgetParam groupParams = (GroupWidgetParam) params;
+    public void setParamCustom(EntryWidgetParam param) {
+        GroupWidgetParam groupParams = (GroupWidgetParam) param;
         layout.inflateAll(groupParams.params, onDataChangedListener());
     }
 
@@ -120,7 +133,7 @@ public class GroupWidget extends EntryWidget {
 
         @Override
         public HeaderNode createHeaderNode() {
-            HeaderNode header = new HeaderNode(null);
+            HeaderNode header = new HeaderNode(name, this);
             for(EntryWidgetParam param: params){
                 header.add(param.createHeaderNode());
             }

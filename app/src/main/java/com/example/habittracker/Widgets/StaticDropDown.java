@@ -5,9 +5,12 @@ import android.content.Context;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
+
+import java.util.HashMap;
 
 public class StaticDropDown extends EntryWidget{
     boolean dataSet = false;
@@ -56,18 +59,13 @@ public class StaticDropDown extends EntryWidget{
     }
 
     @Override
-    public EntryWidgetParam getParam() {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
         throw new RuntimeException();
     }
 
 
 
-    public void setParamCustom(EntryWidgetParam params){
+    public void setParamCustom(EntryWidgetParam param){
         throw new RuntimeException();
     }
 

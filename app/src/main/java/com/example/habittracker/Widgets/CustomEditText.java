@@ -17,7 +17,10 @@ import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.HeaderNode;
+
+import java.util.HashMap;
 
 public class CustomEditText extends EntryWidget {
     public static final String className = "edit text";
@@ -116,18 +119,8 @@ public class CustomEditText extends EntryWidget {
         });
     }
 
-
-
-
-
     @Override
-    public EntryWidgetParam getParam(){
-        EditTextParam params = new EditTextParam(getName());
-        return params;
-    }
-
-    @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
         if(entryValueTree == null)
             throw new RuntimeException();
 
@@ -149,8 +142,8 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
-    public void setParamCustom(EntryWidgetParam params){
-        EditTextParam casted = ((EditTextParam) params);
+    public void setParamCustom(EntryWidgetParam param){
+        EditTextParam casted = ((EditTextParam) param);
     }
 
     public void disableEdit() {
@@ -194,7 +187,7 @@ public class CustomEditText extends EntryWidget {
 
         @Override
         public HeaderNode createHeaderNode() {
-            return new HeaderNode(name);
+            return new HeaderNode(name, this);
         }
     }
 }

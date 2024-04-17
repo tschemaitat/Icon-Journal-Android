@@ -35,4 +35,8 @@ public class WidgetId {
     public ItemPath getNameWithPath(){
         return structure.getHeader().getWidgetNamePath(this);
     }
+
+    public EntryWidgetParam getWidgetParam() {
+        return structure.getWidgetParamFromId(this);
+    }
 }

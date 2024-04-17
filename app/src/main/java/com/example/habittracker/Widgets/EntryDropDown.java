@@ -7,6 +7,7 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
@@ -14,9 +15,9 @@ import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EntryDropDown extends EntryWidget{
-    private boolean dataSet = false;
     private Structure structure = null;
     private WidgetId valueId = null;
     private ArrayList<WidgetId> groupIdList = new ArrayList<>();
@@ -51,18 +52,8 @@ public class EntryDropDown extends EntryWidget{
         onDataChangedListener().run();
     }
 
-
     @Override
-    public DropDownParam getParam(){
-        if(!dataSet){
-            throw new RuntimeException();
-        }
-        DropDownParam params = new DropDownParam(getName(), selectedValuePath, structure, valueId, groupIdList);
-        return params;
-    }
-
-    @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
 
         if(entryValueTree.getItemPath() == null){
             MainActivity.log(entryValueTree.getParent().hierarchy());
@@ -90,9 +81,8 @@ public class EntryDropDown extends EntryWidget{
     }
 
     @Override
-    public void setParamCustom(EntryWidgetParam params){
-        dataSet = true;
-        DropDownParam dropDownParams = ((DropDownParam) params);
+    public void setParamCustom(EntryWidgetParam param){
+        DropDownParam dropDownParams = ((DropDownParam) param);
         dropDownPage = DropDownPageFactory.getGroupedPages(dropDownParams.structure, dropDownParams.valueKey, dropDownParams.groups);
         structure = dropDownParams.structure;
         valueId = dropDownParams.valueKey;
@@ -107,7 +97,8 @@ public class EntryDropDown extends EntryWidget{
         public ArrayList<WidgetId> groups;
         public String name = "null";
 
-        public DropDownParam(String name, RefItemPath selected, Structure structure, WidgetId valueKey, ArrayList<WidgetId> groups){
+        public DropDownParam(String name, RefItemPath selected, Structure structure,
+                             WidgetId valueKey, ArrayList<WidgetId> groups){
             super(name, DropDown.className);
             if(structure == null)
                 throw new RuntimeException();
@@ -131,7 +122,7 @@ public class EntryDropDown extends EntryWidget{
 
         @Override
         public HeaderNode createHeaderNode() {
-            return new HeaderNode(name);
+            return new HeaderNode(name, this);
         }
 
         public String toString(){

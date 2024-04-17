@@ -6,14 +6,11 @@ package com.example.habittracker.StaticClasses;
 
 
 
-import android.content.Context;
-
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +36,7 @@ public class Dictionary {
 
 
 
-    public static Structure addStructure(String name, EntryWidgetParam param, String type){
+    public static Structure addStructure(String name, GroupWidgetParam param, String type){
         if(param == null)
             throw new RuntimeException("try to save null structure");
         if(name == null)
@@ -48,8 +45,9 @@ public class Dictionary {
             throw new RuntimeException("saved structure with null type");
 
         Structure newStructure = new Structure(name, param, type);
-        newStructure.setNewKey();
-        MainActivity.log("saving structure with name: " + newStructure.getCachedName());
+        newStructure.createId();
+
+        MainActivity.log("saving structure with name: " + newStructure.getCachedName() + "and id: " + newStructure.getId());
 
         if(newStructure.getHeader() == null)
             throw new RuntimeException("saved structure couldn't make a header");
@@ -58,9 +56,11 @@ public class Dictionary {
         return newStructure;
     }
 
-    public static void editStructure(Structure structure, EntryWidgetParam param){
+    public static void editStructure(Structure structure, GroupWidgetParam param){
         MainActivity.log("editing structure: " + structure.getCachedName());
-        Structure newStructure = new Structure(structure.getCachedName().getString(), param, structure.getType());
+        Structure newStructure = new Structure(structure.getCachedName().getString(), param,
+                structure.getType(), structure.getEntries(), structure.getHeader().getValuePathMap());
+        newStructure.createId();
         MainActivity.log("new structure: " + newStructure.getCachedName());
         structures.remove(structure.getId());
         structures.put(newStructure.getId(), newStructure);

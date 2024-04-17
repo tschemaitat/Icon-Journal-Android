@@ -319,6 +319,14 @@ public class EntryValueTree {
         this.listItemId = id;
     }
 
+    public CachedString generateCachedStringForDisplay() {
+        if(string != null)
+            return string;
+        if(itemPath != null)
+            return itemPath.getLast();
+        throw new RuntimeException();
+    }
+
     public static class ListItemId{
         private Integer id;
         public ListItemId(Integer id){

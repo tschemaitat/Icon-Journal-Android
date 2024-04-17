@@ -26,7 +26,7 @@ public class RefEntryString implements CachedString{
 
     public String getString(){
         Entry entry = structure.getEntry(entryId);
-        ValueTreePath path = structure.getHeader().getPath(widgetId);
+        ValueTreePath path = structure.getHeader().getWidgetPath(widgetId);
 
         EntryValueTree value = entry.getEntryValueTree().getValue(path, listIdList);
         return value.getCachedString().getString();

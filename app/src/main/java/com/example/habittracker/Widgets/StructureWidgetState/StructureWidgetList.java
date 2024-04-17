@@ -1,12 +1,9 @@
 package com.example.habittracker.Widgets.StructureWidgetState;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -50,10 +47,10 @@ public class StructureWidgetList implements Widget{
 
     }
 
-    @Override
+
     public EntryWidgetParam getParam() {
         ArrayList<StructureWidget> structureWidgets = EnumLoop.makeList(groupWidget.getWidgetLayout().widgets(), (widget) ->(StructureWidget) widget);
-        ArrayList<EntryWidgetParam> entryWidgetParams = EnumLoop.makeList(structureWidgets, (structureWidget)->structureWidget.getParam());
+        ArrayList<EntryWidgetParam> entryWidgetParams = EnumLoop.makeList(structureWidgets, (structureWidget)->structureWidget.getWidgetInfo());
         for(EntryWidgetParam entryWidgetParam: entryWidgetParams)
             if(entryWidgetParam == null)
                 return null;

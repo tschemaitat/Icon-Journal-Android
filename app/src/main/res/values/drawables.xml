@@ -2,4 +2,6 @@
 <resources>
     <drawable name="arrow_left">@drawable/ic_arrow_left</drawable>
     <drawable name="arrow_right">@drawable/ic_arrow_right</drawable>
+    <drawable name="star_on">@android:drawable/btn_star_big_on</drawable>
+    <drawable name="star_off">@android:drawable/btn_star_big_off</drawable>
 </resources>

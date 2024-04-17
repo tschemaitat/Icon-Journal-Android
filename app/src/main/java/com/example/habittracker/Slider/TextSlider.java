@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Widgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TextSlider extends EntryWidget {
     public static final String className = "text slider";
@@ -52,19 +54,16 @@ public class TextSlider extends EntryWidget {
         return null;
     }
 
+
+
     @Override
-    public EntryWidgetParam getParam() {
-        return null;
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
+        throw new RuntimeException();
     }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
-
-    }
-
-    @Override
-    public void setParamCustom(EntryWidgetParam params){
-        TextSliderParam casted = (TextSliderParam) params;
+    public void setParamCustom(EntryWidgetParam param){
+        TextSliderParam casted = (TextSliderParam) param;
         String data = casted.selected;
         int index =  sliderWithLabels.valueArray.indexOf(data);
 

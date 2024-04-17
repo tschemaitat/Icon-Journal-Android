@@ -17,12 +17,8 @@ public class Entry {
         this.structure = structure;
     }
 
-    public ArrayList<CachedString> getCachedUniqueAttributes(){
-        return structure.getEntryName(this);
-    }
-
     public CachedString getCachedName(){
-        return new ArrayString(getCachedUniqueAttributes());
+        return structure.getHeader().getEntryName(this);
     }
 
     public int getId() {

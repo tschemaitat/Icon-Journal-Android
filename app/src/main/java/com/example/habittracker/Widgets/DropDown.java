@@ -214,9 +214,14 @@ public class DropDown{
 
     public void setByPayload(Object payload) {
         DropDownPage page = searchTree(parentPage, payload);
-        CachedString cachedString = page.getCachedName();
+
         if(page == null)
-            throw new RuntimeException("payload: " + payload + "pages: \n" + parentPage.hierarchyString());
+            throw new RuntimeException("payload: " + payload + ", pages: \n" + parentPage.hierarchyString());
+        CachedString cachedString = page.getCachedName();
+        if(page.parent == null){
+            MainActivity.log("page parent is null: \n" + page.hierarchyString());
+            throw new RuntimeException();
+        }
         currentPage = page.parent;
         handleStateOnDataChanged(cachedString.getString());
 
@@ -224,7 +229,7 @@ public class DropDown{
 
     public DropDownPage searchTree(DropDownPage page, Object payload){
         if( ! page.hasChildren()){
-            if(page.getPayloadOption().equals(payload)){
+            if(page.getPayloadOption().getPayload().equals(payload)){
                 return page;
             }else{
                 return null;

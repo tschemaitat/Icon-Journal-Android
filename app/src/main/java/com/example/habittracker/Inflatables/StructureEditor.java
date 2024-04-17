@@ -18,7 +18,7 @@ import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.CustomEditText;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidget;
-import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
 
@@ -45,11 +45,11 @@ public class StructureEditor implements Inflatable{
 
         if(structure.getType() == null)
             throw new RuntimeException("structure type null");
-        MainActivity.log("editing structure: " + structure.getCachedName());
+        MainActivity.log("editing structure: " + structure.getCachedName() + ", with id: " + structure.getId());
         this.structure = structure;
         this.structureType = structure.getType();
 
-        init(structure.getCachedName().getString(), (GroupWidget.GroupWidgetParam)structure.getParam());
+        init(structure.getCachedName().getString(), (GroupWidget.GroupWidgetParam)structure.getWidgetParam());
     }
 
     public StructureEditor(Context context, String structureType){
@@ -118,7 +118,7 @@ public class StructureEditor implements Inflatable{
     public void onSave(){
         MainActivity.log("on save: " + structureKeyEditor.getText());
 
-        ArrayList<EntryWidgetParam> entryWidgetParams = checkForErrorBeforeSave();
+        GroupWidgetParam entryWidgetParams = checkForErrorBeforeSave();
         if(entryWidgetParams == null)
             return;
         if(Structure.isSpreadsheet(structureType)){
@@ -132,13 +132,12 @@ public class StructureEditor implements Inflatable{
         MainActivity.changePage(new EditorSelectionPage(context));
     }
 
-    public void saveAfterCheck(ArrayList<EntryWidgetParam> entryWidgetParams){
-        EntryWidgetParam groupParam = new GroupWidget.GroupWidgetParam(structureKeyEditor.getText(), entryWidgetParams);
+    public void saveAfterCheck(GroupWidgetParam entryWidgetParams){
         //System.out.println("exporting widgetParams: \n" + groupParam.hierarchyString());
         if(structure == null){
-            Dictionary.addStructure(structureKeyEditor.getText(), groupParam, structureType);
+            Dictionary.addStructure(structureKeyEditor.getText(), entryWidgetParams, structureType);
         }else{
-            Dictionary.editStructure(structure, groupParam);
+            Dictionary.editStructure(structure, entryWidgetParams);
         }
 
 
@@ -146,14 +145,10 @@ public class StructureEditor implements Inflatable{
     }
 
     public boolean checkForUniqueAttribute(){
-        StructureWidget structureWidget = ((StructureWidget) widgetLayout.widgets().get(0));
-        if(structureWidget.getType().equals(CustomEditText.className)){
-            return true;
-        }
-        return false;
+        return true;
     }
 
-    public ArrayList<EntryWidgetParam> checkForErrorBeforeSave(){
+    public GroupWidgetParam checkForErrorBeforeSave(){
         boolean error = false;
 
         if(structureKeyEditor.getText() == null){
@@ -161,24 +156,24 @@ public class StructureEditor implements Inflatable{
             error = true;
         }
 
-        ArrayList<EntryWidgetParam> entryWidgetParams = new ArrayList<>();
+        ArrayList<EntryWidgetParam> widgetInfoList = new ArrayList<>();
         for(int i = 0; i < widgetLayout.widgets().size(); i++){
 
-            Widget widget = widgetLayout.widgets().get(i);
-            EntryWidgetParam entryWidgetParam = widget.getParam();
-            if(entryWidgetParam == null){
+            StructureWidget structureWidget = (StructureWidget) widgetLayout.widgets().get(i);
+            EntryWidgetParam widgetInfo = structureWidget.getWidgetInfo();
+            if(widgetInfo == null){
                 System.out.println("error at index: " + i);
                 error = true;
                 break;
             }
-            entryWidgetParams.add(entryWidgetParam);
+            widgetInfoList.add(widgetInfo);
         }
         if(error){
             System.out.println("<structure editor> error while gathering params");
             return null;
         }
 
-        return entryWidgetParams;
+        return new GroupWidgetParam(null, widgetInfoList);
     }
 
 

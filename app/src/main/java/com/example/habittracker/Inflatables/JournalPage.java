@@ -34,7 +34,7 @@ public class JournalPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        EntryWidgetParam params = structure.getParam();
+        EntryWidgetParam params = structure.getWidgetParam();
         System.out.println("journal params: \n" + params.hierarchyString(0));
         System.out.println(params);
         //groupWidget = (GroupWidget)GLib.inflateWidget(context, params, onDataChange);

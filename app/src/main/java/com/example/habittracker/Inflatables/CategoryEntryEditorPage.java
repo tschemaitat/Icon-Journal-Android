@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryValueTree;
+import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Widgets.CustomEditText;
@@ -14,6 +15,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class CategoryEntryEditorPage implements Inflatable{
     private Context context;
@@ -97,11 +99,13 @@ public class CategoryEntryEditorPage implements Inflatable{
         groupWidget = new GroupWidget(context);
         groupWidget.setOnDataChangedListener(()->onDataChanged());
         linearLayout.addView(groupWidget.getView());
-        MainActivity.log("settting param: \n" + structure.getParam());
-        groupWidget.setParam(structure.getParam());
-
+        MainActivity.log("settting param: \n" + structure.getWidgetParam());
+        groupWidget.setParam(structure.getWidgetParam());
+        groupWidget.setStructure(structure);
+        HashMap<Integer, ValueTreePath> map = structure.getHeader().getValuePathMap();
+        MainActivity.log("value map: " + map.toString());
         if(entry != null){
-            groupWidget.setValue(entry.getEntryValueTree());
+            groupWidget.setValue(entry.getEntryValueTree(), map);
             MainActivity.log("set from entry: " + entry.getEntryValueTree().hierarchy());
         }
 

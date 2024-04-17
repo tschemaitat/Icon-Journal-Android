@@ -52,11 +52,11 @@ public class StructureWidgetDropDown implements Widget {
 
     private DropDownPage createStructurePage(){
         ArrayList<Structure> structures = Dictionary.getStructures();
-        MainActivity.log("structures: " + EnumLoop.makeList(structures, structure -> structure.getCachedName().getString()));
+        //MainActivity.log("structures: " + EnumLoop.makeList(structures, structure -> structure.getCachedName().getString()));
         ArrayList<PayloadOption> payloadOptions = EnumLoop.makeList(structures, (input)-> new PayloadOption(
                 input.getCachedName(), input));
         DropDownPage page = new DropDownPage().put(payloadOptions);
-        MainActivity.log("structure pages: \n" + page.hierarchyString());
+        //MainActivity.log("structure pages: \n" + page.hierarchyString());
         return page;
     }
 
@@ -106,17 +106,17 @@ public class StructureWidgetDropDown implements Widget {
         ArrayList<WidgetId> widgetIdList = structure.getHeader().getWidgetIdList();
         ArrayList<ItemPath> itemPathList = EnumLoop.makeList(widgetIdList, widgetId -> widgetId.getNameWithPath());
         ArrayList<Object> payloadList = EnumLoop.makeList(widgetIdList, widgetId -> widgetId);
-        MainActivity.log("widgetIdList: "+widgetIdList);
-        MainActivity.log("itemPathList: "+itemPathList);
-        MainActivity.log("payloadList: "+itemPathList);
+        //MainActivity.log("widgetIdList: "+widgetIdList);
+        //MainActivity.log("itemPathList: "+itemPathList);
+        //MainActivity.log("payloadList: "+itemPathList);
         DropDownPage valuePage = DropDownPage.fromItemPathWithPayload(itemPathList, payloadList);;
-        MainActivity.log("valuePage: \n" + valuePage.hierarchyString());
+        //MainActivity.log("valuePage: \n" + valuePage.hierarchyString());
 
         return valuePage;
     }
 
     private void createValueKeyDropDown(){
-        MainActivity.log("creating value key drop down");
+        //MainActivity.log("creating value key drop down");
         valueKeyDropDown = new StaticDropDown(context, createValuePage(), (itemPath, payload) -> {
             onValueKeyChange((WidgetId) payload);
         });
@@ -124,7 +124,7 @@ public class StructureWidgetDropDown implements Widget {
         customLinearLayout.add(valueKeyDropDown.getView());
     }
     private void resetValueKeyWidget(){
-        System.out.println("resetting value key widget");
+        //System.out.println("resetting value key widget");
         if(valueKeyDropDown == null)
             return;
         customLinearLayout.remove(valueKeyDropDown.getView());
@@ -132,7 +132,7 @@ public class StructureWidgetDropDown implements Widget {
         resetGroupKeyWidget();
     }
     private void onValueKeyChange(WidgetId payload){
-        MainActivity.log("value key change");
+        //MainActivity.log("value key change");
         if(valueWidget != payload){
             resetGroupKeyWidget();
         }
@@ -191,11 +191,11 @@ public class StructureWidgetDropDown implements Widget {
     private ArrayList<WidgetId> getGroupWidgetCandidates(){
 
         ArrayList<WidgetId> widgetIdList = structure.getHeader().getWidgetIdList();
-        MainActivity.log("getting group candidates from: " + widgetIdList);
+        //MainActivity.log("getting group candidates from: " + widgetIdList);
         widgetIdList.remove(valueWidget);
         for(WidgetId widgetId: groupValues)
             widgetIdList.remove(widgetId);
-        MainActivity.log("result: " + widgetIdList);
+        //MainActivity.log("result: " + widgetIdList);
         return widgetIdList;
     }
 
@@ -208,7 +208,7 @@ public class StructureWidgetDropDown implements Widget {
         dropDown.setHint("select group");
         groupDropDowns.add(dropDown);
         groupLayout.getWidgetLayout().add(dropDown);
-        MainActivity.log("checking to remove button: " + groupDropDowns.size() + " >= " + maxNumGroups());
+        //MainActivity.log("checking to remove button: " + groupDropDowns.size() + " >= " + maxNumGroups());
         if(groupDropDowns.size() >= maxNumGroups())
             groupLayout.getLinLayout().removeButton();
     }
@@ -246,7 +246,7 @@ public class StructureWidgetDropDown implements Widget {
     private void resetGroupKeyWidget(){
         if(groupLayout == null)
             return;
-        System.out.println("resetting gorup key widget");
+        //System.out.println("resetting gorup key widget");
         customLinearLayout.remove(groupLayout.getView());
         groupLayout = null;
         groupValues = null;
@@ -272,7 +272,7 @@ public class StructureWidgetDropDown implements Widget {
 
     private int maxNumGroups(){
         ArrayList<WidgetId> totalPossibleWidgets = structure.getHeader().getWidgetIdList();
-        MainActivity.log("candidate widgets: " + totalPossibleWidgets + ", groupValues: " + groupValues);
+        //MainActivity.log("candidate widgets: " + totalPossibleWidgets + ", groupValues: " + groupValues);
         return totalPossibleWidgets.size() - 1;
     }
     private String structureKeyPair(){
@@ -284,7 +284,7 @@ public class StructureWidgetDropDown implements Widget {
 
     }
 
-    @Override
+
     public EntryWidgetParam getParam() {
         if(structure == null){
             structureKeyDropDown.setError();
@@ -308,7 +308,7 @@ public class StructureWidgetDropDown implements Widget {
                 }
             }
             if(groupValues.get(groupValues.size() - 1) == null) {
-                System.out.println("last group value is null");
+                //System.out.println("last group value is null");
                 groupLayout.getViewWrapper().setNameRed();
                 return null;
             }
@@ -332,8 +332,9 @@ public class StructureWidgetDropDown implements Widget {
         for(int i = 0; i < dropDownParam.groups.size(); i++){
             WidgetId widgetId = dropDownParam.groups.get(i);
             addGroupBy();
-            getGroupDropDownList().get(i).setSelectedByPayload(widgetId);
-            onGroupValueChange(new GroupValuePayload(i, widgetId));
+            GroupValuePayload groupValuePayload = new GroupValuePayload(i, widgetId);
+            getGroupDropDownList().get(i).setSelectedByPayload(groupValuePayload);
+            onGroupValueChange(groupValuePayload);
         }
     }
 
@@ -348,6 +349,18 @@ public class StructureWidgetDropDown implements Widget {
         public GroupValuePayload(int groupWidgetIndex, WidgetId widgetId){
             this.groupWidgetIndex = groupWidgetIndex;
             this.widgetId = widgetId;
+        }
+
+        public String toString(){
+            return "<group payload> " + widgetId + ", groupWidgetIndex: " + groupWidgetIndex;
+        }
+
+        @Override
+        public boolean equals(Object object){
+            if(object instanceof GroupValuePayload payload){
+                return payload.groupWidgetIndex == groupWidgetIndex && payload.widgetId.equals(widgetId);
+            }
+            return false;
         }
     }
 

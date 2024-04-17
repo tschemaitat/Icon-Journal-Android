@@ -1,6 +1,5 @@
 package com.example.habittracker.StaticClasses;
 
-import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
@@ -23,10 +22,10 @@ public class DropDownPageFactory {
         //MainActivity.log("getting grouped pages");
         Header header = structure.getHeader();
         ArrayList<Entry> entries = structure.getEntries();
-        ArrayList<ValueTreePath> groupPathList = header.getPathList(groupIdList);
+        ArrayList<ValueTreePath> groupPathList = header.getWidgetPathList(groupIdList);
         //MainActivity.log("group paths: " + groupPathList);
 
-        ValueTreePath valuePath = header.getPath(valueId);
+        ValueTreePath valuePath = header.getWidgetPath(valueId);
         DropDownPage parentPage = new DropDownPage(null);
         //MainActivity.log("value path: " + valuePath);
 

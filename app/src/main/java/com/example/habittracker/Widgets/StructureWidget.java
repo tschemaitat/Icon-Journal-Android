@@ -27,6 +27,8 @@ public class StructureWidget implements Widget {
     private StructureWidgetDropDown structureWidgetDropDown = null;
     private StructureWidgetEditText structureWidgetEditText = null;
 
+    private Integer widgetIdTracker;
+
     private Runnable onDelete;
 
     Runnable onDataChangeListener;
@@ -54,6 +56,8 @@ public class StructureWidget implements Widget {
         }, ()->{
             MainActivity.log("moving down structureWidget");
             parent.moveDown(this);
+        }, ()->{
+            //star button
         });
         layout.add(headerView.getView());
 
@@ -139,8 +143,8 @@ public class StructureWidget implements Widget {
         structureWidgetDropDown = null;
     }
 
-    @Override
-    public EntryWidgetParam getParam(){
+
+    public EntryWidgetParam getWidgetInfo(){
         EntryWidgetParam result = null;
 
         String type = typeDropDown.getSelectedString();
@@ -153,31 +157,34 @@ public class StructureWidget implements Widget {
 
             if(type.equals("list")){
                 ListWidget.ListParam param = (ListWidget.ListParam)structureWidgetList.getParam();
-                if(param != null)
-                    param.name = headerView.nameEditor.getText();
                 result = param;
                 break typeSwitch;
             }
             if(type.equals("drop down")){
                 EntryDropDown.DropDownParam param = (EntryDropDown.DropDownParam) structureWidgetDropDown.getParam();
-                if(param != null)
-                    param.name = headerView.nameEditor.getText();
                 result = param;
                 break typeSwitch;
             }
 
             if(type.equals("edit text")){
                 CustomEditText.EditTextParam param = (CustomEditText.EditTextParam) structureWidgetEditText.getParam();
-                if(param != null)
-                    param.name = headerView.nameEditor.getText();
                 result = param;
                 break typeSwitch;
             }
         }
         if(headerView.nameEditor.getText() == null){
             headerView.nameEditor.setError();
+
             return null;
         }
+
+
+        if(result != null){
+            result.name = headerView.nameEditor.getText();
+            result.setIsUniqueAttribute(headerView.getStarOn());
+            result.widgetIdTracker = widgetIdTracker;
+        }
+
         return result;
     }
 
@@ -190,6 +197,9 @@ public class StructureWidget implements Widget {
         headerView.nameEditor.setText(param.name);
         typeDropDown.setSelected(new RefItemPath(new LiteralString(type)));
         currentType = type;
+        widgetIdTracker = param.widgetIdTracker;
+        MainActivity.log(param.name + ": " + param.isUniqueAttribute);
+        headerView.setStarOn(param.isUniqueAttribute);
         setType();
         typeSwitch:{
             if(type == null)

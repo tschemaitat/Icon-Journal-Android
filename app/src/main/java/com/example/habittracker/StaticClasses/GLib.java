@@ -192,12 +192,16 @@ public class GLib {
 
     public static Drawable upArrow;
     public static Drawable downArrow;
+    public static Drawable starOn;
+    public static Drawable starOff;
 
     public static void generateDrawables(Context context){
         Drawable rightArrow = context.getResources().getDrawable(R.drawable.arrow_right);
         Drawable leftArrow = context.getResources().getDrawable(R.drawable.arrow_left);
         upArrow = rotateDrawable(leftArrow);
         downArrow = rotateDrawable(rightArrow);
+        starOn = context.getResources().getDrawable(R.drawable.star_on);
+        starOff = context.getResources().getDrawable(R.drawable.star_off);
     }
 
     public static Drawable rotateDrawable(Drawable drawable) {
