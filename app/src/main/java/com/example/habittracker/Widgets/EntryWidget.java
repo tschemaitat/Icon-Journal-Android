@@ -3,10 +3,12 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Layouts.ViewWrapper;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.structures.Structure;
 
 public abstract class EntryWidget implements Widget{
@@ -36,20 +38,22 @@ public abstract class EntryWidget implements Widget{
     public final Runnable onDataChangedListener(){
         return onDataChanged;
     }
-    protected abstract EntryValueTree getEntryValueTreeCustom();
+    protected abstract WidgetValue getEntryValueTreeCustom();
 
-    EntryValueTree.ListItemId listId = null;
-    public final EntryValueTree getEntryValueTree(){
-        EntryValueTree tree = getEntryValueTreeCustom();
-        tree.setId(listId);
+    public final WidgetValue getEntryValueTree(){
+        WidgetValue tree = getEntryValueTreeCustom();
+
         return tree;
     }
 
-    protected abstract void setValueCustom(EntryValueTree entryValueTree);
+    public WidgetId getWidgetId(){
+        return new WidgetId(widgetIdTracker, structure);
+    }
 
-    public final void setValue(EntryValueTree entryValueTree){
-        listId = entryValueTree.getListItemId();
-        setValueCustom(entryValueTree);
+    protected abstract void setValueCustom(WidgetValue widgetValueString);
+
+    public final void setValue(WidgetValue widgetValueString){
+        setValueCustom(widgetValueString);
     }
 
     public final void setName(String name){

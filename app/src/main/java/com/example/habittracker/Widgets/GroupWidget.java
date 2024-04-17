@@ -9,6 +9,9 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
 
@@ -29,16 +32,14 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
-    public EntryValueTree getEntryValueTreeCustom() {
-        ArrayList<EntryValueTree> unsorted = new ArrayList<>();
-        EntryValueTree tree = new EntryValueTree();
-        for(EntryWidget widget: entryWidgets()){
-            unsorted.add(widget.getEntryValueTree());
-        }
-        for(int i = 0; i < entryWidgets().size(); i++){
+    public WidgetValue getEntryValueTreeCustom() {
+        ArrayList<WidgetValue> result = new ArrayList<>();
 
+        for(EntryWidget widget: entryWidgets()){
+            result.add(widget.getEntryValueTree());
         }
-        return tree;
+
+        return new GroupValue(result);
     }
 
     public ArrayList<EntryWidget> entryWidgets(){
@@ -75,17 +76,17 @@ public class GroupWidget extends EntryWidget {
 //    }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree) {
-        MainActivity.log("group setting values: \n" + entryValueTree.hierarchy());
+    public void setValueCustom(WidgetValue widgetValue) {
+        GroupValue groupValue = (GroupValue) widgetValue;
+        MainActivity.log("group setting values: \n" + groupValue.hierarchy());
 
         ArrayList<EntryWidget> entryWidgets = entryWidgets();
-
         for(int i = 0; i < entryWidgets.size(); i++){
 
             EntryWidget entryWidget = entryWidgets.get(i);
             int index = entryWidget.getValueId();
             MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetIdTracker() + ", index of value: " + index);
-            entryWidget.setValue(entryValueTree.getTree(index));
+            entryWidget.setValue(groupValue.getWidgetValueByWidget(entryWidget.getWidgetId()));
         }
     }
 

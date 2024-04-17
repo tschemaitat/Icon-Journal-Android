@@ -10,8 +10,10 @@ import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.ListValue;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.Structs.WidgetValue;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.GroupWidget.*;
 import com.example.habittracker.structures.Structure;
@@ -58,13 +60,12 @@ public class ListWidget extends EntryWidget {
 //    }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
-        System.out.println("list setting value: " + entryValueTree.hierarchy());
-        ArrayList<Widget> widgets = layout.widgets();
-        int count = 0;
-        for(EntryValueTree tree: entryValueTree.getList()){
+    public void setValueCustom(WidgetValue widgetValue) {
+        ListValue listValue = (ListValue) widgetValue;
+        System.out.println("list setting value: " + listValue.hierarchy());
+        for(GroupValue groupValue: listValue.getGroupValueList()){
             GroupWidget groupWidget = addGroup(cloneParams);
-            groupWidget.setValue(tree, valueTreePathMap);
+            groupWidget.setValue(groupValue);
         }
 
     }
@@ -91,13 +92,13 @@ public class ListWidget extends EntryWidget {
     }
 
     @Override
-    public EntryValueTree getEntryValueTreeCustom() {
-        EntryValueTree entryValueTree = new EntryValueTree();
+    public WidgetValue getEntryValueTreeCustom() {
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
+        ArrayList<GroupValue> groupValueList = new ArrayList<>();
         for(GroupWidget groupWidget: groupWidgets){
-            entryValueTree.put(groupWidget.getEntryValueTree());
+            groupValueList.add((GroupValue) groupWidget.getEntryValueTree());
         }
-        return entryValueTree;
+        return new ListValue(getWidgetId(), groupValueList);
     }
 
 
@@ -166,13 +167,6 @@ public class ListWidget extends EntryWidget {
                 result.add(child);
 
             return result;
-        }
-    }
-
-    public static class ListValue extends WidgetValue{
-        public ArrayList<WidgetValue> currentWidgets;
-        public ListValue(ArrayList<WidgetValue> currentWidgets){
-            this.currentWidgets = currentWidgets;
         }
     }
 }
