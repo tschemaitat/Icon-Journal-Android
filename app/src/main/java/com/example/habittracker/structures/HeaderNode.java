@@ -1,23 +1,22 @@
 package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Structs.WidgetPath;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class HeaderNode{
-    private String name;
     private ArrayList<HeaderNode> children;
     private EntryWidgetParam widgetParam;
-    public HeaderNode(String name, EntryWidgetParam widgetParam){
+    private HeaderNode parent;
+    public HeaderNode(EntryWidgetParam widgetParam){
         if(widgetParam == null)
             throw new RuntimeException();
         //MainActivity.log("saving headerNode, name: " + name + ", widgetParam: " + widgetParam.name);
-        this.name = name;
         this.widgetParam = widgetParam;
         children = new ArrayList<>();
     }
@@ -27,38 +26,50 @@ public class HeaderNode{
     }
 
     public String getName(){
-        return name;
+        return widgetParam.name;
+    }
+
+    public HeaderNode getByWidget(WidgetId widgetId){
+        for(HeaderNode headerNode: children){
+            if(headerNode.widgetParam.widgetIdTracker == widgetId.getId()){
+                return headerNode;
+            }
+        }
+        MainActivity.log("tried to find headerNode from widget: " + widgetId);
+        MainActivity.log("available widget ids: " + getWidgetIdListOfChildren());
+        throw new RuntimeException();
+    }
+
+    private ArrayList<WidgetId> getWidgetIdListOfChildren() {
+        return EnumLoop.makeList(children, (headerNode -> headerNode.widgetParam.getWidgetId()));
     }
 
     public ArrayList<HeaderNode> getChildren(){
         return children;
     }
 
-    public void traverse(ArrayList<ValueTreePath> paths, ArrayList<EntryWidgetParam> paramList, ArrayList<Integer> currentPath){
-
-        //String tabs = GLib.tabs(currentPath.size());
-        //MainActivity.log(tabs+"currentPath:" + currentPath);
-        ArrayList<Integer> pathCopy = (ArrayList<Integer>) currentPath.clone();
-        if(currentPath.size() != 0){
-            paths.add(new ValueTreePath(currentPath));
-            paramList.add(widgetParam);
+    public ArrayList<HeaderNode> gatherNodes(){
+        ArrayList<HeaderNode> result = new ArrayList<>();
+        result.add(this);
+        for(HeaderNode headerNode: children){
+            result.addAll(headerNode.gatherNodes());
         }
-
-        for(int i = 0; i < children.size(); i++){
-
-            pathCopy.add(i);
-            HeaderNode child = children.get(i);
-            child.traverse(paths, paramList, pathCopy);
-            pathCopy.remove(pathCopy.size() - 1);
-        }
+        return result;
     }
 
-    public void getPathName(ArrayList<String> result, ValueTreePath indexPath, int level) {
-        if(indexPath.size() > level)
-            children.get(indexPath.get(level)).getPathName(result, indexPath, level + 1);
-        if(level != 0)
-            result.add(name);
+    public WidgetPath getWidgetPath(){
+        ArrayList<WidgetId> widgetIdList = new ArrayList<>();
+        getWidgetPathIteration(widgetIdList);
+        return new WidgetPath(widgetIdList);
     }
+
+    public void getWidgetPathIteration(ArrayList<WidgetId> currentWidgetPath){
+        parent.getWidgetPathIteration(currentWidgetPath);
+        currentWidgetPath.add(widgetParam.getWidgetId());
+    }
+
+
+
 
     public String hierarchyString(int numTabs){
         String tabString = GLib.tabs(numTabs);
@@ -68,5 +79,17 @@ public class HeaderNode{
             result += node.hierarchyString(numTabs+1);
         }
         return result;
+    }
+
+
+    public EntryWidgetParam getWidgetParam() {
+        return widgetParam;
+    }
+
+    public void setDoublePointers() {
+        for(HeaderNode headerNode: children){
+            headerNode.parent = this;
+            headerNode.setDoublePointers();
+        }
     }
 }

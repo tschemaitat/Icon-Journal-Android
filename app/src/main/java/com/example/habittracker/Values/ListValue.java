@@ -2,8 +2,8 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Structs.WidgetPath;
 
 import java.util.ArrayList;
 
@@ -12,10 +12,12 @@ public class ListValue extends WidgetValue {
     public ListValue(WidgetId widgetId, ArrayList<GroupValue> groupValueList){
         super(widgetId);
         this.groupValueList = groupValueList;
+        for(GroupValue groupValue: groupValueList)
+            groupValue.setParentListValue(this);
     }
 
     public ArrayList<GroupValue> getGroupValueList() {
-        return groupValueList;
+        return (ArrayList<GroupValue>) groupValueList.clone();
     }
 
     public GroupValue getByListItemId(ListItemId listItemId){
@@ -31,6 +33,15 @@ public class ListValue extends WidgetValue {
     public ArrayList<ListItemId> getListItemIdList(){
         return EnumLoop.makeList(groupValueList, (groupValue)->groupValue.getListItemId());
     }
+
+    public static ArrayList<GroupValue> gatherGroupValuesFromList(ArrayList<ListValue> listValueList){
+        ArrayList<GroupValue> result = new ArrayList<>();
+        for(ListValue listValue: listValueList){
+            result.addAll(listValue.getGroupValueList());
+        }
+        return result;
+    }
+
 
 
     public String hierarchy(){
@@ -53,5 +64,10 @@ public class ListValue extends WidgetValue {
 
     private String nameAndLength() {
         return "list: " + getWidgetId() + " (" + groupValueList.size() +")";
+    }
+
+    public BaseWidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level) {
+        GroupValue groupValue = getByListItemId(listIdList.get(level));
+        return groupValue.getValueIteration(path, listIdList, level + 1);
     }
 }

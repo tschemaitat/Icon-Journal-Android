@@ -2,12 +2,15 @@ package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.Structs.CachedStrings.ArrayString;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
-import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.BaseWidgetValue;
+import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Widgets.GroupWidget.*;
 import com.example.habittracker.Widgets.GroupWidget;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ public class Structure {
     private GroupWidget.GroupWidgetParam widgetParam;
     private String type;
     private HashMap<Integer, Entry> entries;
-    private Header header;
+    private HashMap<WidgetId, Header.WidgetInfo> widgetMap;
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type){
@@ -32,7 +35,7 @@ public class Structure {
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type,
-                     ArrayList<Entry> entries, HashMap<Integer, ValueTreePath> oldValuePaths){
+                     ArrayList<Entry> entries, HashMap<Integer, WidgetPath> oldValuePaths){
         initVariables(name, widgetParam, type, entries, oldValuePaths);
     }
     public Structure(String type){
@@ -40,12 +43,13 @@ public class Structure {
     }
 
     public void initVariables(String name, GroupWidgetParam widgetParam, String type,
-                              ArrayList<Entry> entries, HashMap<Integer, ValueTreePath> oldValuePaths){
+                              ArrayList<Entry> entries, HashMap<Integer, WidgetPath> oldValuePaths){
         this.id = null;
         this.name = name;
         this.widgetParam = widgetParam;
         this.type = type;
         this.entries = new HashMap();
+        widgetParam.setStructure(this);
         if(entries == null)
             this.entries = new HashMap<>();
         else{
@@ -53,17 +57,19 @@ public class Structure {
                 insertOldEntry(data);
         }
 
+
         //MainActivity.log("log param while init structure: \n" + widgetParam.hierarchyString());
 
         init(oldValuePaths);
     }
 
-    public void init(HashMap<Integer, ValueTreePath> oldValuePaths){
+    public void init(HashMap<Integer, WidgetPath> oldValuePaths){
         createHeader(oldValuePaths);
     }
 
-    private void createHeader(HashMap<Integer, ValueTreePath> oldValuePaths) {
-        this.header = new Header(widgetParam, this, oldValuePaths);
+    private void createHeader(HashMap<Integer, WidgetPath> oldValuePaths) {
+        Header header = new Header(widgetParam, this);
+        widgetMap = header.widgetMap;
     }
 
     public void createId(){
@@ -78,7 +84,7 @@ public class Structure {
         entries.put(entry.getId(), entry);
     }
 
-    public void addEntry(EntryValueTree entryData){
+    public void addEntry(GroupValue entryData){
         Set<Integer> entryIdSet = entries.keySet();
         while(entryIdSet.contains(idCount))
             idCount++;
@@ -87,17 +93,7 @@ public class Structure {
         entries.put(entry.getId(), entry);
     }
 
-    public Entry getEntry(ArrayList<String> attributes){
-        String name = attributes.get(0);
-        for(Entry entry: entries.values()){
-            if(entry.getEntryValueTree().getCachedString(0).equals(name)){
-                return entry;
-            }
-        }
-        throw new RuntimeException();
-    }
-
-    public void setData(Entry entryToEdit, EntryValueTree data){
+    public void setData(Entry entryToEdit, GroupValue data){
         int entryId = entryToEdit.getId();
         Entry found = null;
         for(Entry entry: entries.values()){
@@ -116,10 +112,10 @@ public class Structure {
         return new ArrayList<>(entries.values());
     }
 
-    public ArrayList<EntryValueTree> getData(){
-        ArrayList<EntryValueTree> entryValueTrees = new ArrayList<>();
+    public ArrayList<GroupValue> getData(){
+        ArrayList<GroupValue> entryValueTrees = new ArrayList<>();
         for(Entry entry: entries.values())
-            entryValueTrees.add(entry.getEntryValueTree());
+            entryValueTrees.add(entry.getGroupValue());
         return entryValueTrees;
     }
 
@@ -137,8 +133,8 @@ public class Structure {
         return type;
     }
 
-    public Header getHeader(){
-        return header;
+    public Header.WidgetInfo getWidgetInfo(WidgetId widgetId){
+        return widgetMap.get(widgetId);
     }
 
 
@@ -186,6 +182,31 @@ public class Structure {
     }
 
     public EntryWidgetParam getWidgetParamFromId(WidgetId widgetId) {
-        return getHeader().getWidgetParamFromId(widgetId);
+        return widgetMap.get(widgetId).getEntryWidgetParam();
+    }
+
+    protected CachedString getEntryName(Entry entry) {
+        MainActivity.log("getting entry name");
+
+        ArrayList<WidgetId> importantWidgetList = getImportantWidgets();
+        ArrayList<CachedString> arrayStringList = new ArrayList<>();
+        MainActivity.log("important widgets: " + importantWidgetList);
+        for(WidgetId widgetId: importantWidgetList){
+
+            ArrayList<BaseWidgetValue> widgetValueList = entry.getGroupValue().getValuesFromWidgetPath(getWidgetInfo(widgetId).getWidgetPath());
+            ArrayString string = new ArrayString(EnumLoop.makeList(widgetValueList, (widgetValue)->widgetValue.getDisplayCachedString()));
+            MainActivity.log("getting values from widgetId: " + widgetValueList);
+            arrayStringList.add(string);
+        }
+        return new ArrayString(arrayStringList);
+    }
+
+    public ArrayList<WidgetId> getImportantWidgets(){
+        ArrayList<WidgetId> result = new ArrayList<>();
+        for(WidgetId widgetId: widgetMap.keySet()){
+            if(widgetId.getWidgetParam().isUniqueAttribute)
+                result.add(widgetId);
+        }
+        return result;
     }
 }

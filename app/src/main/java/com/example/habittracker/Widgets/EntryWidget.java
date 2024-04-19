@@ -13,11 +13,11 @@ import com.example.habittracker.structures.Structure;
 
 public abstract class EntryWidget implements Widget{
     private Runnable onDataChanged;
-    private String name;
+    private EntryWidgetParam entryWidgetParam;
     private ViewWrapper viewWrapper;
     private boolean dataSet = false;
     private Integer widgetIdTracker;
-    private Structure structure;
+
 
     public EntryWidget(Context context){
 
@@ -47,7 +47,7 @@ public abstract class EntryWidget implements Widget{
     }
 
     public WidgetId getWidgetId(){
-        return new WidgetId(widgetIdTracker, structure);
+        return new WidgetId(widgetIdTracker, entryWidgetParam.getStructure());
     }
 
     protected abstract void setValueCustom(WidgetValue widgetValueString);
@@ -59,7 +59,6 @@ public abstract class EntryWidget implements Widget{
     public final void setName(String name){
         //System.out.println("set name: " + name);
         viewWrapper.setName(name);
-        this.name = name;
     }
 
 
@@ -71,7 +70,7 @@ public abstract class EntryWidget implements Widget{
 
 
     public final String getName(){
-        return name;
+        return entryWidgetParam.name;
     }
 
     public final void setParam(EntryWidgetParam param){
@@ -95,20 +94,9 @@ public abstract class EntryWidget implements Widget{
         return widgetIdTracker;
     }
 
-    public final void setStructure(Structure structure) {
-        this.structure = structure;
-        setStructureCustom(structure);
-    }
 
-    public void setStructureCustom(Structure structure){
-
-    }
 
     public Structure getStructure(){
-        return structure;
-    }
-
-    public int getValueId(){
-        return structure.getHeader().getValueId(widgetIdTracker).getLast();
+        return entryWidgetParam.getStructure();
     }
 }

@@ -6,12 +6,14 @@ import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.RefItemPath;
+import com.example.habittracker.Values.BaseWidgetValue;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.Header;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.Widgets.DropDown;
 
 import java.util.ArrayList;
@@ -20,25 +22,24 @@ import java.util.Arrays;
 public class DropDownPageFactory {
     public static DropDownPage getGroupedPages(Structure structure, WidgetId valueId, ArrayList<WidgetId> groupIdList){
         //MainActivity.log("getting grouped pages");
-        Header header = structure.getHeader();
         ArrayList<Entry> entries = structure.getEntries();
-        ArrayList<ValueTreePath> groupPathList = header.getWidgetPathList(groupIdList);
+        ArrayList<WidgetPath> groupPathList = EnumLoop.makeList(groupIdList, (widgetId)->widgetId.getWidgetInfo().getWidgetPath());
         //MainActivity.log("group paths: " + groupPathList);
 
-        ValueTreePath valuePath = header.getWidgetPath(valueId);
+        WidgetPath valuePath = valueId.getWidgetInfo().getWidgetPath();
         DropDownPage parentPage = new DropDownPage(null);
         //MainActivity.log("value path: " + valuePath);
 
         //iterate through the spreadsheet's entries
         for(Entry entry: entries){
-            EntryValueTree tree = entry.getEntryValueTree();
+            GroupValue entryValueTree = entry.getGroupValue();
             //MainActivity.log("data tree: \n" + tree.hierarchy());
             //make list of pages, starting with the parent page
             ArrayList<DropDownPage> parentPages = new ArrayList<>();
             parentPages.add(parentPage);
 
             //gather values, can have multiple
-            ArrayList<EntryValueTree> entryValueList = tree.getValuesFromPath(valuePath);
+            ArrayList<BaseWidgetValue> entryValueList = entryValueTree.getValuesFromWidgetPath(valuePath);
             //gather group values, can have multiple groups and each group can have multiple values
             //ArrayList<ArrayList<CachedString>> valuesOfGroups = tree.getValueListFromPathList(groupPathList);
             //the first index, we just add items to the parent page
@@ -46,20 +47,20 @@ public class DropDownPageFactory {
             //MainActivity.log("before group index loop: " + groupPathList.size() + ", " + groupIdList.size());
             for(int groupIndex = 0; groupIndex < groupPathList.size(); groupIndex++){
                 //ArrayList<CachedString> valuesOfCurrentGroup = valuesOfGroups.get(groupIndex);
-                ArrayList<EntryValueTree> valuesOfCurrentGroup = tree.getValuesFromPath(groupPathList.get(groupIndex));
+                ArrayList<BaseWidgetValue> valuesOfCurrentGroup = entryValueTree.getValuesFromWidgetPath(groupPathList.get(groupIndex));
                 //MainActivity.log("group index loop: " + groupIndex + "path: " + groupPathList.get(groupIndex) + "\nvalues: " + valuesOfCurrentGroup);
                 //keep track of new pages so that we can set them as the parent later
                 ArrayList<DropDownPage> newPages = new ArrayList<>();
-                for(EntryValueTree groupValue: valuesOfCurrentGroup){
+                for(BaseWidgetValue baseWidgetValue: valuesOfCurrentGroup){
                     //MainActivity.log("group value loop: " + groupValue);
                     for(DropDownPage page: parentPages){
                         //if there is already a page, get the page that matches the name
                         //if there is not a page, create it and add it to the list
                         //MainActivity.log("adding new page");
-                        if(groupValue.getCachedString() instanceof LiteralString){
+                        if(baseWidgetValue.getCachedString() instanceof LiteralString){
 
                         }
-                        newPages.add(page.getOrAdd(new PayloadOption(getRefEntryString(structure, groupIdList.get(groupIndex), entry.getId(), groupValue), null)));
+                        newPages.add(page.getOrAdd(new PayloadOption(getRefEntryString(structure, groupIdList.get(groupIndex), entry.getId(), baseWidgetValue), null)));
                     }
                 }
                 parentPages = newPages;
@@ -69,9 +70,9 @@ public class DropDownPageFactory {
                 ArrayList<CachedString> valuesOfPages = new ArrayList<>();
                 for(int i = 0; i < pages.size(); i++)
                     valuesOfPages.add(pages.get(i).getCachedName());
-                for(EntryValueTree entryValue: entryValueList){
+                for(BaseWidgetValue baseWidgetValue: entryValueList){
                     ArrayList<CachedString> copied = (ArrayList<CachedString>) valuesOfPages.clone();
-                    RefEntryString entryValueRefString = getRefEntryString(structure, valueId, entry.getId(), entryValue);
+                    RefEntryString entryValueRefString = getRefEntryString(structure, valueId, entry.getId(), baseWidgetValue);
                     copied.add(entryValueRefString);
 
                     page.add(new PayloadOption(entryValueRefString, new RefItemPath(copied)));
@@ -82,11 +83,12 @@ public class DropDownPageFactory {
         return parentPage;
     }
 
-    public static RefEntryString getRefEntryString(Structure structure, WidgetId widgetId, Integer entryId, EntryValueTree tree){
+    public static RefEntryString getRefEntryString(Structure structure, WidgetId widgetId, Integer entryId,
+                                                   BaseWidgetValue tree){
         if(entryId == null)
             throw new RuntimeException();
         if(tree.getCachedString() instanceof LiteralString){
-            return new RefEntryString(structure, widgetId, entryId, tree.getListItemIdList());
+            return new RefEntryString(structure, widgetId, entryId, tree.getListItemIds());
         }
         return (RefEntryString) tree.getCachedString();
     }

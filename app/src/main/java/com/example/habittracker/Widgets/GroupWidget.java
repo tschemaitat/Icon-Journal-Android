@@ -50,11 +50,7 @@ public class GroupWidget extends EntryWidget {
         return entryWidgets;
     }
 
-    @Override
-    public void setStructureCustom(Structure structure){
-        for(Widget widget: layout.widgets())
-            ((EntryWidget) widget).setStructure(structure);
-    }
+
 
 
 
@@ -84,8 +80,7 @@ public class GroupWidget extends EntryWidget {
         for(int i = 0; i < entryWidgets.size(); i++){
 
             EntryWidget entryWidget = entryWidgets.get(i);
-            int index = entryWidget.getValueId();
-            MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetIdTracker() + ", index of value: " + index);
+            MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetId());
             entryWidget.setValue(groupValue.getWidgetValueByWidget(entryWidget.getWidgetId()));
         }
     }
@@ -121,6 +116,12 @@ public class GroupWidget extends EntryWidget {
             this.params = new ArrayList<>(Arrays.asList(params));
         }
 
+        @Override
+        public void setStructureCustom(Structure structure){
+            for(EntryWidgetParam entryWidgetParam: params)
+                entryWidgetParam.setStructure(structure);
+        }
+
         public String toString(){
             return hierarchyString(0);
         }
@@ -134,7 +135,7 @@ public class GroupWidget extends EntryWidget {
 
         @Override
         public HeaderNode createHeaderNode() {
-            HeaderNode header = new HeaderNode(name, this);
+            HeaderNode header = new HeaderNode(this);
             for(EntryWidgetParam param: params){
                 header.add(param.createHeaderNode());
             }

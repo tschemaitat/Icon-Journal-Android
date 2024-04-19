@@ -7,7 +7,7 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.Structs.DropDownPages.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.ItemPath;
 import com.example.habittracker.Structs.RefItemPath;
@@ -53,7 +53,7 @@ public class EntryDropDown extends EntryWidget{
     }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
+    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, WidgetPath> valueTreePathMap) {
 
         if(entryValueTree.getItemPath() == null){
             MainActivity.log(entryValueTree.getParent().hierarchy());

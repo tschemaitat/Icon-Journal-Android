@@ -6,7 +6,9 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Widgets.CustomEditText;
@@ -26,7 +28,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     boolean discarding = false;
     public CategoryEntryEditorPage(Context context, Structure spreadsheet, Entry entry){
         if(entry != null)
-            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entry.getId() +"\n"+ entry.getEntryValueTree().hierarchy());
+            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entry.getId() +"\n"+ entry.getGroupValue().hierarchy());
         else
             MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry: null");
         this.context = context;
@@ -36,7 +38,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     public void onDataChanged(){
-        System.out.println("new data: \n" + groupWidget.getEntryValueTree().hierarchy());
+        System.out.println("new data: \n" + ((GroupValue)groupWidget.getEntryValueTree()).hierarchy());
     }
 
     private boolean checkValidForSave(Inflatable page){
@@ -54,7 +56,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     private void save(){
-        EntryValueTree data = groupWidget.getEntryValueTree();
+        WidgetValue data = groupWidget.getEntryValueTree();
         data.setIdOfTree();
         MainActivity.log("group widget children: " + groupWidget.getWidgetLayout().widgets());
         if(entry == null){
@@ -102,11 +104,11 @@ public class CategoryEntryEditorPage implements Inflatable{
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
         groupWidget.setParam(structure.getWidgetParam());
         groupWidget.setStructure(structure);
-        HashMap<Integer, ValueTreePath> map = structure.getHeader().getValuePathMap();
+        HashMap<Integer, WidgetPath> map = structure.getHeader().getValuePathMap();
         MainActivity.log("value map: " + map.toString());
         if(entry != null){
-            groupWidget.setValue(entry.getEntryValueTree(), map);
-            MainActivity.log("set from entry: " + entry.getEntryValueTree().hierarchy());
+            groupWidget.setValue(entry.getGroupValue(), map);
+            MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
         }
 
     }

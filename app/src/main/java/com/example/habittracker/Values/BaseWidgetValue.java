@@ -10,4 +10,6 @@ public abstract class BaseWidgetValue extends WidgetValue{
     }
 
     public abstract CachedString getDisplayCachedString();
+
+    public abstract CachedString getCachedString();
 }

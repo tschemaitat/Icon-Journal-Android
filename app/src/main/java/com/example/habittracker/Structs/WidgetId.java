@@ -1,5 +1,7 @@
 package com.example.habittracker.Structs;
 
+import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.structures.Header;
 import com.example.habittracker.structures.Structure;
 
 public class WidgetId {
@@ -33,10 +35,21 @@ public class WidgetId {
     }
 
     public ItemPath getNameWithPath(){
-        return structure.getHeader().getWidgetNamePath(this);
+        WidgetPath widgetPath = structure.getWidgetInfo(this).getWidgetPath();
+        return new ItemPath(EnumLoop.makeList(widgetPath.getList(), (widgetId)->widgetId.getName()));
     }
+
+    public String getName(){
+        return structure.getWidgetInfo(this).getEntryWidgetParam().name;
+    }
+
+
 
     public EntryWidgetParam getWidgetParam() {
         return structure.getWidgetParamFromId(this);
+    }
+
+    public Header.WidgetInfo getWidgetInfo() {
+        return structure.getWidgetInfo(this);
     }
 }

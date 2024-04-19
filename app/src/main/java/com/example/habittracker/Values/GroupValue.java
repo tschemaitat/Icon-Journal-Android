@@ -2,20 +2,23 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.EntryValueTree;
+import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
 
 public class GroupValue extends WidgetValue{
     private ListItemId listItemId = null;
-    ArrayList<WidgetValue> values = new ArrayList<>();
+    private ArrayList<WidgetValue> values = new ArrayList<>();
+    private ListValue parent;
     public GroupValue(ArrayList<WidgetValue> values){
         super(null);
         if(values == null)
             throw new RuntimeException();
         this.values = values;
+        for(WidgetValue widgetValue: values){
+            widgetValue.setParentGroupValue(this);
+        }
     }
 
     public GroupValue(){
@@ -23,33 +26,35 @@ public class GroupValue extends WidgetValue{
         values = new ArrayList<>();
     }
 
-    public ListValue getListValueByPosition(int index){
-        return (ListValue) values.get(index);
-    }
-
-    public WidgetValue getWidgetValueByPosition(int index){
-        return values.get(index);
+    public void setParentListValue(ListValue listValue){
+        this.parent = listValue;
     }
 
     public ListValue getListValueByWidget(WidgetId widgetId){
-        for(WidgetValue widgetValue : values){
-            if(widgetValue instanceof ListValue listValue){
-                if(listValue.getWidgetId().equals(widgetId))
-                    return listValue;
-            }
-        }
-        MainActivity.log("tried to find: " + widgetId + ", from: \n" + values);
-        MainActivity.log("available widgetIds: " + getWidgetIdList());
+        WidgetValue widgetValue = getWidgetValueByWidget(widgetId);
+        if(widgetValue instanceof ListValue listValue)
+            return listValue;
+        logErrorFindingWidgetValue(widgetId);
         throw new RuntimeException();
     }
 
-    public WidgetValue getWidgetValueByWidget(WidgetId widgetId) {
-        for(WidgetValue widgetValue : values){
-            if(widgetValue.getWidgetId().equals(widgetId))
-                return widgetValue;
-        }
+    public void logErrorFindingWidgetValue(WidgetId widgetId){
         MainActivity.log("tried to find: " + widgetId + ", from: \n" + values);
         MainActivity.log("available widgetIds: " + getWidgetIdList());
+    }
+
+    public WidgetValue getWidgetValueByWidget(WidgetId widgetId) {
+        for(WidgetValue widgetValue : values)
+            if(widgetValue.getWidgetId().equals(widgetId))
+                return widgetValue;
+        logErrorFindingWidgetValue(widgetId);
+        throw new RuntimeException();
+    }
+    public BaseWidgetValue getBaseWidgetValueByWidget(WidgetId widgetId) {
+        WidgetValue widgetValue = getWidgetValueByWidget(widgetId);
+        if(widgetValue instanceof BaseWidgetValue baseWidgetValue)
+            return baseWidgetValue;
+        logErrorFindingWidgetValue(widgetId);
         throw new RuntimeException();
     }
 
@@ -90,4 +95,63 @@ public class GroupValue extends WidgetValue{
     }
 
 
+    public ArrayList<BaseWidgetValue> getValuesFromWidgetPath(WidgetPath widgetPath) {
+        //get values from group indexes. The indexes are the key for the location
+        //MainActivity.log("indexes: \n" + indexes);
+        if(widgetPath.size() == 0){
+            MainActivity.log(this.hierarchy());
+            throw new RuntimeException();
+        }
+
+
+        ArrayList<GroupValue> groupValueList = new ArrayList<>();
+        groupValueList.add(this);
+
+        for(int i = 0; i < widgetPath.size() - 1; i++){
+            groupValueList = processList(groupValueList, widgetPath.get(i));
+        }
+        ArrayList<BaseWidgetValue> baseWidgetValueList = new ArrayList<>();
+        WidgetId lastWidgetId = widgetPath.getLast();
+        for(GroupValue groupValue: groupValueList){
+            baseWidgetValueList.add(groupValue.getBaseWidgetValueByWidget(lastWidgetId));
+        }
+
+        return baseWidgetValueList;
+    }
+
+    public static ArrayList<GroupValue> processList(ArrayList<GroupValue> groupValueList, WidgetId widgetId){
+        ArrayList<ListValue> currentTrees = getListArrayFromGroupValueList(groupValueList, widgetId);
+        return ListValue.gatherGroupValuesFromList(currentTrees);
+    }
+
+
+
+    public static ArrayList<ListValue> getListArrayFromGroupValueList(ArrayList<GroupValue> groupValueList, WidgetId widgetId){
+        ArrayList<ListValue> result = new ArrayList<>();
+        for(GroupValue groupValue: groupValueList){
+            //System.out.println("index from tree: " + tree.nameAndLength());
+            result.add(groupValue.getListValueByWidget(widgetId));
+        }
+        return result;
+    }
+
+    public ListValue getParentListValue() {
+        return parent;
+    }
+
+    public BaseWidgetValue getValue(WidgetPath path, ArrayList<ListItemId> listIdList) {
+        if(path.size() - 1 != listIdList.size()){
+            MainActivity.log("widget path: " + path + "\nlist id list: " + listIdList);
+        }
+        return getValueIteration(path, listIdList, 0);
+    }
+
+    public BaseWidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level){
+        if(level == path.size() - 1){
+            BaseWidgetValue baseWidgetValue = getBaseWidgetValueByWidget(path.get(level));
+            return baseWidgetValue;
+        }
+        ListValue listValue = getListValueByWidget(path.get(level));
+        return listValue.getValueIteration(path, listIdList, level);
+    }
 }

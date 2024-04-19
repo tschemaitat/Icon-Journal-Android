@@ -6,10 +6,8 @@ import android.view.View;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.ValueTreePath;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
@@ -19,7 +17,6 @@ import com.example.habittracker.Widgets.GroupWidget.*;
 import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ListWidget extends EntryWidget {
 

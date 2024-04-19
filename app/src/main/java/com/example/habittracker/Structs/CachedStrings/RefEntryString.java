@@ -3,8 +3,11 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.BaseWidgetValue;
+import com.example.habittracker.Values.ListItemId;
+import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
 
@@ -14,8 +17,8 @@ public class RefEntryString implements CachedString{
     Structure structure;
     WidgetId widgetId;
     Integer entryId;
-    ArrayList<EntryValueTree.ListItemId> listIdList;
-    public RefEntryString(Structure structure, WidgetId widgetId, int entryId, ArrayList<EntryValueTree.ListItemId> listIdList){
+    ArrayList<ListItemId> listIdList;
+    public RefEntryString(Structure structure, WidgetId widgetId, int entryId, ArrayList<ListItemId> listIdList){
         if(structure == null)
             throw new RuntimeException();
         this.structure = structure;
@@ -26,9 +29,9 @@ public class RefEntryString implements CachedString{
 
     public String getString(){
         Entry entry = structure.getEntry(entryId);
-        ValueTreePath path = structure.getHeader().getWidgetPath(widgetId);
+        WidgetPath path = structure.getWidgetInfo(widgetId).getWidgetPath();
 
-        EntryValueTree value = entry.getEntryValueTree().getValue(path, listIdList);
+        BaseWidgetValue value = entry.getGroupValue().getValue(path, listIdList);
         return value.getCachedString().getString();
     }
 
@@ -44,7 +47,7 @@ public class RefEntryString implements CachedString{
         return entryId;
     }
 
-    public ArrayList<EntryValueTree.ListItemId> getListIdList() {
+    public ArrayList<ListItemId> getListIdList() {
         return listIdList;
     }
 

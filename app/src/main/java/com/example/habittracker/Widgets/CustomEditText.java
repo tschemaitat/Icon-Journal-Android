@@ -4,20 +4,20 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.Layouts.LinLayout;
-import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.ValueTreePath;
+import com.example.habittracker.Structs.WidgetPath;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.structures.HeaderNode;
 
 import java.util.HashMap;
@@ -120,13 +120,14 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
-    public void setValueCustom(EntryValueTree entryValueTree, HashMap<Integer, ValueTreePath> valueTreePathMap) {
-        if(entryValueTree == null)
+    public void setValueCustom(WidgetValue widgetValue) {
+        WidgetValueString widgetValueString = (WidgetValueString)widgetValue;
+        if(widgetValue == null)
             throw new RuntimeException();
 
-        if( ! (entryValueTree.getCachedString() instanceof LiteralString))
+        if( ! (widgetValueString.getCachedString() instanceof LiteralString))
             throw new RuntimeException();
-        String currentText = entryValueTree.getCachedString().getString();
+        String currentText = widgetValueString.getCachedString().getString();
         if(currentText == null)
             currentText = "";
 
@@ -135,10 +136,10 @@ public class CustomEditText extends EntryWidget {
     }
 
     @Override
-    public EntryValueTree getEntryValueTreeCustom() {
+    public WidgetValue getEntryValueTreeCustom() {
         //MainActivity.log("returning data tree");
         //MainActivity.log("getText() = " + getText());
-        return new EntryValueTree(new LiteralString(getText()));
+        return new WidgetValueString(getWidgetId(), new LiteralString(getText()));
     }
 
     @Override
@@ -187,7 +188,7 @@ public class CustomEditText extends EntryWidget {
 
         @Override
         public HeaderNode createHeaderNode() {
-            return new HeaderNode(name, this);
+            return new HeaderNode(this);
         }
     }
 }

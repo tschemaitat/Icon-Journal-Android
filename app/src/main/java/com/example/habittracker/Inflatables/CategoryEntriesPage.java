@@ -8,6 +8,7 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
@@ -35,8 +36,8 @@ public class CategoryEntriesPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        ArrayList<EntryValueTree> dataList = structure.getData();
-        for(EntryValueTree data: dataList)
+        ArrayList<GroupValue> dataList = structure.getData();
+        for(GroupValue data: dataList)
             System.out.println(data.hierarchy());
 
         ArrayList<Entry> entryNames = structure.getEntryList();
