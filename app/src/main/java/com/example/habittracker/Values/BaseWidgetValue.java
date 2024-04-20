@@ -1,7 +1,7 @@
 package com.example.habittracker.Values;
 
 import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.structures.WidgetId;
 
 public abstract class BaseWidgetValue extends WidgetValue{
 
@@ -11,5 +11,7 @@ public abstract class BaseWidgetValue extends WidgetValue{
 
     public abstract CachedString getDisplayCachedString();
 
-    public abstract CachedString getCachedString();
+    public abstract CachedString getStandardFormOfCachedString();
+
+    public abstract CachedString getDebugCachedString();
 }

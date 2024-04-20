@@ -5,19 +5,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.WidgetPath;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.EntryWidget;
+import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class CategoryEntryEditorPage implements Inflatable{
     private Context context;
@@ -38,7 +34,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     public void onDataChanged(){
-        System.out.println("new data: \n" + ((GroupValue)groupWidget.getEntryValueTree()).hierarchy());
+        System.out.println("new data: \n" + ((GroupValue)groupWidget.getValue()).hierarchy());
     }
 
     private boolean checkValidForSave(Inflatable page){
@@ -56,7 +52,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     private void save(){
-        WidgetValue data = groupWidget.getEntryValueTree();
+        GroupValue data = (GroupValue)groupWidget.getValue();
         data.setIdOfTree();
         MainActivity.log("group widget children: " + groupWidget.getWidgetLayout().widgets());
         if(entry == null){
@@ -103,13 +99,12 @@ public class CategoryEntryEditorPage implements Inflatable{
         linearLayout.addView(groupWidget.getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
         groupWidget.setParam(structure.getWidgetParam());
-        groupWidget.setStructure(structure);
-        HashMap<Integer, WidgetPath> map = structure.getHeader().getValuePathMap();
-        MainActivity.log("value map: " + map.toString());
         if(entry != null){
-            groupWidget.setValue(entry.getGroupValue(), map);
+            groupWidget.setValue(entry.getGroupValue());
             MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
         }
+
+
 
     }
 

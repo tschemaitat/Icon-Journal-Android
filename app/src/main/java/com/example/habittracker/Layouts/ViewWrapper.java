@@ -20,7 +20,7 @@ public class ViewWrapper {
     public ViewWrapper(Context context){
         this.context = context;
         linearLayout = new LinLayout(context);
-        linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
+        linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         ((LinearLayout)linearLayout.getView()).setOrientation(LinearLayout.VERTICAL);
     }
     public void setName(String name){

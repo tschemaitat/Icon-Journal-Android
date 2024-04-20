@@ -1,9 +1,7 @@
 package com.example.habittracker.Values;
 
-import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.RefItemPath;
-import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.structures.WidgetId;
 
 public class WidgetValueString extends BaseWidgetValue {
     private CachedString cachedString;
@@ -13,7 +11,12 @@ public class WidgetValueString extends BaseWidgetValue {
         this.cachedString = cachedString;
     }
 
-    public CachedString getCachedString(){
+    public CachedString getStandardFormOfCachedString(){
+        return cachedString;
+    }
+
+    @Override
+    public CachedString getDebugCachedString() {
         return cachedString;
     }
 

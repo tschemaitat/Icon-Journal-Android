@@ -22,6 +22,7 @@ public class ColorPalette {
         groupColor = context.getColor(R.color.groupColor);
 
         hintText = context.getColor(R.color.hintText);
+        dragShadowBackground = context.getColor(R.color.drawShadowBackground);
     }
     public static int hintText;
     public static int text;
@@ -32,4 +33,5 @@ public class ColorPalette {
     public static int secondary;
     public static int tertiary;
     public static int groupColor;
+    public static int dragShadowBackground;
 }

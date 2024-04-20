@@ -1,18 +1,17 @@
 package com.example.habittracker;
 
 import android.content.Context;
-import android.icu.text.UnicodeSet;
 
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.EntryDropDown;
-import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
+import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class UnitTests {
@@ -23,13 +22,41 @@ public class UnitTests {
         //makeMuscleStructure();
         Structure exercises = makeExerciseStructure();
         makeExerciseRoutineStructure(exercises);
+        Structure genreStructure = makeGenreStructure();
+        makeShowStructure(genreStructure);
+    }
+
+    private Structure makeGenreStructure() {
+        String spreadSheetName = "show genres";
+        EditTextParam nameEditText = new EditTextParam("name");
+        nameEditText.isUniqueAttribute = true;
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
+                nameEditText
+        });
+        return Dictionary.addStructure(spreadSheetName, groupWidgetParam, Dictionary.category);
+    }
+
+    private void makeShowStructure(Structure genreStructure) {
+        String spreadSheetName = "shows";
+        EditTextParam nameEditText = new EditTextParam("name");
+        nameEditText.isUniqueAttribute = true;
+        WidgetId genreWidgetId = getWidgetFromStructure("name", genreStructure);
+        DropDownParam exerciseDropDown = new DropDownParam("genre",
+                genreStructure, genreWidgetId, new ArrayList<>());
+        ListParam genreList = new ListParam("genres", new GroupWidgetParam(null,
+                new ArrayList<>(Collections.singleton(exerciseDropDown))));
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
+                nameEditText,
+                genreList
+        });
+        Dictionary.addStructure(spreadSheetName, groupWidgetParam, Dictionary.category);
     }
 
     public void makeBodyPartStructure(){
         String spreadSheetName = "body part";
-        CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
+        EditTextParam nameEditText = new EditTextParam("name");
 
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText
         });
 
@@ -38,10 +65,10 @@ public class UnitTests {
 
     public void makeMuscleStructure(){
         String spreadSheetName = "muscleGroup";
-        CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
-        CustomEditText.EditTextParam bodyPartEditText = new CustomEditText.EditTextParam("body part");
+        EditTextParam nameEditText = new EditTextParam("name");
+        EditTextParam bodyPartEditText = new EditTextParam("body part");
 
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
                 bodyPartEditText
         });
@@ -51,10 +78,10 @@ public class UnitTests {
 
     public Structure makeExerciseStructure(){
         String spreadSheetName = "exercises";
-        CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
+        EditTextParam nameEditText = new EditTextParam("name");
         nameEditText.isUniqueAttribute = true;
-        CustomEditText.EditTextParam bodyPartEditText = new CustomEditText.EditTextParam("body part");
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+        EditTextParam bodyPartEditText = new EditTextParam("body part");
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
                 bodyPartEditText
         });
@@ -63,15 +90,15 @@ public class UnitTests {
 
     public void makeExerciseRoutineStructure(Structure exerciseStructure){
         String spreadSheetName = "exercise routine";
-        CustomEditText.EditTextParam nameEditText = new CustomEditText.EditTextParam("name");
+        EditTextParam nameEditText = new EditTextParam("name");
         nameEditText.isUniqueAttribute = true;
         WidgetId exerciseName = getWidgetFromStructure("name", exerciseStructure);
         WidgetId bodyPart = getWidgetFromStructure("body part", exerciseStructure);
-        EntryDropDown.DropDownParam exerciseDropDown = new EntryDropDown.DropDownParam("exercise", null,
+        DropDownParam exerciseDropDown = new DropDownParam("exercise",
                 exerciseStructure, exerciseName, new ArrayList<>(Collections.singleton(bodyPart)));
         exerciseDropDown.isUniqueAttribute = true;
-        CustomEditText.EditTextParam repEditText = new CustomEditText.EditTextParam("reps");
-        GroupWidget.GroupWidgetParam groupWidgetParam = new GroupWidget.GroupWidgetParam(null, new EntryWidgetParam[]{
+        EditTextParam repEditText = new EditTextParam("reps");
+        GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
                 exerciseDropDown,
                 repEditText
@@ -81,13 +108,13 @@ public class UnitTests {
     }
 
     public WidgetId getWidgetFromStructure(String widgetName, Structure structure){
-        ArrayList<WidgetId> widgets = structure.getHeader().getWidgetIdList();
+        ArrayList<WidgetId> widgets = structure.getWidgetIdList();
         for(WidgetId widget: widgets){
-            if(widgetName.equals(widget.getNameWithPath().getName())){
+            if(widgetName.equals(widget.getNameWithPath().getLast().getString())){
                 return widget;
             }
         }
-        MainActivity.log("name: " + widgetName + "widgets: \n" + widgets);
+        MainActivity.log("name: " + widgetName + ", widgets: \n" + widgets);
         throw new RuntimeException("tried to find widget by name");
     }
 

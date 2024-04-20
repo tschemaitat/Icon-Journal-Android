@@ -2,6 +2,7 @@ package com.example.habittracker.Structs;
 
 import androidx.annotation.NonNull;
 
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 
 import java.util.ArrayList;
@@ -42,12 +43,7 @@ public class RefItemPath implements Iterable<CachedString>{
         return path.toString();
     }
 
-    public ItemPath getItemPath() {
-        ArrayList<String> stringPath = new ArrayList<>();
-        for(CachedString cachedString: path)
-            stringPath.add(cachedString.getString());
-        return new ItemPath(stringPath);
-    }
+
 
     @NonNull
     @Override
@@ -65,5 +61,9 @@ public class RefItemPath implements Iterable<CachedString>{
     @Override
     public Spliterator<CachedString> spliterator() {
         return path.spliterator();
+    }
+
+    public ArrayList<String> getStringList() {
+        return EnumLoop.makeList(path, (cachedString -> cachedString.getString()));
     }
 }

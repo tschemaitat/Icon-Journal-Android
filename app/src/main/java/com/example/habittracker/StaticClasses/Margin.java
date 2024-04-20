@@ -11,9 +11,8 @@ import android.widget.RelativeLayout;
 
 
 import com.example.habittracker.Layouts.LinLayout;
-import com.example.habittracker.MainActivity;
-import com.example.habittracker.ViewWidgets.StructureWidgetHeaderView;
-import com.example.habittracker.Widgets.CustomEditText;
+import com.example.habittracker.Widgets.StructureWidgets.StructureWidgetHeaderView;
+import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 
 public class Margin {
     public static final int initialLeftMargin = 20;

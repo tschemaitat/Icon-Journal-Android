@@ -3,11 +3,9 @@ package com.example.habittracker.Layouts;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.StructureWidget;
 import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
@@ -39,6 +37,11 @@ public class WidgetLayout {
     public void add(Widget widget){
         widgets.add(widget);
         layout.add(widget.getView());
+    }
+
+    public void add(Widget widget, int index){
+        widgets.add(index, widget);
+        layout.add(widget.getView(), index);
     }
 
     public void remove(Widget widget){

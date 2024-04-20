@@ -3,18 +3,16 @@ package com.example.habittracker.StaticClasses;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.DropDownPages.DropDownPage;
+import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Structs.WidgetPath;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetPath;
+import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +55,7 @@ public class DropDownPageFactory {
                         //if there is already a page, get the page that matches the name
                         //if there is not a page, create it and add it to the list
                         //MainActivity.log("adding new page");
-                        if(baseWidgetValue.getCachedString() instanceof LiteralString){
+                        if(baseWidgetValue.getStandardFormOfCachedString() instanceof LiteralString){
 
                         }
                         newPages.add(page.getOrAdd(new PayloadOption(getRefEntryString(structure, groupIdList.get(groupIndex), entry.getId(), baseWidgetValue), null)));
@@ -87,10 +85,10 @@ public class DropDownPageFactory {
                                                    BaseWidgetValue tree){
         if(entryId == null)
             throw new RuntimeException();
-        if(tree.getCachedString() instanceof LiteralString){
+        if(tree.getStandardFormOfCachedString() instanceof LiteralString){
             return new RefEntryString(structure, widgetId, entryId, tree.getListItemIds());
         }
-        return (RefEntryString) tree.getCachedString();
+        return (RefEntryString) tree.getStandardFormOfCachedString();
     }
 
 

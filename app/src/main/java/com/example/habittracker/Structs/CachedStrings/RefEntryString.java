@@ -2,12 +2,10 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 
-import com.example.habittracker.Structs.EntryValueTree;
-import com.example.habittracker.Structs.WidgetPath;
-import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.structures.WidgetPath;
+import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
-import com.example.habittracker.Values.ListItemId;
-import com.example.habittracker.Values.ListValue;
+import com.example.habittracker.structures.ListItemId;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
 
@@ -32,7 +30,7 @@ public class RefEntryString implements CachedString{
         WidgetPath path = structure.getWidgetInfo(widgetId).getWidgetPath();
 
         BaseWidgetValue value = entry.getGroupValue().getValue(path, listIdList);
-        return value.getCachedString().getString();
+        return value.getStandardFormOfCachedString().getString();
     }
 
     public Structure getStructureId() {

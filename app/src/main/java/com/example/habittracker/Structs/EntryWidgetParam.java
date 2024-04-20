@@ -2,6 +2,7 @@ package com.example.habittracker.Structs;
 
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structures.WidgetId;
 
 public abstract class EntryWidgetParam {
 

@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,8 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.ViewWidgets.Drag;
+import com.example.habittracker.ViewWidgets.LockableScrollView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,12 +35,13 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     public static Context context;
-    ScrollView scrollView;
+    public static LockableScrollView scrollView;
     LinearLayout scrollLinearLayout;
     public static ConstraintLayout constraintLayout;
     LinearLayout buttonInflateBufferLayout;
     public static LinearLayout inflateLayout;
     public static MainActivity mainActivity;
+    public static RelativeLayout popUpLayout;
 
     static Inflatable currentLayout;
 
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);
         constraintLayout = findViewById(R.id.constraintLayoutParent);
         buttonInflateBufferLayout = findViewById(R.id.ButtonInflateBufferLayout);
+        popUpLayout = findViewById(R.id.popUpLayout);
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);
@@ -149,9 +156,60 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(className + "." + methodName + "():" + lineNumber, "<CustLogzzz> " + message);
     }
+    private Drag drag;
+    public void setDragListener(Drag drag){
+        this.drag = drag;
+        scrollView.setScrollingEnabled(false);
+    }
 
+    public void endDrag(){
+        drag.actionUp();
+        this.drag = null;
+        scrollView.setScrollingEnabled(true);
 
+    }
 
+    public void handleTouchEvent(MotionEvent event){
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // User started touching the screen
+                break;
+            case MotionEvent.ACTION_MOVE:
+                drag.updateCursorPosition(event.getRawX(), event.getRawY());
+                // User is moving the touch on the screen
+                break;
+            case MotionEvent.ACTION_UP:
+                endDrag();
+                // User has lifted the touch
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                endDrag();
+                // User has lifted the touch
+                break;
+        }
+    }
+
+    public void logEvent(MotionEvent event){
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //MainActivity.log("action down");
+                return;
+            case MotionEvent.ACTION_MOVE:
+                //MainActivity.log("action down");
+                return;
+            case MotionEvent.ACTION_UP:
+                //MainActivity.log("action up");
+                return;
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        logEvent(event);
+        if(drag != null)
+            handleTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 
 

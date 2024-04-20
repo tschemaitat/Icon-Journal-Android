@@ -1,14 +1,8 @@
 package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.CachedStrings.ArrayString;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetPath;
-import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Values.BaseWidgetValue;
-import com.example.habittracker.Widgets.GroupWidget.*;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +21,11 @@ public class Header {
     }
 
     public void setupWidgetParams(){
+        MainActivity.log("\n\nsetup header for: " + structure.getCachedName());
         parentNode.setDoublePointers();
         ArrayList<HeaderNode> headerNodeList = parentNode.gatherNodes();
+        headerNodeList.remove(parentNode);
+        MainActivity.log("header nodes after gather: \n" + parentNode.hierarchyString(0));
         HashSet<WidgetId> currentWidgetIds = new HashSet<>();
         for(HeaderNode headerNode: headerNodeList){
             WidgetId widgetId = headerNode.getWidgetParam().getWidgetId();
@@ -44,8 +41,10 @@ public class Header {
             if(headerNode.getWidgetParam().getWidgetId() == null){
                 headerNode.getWidgetParam().setWidgetId(idCounter);
                 currentWidgetIds.add(headerNode.getWidgetParam().getWidgetId());
+                idCounter++;
             }
         }
+        MainActivity.log("header nodes after setting ids: \n" + parentNode.hierarchyString(0));
         widgetMap = new HashMap<>();
         for(HeaderNode headerNode: headerNodeList){
             WidgetInfo widgetInfo = new WidgetInfo(headerNode.getWidgetParam(), headerNode.getWidgetPath());

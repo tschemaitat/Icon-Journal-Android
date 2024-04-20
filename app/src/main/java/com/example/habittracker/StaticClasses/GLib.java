@@ -20,13 +20,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.Widgets.CustomEditText;
-import com.example.habittracker.Widgets.DropDown;
+import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
+import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.EntryDropDown;
+import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.StructureWidget;
 import com.example.habittracker.Widgets.Widget;
 
 public class GLib {

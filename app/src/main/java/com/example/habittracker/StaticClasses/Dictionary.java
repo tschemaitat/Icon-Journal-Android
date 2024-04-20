@@ -9,6 +9,7 @@ package com.example.habittracker.StaticClasses;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Widgets.GroupWidget.*;
 
@@ -49,9 +50,6 @@ public class Dictionary {
 
         MainActivity.log("saving structure with name: " + newStructure.getCachedName() + "and id: " + newStructure.getId());
 
-        if(newStructure.getHeader() == null)
-            throw new RuntimeException("saved structure couldn't make a header");
-
         structures.put(newStructure.getId(), newStructure);
         return newStructure;
     }
@@ -59,7 +57,7 @@ public class Dictionary {
     public static void editStructure(Structure structure, GroupWidgetParam param){
         MainActivity.log("editing structure: " + structure.getCachedName());
         Structure newStructure = new Structure(structure.getCachedName().getString(), param,
-                structure.getType(), structure.getEntries(), structure.getHeader().getValuePathMap());
+                structure.getType(), structure.getEntries());
         newStructure.createId();
         MainActivity.log("new structure: " + newStructure.getCachedName());
         structures.remove(structure.getId());

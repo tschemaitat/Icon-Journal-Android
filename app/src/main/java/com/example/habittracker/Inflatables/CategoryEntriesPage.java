@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.EntryValueTree;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Values.GroupValue;

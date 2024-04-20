@@ -12,12 +12,13 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
-import com.example.habittracker.Widgets.CustomEditText;
+import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.StructureWidget;
+import com.example.habittracker.Widgets.StructureWidgets.StructureWidget;
 import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class StructureEditor implements Inflatable{
         this.structure = structure;
         this.structureType = structure.getType();
 
-        init(structure.getCachedName().getString(), (GroupWidget.GroupWidgetParam)structure.getWidgetParam());
+        init(structure.getCachedName().getString(), (GroupWidgetParam)structure.getWidgetParam());
     }
 
     public StructureEditor(Context context, String structureType){
@@ -59,7 +60,7 @@ public class StructureEditor implements Inflatable{
         init(null, null);
     }
 
-    private void init(String name, GroupWidget.GroupWidgetParam groupWidgetParam){
+    private void init(String name, GroupWidgetParam groupWidgetParam){
         layout = new LinLayout(context);
         Margin.setInitialLayout(layout.getView());
         layout.getView().setId(R.id.pageLayout);
@@ -69,7 +70,7 @@ public class StructureEditor implements Inflatable{
         widgetLayout = setupWidgetLayout(layout, groupWidgetParam, context, ()->addStructureWidget());
     }
 
-    private WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidget.GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
+    private WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
         WidgetLayout widgetLayout = new WidgetLayout(context);
         layout.add(widgetLayout.getView());
         if(groupWidgetParam != null)
@@ -85,7 +86,7 @@ public class StructureEditor implements Inflatable{
         widgetLayout.add(structureWidget);
     }
 
-    private void inflateStructureUsingParam(GroupWidget.GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
+    private void inflateStructureUsingParam(GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
         ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
         for(EntryWidgetParam param: entryWidgetParams){
             StructureWidget structureWidget = new StructureWidget(context, widgetLayout);

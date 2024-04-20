@@ -2,8 +2,9 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Structs.WidgetPath;
+import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetPath;
+import com.example.habittracker.structures.ListItemId;
 
 import java.util.ArrayList;
 
@@ -69,5 +70,23 @@ public class ListValue extends WidgetValue {
     public BaseWidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level) {
         GroupValue groupValue = getByListItemId(listIdList.get(level));
         return groupValue.getValueIteration(path, listIdList, level + 1);
+    }
+
+    public void setIdIteration() {
+        int max = -1000;
+        for(GroupValue groupValue: groupValueList){
+            if(groupValue.getListItemId() != null){
+                max = Math.max(max, groupValue.getListItemId().getId());
+            }
+        }
+        max++;
+        for(GroupValue groupValue: groupValueList){
+            if(groupValue.getListItemId() == null){
+                groupValue.setListItemId(new ListItemId(max));
+                max++;
+            }
+        }
+        for(GroupValue groupValue: groupValueList)
+            groupValue.setIdOfTree();
     }
 }

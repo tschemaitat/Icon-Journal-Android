@@ -7,12 +7,10 @@ import com.example.habittracker.Structs.CachedStrings.ArrayString;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetPath;
-import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Widgets.GroupWidget.*;
-import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -22,28 +20,28 @@ public class Structure {
     private int idCount = 0;
     private Integer id;
     private String name;
-    private GroupWidget.GroupWidgetParam widgetParam;
+    private GroupWidgetParam widgetParam;
     private String type;
     private HashMap<Integer, Entry> entries;
     private HashMap<WidgetId, Header.WidgetInfo> widgetMap;
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type){
-        initVariables(name, widgetParam, type, null, null);
+        initVariables(name, widgetParam, type, null);
     }
 
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type,
-                     ArrayList<Entry> entries, HashMap<Integer, WidgetPath> oldValuePaths){
-        initVariables(name, widgetParam, type, entries, oldValuePaths);
+                     ArrayList<Entry> entries){
+        initVariables(name, widgetParam, type, entries);
     }
     public Structure(String type){
-        initVariables(null, null, type, null, null);
+        initVariables(null, null, type, null);
     }
 
     public void initVariables(String name, GroupWidgetParam widgetParam, String type,
-                              ArrayList<Entry> entries, HashMap<Integer, WidgetPath> oldValuePaths){
+                              ArrayList<Entry> entries){
         this.id = null;
         this.name = name;
         this.widgetParam = widgetParam;
@@ -60,14 +58,10 @@ public class Structure {
 
         //MainActivity.log("log param while init structure: \n" + widgetParam.hierarchyString());
 
-        init(oldValuePaths);
+        init();
     }
 
-    public void init(HashMap<Integer, WidgetPath> oldValuePaths){
-        createHeader(oldValuePaths);
-    }
-
-    private void createHeader(HashMap<Integer, WidgetPath> oldValuePaths) {
+    private void init(){
         Header header = new Header(widgetParam, this);
         widgetMap = header.widgetMap;
     }
@@ -208,5 +202,9 @@ public class Structure {
                 result.add(widgetId);
         }
         return result;
+    }
+
+    public ArrayList<WidgetId> getWidgetIdList() {
+        return new ArrayList<>(widgetMap.keySet());
     }
 }

@@ -2,8 +2,9 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.WidgetPath;
-import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.structures.WidgetPath;
+import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.ListItemId;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ public class GroupValue extends WidgetValue{
     private ListItemId listItemId = null;
     private ArrayList<WidgetValue> values = new ArrayList<>();
     private ListValue parent;
+    private boolean setIds = false;
     public GroupValue(ArrayList<WidgetValue> values){
         super(null);
         if(values == null)
@@ -80,7 +82,7 @@ public class GroupValue extends WidgetValue{
         result += tabString + nameAndLength() + "\n";
         for(WidgetValue obj: values){
             if( obj instanceof BaseWidgetValue baseWidgetValue){
-                result += tabString + tab + baseWidgetValue.getDisplayCachedString() + "\n";
+                result += tabString + tab + baseWidgetValue.getDebugCachedString() + "\n";
                 continue;
             }
             if(obj instanceof ListValue listValue){
@@ -153,5 +155,31 @@ public class GroupValue extends WidgetValue{
         }
         ListValue listValue = getListValueByWidget(path.get(level));
         return listValue.getValueIteration(path, listIdList, level);
+    }
+
+    public void setIdOfTree() {
+        if(setIds)
+            throw new RuntimeException();
+        setIdIteration();
+    }
+
+    public void setIdIteration(){
+        setIds = true;
+
+        for(WidgetValue widgetValue: values){
+            if(widgetValue instanceof ListValue listValue){
+                listValue.setIdIteration();
+            }
+        }
+
+    }
+
+    public void setListItemId(ListItemId listItemId) {
+        if(this.listItemId != null){
+            MainActivity.log("tried to set listItemId, current id: " + listItemId.getId() +
+                    "\ncurrent tree: " + hierarchy());
+            throw new RuntimeException();
+        }
+        this.listItemId = listItemId;
     }
 }

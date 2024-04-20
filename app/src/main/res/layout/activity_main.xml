@@ -8,14 +8,80 @@
     android:background="@color/dark1"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/popUpLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/buttonLayout">
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark2"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/EditorButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:text="Editor"
+            android:textAlignment="center"
+            android:textColor="@color/purple"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/CategoriesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:text="Categories"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/purple"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/JournalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:text="Journal"
+            android:textAlignment="center"
+            android:textColor="@color/purple"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TestButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:text="Test"
+            android:textAlignment="center"
+            android:textColor="@color/purple"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <com.example.habittracker.ViewWidgets.LockableScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLayout">
 
         <LinearLayout
             android:id="@+id/scrollLinearLayout"
@@ -30,61 +96,6 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/buttonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/dark2"
-                    android:orientation="horizontal"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp">
-
-                    <TextView
-                        android:id="@+id/EditorButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:layout_weight="1"
-                        android:text="Editor"
-                        android:textAlignment="center"
-                        android:textColor="@color/purple"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/CategoriesButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:layout_weight="1"
-                        android:text="Categories"
-                        android:textAlignment="center"
-                        android:textAllCaps="false"
-                        android:textColor="@color/purple"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/JournalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:layout_weight="1"
-                        android:text="Journal"
-                        android:textAlignment="center"
-                        android:textColor="@color/purple"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/TestButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:layout_weight="1"
-                        android:text="Test"
-                        android:textAlignment="center"
-                        android:textColor="@color/purple"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/inflateLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -95,12 +106,12 @@
                 <View
                     android:id="@+id/view2"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp" />
+                    android:layout_height="100dp" />
 
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </com.example.habittracker.ViewWidgets.LockableScrollView>
 
     <!-- Additional attributes like textSize, textColor, etc. -->
 

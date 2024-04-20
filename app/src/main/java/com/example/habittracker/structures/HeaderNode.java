@@ -4,8 +4,6 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Structs.WidgetPath;
 
 import java.util.ArrayList;
 
@@ -60,11 +58,13 @@ public class HeaderNode{
     public WidgetPath getWidgetPath(){
         ArrayList<WidgetId> widgetIdList = new ArrayList<>();
         getWidgetPathIteration(widgetIdList);
+        widgetIdList.remove(0);
         return new WidgetPath(widgetIdList);
     }
 
     public void getWidgetPathIteration(ArrayList<WidgetId> currentWidgetPath){
-        parent.getWidgetPathIteration(currentWidgetPath);
+        if(parent != null)
+            parent.getWidgetPathIteration(currentWidgetPath);
         currentWidgetPath.add(widgetParam.getWidgetId());
     }
 
@@ -73,7 +73,10 @@ public class HeaderNode{
 
     public String hierarchyString(int numTabs){
         String tabString = GLib.tabs(numTabs);
-        String result = tabString + "(" + getChildren().size() + ")" +getName() + "\n";
+        Integer id = null;
+        if(widgetParam.getWidgetId() != null)
+            id = widgetParam.getWidgetId().getId();
+        String result = tabString + "(" + getChildren().size() + ")" +getName() + ", id: "+id+"\n";
 
         for(HeaderNode node: getChildren()){
             result += node.hierarchyString(numTabs+1);

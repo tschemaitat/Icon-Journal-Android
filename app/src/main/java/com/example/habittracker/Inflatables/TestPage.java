@@ -13,9 +13,8 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.Widgets.CustomEditText;
+import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.ViewWidgets.CustomPopup;
-import com.example.habittracker.Widgets.StructureWidget;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticClasses.GLib;
@@ -11,9 +12,13 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.ViewWidgets.ListWidgetGhostManager;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Layouts.WidgetLayout;
-import com.example.habittracker.Widgets.GroupWidget.*;
+
 import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
@@ -30,7 +35,7 @@ public class ListWidget extends EntryWidget {
         super(context);
         this.context = context;
         layout = new WidgetLayout(context);
-        setChild(layout.getView());
+        setViewWrapperChild(layout.getView());
 
         layout.getLinLayout().getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.secondary));
         Margin.setPadding(layout.getLinLayout().getView(), Margin.listPadding());
@@ -67,18 +72,16 @@ public class ListWidget extends EntryWidget {
 
     }
 
-    @Override
-    public void setStructureCustom(Structure structure){
-        for(GroupWidget groupWidget: getGroupWidgets())
-            groupWidget.setStructure(structure);
-    }
+
 
     public GroupWidget addGroup(GroupWidgetParam param){
+        MainActivity.log("adding group");
         GroupWidget groupWidget = new GroupWidget(context);
+        groupWidget.setListParent(this);
         groupWidget.setOnDataChangedListener(onDataChangedListener());
         groupWidget.setParam(param);
 
-        groupWidget.setStructure(getStructure());
+
 
         LinLayout linLayout = groupWidget.getLinLayout();
         linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
@@ -88,12 +91,17 @@ public class ListWidget extends EntryWidget {
         return groupWidget;
     }
 
+    public void startDrag(GroupWidget draggedGroupWidget) {
+        ListWidgetGhostManager listWidgetGhostManager = new ListWidgetGhostManager(this,
+                draggedGroupWidget, context, layout);
+    }
+
     @Override
     public WidgetValue getEntryValueTreeCustom() {
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
         for(GroupWidget groupWidget: groupWidgets){
-            groupValueList.add((GroupValue) groupWidget.getEntryValueTree());
+            groupValueList.add((GroupValue) groupWidget.getValue());
         }
         return new ListValue(getWidgetId(), groupValueList);
     }
@@ -104,7 +112,6 @@ public class ListWidget extends EntryWidget {
         ListParam listParams = (ListParam) param;
         name = listParams.name;
         cloneParams = listParams.cloneableWidget;
-        layout.inflateAll(new ArrayList<>(listParams.currentWidgets), onDataChangedListener());
         makeButton();
 
 
@@ -115,55 +122,13 @@ public class ListWidget extends EntryWidget {
         layout.getLinLayout().addButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GroupWidget newWidget = null;
-
-                newWidget = (GroupWidget) GLib.inflateWidget(context, cloneParams, onDataChangedListener());
-
-                layout.add(newWidget);
+                addGroup(cloneParams);
             }
         });
     }
 
 
-    public static class ListParam extends EntryWidgetParam {
-        public GroupWidget.GroupWidgetParam cloneableWidget;
-        public ArrayList<GroupWidgetParam> currentWidgets;
 
-        public ListParam(String name, GroupWidgetParam cloneableWidget, ArrayList<GroupWidgetParam> currentWidgets){
-            super(name, ListWidget.className);
-            this.cloneableWidget = cloneableWidget;
-            this.currentWidgets = currentWidgets;
-        }
 
-        public ListParam(String name, GroupWidgetParam cloneableWidget){
-            super(name, ListWidget.className);
-            this.cloneableWidget = cloneableWidget;
-            currentWidgets = new ArrayList<>();
-        }
 
-        public ListParam(String name, EntryWidgetParam[] entryWidgetParams){
-            super(name, ListWidget.className);
-            this.cloneableWidget = new GroupWidgetParam(null, entryWidgetParams);
-            currentWidgets = new ArrayList<>();
-        }
-        public String toString(){
-            return hierarchyString(0);
-        }
-
-        public String hierarchyString(int numTabs){
-
-            return GLib.tabs(numTabs) + "list ("+name+")\n"
-                    + cloneableWidget.hierarchyStringFromList(numTabs + 1);
-        }
-
-        @Override
-        public HeaderNode createHeaderNode() {
-            HeaderNode tree = cloneableWidget.createHeaderNode();
-            HeaderNode result = new HeaderNode(name, this);
-            for(HeaderNode child: tree.getChildren())
-                result.add(child);
-
-            return result;
-        }
-    }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class LinLayout {
     private Context context;
 
-    private LinearLayout layout;
+    private InterceptLinearLayout layout;
     private View addButton = null;
     ArrayList<View> views = new ArrayList<>();
 
@@ -24,10 +24,10 @@ public class LinLayout {
     public LinLayout(Context context){
         this.context = context;
 
-        layout = new LinearLayout(context);
+        layout = new InterceptLinearLayout(context);
         layout.setId(R.id.linLayout);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
+        layout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
     }
 
     public void setChildMargin(Margin margin){
@@ -62,7 +62,17 @@ public class LinLayout {
 
         views.add(view);
         view.setLayoutParams(childParams());
+    }
 
+    public void addWithoutSettingParams(View view, int i){
+        if(view == null)
+            throw new RuntimeException();
+        if(hasButton())
+            layout.addView(view, i);
+        else
+            layout.addView(view, i);
+
+        views.add(i, view);
     }
 
     public void add(View view, int i) {
@@ -82,6 +92,11 @@ public class LinLayout {
             throw new RuntimeException();
         views.remove(view);
         layout.removeView(view);
+    }
+
+    public void removeAt(int index){
+        views.remove(index);
+        layout.removeViewAt(index);
     }
 
     public void addButton(View.OnClickListener listener){

@@ -34,4 +34,6 @@
     <color name="groupColor">#2C213A</color>
     <color name="hintText">#848484</color>
 
+    <color name="drawShadowBackground">#33000000</color>
+
 </resources>

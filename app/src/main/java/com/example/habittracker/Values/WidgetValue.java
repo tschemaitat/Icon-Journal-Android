@@ -1,6 +1,7 @@
 package com.example.habittracker.Values;
 
-import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.ListItemId;
 
 import java.util.ArrayList;
 
@@ -38,4 +39,6 @@ public abstract class WidgetValue {
 
         return result;
     }
+
+
 }
