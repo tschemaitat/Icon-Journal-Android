@@ -14,6 +14,7 @@ public class LockableScrollView extends ScrollView {
     // true if we can scroll (not locked)
     // false if we cannot scroll (locked)
     private boolean mScrollable = true;
+    private float manualScrollCounter = 0.0f;
 
     public LockableScrollView(Context context) {
         super(context);
@@ -44,15 +45,13 @@ public class LockableScrollView extends ScrollView {
     }
 
     public void scroll_down(float amount){
+        manualScrollCounter = manualScrollCounter + amount;
+        int intAmount = (int)manualScrollCounter;
+        float difference = manualScrollCounter - intAmount;
+        manualScrollCounter = difference;
         if(!is_child_larger())
             return;
-        this.scrollBy(0, (int)amount);
-    }
-
-    public void scroll_up(float amount){
-        if(!is_child_larger())
-            return;
-        this.scrollBy(0, (int)(amount * -1));
+        this.scrollBy(0, intAmount);
     }
 
     public boolean isScrollable() {

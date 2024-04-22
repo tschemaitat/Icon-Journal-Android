@@ -1,10 +1,12 @@
 package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import com.example.habittracker.Layouts.ViewWrapper;
 import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Values.WidgetValue;
@@ -17,9 +19,12 @@ public abstract class EntryWidget implements Widget {
     private ViewWrapper viewWrapper;
     private boolean dataSet = false;
     private Integer widgetIdTracker;
+    private boolean enabled = true;
+    private Context context;
 
 
     public EntryWidget(Context context){
+        this.context = context;
 
         viewWrapper = new ViewWrapper(context);
         viewWrapper.getView().setId(R.id.entryWidgetWrapper);
@@ -30,6 +35,28 @@ public abstract class EntryWidget implements Widget {
             throw new RuntimeException();
         this.onDataChanged = runnable;
     }
+
+    public void disable(){
+        if(!enabled)
+            throw new RuntimeException();
+        enabled = false;
+        getView().setForeground(new ColorDrawable(ColorPalette.disableForeground));
+        disableCustom();
+    }
+
+    public void enable(){
+        if(enabled)
+            throw new RuntimeException();
+        enabled = true;
+        getView().setForeground(null);
+        enableCustom();
+    }
+
+    protected abstract void disableCustom();
+
+    protected abstract void enableCustom();
+
+
 
     protected final void setViewWrapperChild(View view){
         viewWrapper.setChildView(view);

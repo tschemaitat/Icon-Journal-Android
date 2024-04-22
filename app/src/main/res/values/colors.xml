@@ -22,6 +22,8 @@
     <color name="darkText1">#D8D8D8</color>
     <color name="darkText2">#9C9C9C</color>
 
+    <color name="disableForeground">#585858</color>
+
 
     <color name="errorTextColor">#D75050</color>
 

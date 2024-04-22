@@ -20,7 +20,8 @@ public class Drag {
     private RelativeLayout.LayoutParams shadowParam;
     private int topBorder;
     private int bottomBorder;
-    private int scrollFactor = 1;
+    private float scrollFactor = 100f;
+    private int postDelayedNumber = 20;
 
 
     public Drag(int shadowWidth, int shadowHeight, ListWidgetGhostManager listWidgetGhostManager, Context context){
@@ -46,27 +47,34 @@ public class Drag {
         return false;
     }
 
-    public int magnitude(int value, int low, int high){
-        return (int)(scrollFactor*(value - low) / (float)(high-low));
+    public float magnitudeBot(int value, int low, int high){
+        float linNumber = (value - low) / (float)(high-low);
+        return scrollFactor * (float)Math.pow(linNumber, 1);
+    }
+
+    public float magnitudeTop(int value, int low, int high){
+        float height = high-low;
+        float linNumber = (height - (value - low) )  / height;
+        return scrollFactor * (float)Math.pow(linNumber, 1);
     }
 
     public void tryToScroll(){
         int layoutHeight = bottomBorder - topBorder;
-        int areaToScroll = layoutHeight/4;
+        int areaToScroll = (int)(layoutHeight/2.3);
         int sign = 0;
         float magnitude = 0;
         if(inBetween(cursorY, topBorder, topBorder + areaToScroll)){
             sign = -1;
-            magnitude = magnitude(cursorY, topBorder, topBorder + layoutHeight);
+            magnitude = magnitudeTop(cursorY, topBorder, topBorder + areaToScroll);
         }
         if(inBetween(cursorY, bottomBorder - areaToScroll, bottomBorder)){
             sign = 1;
-            magnitude = magnitude(cursorY, bottomBorder - areaToScroll, bottomBorder);
+            magnitude = magnitudeBot(cursorY, bottomBorder - areaToScroll, bottomBorder);
         }
         MainActivity.scrollView.scroll_down(sign*magnitude);
     }
     public interface DragIterate{
-        void iterate(int x, int y);
+        void iterate(int x, int y, int scrollAmount);
     }
     private DragIterate iterateFunction;
     public void setIterateFunction(DragIterate iterateFunction){
@@ -103,7 +111,7 @@ public class Drag {
         }
         tryToScroll();
         updateShadowLocation();
-        iterateFunction.iterate(cursorX, cursorY);
+        iterateFunction.iterate(cursorX, cursorY, MainActivity.scrollView.getScrollY());
     }
 
     private void finalIteration(){
@@ -114,7 +122,7 @@ public class Drag {
 
     private void postFunction(){
 
-        view.post(()->{
+        view.postDelayed(()->{
             MainActivity.mainActivity.runOnUiThread(()->{
                 if(isActionUp()){
                     finalIteration();
@@ -123,7 +131,7 @@ public class Drag {
                 iterate();
                 postFunction();
             });
-        });
+        }, postDelayedNumber);
     }
 
     public boolean isActionUp(){

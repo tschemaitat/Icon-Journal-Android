@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
@@ -41,12 +40,12 @@ public class ListWidgetGhostManager {
         View draggedView = draggedGroupWidget.getView();
         int shadowWidth = draggedView.getWidth();
         int shadowHeight = getShadowHeight(draggedView);
-        generateRectangleList(groupWidgetList, shadowWidth, shadowHeight, draggedView.getHeight());
+        generateRectangleList(groupWidgetList, shadowWidth, shadowHeight, draggedView.getHeight(), MainActivity.scrollView.getScrollY());
 
         Drag drag = new Drag(shadowWidth, shadowHeight, this, context);
-        drag.setIterateFunction((x, y) -> {
-            //MainActivity.log("iterating: " + x + ", " + y);
-            int boundIndex = getIndexInBounds(x, y);
+        drag.setIterateFunction((x, y, scrollY) -> {
+            //MainActivity.log("iterating: " + x + ", " + y + ", scrollY: " + scrollY);
+            int boundIndex = getIndexInBounds(x, y + scrollY);
             if(currentVacantIndex != boundIndex){
                 MainActivity.log("new bounds index: " + boundIndex + ", at: " + x + ", " + y);
             }
@@ -86,7 +85,8 @@ public class ListWidgetGhostManager {
     }
 
     public void generateRectangleList(ArrayList<GroupWidget> groupWidgetList, int shadowWidth, int shadowHeight,
-                                      int draggedViewHeight){
+                                      int draggedViewHeight, int scrollY){
+        MainActivity.log("generating bounds list, starting scrollY: " + scrollY);
         groupWidgetBoundList = new ArrayList<>();
         int indexCount = 0;
         int addedY = 0;
@@ -99,7 +99,7 @@ public class ListWidgetGhostManager {
             int width = groupWidgetView.getWidth();
             int height = groupWidgetView.getHeight();
             groupWidgetView.getLocationOnScreen(tempPosArray);
-            groupWidgetBoundList.add(new Rectangle(tempPosArray[0], tempPosArray[1] - addedY, width, height));
+            groupWidgetBoundList.add(new Rectangle(tempPosArray[0], tempPosArray[1] - addedY + scrollY, width, height));
             indexCount++;
         }
         Rectangle lastRectangle = groupWidgetBoundList.get(groupWidgetBoundList.size()-1);

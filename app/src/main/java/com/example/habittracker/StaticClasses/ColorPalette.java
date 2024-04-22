@@ -23,6 +23,8 @@ public class ColorPalette {
 
         hintText = context.getColor(R.color.hintText);
         dragShadowBackground = context.getColor(R.color.drawShadowBackground);
+        disableForeground = context.getColor(R.color.disableForeground);
+
     }
     public static int hintText;
     public static int text;
@@ -34,4 +36,5 @@ public class ColorPalette {
     public static int tertiary;
     public static int groupColor;
     public static int dragShadowBackground;
+    public static int disableForeground;
 }
