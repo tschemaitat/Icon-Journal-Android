@@ -2,11 +2,14 @@ package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.example.habittracker.Layouts.ViewWrapper;
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Values.WidgetValue;
@@ -40,21 +43,25 @@ public abstract class EntryWidget implements Widget {
         if(!enabled)
             throw new RuntimeException();
         enabled = false;
-        getView().setForeground(new ColorDrawable(ColorPalette.disableForeground));
-        disableCustom();
+        viewWrapper.disable();
+        Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
+        Margin currentPadding = Margin.getPadding(getView());
+        getView().setForeground(foregroundDrawable);
+        Margin paddingAfter = Margin.getPadding(getView());
+        if( ! currentPadding.equals(paddingAfter)){
+            MainActivity.log(currentPadding.toString());
+            MainActivity.log(paddingAfter.toString());
+            throw new RuntimeException();
+        }
     }
 
     public void enable(){
         if(enabled)
             throw new RuntimeException();
+        viewWrapper.enable();
         enabled = true;
         getView().setForeground(null);
-        enableCustom();
     }
-
-    protected abstract void disableCustom();
-
-    protected abstract void enableCustom();
 
 
 
@@ -85,8 +92,11 @@ public abstract class EntryWidget implements Widget {
 
     public final void setName(String name){
         //System.out.println("set name: " + name);
-        viewWrapper.setName(name);
+        //viewWrapper.setName(name);
+        setHint(name);
     }
+
+    protected abstract void setHint(String hintString);
 
 
 

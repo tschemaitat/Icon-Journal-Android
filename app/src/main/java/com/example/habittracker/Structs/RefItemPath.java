@@ -66,4 +66,12 @@ public class RefItemPath implements Iterable<CachedString>{
     public ArrayList<String> getStringList() {
         return EnumLoop.makeList(path, (cachedString -> cachedString.getString()));
     }
+
+    public int size() {
+        return path.size();
+    }
+
+    public CachedString get(int i) {
+        return path.get(i);
+    }
 }

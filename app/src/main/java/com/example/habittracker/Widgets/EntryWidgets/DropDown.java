@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.DropDownPage;
@@ -17,6 +16,7 @@ import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DropDown{
 
@@ -40,9 +40,10 @@ public class DropDown{
     private DropDownOnSelected onSelectedListener;
 
     boolean setSelected = false;
+    private DropDownPage previousDropDownPage = null;
 
 
-    public ArrayList<String> selectedValuePath = null;
+    public DropDownOption selectedDropDownOption = null;
     public DropDown(Context context, DropDownOnSelected onSelected) {
         this.context = context;
         this.onSelectedListener = onSelected;
@@ -53,7 +54,6 @@ public class DropDown{
 
 
     private void init(){
-        selectedValuePath = null;
         createButton();
     }
     private void createButton(){
@@ -63,13 +63,21 @@ public class DropDown{
         });
         buttonSelectionView.setColor(ColorPalette.textPurple);
     }
+    private void logPages(){
+        MainActivity.log("parent: \n" + parentPage.hierarchyString());
+        MainActivity.log("current: \n" + currentPage.hierarchyString());
+    }
     //when drop down is initially pressed
     private void createPopUp(){
-        customPopup = new CustomPopup(context, "", new ArrayList<>(), (stringValue, position, key) -> {
-            onItemSelected(position, key);
+        customPopup = new CustomPopup(context, "", new ArrayList<>(), (cachedString, position, key) -> {
+            MainActivity.log("item selected");
+            logPages();
+            onItemSelected(cachedString, position, key);
         }, () -> {
+            MainActivity.log("back selected");
             onBackSelected();
         }, ()->{
+            MainActivity.log("outside selected");
             //on nothing selected
             //dataChanged(null);
             customPopup.close();
@@ -98,11 +106,16 @@ public class DropDown{
 
 
 
-    private void onItemSelected(int position, Object payload){
+    private void onItemSelected(CachedString cachedString, int position, Object payload){
         DropDownPage clickedPage = currentPage.getChildPage(position);
+        if(currentPage == parentPage){
+            if(customPopup.hasBackIcon()){
+                customPopup.addBackIcon();
+            }
+        }
         //if the page clicked is not a folder
         if(!clickedPage.hasChildren()){
-            onDataChanged(clickedPage.getName(), payload);
+            onDataChanged(clickedPage, false);
             return;
         }
         //if we are going into a new page
@@ -114,37 +127,55 @@ public class DropDown{
     }
     private void onBackSelected() {
         //System.out.println("back button");
-        if(currentPage == parentPage){
-            onDataChanged(null, null);
-            return;
-        }
+        //this never happened????
+//        if(currentPage == parentPage){
+//            currentPage = currentPage.getParent();
+//            onDataChanged(null, true);
+//            return;
+//        }
         if(currentPage.getParent() == parentPage){
             customPopup.removeBackIcon();
         }
-        //on back button
         currentPage = currentPage.getParent();
+        //on back button
+
         setOptionsOfPage();
     }
-    private void onDataChanged(String newValue, Object payload){
+    private void onDataChanged(DropDownPage clickedPage, boolean newValueIsNull){
+        DropDownOption previousSelectedOption = selectedDropDownOption;
         //we didn't set the page clicked because its not a folder, so we have to add the name onto the end
-        handleStateOnDataChanged(newValue);
+        handleStateOnDataChanged(clickedPage, newValueIsNull);
 
         customPopup.close();
         customPopup = null;
-        onSelectedListener.onSelected(selectedValuePath, payload);
+
+        RefItemPath currentRefItemPath = null;
+        RefItemPath prevRefItemPath = null;
+        Object currentPayload = null;
+        Object prevPayload = null;
+
+        if(previousSelectedOption != null){
+            prevRefItemPath = previousSelectedOption.refItemPath;
+            prevPayload = previousSelectedOption.payload;
+        }
+        if(selectedDropDownOption != null){
+            currentRefItemPath = selectedDropDownOption.refItemPath;
+            currentPayload = selectedDropDownOption.payload;
+        }
+
+        onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
     }
 
-    private void handleStateOnDataChanged(String newValue){
-        MainActivity.log("handle state change: " + newValue);
-        RefItemPath refItemPath = currentPage.getRefPathToPageWithName();
-        selectedValuePath = refItemPath.getStringList();
-        selectedValuePath.add(newValue);
-        if(newValue == null)
-            buttonSelectionView.setText(new String[]{hint});
-        else
-            buttonSelectionView.setText(new String[]{newValue});
+    private void handleStateOnDataChanged(DropDownPage clickedPage, boolean isValueNull){
+        if(isValueNull){
+            selectedDropDownOption = null;
+            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(new LiteralString(hint))));
+        }else{
+            selectedDropDownOption = new DropDownOption(clickedPage.getRefPathToPageWithName(),
+                    clickedPage.getPayloadOption().getPayload());
+            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(clickedPage.getCachedName())));
+        }
     }
-
     private ArrayList<PayloadOption> formatOptions(DropDownPage page, String folderString){
         if(page != parentPage && ! page.hasChildren()){
             MainActivity.log("parent: \n" + parentPage.hierarchyString() + "\nthis page: \n" + page.hierarchyString());
@@ -173,13 +204,11 @@ public class DropDown{
         return buttonSelectionView.getView();
     }
     public void setDropDownPage(DropDownPage dropDownPage){
-        if(dropDownPage == null)
-            throw new RuntimeException();
         this.parentPage = dropDownPage;
         currentPage = parentPage;
     }
 
-    public void setSelected(ArrayList<String> itemPath){
+    public void setSelected(RefItemPath refItemPath){
         if(setSelected)
             throw new RuntimeException("set selected shouldn't be called twice");
         setSelected = true;
@@ -187,17 +216,27 @@ public class DropDown{
             throw new RuntimeException("tried to set selected path with no page set");
         if(currentPage != parentPage)
             throw new RuntimeException("weird state, tried to set selected when current page isn't parent page");
-        EnumLoop.loop(itemPath, (index, pageName)->{
+        for(int i = 0; i < refItemPath.size() - 1; i++){
+            CachedString pageName = refItemPath.get(i);
             DropDownPage newPage = currentPage.getChildPage(pageName);
             currentPage = newPage;
-        });
-        handleStateOnDataChanged(itemPath.get(itemPath.size()-1));
+        }
+        DropDownPage lastPage = currentPage.getChildPage(refItemPath.getLast());
+        handleStateOnDataChanged(lastPage, false);
     }
-    public ArrayList<String> getSelectedPath(){
-        return selectedValuePath;
+    public RefItemPath getSelectedPath(){
+        if(selectedDropDownOption == null)
+            return null;
+        return selectedDropDownOption.refItemPath;
+    }
+
+    public Object getPayload(){
+        if(selectedDropDownOption == null)
+            return null;
+        return selectedDropDownOption.payload;
     }
     public void resetValue(){
-        selectedValuePath = null;
+        selectedDropDownOption = null;
         currentPage = parentPage;
     }
     public void setHint(String select_type) {
@@ -224,11 +263,11 @@ public class DropDown{
             throw new RuntimeException();
         }
         currentPage = page.parent;
-        handleStateOnDataChanged(cachedString.getString());
+        handleStateOnDataChanged(page, false);
 
     }
 
-    public DropDownPage searchTree(DropDownPage page, Object payload){
+    private DropDownPage searchTree(DropDownPage page, Object payload){
         if( ! page.hasChildren()){
             if(page.getPayloadOption().getPayload().equals(payload)){
                 return page;
@@ -245,6 +284,16 @@ public class DropDown{
     }
 
     public interface DropDownOnSelected{
-        void onSelected(ArrayList<String> itemPath, Object payload);
+        void onSelected(RefItemPath refItemPath, Object payload, RefItemPath prevRefItemPath, Object prevPayload);
+    }
+
+    public static class DropDownOption{
+        public RefItemPath refItemPath;
+        public Object payload;
+
+        public DropDownOption(RefItemPath refItemPath, Object payload) {
+            this.refItemPath = refItemPath;
+            this.payload = payload;
+        }
     }
 }

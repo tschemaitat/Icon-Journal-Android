@@ -118,4 +118,11 @@ public class LinLayout {
     }
 
 
+    public void disableViewsInside() {
+        layout.disableViewsInside();
+    }
+
+    public void enableViewsInside() {
+        layout.enableViewsInside();
+    }
 }

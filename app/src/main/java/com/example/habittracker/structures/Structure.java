@@ -27,22 +27,22 @@ public class Structure {
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type){
-        initVariables(name, widgetParam, type, null);
+        initVariables(name, widgetParam, type, null, null);
     }
 
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type,
-                     ArrayList<Entry> entries){
-        initVariables(name, widgetParam, type, entries);
+                     ArrayList<Entry> entries, int id){
+        initVariables(name, widgetParam, type, entries, id);
     }
     public Structure(String type){
-        initVariables(null, null, type, null);
+        initVariables(null, null, type, null, null);
     }
 
     public void initVariables(String name, GroupWidgetParam widgetParam, String type,
-                              ArrayList<Entry> entries){
-        this.id = null;
+                              ArrayList<Entry> entries, Integer id){
+        this.id = id;
         this.name = name;
         this.widgetParam = widgetParam;
         this.type = type;

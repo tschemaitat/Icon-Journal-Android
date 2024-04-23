@@ -39,7 +39,7 @@ public class EditorSelectionPage implements Inflatable {
         items.add("category");
         items.add("journal");
         SelectionView folderSelection = new SelectionView(context, items.toArray(new String[2]), (value, position, key) -> {
-            createSelectionAfterFolder(value);
+            createSelectionAfterFolder(value.getString());
         });
         parentLayout.addView(folderSelection.getView());
     }

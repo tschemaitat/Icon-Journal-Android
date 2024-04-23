@@ -42,7 +42,7 @@ public class CategoryEntryEditorPage implements Inflatable{
         CustomEditText uniqueAttributeEditor = (CustomEditText) firstWidget;
         String uniqueAttribute = uniqueAttributeEditor.getText();
         if(uniqueAttribute == null){
-            uniqueAttributeEditor.showError();
+            uniqueAttributeEditor.setError();
             System.out.println("saving entry error: missing unique attribute");
             createSaveErrorDialog(page);
             return false;

@@ -2,6 +2,7 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
@@ -34,23 +35,23 @@ public class StaticDropDown extends EntryWidget {
     public StaticDropDown(Context context, DropDownPage dropDownPage, Runnable onSelected){
         super(context);
         this.context = context;
-        this.onSelected = (itemPath, payload) -> onSelected.run();
+        this.onSelected = (itemPath, payload, prevItemPath, prevPayload) -> onSelected.run();
         init();
 
-        setup(dropDownPage, (itemPath, payload) -> onSelected.run());
+        setup(dropDownPage, (itemPath, payload, prevItemPath, prevPayload) -> onSelected.run());
     }
 
     private void init(){
-        dropDown = new DropDown(context, (itemPath, payload) -> {
-            listenerWrapper(itemPath, payload);
+        dropDown = new DropDown(context, (itemPath, payload, prevItemPath, prevPayload) -> {
+            listenerWrapper(itemPath, payload, prevItemPath, prevPayload);
         });
         setViewWrapperChild(dropDown.getView());
 
     }
 
-    private void listenerWrapper(ArrayList<String> itemPath, Object payload){
+    private void listenerWrapper(RefItemPath refItemPath, Object payload, RefItemPath prevItemPath, Object prevPayload){
         if(onSelected != null)
-            onSelected.onSelected(itemPath, payload);
+            onSelected.onSelected(refItemPath, payload, prevItemPath, prevPayload);
     }
 
     @Override
@@ -80,11 +81,11 @@ public class StaticDropDown extends EntryWidget {
         return dropDown;
     }
 
-    public String getSelectedString() {
-        ArrayList<String> itemPath = dropDown.getSelectedPath();
+    public CachedString getSelectedString() {
+        RefItemPath itemPath = dropDown.getSelectedPath();
         if(itemPath == null)
             return null;
-        return itemPath.get(itemPath.size() - 1);
+        return itemPath.getLast();
     }
 
     public void setHint(String item_to_be_selected) {
@@ -95,7 +96,7 @@ public class StaticDropDown extends EntryWidget {
         dropDown.resetError();
     }
 
-    public ArrayList<String> getSelectedPath() {
+    public RefItemPath getSelectedPath() {
         return dropDown.getSelectedPath();
     }
 
@@ -112,12 +113,17 @@ public class StaticDropDown extends EntryWidget {
     }
 
     public void setSelectedByPayload(Object payload) {
-
+        if(payload == null)
+            throw new RuntimeException();
         dropDown.setByPayload(payload);
     }
 
+    public Object getPayload(){
+        return dropDown.getPayload();
+    }
+
     public void setSelected(RefItemPath refItemPath) {
-        dropDown.setSelected(refItemPath.getStringList());
+        dropDown.setSelected(refItemPath);
     }
 
     public static class StaticDropDownParameters extends EntryWidgetParam {

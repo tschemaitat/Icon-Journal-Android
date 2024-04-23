@@ -179,6 +179,19 @@ public class Margin {
         return param;
     }
 
+    public String toString(){
+        return "[" + left + ", " + top + ", " + right + ", " + bottom + "]";
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof Margin margin){
+            if(margin.left == left && margin.right == right && margin.top == top && margin.bottom == bottom)
+                return true;
+        }
+        return false;
+    }
+
 
 
     public static class Size{

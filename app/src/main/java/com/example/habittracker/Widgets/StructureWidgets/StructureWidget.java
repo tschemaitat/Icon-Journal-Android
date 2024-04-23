@@ -9,6 +9,7 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
@@ -26,7 +27,6 @@ public class StructureWidget implements Widget {
     private StructureWidgetHeaderView headerView = null;
 
     private StaticDropDown typeDropDown = null;
-    private String currentType = null;
 
     private StructureWidgetList structureWidgetList = null;
     private StructureWidgetDropDown structureWidgetDropDown = null;
@@ -68,9 +68,11 @@ public class StructureWidget implements Widget {
 
         typeDropDown = new StaticDropDown(context);
         layout.add(typeDropDown.getView());
-        typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload) -> onTypeChange());
+        typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload, prevRefItemPath, prevPayload) ->
+                onTypeChange((String)payload, (String)prevPayload));
         typeDropDown.setHint("select type");
         Margin.setStructureWidgetLayout(layout);
+        headerView.disableStar();
     }
 
     public void onDelete(){
@@ -85,21 +87,18 @@ public class StructureWidget implements Widget {
         headerView.nameEditor.disableEdit();
     }
 
-    public void onTypeChange(){
+    public void onTypeChange(String type, String prevType){
         typeDropDown.resetError();
         //System.out.println("<StructureWidget>data changed");
-        String type = typeDropDown.getSelectedString();
         //System.out.println("type = " + type)
         if(type == null){
-            if(currentType == null)
+            if(prevType == null)
                 return;
-            currentType = type;
             setType();
             return;
         }
 
-        if( ! type.equals(currentType) ){
-            currentType = type;
+        if( ! type.equals(prevType) ){
             setType();
         }
 
@@ -111,28 +110,41 @@ public class StructureWidget implements Widget {
         onDataChangeListener.run();
     }
 
-
+    public String getType(){
+        return (String)typeDropDown.getPayload();
+    }
 
     public void setType(){
+        String currentType = getType();
         //System.out.println("reset type");
         clearWidgets();
         typeSwitch:{
             if(currentType == null){
-
+                if(headerView.isStarEnabled())
+                    headerView.disableStar();
                 //System.out.println("structure type null");
                 return;
             }
             if(currentType.equals("list")){
+                MainActivity.log("trying to disable star is it enabled?: " + headerView.isStarEnabled());
+
+                if(headerView.isStarEnabled())
+                    headerView.disableStar();
+                MainActivity.log("after: " + headerView.isStarEnabled());
                 structureWidgetList = new StructureWidgetList(context, layout);
                 return;
             }
             if(currentType.equals("drop down")){
+                if( ! headerView.isStarEnabled())
+                    headerView.enableStar();
                 structureWidgetDropDown = new StructureWidgetDropDown(context, layout);
                 return;
             }
 
 
             if(currentType.equals("edit text")){
+                if( ! headerView.isStarEnabled())
+                    headerView.enableStar();
                 structureWidgetEditText = new StructureWidgetEditText(context, layout);
                 return;
             }
@@ -152,7 +164,7 @@ public class StructureWidget implements Widget {
     public EntryWidgetParam getWidgetInfo(){
         EntryWidgetParam result = null;
 
-        String type = typeDropDown.getSelectedString();
+        String type = getType();
         typeSwitch:{
             if(type == null){
                 typeDropDown.setError();
@@ -200,12 +212,11 @@ public class StructureWidget implements Widget {
         System.out.println("setting param: " + param);
         String type = param.className;
         headerView.nameEditor.setText(param.name);
-        typeDropDown.setSelected(new RefItemPath(new LiteralString(type)));
-        currentType = type;
+        typeDropDown.setSelectedByPayload(type);
         widgetIdTracker = param.widgetIdTracker;
         MainActivity.log(param.name + ": " + param.isUniqueAttribute);
-        headerView.setStarOn(param.isUniqueAttribute);
         setType();
+        headerView.setStarOn(param.isUniqueAttribute);
         typeSwitch:{
             if(type == null)
                 throw new RuntimeException();
@@ -240,9 +251,13 @@ public class StructureWidget implements Widget {
         onDataChangeListener = runnable;
     }
 
-
-    public String getType() {
-        return currentType;
+    public boolean hasUniqueAttribute() {
+        if(headerView.getStarOn())
+            return true;
+        if(getType().equals(ListWidget.className)){
+            return structureWidgetList.hasUniqueAttribute();
+        }
+        return false;
     }
 
     public interface StructureWidgetLayout{

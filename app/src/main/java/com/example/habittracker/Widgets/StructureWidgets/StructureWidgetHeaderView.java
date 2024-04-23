@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
@@ -18,6 +19,8 @@ public class StructureWidgetHeaderView {
     public View upButton;
     public View downButton;
     private boolean starOn = false;
+    private boolean starEnabled = true;
+    private Runnable pressedStarListener;
     private Context context;
     public StructureWidgetHeaderView(Context context, Runnable onTextChange, Runnable onDelete, Runnable moveUp, Runnable moveDown, Runnable pressStar){
         this.context = context;
@@ -26,7 +29,8 @@ public class StructureWidgetHeaderView {
         addNameEditor(null, onTextChange);
         addDeleteButton(onDelete);
         addMoveButtons(moveUp, moveDown);
-        addStar(pressStar);
+        pressedStarListener = pressStar;
+        addStar();
         align(starButton, RelativeLayout.BELOW, downButton);
         align(downButton, RelativeLayout.RIGHT_OF, starButton);
         align(upButton, RelativeLayout.RIGHT_OF, downButton);
@@ -41,6 +45,30 @@ public class StructureWidgetHeaderView {
         //first.setLayoutParams(param);
 
     }
+
+    public void disableStar(){
+        if(starOn)
+            throw new RuntimeException();
+        if( ! starEnabled)
+            throw new RuntimeException();
+        starEnabled = false;
+        starButton.setBackground(GLib.starDisabled);
+    }
+    public void enableStar(){
+        if(starOn)
+            throw new RuntimeException();
+        if(starEnabled)
+            throw new RuntimeException();
+        MainActivity.log("enabling star");
+        starEnabled = true;
+        starButton.setBackground(GLib.starOff);
+    }
+
+    public boolean isStarEnabled(){
+        return starEnabled;
+    }
+
+
     public boolean getStarOn(){
         return starOn;
     }
@@ -50,17 +78,19 @@ public class StructureWidgetHeaderView {
             throw new RuntimeException();
         setStarOn = true;
         this.starOn = starOn;
-        setStarImage();
+        if(starEnabled)
+            setStarImage();
     }
 
     private void setStarImage(){
+        MainActivity.log("setting star image enabled: " + starEnabled);
         if(starOn)
             starButton.setBackground(GLib.starOn);
         else
             starButton.setBackground(GLib.starOff);
     }
 
-    private void addStar(Runnable pressStar){
+    private void addStar(){
         int size = 100;
         starButton = new View(context);
         starButton.setBackground(GLib.starOff);
@@ -69,14 +99,19 @@ public class StructureWidgetHeaderView {
         starParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         starButton.setLayoutParams(starParam);
         relativeLayout.addView(starButton);
-        starButton.setOnClickListener(view -> {
-            if(starOn)
-                starOn = false;
-            else
-                starOn = true;
-            setStarImage();
-            pressStar.run();
-        });
+        starButton.setOnClickListener(view -> starPressed());
+    }
+
+    private void starPressed(){
+        if( ! starEnabled)
+            return;
+        if(starOn)
+            starOn = false;
+        else
+            starOn = true;
+
+        setStarImage();
+        pressedStarListener.run();
     }
 
     private void addMoveButtons(Runnable moveUp, Runnable moveDown) {

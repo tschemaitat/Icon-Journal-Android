@@ -26,6 +26,7 @@ public class InterceptLinearLayout extends LinearLayout {
     private int id;
     private GroupWidget groupWidget;
     private Rectangle boundingBox;
+    private boolean disableViewsInside = false;
     public InterceptLinearLayout(Context context) {
         super(context);
         init();
@@ -62,9 +63,12 @@ public class InterceptLinearLayout extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if(disableViewsInside)
+            return true;
+
         if(!enableIntercept){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
-                MainActivity.log("cannot intercept id: " + id);
+                //MainActivity.log("cannot intercept id: " + id);
             }
             return false;
         }
@@ -169,4 +173,11 @@ public class InterceptLinearLayout extends LinearLayout {
         }, longClickTime);
     }
 
+    public void disableViewsInside(){
+        disableViewsInside = true;
+    }
+
+    public void enableViewsInside(){
+        disableViewsInside = false;
+    }
 }

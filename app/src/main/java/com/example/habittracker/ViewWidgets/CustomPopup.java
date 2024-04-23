@@ -18,6 +18,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.RelParam;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
@@ -115,7 +116,7 @@ public class CustomPopup {
         popupWindow.dismiss();
     }
 
-    public void onSelection(String value, int index, Object key){
+    public void onSelection(CachedString value, int index, Object key){
         MainActivity.log("thing selected: " + value + ", " + key);
         //System.out.println("value selected of popup");
         if(!closed)
@@ -141,7 +142,9 @@ public class CustomPopup {
         backEnabled = false;
     }
 
+    private boolean hasBackIcon = false;
     public void addBackIcon(){
+        hasBackIcon = true;
         //System.out.println("addBackIcon");
         nameLayout.addView(backIcon);
         TextView textView = (TextView) name.getChild(0);
@@ -151,6 +154,7 @@ public class CustomPopup {
     }
 
     public void removeBackIcon(){
+        hasBackIcon = false;
         nameLayout.removeView(backIcon);
     }
 
@@ -175,5 +179,9 @@ public class CustomPopup {
         }
 
         return new BitmapDrawable(resources, bitmap);
+    }
+
+    public boolean hasBackIcon() {
+        return hasBackIcon;
     }
 }

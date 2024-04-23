@@ -17,6 +17,7 @@ import com.example.habittracker.Structs.PayloadOption;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 public class SelectionView {
     Context context;
@@ -91,9 +92,13 @@ public class SelectionView {
         setText(convert(new ArrayList<>(Arrays.asList(strings))));
     }
 
+    public void setTextString(ArrayList<CachedString> stringList) {
+        setText(EnumLoop.makeList(stringList, (string)->new PayloadOption(string, null)));
+    }
+
 
     public interface OnSelected {
-        public void onSelected(String stringValue, int position, Object key);
+        public void onSelected(CachedString cachedString, int position, Object key);
     }
 
     public interface OnAdd{
@@ -192,7 +197,7 @@ public class SelectionView {
 
     private void sendItemSelectedCall(int position){
         PayloadOption cachedString = options.get(position);
-        onSelected.onSelected(cachedString.getString(), position, cachedString.getPayload());
+        onSelected.onSelected(cachedString.getCachedString(), position, cachedString.getPayload());
     }
 
     private ArrayList<PayloadOption> getOptions(){

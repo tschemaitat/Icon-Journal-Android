@@ -54,6 +54,11 @@ public class TextSlider extends EntryWidget {
     }
 
     @Override
+    protected void setHint(String hintString) {
+
+    }
+
+    @Override
     protected void setParamCustom(EntryWidgetParam param) {
 
     }

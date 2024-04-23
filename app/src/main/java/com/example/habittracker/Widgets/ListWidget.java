@@ -72,6 +72,10 @@ public class ListWidget extends EntryWidget {
 
     }
 
+    @Override
+    protected void setHint(String hintString) {
+
+    }
 
 
     public GroupWidget addGroup(GroupWidgetParam param){

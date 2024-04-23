@@ -111,7 +111,7 @@ public class DropDownPage{
         if(payloadOption == null)
             throw new RuntimeException("null name in getOrAdd function");
         for(DropDownPage page: children){
-            if(page.getPayloadOption().equals(payloadOption))
+            if(page.getPayloadOption().getCachedString().equals(payloadOption.getCachedString()))
                 return page;
         }
         DropDownPage newPage = new DropDownPage(payloadOption);
@@ -186,7 +186,7 @@ public class DropDownPage{
     }
 
 
-    public DropDownPage getChildPage(String name) {
+    public DropDownPage getChildPage(CachedString name) {
         for(DropDownPage child: getChildren()){
             if(child.getName().equals(name))
                 return child;

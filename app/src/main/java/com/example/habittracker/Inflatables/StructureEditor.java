@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
@@ -146,14 +147,24 @@ public class StructureEditor implements Inflatable{
     }
 
     public boolean checkForUniqueAttribute(){
-        return true;
+        ArrayList<StructureWidget> structureWidgetList = EnumLoop.makeList(widgetLayout.widgets(),
+                (widget)->(StructureWidget) widget);
+        for(StructureWidget structureWidget: structureWidgetList){
+            if(structureWidget.hasUniqueAttribute()){
+                MainActivity.log("structure has a unqiue attribute");
+                return true;
+            }
+
+        }
+        MainActivity.log("doesn't have a unique attribute");
+        return false;
     }
 
     public GroupWidgetParam checkForErrorBeforeSave(){
         boolean error = false;
 
         if(structureKeyEditor.getText() == null){
-            structureKeyEditor.getViewWrapper().setNameRed();
+            structureKeyEditor.setError();
             error = true;
         }
 
@@ -163,16 +174,18 @@ public class StructureEditor implements Inflatable{
             StructureWidget structureWidget = (StructureWidget) widgetLayout.widgets().get(i);
             EntryWidgetParam widgetInfo = structureWidget.getWidgetInfo();
             if(widgetInfo == null){
-                System.out.println("error at index: " + i);
+                MainActivity.log("error at index: " + i);
                 error = true;
                 break;
             }
             widgetInfoList.add(widgetInfo);
         }
         if(error){
-            System.out.println("<structure editor> error while gathering params");
+            MainActivity.log("<structure editor> error while gathering params");
             return null;
         }
+
+
 
         return new GroupWidgetParam(null, widgetInfoList);
     }

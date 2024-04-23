@@ -77,6 +77,11 @@ public class GroupWidget extends EntryWidget {
     }
 
     @Override
+    protected void setHint(String hintString) {
+
+    }
+
+    @Override
     public void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
         layout.inflateAll(groupParams.params, onDataChangedListener());

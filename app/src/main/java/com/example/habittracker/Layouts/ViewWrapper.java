@@ -23,6 +23,15 @@ public class ViewWrapper {
         linearLayout.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         ((LinearLayout)linearLayout.getView()).setOrientation(LinearLayout.VERTICAL);
     }
+
+    public void disable(){
+        linearLayout.disableViewsInside();
+    }
+
+    public void enable(){
+        linearLayout.enableViewsInside();
+    }
+
     public void setName(String name){
         if(name == null)
             throw new RuntimeException();

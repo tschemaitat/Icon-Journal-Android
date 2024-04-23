@@ -73,4 +73,14 @@ public class StructureWidgetList implements Widget{
     public View getView() {
         return groupWidget.getView();
     }
+
+    public boolean hasUniqueAttribute() {
+        ArrayList<StructureWidget> structureWidgetList = EnumLoop.makeList(groupWidget.getWidgetLayout().widgets(),
+                (widget)->(StructureWidget) widget);
+        for(StructureWidget structureWidget: structureWidgetList){
+            if(structureWidget.hasUniqueAttribute())
+                return true;
+        }
+        return false;
+    }
 }

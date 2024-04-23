@@ -20,8 +20,6 @@ public class EntryDropDown extends EntryWidget {
     private WidgetId valueId = null;
     private ArrayList<WidgetId> groupIdList = new ArrayList<>();
 
-    private RefItemPath selectedValuePath = null;
-
     private DropDown dropDown;
 
     private DropDownPage dropDownPage = null;
@@ -35,18 +33,12 @@ public class EntryDropDown extends EntryWidget {
 
     private void init(){
 
-        dropDown = new DropDown(context, new DropDown.DropDownOnSelected() {
-            @Override
-            public void onSelected(ArrayList<String> itemPath, Object payload) {
-                onDataChanged((RefItemPath)payload);
-            }
-        });
+        dropDown = new DropDown(context, (refItemPath, payload, prevRefItemPath, prevPayload) -> onDataChanged((RefItemPath)payload));
         setViewWrapperChild(dropDown.getView());
     }
 
     private void onDataChanged(RefItemPath refItemPath){
         MainActivity.log("on data changed: " + refItemPath);
-        selectedValuePath = refItemPath;
         onDataChangedListener().run();
     }
 
@@ -61,21 +53,25 @@ public class EntryDropDown extends EntryWidget {
         setSelected(widgetValueStringPath.getRefItemPath());
     }
 
+    @Override
+    protected void setHint(String hintString) {
+
+    }
+
     public void setSelected(RefItemPath itemPath){
-        dropDown.setSelected(itemPath.getStringList());
-        selectedValuePath = itemPath;
+        dropDown.setSelected(itemPath);
     }
 
 
 
     public RefItemPath getSelectedPath(){
-        return selectedValuePath;
+        return dropDown.getSelectedPath();
     }
 
     @Override
     public WidgetValue getEntryValueTreeCustom() {
-        MainActivity.log("saving value path: " + selectedValuePath);
-        return new WidgetValueStringPath(getWidgetId(), selectedValuePath);
+        MainActivity.log("saving value path: " + dropDown.getSelectedPath());
+        return new WidgetValueStringPath(getWidgetId(), dropDown.getSelectedPath());
     }
 
     @Override

@@ -57,8 +57,8 @@ public class Dictionary {
     public static void editStructure(Structure structure, GroupWidgetParam param){
         MainActivity.log("editing structure: " + structure.getCachedName());
         Structure newStructure = new Structure(structure.getCachedName().getString(), param,
-                structure.getType(), structure.getEntries());
-        newStructure.createId();
+                structure.getType(), structure.getEntries(), structure.getId());
+
         MainActivity.log("new structure: " + newStructure.getCachedName());
         structures.remove(structure.getId());
         structures.put(newStructure.getId(), newStructure);

@@ -151,10 +151,6 @@ public class CustomEditText extends EntryWidget {
         editTextLayout.setHint(widget_name);
     }
 
-    public void showError() {
-        editTextLayout.setTextColor(ColorPalette.redText);
-    }
-
     public void setError() {
         String text = getText();
         if(text == null){

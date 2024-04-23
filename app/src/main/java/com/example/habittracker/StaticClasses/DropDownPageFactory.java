@@ -100,7 +100,7 @@ public class DropDownPageFactory {
                 "sliderfds"
         };
         ArrayList<String> typeStringList = new ArrayList<>(Arrays.asList(numbers));
-        ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(typeStringList, s -> new PayloadOption(new LiteralString(s), new LiteralString(s)));
+        ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(typeStringList, s -> new PayloadOption(new LiteralString(s), s));
 
         DropDownPage page = new DropDownPage().put(payloadOptionList);
         //MainActivity.log("type pages: \n" + page.hierarchyString());

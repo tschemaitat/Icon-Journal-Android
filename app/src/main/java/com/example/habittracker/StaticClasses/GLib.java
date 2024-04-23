@@ -3,9 +3,11 @@ package com.example.habittracker.StaticClasses;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -193,6 +196,7 @@ public class GLib {
     public static Drawable downArrow;
     public static Drawable starOn;
     public static Drawable starOff;
+    public static Drawable starDisabled;
 
     public static void generateDrawables(Context context){
         Drawable rightArrow = context.getResources().getDrawable(R.drawable.arrow_right);
@@ -201,6 +205,9 @@ public class GLib {
         downArrow = rotateDrawable(rightArrow);
         starOn = context.getResources().getDrawable(R.drawable.star_on);
         starOff = context.getResources().getDrawable(R.drawable.star_off);
+        starDisabled = starOff.getConstantState().newDrawable().mutate();
+        starDisabled.setColorFilter(new PorterDuffColorFilter(Color.argb(128, 0, 0, 0), PorterDuff.Mode.SRC_ATOP));
+
     }
 
     public static Drawable rotateDrawable(Drawable drawable) {
