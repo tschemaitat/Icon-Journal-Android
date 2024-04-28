@@ -7,7 +7,7 @@ import com.example.habittracker.structures.WidgetId;
 public abstract class EntryWidgetParam {
 
     public String name;
-    public String className;
+    private String className;
     public Boolean isUniqueAttribute = false;
     public Integer widgetIdTracker = null;
     private Structure structure;
@@ -49,5 +49,9 @@ public abstract class EntryWidgetParam {
 
     public void setWidgetId(int idCounter) {
         widgetIdTracker = idCounter;
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

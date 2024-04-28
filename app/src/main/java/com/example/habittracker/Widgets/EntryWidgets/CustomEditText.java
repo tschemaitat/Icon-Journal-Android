@@ -2,8 +2,10 @@ package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -16,13 +18,12 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
-import com.example.habittracker.structures.HeaderNode;
 
 public class CustomEditText extends EntryWidget {
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinLayout linLayout;
-    private EditText editTextLayout;
+    private EditText editText;
     private Context context;
 
     private String currentText = nullText;
@@ -36,7 +37,7 @@ public class CustomEditText extends EntryWidget {
     }
 
     public String getText(){
-        Editable editable = editTextLayout.getText();
+        Editable editable = editText.getText();
         if(editable == null)
             return null;
         String result = editable.toString();
@@ -53,23 +54,25 @@ public class CustomEditText extends EntryWidget {
 
     private void setTextState(String newText){
         currentText = newText;
-        editTextLayout.setText(newText);
+        editText.setText(newText);
     }
 
     private void init(){
         linLayout = new LinLayout(context);
         setViewWrapperChild(linLayout.getView());
         //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
-        editTextLayout = new EditText(context);
-        editTextLayout.setPadding(10,0,0,0);
-        editTextLayout.setGravity(Gravity.CENTER_VERTICAL);
-        linLayout.add(editTextLayout);
+        editText = new EditText(context);
+        editText.setPadding(10,0,0,0);
+        editText.setGravity(Gravity.CENTER_VERTICAL);
+        linLayout.add(editText);
 
-        editTextLayout.setMinWidth(GLib.dpToPx(400));
-        editTextLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
-        editTextLayout.setTextColor(ColorPalette.textPurple);
-        editTextLayout.setBackground(null);
-        editTextLayout.setHintTextColor(ColorPalette.hintText);
+        editText.setMinWidth(GLib.dpToPx(400));
+        editText.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
+        editText.setTextColor(ColorPalette.textPurple);
+        editText.setBackground(null);
+        editText.setHintTextColor(ColorPalette.hintText);
+        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
         Margin.setEditTextLayout(this);
 
         setTextListener();
@@ -92,7 +95,7 @@ public class CustomEditText extends EntryWidget {
     }
 
     private void setTextListener(){
-        editTextLayout.addTextChangedListener(new TextWatcher() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -144,29 +147,29 @@ public class CustomEditText extends EntryWidget {
     }
 
     public void disableEdit() {
-        editTextLayout.setEnabled(false);
+        editText.setEnabled(false);
     }
 
     public void setHint(String widget_name) {
-        editTextLayout.setHint(widget_name);
+        editText.setHint(widget_name);
     }
 
     public void setError() {
         String text = getText();
         if(text == null){
-            editTextLayout.setHintTextColor(ColorPalette.redText);
+            editText.setHintTextColor(ColorPalette.redText);
             return;
         }
-        editTextLayout.setTextColor(ColorPalette.redText);
+        editText.setTextColor(ColorPalette.redText);
     }
 
     public void resetError(){
-        editTextLayout.setHintTextColor(ColorPalette.hintText);
-        editTextLayout.setTextColor(ColorPalette.textPurple);
+        editText.setHintTextColor(ColorPalette.hintText);
+        editText.setTextColor(ColorPalette.textPurple);
     }
 
     public EditText getEditText() {
-        return editTextLayout;
+        return editText;
     }
 
 

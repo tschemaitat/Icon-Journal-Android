@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets.EntryWidgets;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.example.habittracker.Layouts.ViewWrapper;
@@ -11,6 +12,10 @@ import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.FocusTreeParent;
+import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.structures.ListItemId;
 import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
@@ -24,6 +29,8 @@ public abstract class EntryWidget implements Widget {
     private Integer widgetIdTracker;
     private boolean enabled = true;
     private Context context;
+    private ListItemId listItemId;
+    private FocusTreeParent focusParent;
 
 
     public EntryWidget(Context context){
@@ -78,6 +85,39 @@ public abstract class EntryWidget implements Widget {
         WidgetValue tree = getEntryValueTreeCustom();
 
         return tree;
+    }
+
+    public void setListItemId(ListItemId listItemId){
+        if(listItemId == null){
+            MainActivity.log("name: " + getName());
+            throw new RuntimeException();
+        }
+        this.listItemId = listItemId;
+    }
+
+    public void setFocusParent(FocusTreeParent parent){
+        this.focusParent = parent;
+        this.getView().setFocusable(true);
+        this.getView().setFocusableInTouchMode(true);
+        this.getView().setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                EntryWidget nextWidget = parent.findNextWidget(this);
+                this.getView().clearFocus();
+                if(nextWidget != null)
+                    nextWidget.getView().requestFocus();
+            }
+            return false;
+        });
+
+    }
+
+    public FocusTreeParent getFocusParent(){
+        return focusParent;
+
+    }
+
+    public ListItemId getListItemId(){
+        return listItemId;
     }
 
     public WidgetId getWidgetId(){

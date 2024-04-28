@@ -188,7 +188,7 @@ public class DropDownPage{
 
     public DropDownPage getChildPage(CachedString name) {
         for(DropDownPage child: getChildren()){
-            if(child.getName().equals(name))
+            if(child.getCachedName().equals(name))
                 return child;
         }
         throw new RuntimeException("tried to find: " + name);

@@ -25,7 +25,7 @@ public class SelectionView {
     OnSelected onSelected;
     OnAdd onAdd;
     ListView listView;
-    int textViewResource;
+    int textViewResource = android.R.layout.simple_list_item_1;
     int color = -1;
 
     public static final String addString = "add";
@@ -157,7 +157,7 @@ public class SelectionView {
         }
         ArrayList<String> optionNames = EnumLoop.makeList(options, payloadOption -> payloadOption.getString());
         //MainActivity.log("selection view optionNames: " + optionNames);
-        textViewResource = android.R.layout.simple_list_item_1;
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 textViewResource, optionNames);

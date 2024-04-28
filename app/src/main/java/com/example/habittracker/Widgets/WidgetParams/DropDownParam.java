@@ -42,7 +42,7 @@ public class DropDownParam extends EntryWidgetParam {
     }
 
     public String toString(){
-        return "{" + className + ", " +structure + ", " +valueKey + ", " +groups + "}";
+        return "{" + getClassName() + ", " +structure + ", " +valueKey + ", " +groups + "}";
     }
 
 }

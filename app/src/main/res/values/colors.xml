@@ -23,6 +23,7 @@
     <color name="darkText2">#9C9C9C</color>
 
     <color name="disableForeground">#585858</color>
+    <color name="listItemBeforeAdd">#5C4C4C4C</color>
 
 
     <color name="errorTextColor">#D75050</color>

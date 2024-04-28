@@ -1,0 +1,15 @@
+com.example.habittracker
+com.example.habittracker.ANotUsing.Slider
+com.example.habittracker.ANotUsing.Slider.Sliders
+com.example.habittracker.Inflatables
+com.example.habittracker.Layouts
+com.example.habittracker.StaticClasses
+com.example.habittracker.Structs
+com.example.habittracker.Structs.CachedStrings
+com.example.habittracker.structures
+com.example.habittracker.Values
+com.example.habittracker.ViewWidgets
+com.example.habittracker.Widgets
+com.example.habittracker.Widgets.EntryWidgets
+com.example.habittracker.Widgets.StructureWidgets
+com.example.habittracker.Widgets.WidgetParams

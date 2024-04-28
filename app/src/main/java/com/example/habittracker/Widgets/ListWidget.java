@@ -1,35 +1,31 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.view.KeyEvent;
 import android.view.View;
 
-import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.Layouts.InterceptLinearLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewWidgets.ListWidgetGhostManager;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.ListParam;
-import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Layouts.WidgetLayout;
-
-import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
 
-public class ListWidget extends EntryWidget {
+public class ListWidget extends EntryWidget implements FocusTreeParent {
 
-    private GroupWidgetParam cloneParams = null;
-    public static final String className = "list";
+
+    public static String className = "list";
     private Context context;
-    private WidgetLayout layout;
-    private String name;
+    protected WidgetLayout layout;
+    protected Widget ghostItem;
+    protected EntryWidgetParam cloneParam;
 
     public ListWidget(Context context){
         super(context);
@@ -37,9 +33,54 @@ public class ListWidget extends EntryWidget {
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getView());
 
-        layout.getLinLayout().getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.secondary));
-        Margin.setPadding(layout.getLinLayout().getView(), Margin.listPadding());
 
+        //makeButton(()->addItem());
+
+    }
+
+
+
+    protected ArrayList<EntryWidget> getWidgetListWithoutGhost(){
+        ArrayList<Widget> widgetList = layout.widgets();
+        widgetList = (ArrayList<Widget>) widgetList.clone();
+        widgetList.remove(widgetList.size() - 1);
+        return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
+    }
+
+    protected ArrayList<EntryWidget> getWidgetList(){
+        ArrayList<Widget> widgetList = layout.widgets();
+        widgetList = (ArrayList<Widget>) widgetList.clone();
+        return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
+    }
+
+    protected void setValueListCustom(WidgetValue widgetValue){
+        throw new RuntimeException();
+    }
+
+    protected void onItemCreated(Widget widget){
+        throw new RuntimeException();
+    }
+
+    protected void addGhostItem(Widget widget){
+        MainActivity.log("adding ghost");
+        widget.getView().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
+        ghostItem = widget;
+        widget.setOnDataChangedListener(()->onGhostData());
+        layout.add(widget);
+    }
+
+    private void onGhostData() {
+        ghostItem.getView().setForeground(null);
+        setViewDraggable(ghostItem);
+        ghostItem = null;
+        addGhostItem(createItem());
+    }
+
+    protected final EntryWidget createItem(){
+        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, onDataChangedListener());
+        entryWidget.setFocusParent(this);
+        onItemCreated(entryWidget);
+        return entryWidget;
     }
 
     public ArrayList<GroupWidget> getGroupWidgets(){
@@ -47,29 +88,17 @@ public class ListWidget extends EntryWidget {
         for(Widget widget: layout.widgets()){
             groupWidgets.add((GroupWidget) widget);
         }
+        groupWidgets.remove(groupWidgets.size() - 1);
         return groupWidgets;
     }
 
-//    public EntryWidgetParam getParam(){
-//        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
-//        ArrayList<GroupWidgetParam> groupWidgetParam = new ArrayList<>();
-//        for(GroupWidget groupWidget: groupWidgets){
-//            groupWidgetParam.add((GroupWidgetParam) groupWidget.getParam());
-//        }
-//        ListParam params = new ListParam(name, cloneParams, groupWidgetParam);
-//
-//        return params;
-//    }
-
     @Override
-    public void setValueCustom(WidgetValue widgetValue) {
-        ListValue listValue = (ListValue) widgetValue;
-        System.out.println("list setting value: " + listValue.hierarchy());
-        for(GroupValue groupValue: listValue.getGroupValueList()){
-            GroupWidget groupWidget = addGroup(cloneParams);
-            groupWidget.setValue(groupValue);
-        }
-
+    public final void setValueCustom(WidgetValue widgetValue) {
+        layout.remove(ghostItem);
+        ghostItem = null;
+        MainActivity.log("set value list");
+        setValueListCustom(widgetValue);
+        addGhostItem(createItem());
     }
 
     @Override
@@ -77,59 +106,53 @@ public class ListWidget extends EntryWidget {
 
     }
 
-
-    public GroupWidget addGroup(GroupWidgetParam param){
-        MainActivity.log("adding group");
-        GroupWidget groupWidget = new GroupWidget(context);
-        groupWidget.setListParent(this);
-        groupWidget.setOnDataChangedListener(onDataChangedListener());
-        groupWidget.setParam(param);
-
-
-
-        LinLayout linLayout = groupWidget.getLinLayout();
-        linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
-        Margin.setPadding(linLayout.getView(), Margin.listChildMargin());
-
-        layout.add(groupWidget);
-        return groupWidget;
+    protected void setViewDraggable(Widget widget){
+        ((InterceptLinearLayout) widget.getView()).enableIntercept(()->startDrag(widget));
     }
 
-    public void startDrag(GroupWidget draggedGroupWidget) {
+    protected void startDrag(Widget widget) {
         ListWidgetGhostManager listWidgetGhostManager = new ListWidgetGhostManager(this,
-                draggedGroupWidget, context, layout);
+                widget, context, layout);
+    }
+
+    @Override
+    public EntryWidget getFirstWidget() {
+        return (EntryWidget) layout.widgets().get(0);
+    }
+    @Override
+    public EntryWidget findNextWidget(EntryWidget entryWidget){
+        return FocusTreeParentHelper.findNextWidget(entryWidget, getWidgetList(), getFocusParent());
+    }
+
+    protected void setWidgetParam(EntryWidgetParam entryWidgetParam){
+        this.cloneParam = entryWidgetParam;
+        if(ghostItem != null)
+            throw new RuntimeException();
+        addGhostItem(createItem());
     }
 
     @Override
     public WidgetValue getEntryValueTreeCustom() {
-        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
-        ArrayList<GroupValue> groupValueList = new ArrayList<>();
-        for(GroupWidget groupWidget: groupWidgets){
-            groupValueList.add((GroupValue) groupWidget.getValue());
-        }
-        return new ListValue(getWidgetId(), groupValueList);
+        throw new RuntimeException();
     }
 
-
+    @Override
     public void setParamCustom(EntryWidgetParam param){
-        //System.out.println("setting data for list");
-        ListParam listParams = (ListParam) param;
-        name = listParams.name;
-        cloneParams = listParams.cloneableWidget;
-        makeButton();
-
-
-        //System.out.println("data finished set for list");
+        throw new RuntimeException();
     }
 
-    public void makeButton(){
+    public void makeButton(Runnable runnable){
         layout.getLinLayout().addButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addGroup(cloneParams);
+                runnable.run();
             }
         });
     }
+
+
+
+
 
 
 

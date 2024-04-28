@@ -16,6 +16,7 @@ import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.Widgets.ListWidgetMultipleItems;
 import com.example.habittracker.Widgets.StaticDropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
@@ -210,7 +211,7 @@ public class StructureWidget implements Widget {
     @Override
     public void setParam(EntryWidgetParam param){
         System.out.println("setting param: " + param);
-        String type = param.className;
+        String type = param.getClassName();
         headerView.nameEditor.setText(param.name);
         typeDropDown.setSelectedByPayload(type);
         widgetIdTracker = param.widgetIdTracker;

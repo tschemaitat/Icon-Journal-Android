@@ -110,11 +110,26 @@ public class Margin {
         setPaddingAndBackground(linLayout.getView(), secondary, padding);
         //linLayout.setChildMargin(Margin.listChildMargin());
     }
-    public static void setListLayout(LinLayout linLayout){
+    public static void setStructureWidgetListLayout(LinLayout linLayout){
         Margin padding = listPadding();
         setPaddingAndBackground(linLayout.getView(), groupColor, padding);
         linLayout.setChildMargin(Margin.listChildMargin());
     }
+
+    public static void setListWidgetLayout(LinLayout linLayout){
+        Margin padding = listPadding();
+        setPaddingAndBackground(linLayout.getView(), groupColor, padding);
+        linLayout.setChildMargin(Margin.listChildMargin());
+    }
+
+    public static void setListWidgetSingleItemLayout(LinLayout linLayout){
+        Margin padding = listPadding();
+        setPaddingAndBackground(linLayout.getView(), groupColor, padding);
+        linLayout.setChildMargin(Margin.listChildMargin());
+    }
+
+
+
     public static void setEditTextLayout(CustomEditText customEditText){
 
 
@@ -194,7 +209,7 @@ public class Margin {
 
 
 
-    public static class Size{
+    public static class Size {
         private int width;
         private int height;
         private Context context;

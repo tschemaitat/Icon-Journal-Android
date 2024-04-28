@@ -9,15 +9,20 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
+import com.example.habittracker.ViewWidgets.CustomListView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TestPage implements Inflatable {
     private LinearLayout linearLayout;
@@ -27,12 +32,7 @@ public class TestPage implements Inflatable {
         this.context = context;
         linearLayout = MainActivity.createVerticalLayout();
         linearLayout.setId(R.id.pageLayout);
-        //setupTestLayout();
-        //testDataTreeValueExport();
-        //testNewEditText();
-        //testCard();
-        //testPopup();
-        testLinLayoutButton();
+        testCustomListView();
     }
 
     @Override
@@ -55,54 +55,23 @@ public class TestPage implements Inflatable {
         return true;
     }
 
-    public void testCard(){
-        MainActivity.constraintLayout.setBackgroundColor(Color.WHITE);
-
-        CardView cardView = (CardView) GLib.inflate(R.layout.card_view);
-        RelativeLayout.LayoutParams cardViewLayoutParams = new RelativeLayout.LayoutParams(200, 400);
-        cardViewLayoutParams.setMargins(100, 100, 100, 100);
-        cardViewLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        cardView.setLayoutParams(cardViewLayoutParams);
-        //cardView.setCardElevation(-10);
-        //cardView.setCardBackgroundColor(context.getColor(R.color.gray3));
-        //cardView.setCardBackgroundColor(Color.WHITE);
-        //cardView.setRadius(20);
-        linearLayout.addView(cardView);
-        cardView.setCardElevation(0);
-        cardView.setBackground(context.getDrawable(R.drawable.background_of_card));
-        cardView.setPadding(20, 20, 20, 20);
+    private void testCustomListView(){
+        ArrayList<String> array = new ArrayList<>(List.of(
+                "option1",
+                "option2",
+                "option3"
+        ));
+        CustomListView customListView = new CustomListView(ColorPalette.textPurple, context);
+        customListView.setArray(array);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(400, 400);
+        customListView.getView().setLayoutParams(param);
+        linearLayout.addView(customListView.getView());
     }
 
-    public void testLinLayoutButton(){
-        LinLayout linLayout = new LinLayout(context);
-        linearLayout.addView(linLayout.getView());
-        linLayout.addButton((view)->{});
-        TextView textView = new TextView(context);
-        textView.setText("hello");
-        linLayout.add(textView);
-
-    }
-
-    public void testPopup(){
-        int blue1 = context.getColor(R.color.blue1);
-        int blue2 = context.getColor(R.color.blue2);
-        int blue3 = context.getColor(R.color.blue3);
-        int blue4 = context.getColor(R.color.blue4);
-        int blue5 = context.getColor(R.color.blue5);
-        MainActivity.constraintLayout.setBackgroundColor(context.getColor(R.color.dark1));
-        //linearLayout.setBackground(new ColorDrawable(Color.WHITE));
-
-        LinLayout layout = new LinLayout(context);
-        linearLayout.addView(layout.getView());
-        CustomEditText customEditText = new CustomEditText(context);
-        layout.add(customEditText.getView());
-        CustomPopup customPopup = new CustomPopup(context, "title", new ArrayList<>(Arrays.asList("hi", "hello")), null, null, null);
 
 
-        linearLayout.post(()->{
-            customPopup.showPopupWindow(customEditText.getView());
-        });
-    }
+
+
 
 
 

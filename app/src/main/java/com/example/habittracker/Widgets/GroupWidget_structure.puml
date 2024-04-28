@@ -1,0 +1,1132 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 3,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.example.habittracker.Widgets.GroupWidget",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1322970774 { 
+   	label=example
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_534109880 { 
+   	label=habittracker
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   CategoryEntriesPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CategoryEntriesPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linearLayout: LinearLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- getOptionsFromNames(entryNames: ArrayList&lt;ArrayList&lt;String&gt;&gt;): ArrayList&lt;String&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CategoryEntryEditorPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CategoryEntryEditorPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   discarding: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   entry: Entry [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupWidget: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linearLayout: LinearLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- checkValidForSave(page: Inflatable): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- createSaveErrorDialog(page: Inflatable)</TD></TR>
+<TR><TD ALIGN="LEFT" >- discardEntry(page: Inflatable)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onDataChanged()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >- save()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CategorySelectionPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CategorySelectionPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linearLayout: LinearLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ onCategorySelected(structure: Structure)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CustomEditText1069778869[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CustomEditText</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   currentText: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   editTextLayout: EditText [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linLayout: LinLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ disableEdit()</TD></TR>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onTextChange(before: String, newText: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetError()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Drag775554897[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Drag</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   actionUp: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   bottomBorder: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cursorX: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cursorY: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   doneInitialPost: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   iterateFunction: DragIterate [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   listWidgetGhostManager: ListWidgetGhostManager [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   onActionUp: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   postDelayedNumber: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   relativeLayout: RelativeLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   scrollFactor: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   shadowParam: LayoutParams [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   topBorder: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   view: View [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ actionUp()</TD></TR>
+<TR><TD ALIGN="LEFT" >- finalIteration()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inBetween(value: int, low: int, high: int): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- initShadow(shadowWidth: int, shadowHeight: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >- initialPost()</TD></TR>
+<TR><TD ALIGN="LEFT" >- iterate()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ magnitudeBot(value: int, low: int, high: int): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ magnitudeTop(value: int, low: int, high: int): float</TD></TR>
+<TR><TD ALIGN="LEFT" >- postFunction()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToScroll()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateCursorPosition(rawX: float, rawY: float)</TD></TR>
+<TR><TD ALIGN="LEFT" >- updateShadowLocation()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+DropDown1069778869[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DropDown</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   buttonSelectionView: SelectionView [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   currentPage: DropDownPage [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   customPopup: CustomPopup [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   folder: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   hint: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   onSelectedListener: DropDownOnSelected [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   parentPage: DropDownPage [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   previousDropDownPage: DropDownPage [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   selectedDropDownOption: DropDownOption [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   setSelected: boolean [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- createButton()</TD></TR>
+<TR><TD ALIGN="LEFT" >- createPopUp()</TD></TR>
+<TR><TD ALIGN="LEFT" >- formatOptions(page: DropDownPage, folderString: String): ArrayList&lt;PayloadOption&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >- handleStateOnDataChanged(clickedPage: DropDownPage, isValueNull: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >- logPages()</TD></TR>
+<TR><TD ALIGN="LEFT" >- onBackSelected()</TD></TR>
+<TR><TD ALIGN="LEFT" >- onDataChanged(clickedPage: DropDownPage, newValueIsNull: boolean)</TD></TR>
+<TR><TD ALIGN="LEFT" >- onItemSelected(cachedString: CachedString, position: int, payload: Object)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetError()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetValue()</TD></TR>
+<TR><TD ALIGN="LEFT" >- searchTree(page: DropDownPage, payload: Object): DropDownPage</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+DropDownPage1430611515[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DropDownPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   children: ArrayList&lt;DropDownPage&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   parent: DropDownPage [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   payloadOption: PayloadOption [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ add(page: DropDownPage)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ add(payloadOption: PayloadOption)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromItemPathWithPayload(itemPathList: ArrayList&lt;RefItemPath&gt;, payloadList: ArrayList&lt;Object&gt;): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromItems(payloadOptionListList: ArrayList&lt;ArrayList&lt;PayloadOption&gt;&gt;): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getByIndex(index: int): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getChild(name: String): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getChildPage(name: CachedString): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getChildPage(index: int): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getOrAdd(payloadOption: PayloadOption): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >- getPagePathIteration(pages: ArrayList&lt;DropDownPage&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getRefPathToPageWithName(path: ArrayList&lt;CachedString&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- hierarchyStringIteration(numTabs: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ makeFromLiteralStrings(name: String, nameList: ArrayList&lt;String&gt;): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ put(nameList: ArrayList&lt;PayloadOption&gt;): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stringWithTab(tab: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+DropDownParam202339646[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DropDownParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   groups: ArrayList&lt;WidgetId&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   structure: Structure [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   valueKey: WidgetId [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EditTextParam202339646[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EditTextParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EditorSelectionPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EditorSelectionPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   parentLayout: LinearLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createFolders()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ createSelectionAfterFolder(structureType: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inflateStructureEditor(structure: Structure)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ initLayout()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EntryDropDown1069778869[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EntryDropDown</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   dropDown: DropDown [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   dropDownPage: DropDownPage [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupIdList: ArrayList&lt;WidgetId&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   valueId: WidgetId [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >- onDataChanged(refItemPath: RefItemPath)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EntryWidget1069778869[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EntryWidget</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   dataSet: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   enabled: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   entryWidgetParam: EntryWidgetParam [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   onDataChanged: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   viewWrapper: ViewWrapper [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgetIdTracker: Integer [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ disable()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enable()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onDataChangedListener(): Runnable</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EntryWidgetParam1430611515[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EntryWidgetParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   className: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   isUniqueAttribute: Boolean [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   widgetIdTracker: Integer [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+EnumLoop346682143[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)EnumLoop</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ loop(list: ArrayList&lt;T&gt;, loopFunction: loopFunction&lt;T&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ makeList(inputList: ArrayList&lt;Input&gt;, convertFunc: ConvertFunc&lt;Result, Input&gt;): ArrayList&lt;Result&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+GLib346682143[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)GLib</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ calculateTextHeight(text: String, textSize: float, typeface: Typeface): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ calculateTextHeight(textView: TextView): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ calculateTextWidth(text: String, textSize: float, typeface: Typeface): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ calculateTextWidth(textView: TextView): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dpToPx(dp: int): int</TD></TR>
+<TR><TD ALIGN="LEFT" >- drawableToBitmap(drawable: Drawable): Bitmap</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateDrawables(context: Context)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getButton(listener: OnClickListener, context: Context): View</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inflate(context: Context, resourceId: int): View</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inflate(id: int): View</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inflateWidget(context: Context, params: EntryWidgetParam, onDataChange: Runnable): Widget</TD></TR>
+<TR><TD ALIGN="LEFT" >+ outlinedLayoutAddView(outlinedLayout: ConstraintLayout, child: View)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ pxToDp(px: int): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ rotateDrawable(drawable: Drawable): Drawable</TD></TR>
+<TR><TD ALIGN="LEFT" >+ setBackgroundColorForView(context: Context, color: int): Drawable</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tabs(num: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+GroupWidget1791138102[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)GroupWidget</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: WidgetLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   listWidgetParent: ListWidget [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ entryWidgets(): ArrayList&lt;EntryWidget&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startDrag()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+GroupWidgetParam202339646[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)GroupWidgetParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   params: ArrayList&lt;EntryWidgetParam&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyStringFromList(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+InterceptLinearLayout409146640[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)InterceptLinearLayout</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   boundingBox: Rectangle [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   disableViewsInside: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   enableIntercept: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupWidget: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   id: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   state: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   timer: Timer [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   timerFinished: boolean [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- cancelEvent()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ cancelTimer()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ disableViewsInside()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enableIntercept(groupWidget: GroupWidget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enableViewsInside()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init()</TD></TR>
+<TR><TD ALIGN="LEFT" >- isInsideBoundingBox(event: MotionEvent): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ longClickFound()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onInterceptTouchEvent(event: MotionEvent): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+JournalPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)JournalPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupWidget: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+LinLayout409146640[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)LinLayout</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   addButton: View [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: InterceptLinearLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   margin: Margin [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   padding: Margin [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   views: ArrayList&lt;View&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ add(view: View)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ add(view: View, i: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addButton(listener: OnClickListener)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addWithoutSettingParams(view: View, i: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ childParams(): LayoutParams</TD></TR>
+<TR><TD ALIGN="LEFT" >+ disableViewsInside()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enableViewsInside()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ remove(view: View)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeAt(index: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeButton()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ListParam202339646[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ListParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   cloneableWidget: GroupWidgetParam [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ListWidget1791138102[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ListWidget</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   cloneParams: GroupWidgetParam [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: WidgetLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addGroup(param: GroupWidgetParam): GroupWidget</TD></TR>
+<TR><TD ALIGN="LEFT" >+ makeButton()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startDrag(draggedGroupWidget: GroupWidget)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ListWidgetGhostManager775554897[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ListWidgetGhostManager</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   currentVacantIndex: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   draggedGroupWidget: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupWidgetBoundList: ArrayList&lt;Rectangle&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   listWidget: ListWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   originalIndex: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   vacantHeight: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgetLayout: WidgetLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addVacant(index: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ generateRectangleList(groupWidgetList: ArrayList&lt;GroupWidget&gt;, shadowWidth: int, shadowHeight: int, draggedViewHeight: int, scrollY: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getIndexInBounds(x: int, y: int): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getShadowHeight(groupWidgetView: View): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ init()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeVacant()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MainActivity179464085[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MainActivity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   buttonInflateBufferLayout: LinearLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   drag: Drag [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   scrollLinearLayout: LinearLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ changePage(newLayout: Inflatable)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ createVerticalLayout(): LinearLayout</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dispatchTouchEvent(event: MotionEvent): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ endDrag()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ handleTouchEvent(event: MotionEvent)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ log(message: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ logEvent(event: MotionEvent)</TD></TR>
+<TR><TD ALIGN="LEFT" ># onCreate(savedInstanceState: Bundle)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ showPopup(context: Context, prompt: String, optionNames: ArrayList&lt;String&gt;, onClickOptions: ArrayList&lt;Runnable&gt;)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ showToast(context: Context, message: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Margin346682143[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Margin</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+   bottom: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   left: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   right: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   top: int [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ add(margin: Margin): Margin</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getLin(width: int, height: int): LayoutParams</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getPadding(view: View): Margin</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getRelativeParam(width: int, height: int, margin: Margin): LayoutParams</TD></TR>
+<TR><TD ALIGN="LEFT" >+ initialPagePadding(): Margin</TD></TR>
+<TR><TD ALIGN="LEFT" >+ listChildMargin(): Margin</TD></TR>
+<TR><TD ALIGN="LEFT" >+ listPadding(): Margin</TD></TR>
+<TR><TD ALIGN="LEFT" >+ subtract(margin: Margin): Margin</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+SliderWithLabels2057271174[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)SliderWithLabels</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   labelIndexList: ArrayList&lt;Integer&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   labels: ArrayList&lt;TextView&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   slider: CustomSlider [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   valueArray: ArrayList&lt;String&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- constraint(view: View, context: Context, x: int, y: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >- constraintLabels(trackToLabelMargin: int, numberValues: int, trackStart: int, trackEnd: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >- constraintSlider(marginLeft: int, marginTop: int, marginRight: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >- constraintSliderAndLabels()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ createLabelViews(context: Context)</TD></TR>
+<TR><TD ALIGN="LEFT" >- createTextView(context: Context, label: String): TextView</TD></TR>
+<TR><TD ALIGN="LEFT" >- init(context: Context)</TD></TR>
+<TR><TD ALIGN="LEFT" >- printAllConstraints()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ selectedValue(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >- trackMargin(): int</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StaticDropDown1791138102[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StaticDropDown</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   dataSet: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   dropDown: DropDown [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   onSelected: DropDownOnSelected [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >- listenerWrapper(refItemPath: RefItemPath, payload: Object, prevItemPath: RefItemPath, prevPayload: Object)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetError()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetValue()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StaticDropDownParameters2086431593[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StaticDropDownParameters</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   page: DropDownPage [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Structure1914509657[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Structure</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   entries: HashMap&lt;Integer, Entry&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   id: Integer [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   idCount: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   type: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgetMap: HashMap&lt;WidgetId, WidgetInfo&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgetParam: GroupWidgetParam [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addEntry(entryData: GroupValue)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ createId()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getEntry(entryId: int): Entry</TD></TR>
+<TR><TD ALIGN="LEFT" ># getEntryName(entry: Entry): CachedString</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getWidgetInfo(widgetId: WidgetId): WidgetInfo</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getWidgetParamFromId(widgetId: WidgetId): EntryWidgetParam</TD></TR>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ initVariables(name: String, widgetParam: GroupWidgetParam, type: String, entries: ArrayList&lt;Entry&gt;, id: Integer)</TD></TR>
+<TR><TD ALIGN="LEFT" >- insertOldEntry(entry: Entry)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ isSpreadsheet(type: String): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureEditor1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureEditor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   layout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   newStructure: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   structure: Structure [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   structureKeyEditor: CustomEditText [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   structureType: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   widgetLayout: WidgetLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- addStructureWidget()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ checkForErrorBeforeSave(): GroupWidgetParam</TD></TR>
+<TR><TD ALIGN="LEFT" >+ checkForUniqueAttribute(): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >- inflateStructureUsingParam(groupWidgetParam: GroupWidgetParam, widgetLayout: WidgetLayout, context: Context)</TD></TR>
+<TR><TD ALIGN="LEFT" >- init(name: String, groupWidgetParam: GroupWidgetParam)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onSave()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ saveAfterCheck(entryWidgetParams: GroupWidgetParam)</TD></TR>
+<TR><TD ALIGN="LEFT" >- setupSaveButton(layout: LinLayout, onSave: Runnable): Button</TD></TR>
+<TR><TD ALIGN="LEFT" >- setupStructureKeyEditor(name: String, layout: LinLayout, context: Context): CustomEditText</TD></TR>
+<TR><TD ALIGN="LEFT" >- setupWidgetLayout(layout: LinLayout, groupWidgetParam: GroupWidgetParam, context: Context, addStructureWidget: Runnable): WidgetLayout</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureWidget1818475628[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureWidget</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   headerView: StructureWidgetHeaderView [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   moveDown: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   moveUp: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   onDataChangeListener: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   onDelete: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structureWidgetDropDown: StructureWidgetDropDown [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structureWidgetEditText: StructureWidgetEditText [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structureWidgetList: StructureWidgetList [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   typeDropDown: StaticDropDown [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgetIdTracker: Integer [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ clearWidgets()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ disableNameEditor()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onDataChange()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onDelete()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onTypeChange(type: String, prevType: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureWidgetDropDown1818475628[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureWidgetDropDown</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   customLinearLayout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   groupLayout: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   parent: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   structureKeyDropDown: StaticDropDown [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   valueKeyDropDown: StaticDropDown [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- addGroupBy()</TD></TR>
+<TR><TD ALIGN="LEFT" >- addGroupKeyDropDownAdd()</TD></TR>
+<TR><TD ALIGN="LEFT" >- createGroupLayout()</TD></TR>
+<TR><TD ALIGN="LEFT" >- createGroupPage(): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >- createStructureKeyDropDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >- createStructurePage(): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >- createValueKeyDropDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >- createValuePage(): DropDownPage</TD></TR>
+<TR><TD ALIGN="LEFT" >- enableGroupLayout()</TD></TR>
+<TR><TD ALIGN="LEFT" >- enableStructureKeyDropDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >- enableValueKeyDropDown()</TD></TR>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" >- maxNumGroups(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >- onGroupValueChange(payload: WidgetId, prevPayload: WidgetId, index: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >- onStructureKeyChange(structure: Structure, prevStructure: Structure)</TD></TR>
+<TR><TD ALIGN="LEFT" >- onValueKeyChange(value: WidgetId, prevValue: WidgetId)</TD></TR>
+<TR><TD ALIGN="LEFT" >- processGroupClick()</TD></TR>
+<TR><TD ALIGN="LEFT" >- resetAndDisableGroupKeyWidget()</TD></TR>
+<TR><TD ALIGN="LEFT" >- resetAndDisableValueKeyWidget()</TD></TR>
+<TR><TD ALIGN="LEFT" >- tryAddButton()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureWidgetEditText1818475628[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureWidgetEditText</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   parent: LinLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureWidgetHeaderView1818475628[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureWidgetHeaderView</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   deleteButton: ImageButton [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   downButton: View [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   nameEditor: CustomEditText [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pressedStarListener: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   relativeLayout: RelativeLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   setStarOn: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   starButton: View [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   starEnabled: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   starOn: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   upButton: View [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- addDeleteButton(runnable: Runnable)</TD></TR>
+<TR><TD ALIGN="LEFT" >- addMoveButtons(moveUp: Runnable, moveDown: Runnable)</TD></TR>
+<TR><TD ALIGN="LEFT" >- addNameEditor(name: String, onTextChange: Runnable)</TD></TR>
+<TR><TD ALIGN="LEFT" >- addStar()</TD></TR>
+<TR><TD ALIGN="LEFT" >- align(first: View, rule: int, second: View)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ disableStar()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enableStar()</TD></TR>
+<TR><TD ALIGN="LEFT" >- starPressed()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StructureWidgetList1818475628[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StructureWidgetList</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   groupWidget: GroupWidget [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   parent: LinLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addStructureWidget(): StructureWidget</TD></TR>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TestPage1522870782[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TestPage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linearLayout: LinearLayout [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ onOpened()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onRemoved()</TD></TR>
+<TR><TD ALIGN="LEFT" >- testCustomListView()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ tryToRemove(page: Inflatable): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TextSlider2057271174[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TextSlider</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   onDataChangedListener: Runnable [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   sliderWithLabels: SliderWithLabels [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TextSliderParam251238018[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TextSliderParam</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   selected: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ createHeaderNode(): HeaderNode</TD></TR>
+<TR><TD ALIGN="LEFT" >+ hierarchyString(numTabs: int): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ViewWrapper409146640[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ViewWrapper</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   linearLayout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   nameTextView: TextView [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   view: View [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ disable()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ enable()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ resetNameColor()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+WidgetId1914509657[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)WidgetId</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   id: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   structure: Structure [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+WidgetLayout409146640[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)WidgetLayout</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   context: Context [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   layout: LinLayout [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   widgets: ArrayList&lt;Widget&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ add(widget: Widget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ add(widget: Widget, index: int)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ delete(widget: Widget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ inflateAll(params: ArrayList&lt;EntryWidgetParam&gt;, onDataChange: Runnable): ArrayList&lt;Widget&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ moveDown(widget: Widget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ moveUp(widget: Widget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ remove(widget: Widget)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ widgets(): ArrayList&lt;Widget&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+CategoryEntryEditorPage1522870782 -> GroupWidget1791138102[label="groupWidget
+[0..1]"];
+CustomEditText1069778869 -> GLib346682143[label="init() -> dpToPx()"];
+CustomEditText1069778869 -> LinLayout409146640[label="linLayout
+[0..1]"];
+CustomEditText1069778869 -> ViewWrapper409146640[label="onTextChange() -> resetNameColor()"];
+EntryDropDown1069778869 -> DropDown1069778869[label="dropDown
+[0..1]"];
+EntryDropDown1069778869 -> DropDownPage1430611515[label="dropDownPage
+[0..1]"];
+EntryDropDown1069778869 -> MainActivity179464085[label="onDataChanged() -> log()"];
+EntryDropDown1069778869 -> Structure1914509657[label="structure
+[0..1]"];
+EntryDropDown1069778869 -> WidgetId1914509657[label="groupIdList
+[0..*]"];
+EntryDropDown1069778869 -> WidgetId1914509657[label="valueId
+[0..1]"];
+EntryWidget1069778869 -> CustomEditText1069778869[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> EntryDropDown1069778869[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> EntryWidgetParam1430611515[label="entryWidgetParam
+[0..1]"];
+EntryWidget1069778869 -> GroupWidget1791138102[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> ListWidget1791138102[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> StaticDropDown1791138102[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> StructureWidget1818475628[arrowhead=none];
+EntryWidget1069778869 -> StructureWidgetDropDown1818475628[arrowhead=none];
+EntryWidget1069778869 -> StructureWidgetEditText1818475628[arrowhead=none];
+EntryWidget1069778869 -> StructureWidgetList1818475628[arrowhead=none];
+EntryWidget1069778869 -> TextSlider2057271174[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidget1069778869 -> ViewWrapper409146640[label="viewWrapper
+[0..1]"];
+EntryWidgetParam1430611515 -> DropDownParam202339646[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidgetParam1430611515 -> EditTextParam202339646[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidgetParam1430611515 -> GroupWidgetParam202339646[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidgetParam1430611515 -> ListParam202339646[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidgetParam1430611515 -> StaticDropDownParameters2086431593[arrowhead=none, arrowtail=empty, dir=both];
+EntryWidgetParam1430611515 -> Structure1914509657[label="structure
+[0..1]"];
+EntryWidgetParam1430611515 -> TextSliderParam251238018[arrowhead=none, arrowtail=empty, dir=both];
+GroupWidget1791138102 -> ListWidget1791138102[label="listWidgetParent
+[0..1]"];
+GroupWidget1791138102 -> WidgetLayout409146640[label="layout
+[0..1]"];
+InterceptLinearLayout409146640 -> GroupWidget1791138102[label="groupWidget
+[0..1]"];
+JournalPage1522870782 -> GroupWidget1791138102[label="groupWidget
+[0..1]"];
+ListWidget1791138102 -> WidgetLayout409146640[label="layout
+[0..1]"];
+ListWidgetGhostManager775554897 -> GroupWidget1791138102[label="draggedGroupWidget
+[0..1]"];
+ListWidgetGhostManager775554897 -> ListWidget1791138102[label="listWidget
+[0..1]"];
+ListWidgetGhostManager775554897 -> WidgetLayout409146640[label="widgetLayout
+[0..1]"];
+MainActivity179464085 -> CategoryEntriesPage1522870782[arrowhead=none];
+MainActivity179464085 -> CategoryEntryEditorPage1522870782[arrowhead=none];
+MainActivity179464085 -> CategorySelectionPage1522870782[arrowhead=none];
+MainActivity179464085 -> Drag775554897[label="drag
+[0..1]"];
+MainActivity179464085 -> EditorSelectionPage1522870782[arrowhead=none];
+MainActivity179464085 -> GLib346682143[label="onCreate() -> generateDrawables()"];
+MainActivity179464085 -> JournalPage1522870782[arrowhead=none];
+MainActivity179464085 -> StructureEditor1522870782[arrowhead=none];
+MainActivity179464085 -> TestPage1522870782[arrowhead=none];
+StaticDropDown1791138102 -> DropDown1069778869[label="dropDown
+[0..1]"];
+StructureEditor1522870782 -> CustomEditText1069778869[label="structureKeyEditor
+[0..1]"];
+StructureEditor1522870782 -> WidgetLayout409146640[label="widgetLayout
+[0..1]"];
+StructureWidget1818475628 -> CustomEditText1069778869[label="disableNameEditor() -> disableEdit()"];
+StructureWidget1818475628 -> LinLayout409146640[label="layout
+[0..1]"];
+StructureWidget1818475628 -> StaticDropDown1791138102[label="typeDropDown
+[0..1]"];
+StructureWidget1818475628 -> StructureWidgetDropDown1818475628[label="structureWidgetDropDown
+[0..1]"];
+StructureWidget1818475628 -> StructureWidgetEditText1818475628[label="structureWidgetEditText
+[0..1]"];
+StructureWidget1818475628 -> StructureWidgetHeaderView1818475628[label="headerView
+[0..1]"];
+StructureWidget1818475628 -> StructureWidgetList1818475628[label="structureWidgetList
+[0..1]"];
+StructureWidgetDropDown1818475628 -> DropDown1069778869[label="onStructureKeyChange() -> resetError()"];
+StructureWidgetDropDown1818475628 -> GroupWidget1791138102[label="groupLayout
+[0..1]"];
+StructureWidgetDropDown1818475628 -> LinLayout409146640[label="customLinearLayout
+[0..1]"];
+StructureWidgetDropDown1818475628 -> LinLayout409146640[label="parent
+[0..1]"];
+StructureWidgetDropDown1818475628 -> StaticDropDown1791138102[label="structureKeyDropDown
+[0..1]"];
+StructureWidgetDropDown1818475628 -> StaticDropDown1791138102[label="valueKeyDropDown
+[0..1]"];
+StructureWidgetDropDown1818475628 -> ViewWrapper409146640[label="processGroupClick() -> resetNameColor()"];
+StructureWidgetEditText1818475628 -> LinLayout409146640[label="layout
+[0..1]"];
+StructureWidgetEditText1818475628 -> LinLayout409146640[label="parent
+[0..1]"];
+StructureWidgetHeaderView1818475628 -> CustomEditText1069778869[label="nameEditor
+[0..1]"];
+StructureWidgetList1818475628 -> GroupWidget1791138102[label="groupWidget
+[0..1]"];
+StructureWidgetList1818475628 -> LinLayout409146640[label="parent
+[0..1]"];
+StructureWidgetList1818475628 -> WidgetLayout409146640[label="addStructureWidget() -> add()"];
+TextSlider2057271174 -> SliderWithLabels2057271174[label="sliderWithLabels
+[0..1]"];
+WidgetLayout409146640 -> EntryWidget1069778869[label="widgets
+[0..*]", arrowhead=none];
+    
+}
+@enduml

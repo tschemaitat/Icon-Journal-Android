@@ -80,12 +80,16 @@ public class DropDown{
             MainActivity.log("outside selected");
             //on nothing selected
             //dataChanged(null);
-            customPopup.close();
-            customPopup = null;
+            onOutsideSelected();
         });
         setOptionsOfPage();
         customPopup.enableBack();
         customPopup.showPopupWindow(this.getView());
+    }
+
+    private void onOutsideSelected(){
+        customPopup.close();
+        customPopup = null;
     }
 
 
@@ -126,6 +130,10 @@ public class DropDown{
         setOptionsOfPage();
     }
     private void onBackSelected() {
+        if(currentPage == parentPage){
+            onDataChanged(currentPage, true);
+            return;
+        }
         //System.out.println("back button");
         //this never happened????
 //        if(currentPage == parentPage){
@@ -162,8 +170,27 @@ public class DropDown{
             currentRefItemPath = selectedDropDownOption.refItemPath;
             currentPayload = selectedDropDownOption.payload;
         }
+        if(currentRefItemPath == null){
 
-        onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
+        }
+        if( ! isDataSame(prevRefItemPath, currentRefItemPath)){
+            MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
+            onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
+        }
+
+    }
+
+    private boolean isDataSame(RefItemPath prevPath, RefItemPath newPath){
+        if(prevPath == null){
+            if(newPath == null)
+                return true;
+            else
+                return false;
+        }else{
+            if(newPath == null)
+                return false;
+            return prevPath.equals(newPath);
+        }
     }
 
     private void handleStateOnDataChanged(DropDownPage clickedPage, boolean isValueNull){
@@ -216,13 +243,21 @@ public class DropDown{
             throw new RuntimeException("tried to set selected path with no page set");
         if(currentPage != parentPage)
             throw new RuntimeException("weird state, tried to set selected when current page isn't parent page");
-        for(int i = 0; i < refItemPath.size() - 1; i++){
-            CachedString pageName = refItemPath.get(i);
-            DropDownPage newPage = currentPage.getChildPage(pageName);
-            currentPage = newPage;
+        try{
+            for(int i = 0; i < refItemPath.size() - 1; i++){
+                CachedString pageName = refItemPath.get(i);
+                DropDownPage newPage = currentPage.getChildPage(pageName);
+                currentPage = newPage;
+            }
+            DropDownPage lastPage = currentPage.getChildPage(refItemPath.getLast());
+            handleStateOnDataChanged(lastPage, false);
+        }catch(Exception exception){
+            MainActivity.log("tried to set: " + refItemPath);
+            MainActivity.log("page: " + parentPage.hierarchyString());
+            MainActivity.log("throwing exception");
+            throw exception;
         }
-        DropDownPage lastPage = currentPage.getChildPage(refItemPath.getLast());
-        handleStateOnDataChanged(lastPage, false);
+
     }
     public RefItemPath getSelectedPath(){
         if(selectedDropDownOption == null)

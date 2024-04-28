@@ -38,7 +38,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     private boolean checkValidForSave(Inflatable page){
-        EntryWidget firstWidget = groupWidget.entryWidgets().get(0);
+        EntryWidget firstWidget = groupWidget.getEntryWidgets().get(0);
         CustomEditText uniqueAttributeEditor = (CustomEditText) firstWidget;
         String uniqueAttribute = uniqueAttributeEditor.getText();
         if(uniqueAttribute == null){

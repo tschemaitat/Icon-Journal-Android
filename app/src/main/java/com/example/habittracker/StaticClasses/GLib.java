@@ -29,7 +29,10 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.Widgets.ListWidgetMultipleItems;
+import com.example.habittracker.Widgets.ListWidgetSingleItem;
 import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -120,37 +123,36 @@ public class GLib {
 
     public static Widget inflateWidget(Context context, EntryWidgetParam params, Runnable onDataChange){
 
-        String className = params.className;
+        String className = params.getClassName();
         //System.out.println("inflating widget: " + className);
         Widget widget = null;
-        switch (className){
-            case DropDown.className:
+        switch (className) {
+            case DropDown.className -> {
                 widget = new EntryDropDown(context);
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
-                break;
-            case "list":
-                widget = new ListWidget(context);
+            }
+            case ListWidgetMultipleItems.className -> {
+                widget = new ListWidgetMultipleItems(context);
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
-                break;
-            case GroupWidget.className:
+            }
+            case ListWidgetSingleItem.className -> {
+                widget = new ListWidgetSingleItem(context);
+                widget.setOnDataChangedListener(onDataChange);
+                widget.setParam(params);
+            }
+            case GroupWidget.className -> {
                 widget = new GroupWidget(context);
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
-                break;
-            case CustomEditText.className:
+            }
+            case CustomEditText.className -> {
                 widget = new CustomEditText(context);
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
-                break;
-
-            default:
-
-                throw new RuntimeException("unknown widget class: " + className);
-
-
-
+            }
+            default -> throw new RuntimeException("unknown widget class: " + className);
         }
         return widget;
     }

@@ -24,9 +24,10 @@ public class InterceptLinearLayout extends LinearLayout {
     private boolean enableIntercept = false;
     private int state = stateNoCurrentEvent;
     private int id;
-    private GroupWidget groupWidget;
+    //private GroupWidget groupWidget;
     private Rectangle boundingBox;
     private boolean disableViewsInside = false;
+    private Runnable dragListener;
     public InterceptLinearLayout(Context context) {
         super(context);
         init();
@@ -47,10 +48,10 @@ public class InterceptLinearLayout extends LinearLayout {
         idCount++;
     }
 
-    public void enableIntercept(GroupWidget groupWidget){
+    public void enableIntercept(Runnable dragListener){
         MainActivity.log("enabling intercept id: " + id);
         enableIntercept = true;
-        this.groupWidget = groupWidget;
+        this.dragListener = dragListener;
     }
 
     public static final int stateDown = 1;
@@ -146,7 +147,7 @@ public class InterceptLinearLayout extends LinearLayout {
     public void longClickFound(){
         state = stateNoCurrentEvent;
         MainActivity.log("got long click");
-        groupWidget.startDrag();
+        dragListener.run();
     }
 
     public void cancelTimer(){

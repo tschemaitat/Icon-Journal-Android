@@ -8,10 +8,10 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
+import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class StructureWidgetList implements Widget{
         groupWidget.getWidgetLayout().getLinLayout().addButton(view -> {
             addStructureWidget();
         });
-        Margin.setListLayout(groupWidget.getLinLayout());
+        Margin.setStructureWidgetListLayout(groupWidget.getLinLayout());
 
 //        groupWidget.getView().setBackground(new ColorDrawable(ColorPalette.tertiary));
 //        Margin.setPadding(groupWidget.getView(), Margin.listPadding());
@@ -55,8 +55,16 @@ public class StructureWidgetList implements Widget{
         for(EntryWidgetParam entryWidgetParam: entryWidgetParams)
             if(entryWidgetParam == null)
                 return null;
+        if(entryWidgetParams.size() == 0)
+            return null;
+        if(entryWidgetParams.size() == 1){
+            return new ListSingleItemParam(null, entryWidgetParams.get(0));
+        }else{
+            return new ListParam(null, new GroupWidgetParam(null, entryWidgetParams));
+        }
 
-        return new ListParam(null, new GroupWidgetParam(null, entryWidgetParams));
+
+
     }
 
     @Override

@@ -9,22 +9,24 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
 
 public class ListWidgetGhostManager {
     private ListWidget listWidget;
-    private GroupWidget draggedGroupWidget;
+    private Widget draggedWidget;
     private ArrayList<Rectangle> groupWidgetBoundList;
     private Context context;
     private int currentVacantIndex = -1;
     private WidgetLayout widgetLayout;
     private int vacantHeight = 200;
     private int originalIndex = -1;
+    private ArrayList<GroupWidget> groupWidgetList;
 
-    public ListWidgetGhostManager(ListWidget listWidget, GroupWidget draggedGroupWidget, Context context, WidgetLayout widgetLayout) {
+    public ListWidgetGhostManager(ListWidget listWidget, Widget draggedWidget, Context context, WidgetLayout widgetLayout) {
         this.listWidget = listWidget;
-        this.draggedGroupWidget = draggedGroupWidget;
+        this.draggedWidget = draggedWidget;
         this.context = context;
         this.widgetLayout = widgetLayout;
         init();
@@ -33,11 +35,11 @@ public class ListWidgetGhostManager {
 
     public void init(){
         MainActivity.log("starting drag");
-        ArrayList<GroupWidget> groupWidgetList = listWidget.getGroupWidgets();
-        originalIndex = groupWidgetList.indexOf(draggedGroupWidget);
-        widgetLayout.remove(draggedGroupWidget);
-        groupWidgetList.remove(draggedGroupWidget);
-        View draggedView = draggedGroupWidget.getView();
+        ArrayList<Widget> groupWidgetList = widgetLayout.widgets();
+        originalIndex = groupWidgetList.indexOf(draggedWidget);
+        widgetLayout.remove(draggedWidget);
+        groupWidgetList.remove(draggedWidget);
+        View draggedView = draggedWidget.getView();
         int shadowWidth = draggedView.getWidth();
         int shadowHeight = getShadowHeight(draggedView);
         generateRectangleList(groupWidgetList, shadowWidth, shadowHeight, draggedView.getHeight(), MainActivity.scrollView.getScrollY());
@@ -66,9 +68,9 @@ public class ListWidgetGhostManager {
             if(currentVacantIndex != -1){
                 int temp = currentVacantIndex;
                 removeVacant();
-                widgetLayout.add(draggedGroupWidget, temp);
+                widgetLayout.add(draggedWidget, temp);
             }else{
-                widgetLayout.add(draggedGroupWidget, originalIndex);
+                widgetLayout.add(draggedWidget, originalIndex);
             }
 
         });
@@ -84,17 +86,17 @@ public class ListWidgetGhostManager {
         return -1;
     }
 
-    public void generateRectangleList(ArrayList<GroupWidget> groupWidgetList, int shadowWidth, int shadowHeight,
+    public void generateRectangleList(ArrayList<Widget> groupWidgetList, int shadowWidth, int shadowHeight,
                                       int draggedViewHeight, int scrollY){
         MainActivity.log("generating bounds list, starting scrollY: " + scrollY);
         groupWidgetBoundList = new ArrayList<>();
         int indexCount = 0;
         int addedY = 0;
-        for(GroupWidget groupWidget: groupWidgetList){
+        for(Widget widget: groupWidgetList){
             if(indexCount == originalIndex){
                 addedY = draggedViewHeight;
             }
-            View groupWidgetView = groupWidget.getView();
+            View groupWidgetView = widget.getView();
             int[] tempPosArray = new int[2];
             int width = groupWidgetView.getWidth();
             int height = groupWidgetView.getHeight();

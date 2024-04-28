@@ -4,6 +4,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.Widgets.ListWidgetMultipleItems;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
 
@@ -11,8 +12,10 @@ public class ListParam extends EntryWidgetParam {
     public GroupWidgetParam cloneableWidget;
 
     public ListParam(String name, GroupWidgetParam cloneableWidget){
-        super(name, ListWidget.className);
+        super(name, ListWidgetMultipleItems.className);
         this.cloneableWidget = cloneableWidget;
+        if(cloneableWidget.params.size() == 1)
+            throw new RuntimeException();
     }
 
     @Override
