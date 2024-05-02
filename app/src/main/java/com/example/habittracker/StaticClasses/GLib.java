@@ -97,6 +97,14 @@ public class GLib {
         return (int)(dp * (MainActivity.context.getResources().getDisplayMetrics().densityDpi / 160f));
     }
 
+    public static float pxToDp(float px) {
+        return (px / (MainActivity.context.getResources().getDisplayMetrics().densityDpi / 160f));
+    }
+
+    public static float dpToPx(float dp){
+        return (dp * (MainActivity.context.getResources().getDisplayMetrics().densityDpi / 160f));
+    }
+
     public void setMargin(int dp){
 
     }

@@ -6,12 +6,14 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -36,6 +38,15 @@ public class CustomEditText extends EntryWidget {
         init();
     }
 
+    public void setModeNext(){
+        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+    }
+
+    public void setModeEnter(){
+        editText.setImeOptions(EditorInfo.IME_ACTION_NONE);
+    }
+
     public String getText(){
         Editable editable = editText.getText();
         if(editable == null)
@@ -57,7 +68,28 @@ public class CustomEditText extends EntryWidget {
         editText.setText(newText);
     }
 
+    private void setModeFromToggle(boolean isEnter){
+        if(isEnter)
+            setModeEnter();
+        else
+            setModeNext();
+        if(editText.hasFocus())
+            resetKeyboard();
+    }
+
+    private void resetKeyboard(){
+        // Force the keyboard to close
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+        // Force the keyboard to open again
+        editText.requestFocus();
+        imm.showSoftInput(editText, InputMethodManager.RESULT_SHOWN);
+    }
+
     private void init(){
+
+
         linLayout = new LinLayout(context);
         setViewWrapperChild(linLayout.getView());
         //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
@@ -71,8 +103,15 @@ public class CustomEditText extends EntryWidget {
         editText.setTextColor(ColorPalette.textPurple);
         editText.setBackground(null);
         editText.setHintTextColor(ColorPalette.hintText);
-        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
+
+        setModeFromToggle(KeyBoardActionManager.getManager().getIsEnter());
+        KeyBoardActionManager.getManager().addToggleListener((isEnter)->{
+            setModeFromToggle(isEnter);
+        });
+
+        //setModeEnter();
+        //editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         Margin.setEditTextLayout(this);
 
         setTextListener();

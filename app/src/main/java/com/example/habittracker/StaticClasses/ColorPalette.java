@@ -25,6 +25,7 @@ public class ColorPalette {
         dragShadowBackground = context.getColor(R.color.drawShadowBackground);
         disableForeground = context.getColor(R.color.disableForeground);
         listItemBeforeAddForeground = context.getColor(R.color.listItemBeforeAdd);
+        toggleHighlight = context.getColor(R.color.toggleHighlight);
 
     }
     public static int hintText;
@@ -39,4 +40,5 @@ public class ColorPalette {
     public static int dragShadowBackground;
     public static int disableForeground;
     public static int listItemBeforeAddForeground;
+    public static int toggleHighlight;
 }

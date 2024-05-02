@@ -31,6 +31,7 @@ public class CategoryEntryEditorPage implements Inflatable{
         this.structure = spreadsheet;
         this.entry = entry;
         linearLayout = new LinearLayout(context);
+
     }
 
     public void onDataChanged(){
@@ -89,11 +90,13 @@ public class CategoryEntryEditorPage implements Inflatable{
 
     @Override
     public void onRemoved() {
+
         System.out.println("category entry editor removed");
     }
 
     @Override
     public void onOpened() {
+        MainActivity.showEntryMenuBar();
         groupWidget = new GroupWidget(context);
         groupWidget.setOnDataChangedListener(()->onDataChanged());
         linearLayout.addView(groupWidget.getView());

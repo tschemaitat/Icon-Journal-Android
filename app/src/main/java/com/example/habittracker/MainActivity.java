@@ -6,10 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +18,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.habittracker.Inflatables.CategorySelectionPage;
 import com.example.habittracker.Inflatables.Inflatable;
 import com.example.habittracker.Inflatables.EditorSelectionPage;
-import com.example.habittracker.Inflatables.JournalPage;
 import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 
@@ -38,10 +35,13 @@ public class MainActivity extends AppCompatActivity {
     public static LockableScrollView scrollView;
     LinearLayout scrollLinearLayout;
     public static ConstraintLayout constraintLayout;
-    LinearLayout buttonInflateBufferLayout;
+    LinearLayout pageButtonLayout;
     public static LinearLayout inflateLayout;
     public static MainActivity mainActivity;
     public static RelativeLayout popUpLayout;
+    public static LinearLayout menuBarLayout;
+
+    private LinearLayout currentMenuBar = null;
 
     static Inflatable currentLayout;
 
@@ -66,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.scrollView);
         scrollLinearLayout = findViewById(R.id.scrollLinearLayout);
         constraintLayout = findViewById(R.id.constraintLayoutParent);
-        buttonInflateBufferLayout = findViewById(R.id.ButtonInflateBufferLayout);
+        pageButtonLayout = findViewById(R.id.ButtonInflateBufferLayout);
+        currentMenuBar = pageButtonLayout;
         popUpLayout = findViewById(R.id.popUpLayout);
+        menuBarLayout = findViewById(R.id.menuBarLayout);
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);
@@ -82,6 +84,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void showEntryMenuBar(){
+        MainActivity.log("adding entry menu bar");
+        KeyBoardActionManager.makeNewManager(context, menuBarLayout);
+    }
+
+    public static void removeEntryMenuBar(){
+        if(KeyBoardActionManager.hasManager()){
+            MainActivity.log("removing menu bar");
+            KeyBoardActionManager.removeManager();
+        }
+
+    }
+
     public static void changePage(Inflatable newLayout){
         log("inflating: " + newLayout.getClass().getSimpleName());
         if(currentLayout != null){
@@ -91,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 log("remove: " + currentLayout.getClass().getName() + " failed");
                 return;
             }
-
+            removeEntryMenuBar();
             inflateLayout.removeView(currentLayout.getView());
             currentLayout.onRemoved();
         }

@@ -20,58 +20,68 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/buttonLayout"
+        android:id="@+id/menuBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark2"
-        android:orientation="horizontal"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/EditorButton"
+        <LinearLayout
+            android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:text="Editor"
-            android:textAlignment="center"
-            android:textColor="@color/purple"
-            android:textSize="18sp" />
+            android:background="@color/dark2"
+            android:orientation="horizontal"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/CategoriesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:text="Categories"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/purple"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/EditorButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:text="Editor"
+                android:textAlignment="center"
+                android:textColor="@color/purple"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/JournalButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:text="Journal"
-            android:textAlignment="center"
-            android:textColor="@color/purple"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/CategoriesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:text="Categories"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/purple"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/TestButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:text="Test"
-            android:textAlignment="center"
-            android:textColor="@color/purple"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/JournalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:text="Journal"
+                android:textAlignment="center"
+                android:textColor="@color/purple"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/TestButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:text="Test"
+                android:textAlignment="center"
+                android:textColor="@color/purple"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <com.example.habittracker.ViewWidgets.LockableScrollView
@@ -81,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLayout">
+        app:layout_constraintTop_toBottomOf="@+id/menuBarLayout">
 
         <LinearLayout
             android:id="@+id/scrollLinearLayout"

@@ -2,6 +2,7 @@ package com.example.habittracker.Inflatables;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,7 +17,9 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
+import com.example.habittracker.ViewWidgets.AnimatedHighlightView;
 import com.example.habittracker.ViewWidgets.CustomListView;
+import com.example.habittracker.ViewWidgets.ToggleView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 
@@ -32,7 +35,8 @@ public class TestPage implements Inflatable {
         this.context = context;
         linearLayout = MainActivity.createVerticalLayout();
         linearLayout.setId(R.id.pageLayout);
-        testCustomListView();
+        //testCustomListView();
+        testAnimatedToggle();
     }
 
     @Override
@@ -66,6 +70,11 @@ public class TestPage implements Inflatable {
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(400, 400);
         customListView.getView().setLayoutParams(param);
         linearLayout.addView(customListView.getView());
+    }
+
+    private void testAnimatedToggle(){
+        ToggleView toggleView = new ToggleView(context, "keyboard mode", "enter", "next",
+                450, 150, linearLayout, (isLeft -> {MainActivity.log("highlight is left: " + isLeft);}));
     }
 
 

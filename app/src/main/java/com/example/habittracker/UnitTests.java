@@ -44,10 +44,14 @@ public class UnitTests {
         WidgetId genreWidgetId = getWidgetFromStructure("name", genreStructure);
         DropDownParam exerciseDropDown = new DropDownParam("genre",
                 genreStructure, genreWidgetId, new ArrayList<>());
-        ListSingleItemParam genreList = new ListSingleItemParam("genres", exerciseDropDown);
+        EditTextParam genreDesc = new EditTextParam("genreDesc");
+        ListSingleItemParam genreList = new ListSingleItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
+                exerciseDropDown,
+                genreDesc,
+        }));
         GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{
                 nameEditText,
-                genreList
+                genreList,
         });
         Dictionary.addStructure(spreadSheetName, groupWidgetParam, Dictionary.category);
     }
