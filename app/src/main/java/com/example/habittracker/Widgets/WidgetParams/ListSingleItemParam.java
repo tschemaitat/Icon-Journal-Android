@@ -1,9 +1,9 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.ListWidgetSingleItem;
+import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
 
@@ -13,6 +13,10 @@ public class ListSingleItemParam extends EntryWidgetParam {
     public ListSingleItemParam(String name, EntryWidgetParam widgetParam){
         super(name, ListWidgetSingleItem.className);
         this.widgetParam = widgetParam;
+        if(widgetParam instanceof GroupWidgetParam){
+            MainActivity.log("put group widget param in single item list param");
+            throw new RuntimeException();
+        }
     }
 
     @Override

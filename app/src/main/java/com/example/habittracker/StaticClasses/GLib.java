@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -28,11 +27,9 @@ import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.ListWidgetMultipleItems;
-import com.example.habittracker.Widgets.ListWidgetSingleItem;
+import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
+import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.Widgets.Widget;
-import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -182,6 +179,11 @@ public class GLib {
             throw new RuntimeException();
         }
         return background;
+    }
+
+    public static int getInnerRoundCornerSize(){
+        int dpSize = 3;
+        return dpToPx(dpSize);
     }
 
 

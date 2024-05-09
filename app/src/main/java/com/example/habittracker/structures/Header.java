@@ -2,6 +2,7 @@ package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
@@ -137,6 +138,7 @@ public class Header {
         public WidgetInfo(EntryWidgetParam entryWidgetParam, WidgetPath widgetPath){
             this.entryWidgetParam = entryWidgetParam;
             this.widgetPath = widgetPath;
+            compileReference();
         }
 
         public EntryWidgetParam getEntryWidgetParam() {
@@ -145,6 +147,19 @@ public class Header {
 
         public WidgetPath getWidgetPath() {
             return widgetPath;
+        }
+
+        private WidgetId reference;
+        private void compileReference(){
+            if(entryWidgetParam instanceof DropDownParam dropDownParam){
+                reference = dropDownParam.getWidgetId();
+            }else{
+                reference = null;
+            }
+        }
+
+        public WidgetId getReference(){
+            return reference;
         }
     }
 }

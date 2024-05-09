@@ -19,6 +19,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.ViewWidgets.AnimatedHighlightView;
 import com.example.habittracker.ViewWidgets.CustomListView;
+import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.ViewWidgets.CustomPopup;
@@ -36,8 +37,11 @@ public class TestPage implements Inflatable {
         linearLayout = MainActivity.createVerticalLayout();
         linearLayout.setId(R.id.pageLayout);
         //testCustomListView();
-        testAnimatedToggle();
+        //testAnimatedToggle();
+        testRoundRectBorder();
     }
+
+
 
     @Override
     public View getView() {
@@ -75,6 +79,13 @@ public class TestPage implements Inflatable {
     private void testAnimatedToggle(){
         ToggleView toggleView = new ToggleView(context, "keyboard mode", "enter", "next",
                 450, 150, linearLayout, (isLeft -> {MainActivity.log("highlight is left: " + isLeft);}));
+    }
+
+
+    private void testRoundRectBorder() {
+        RoundRectBorder roundRectBorder = new RoundRectBorder(context);
+        roundRectBorder.setLayoutParams(new LinearLayout.LayoutParams(400, 200));
+        linearLayout.addView(roundRectBorder);
     }
 
 

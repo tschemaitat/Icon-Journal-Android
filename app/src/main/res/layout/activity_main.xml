@@ -20,6 +20,15 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/invisibleMenuBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuBarLayout"></LinearLayout>
+
+    <LinearLayout
         android:id="@+id/menuBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

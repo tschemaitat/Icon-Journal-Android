@@ -76,7 +76,7 @@ public class StructureWidgetDropDown implements Widget {
         structureKeyDropDown = new StaticDropDown(context);
         structureKeyDropDown.getDropDown().setHint("select spreadsheet");
         customLinearLayout.add(structureKeyDropDown.getView());
-        structureKeyDropDown.disable();
+        structureKeyDropDown.disableWithGrayOut();
     }
 
 
@@ -138,7 +138,7 @@ public class StructureWidgetDropDown implements Widget {
         });
         customLinearLayout.add(valueKeyDropDown.getView());
         valueKeyDropDown.setHint("item to be selected");
-        valueKeyDropDown.disable();
+        valueKeyDropDown.disableWithGrayOut();
     }
 
 
@@ -146,7 +146,7 @@ public class StructureWidgetDropDown implements Widget {
     private void resetAndDisableValueKeyWidget(){
         //customLinearLayout.remove(valueKeyDropDown.getView());
         valueKeyDropDown.resetValue();
-        valueKeyDropDown.disable();
+        valueKeyDropDown.disableWithGrayOut();
         resetAndDisableGroupKeyWidget();
     }
 
@@ -212,7 +212,7 @@ public class StructureWidgetDropDown implements Widget {
         groupLayout = new GroupWidget(context);
         Margin.setStructureWidgetGroupLayout(groupLayout.getLinLayout());
         customLinearLayout.add(groupLayout.getView());
-        groupLayout.disable();
+        groupLayout.disableWithGrayOut();
         addGroupKeyDropDownAdd();
     }
 
@@ -286,7 +286,7 @@ public class StructureWidgetDropDown implements Widget {
             groupLayout.getWidgetLayout().remove(widget);
         //customLinearLayout.remove(groupLayout.getView());
         //groupLayout = null;
-        groupLayout.disable();
+        groupLayout.disableWithGrayOut();
     }
 
 

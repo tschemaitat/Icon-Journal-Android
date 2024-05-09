@@ -1,4 +1,4 @@
-package com.example.habittracker.Widgets;
+package com.example.habittracker.Widgets.ListWidgets;
 
 import android.content.Context;
 
@@ -7,16 +7,22 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.WidgetParams.ListParam;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
+import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 
 import java.util.ArrayList;
 
-public class ListWidgetMultipleItems extends ListWidget{
-    private ListParam listParam = null;
+public class ListWidgetMultipleItems extends ListWidget {
+    private ListMultiItemParam listMultiItemParam = null;
     private Context context;
     public static final String className = "list multiple items";
     public ListWidgetMultipleItems(Context context) {
@@ -34,6 +40,7 @@ public class ListWidgetMultipleItems extends ListWidget{
             layout.add(groupWidget);
             groupWidget.setValue(groupValue);
             groupWidget.setListItemId(groupValue.getListItemId());
+            groupWidget.setParentListItemIdProvider(getListItemIdProvider());
         }
 
     }
@@ -41,8 +48,10 @@ public class ListWidgetMultipleItems extends ListWidget{
 
     @Override
     protected void onItemCreated(Widget item){
+        MainActivity.log("setting group widget onItemCreated");
         GroupWidget groupWidget = (GroupWidget)item;
         LinLayout linLayout = groupWidget.getLinLayout();
+
         linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
         Margin.setPadding(linLayout.getView(), Margin.listChildMargin());
     }
@@ -60,7 +69,29 @@ public class ListWidgetMultipleItems extends ListWidget{
         return new ListValue(getWidgetId(), groupValueList);
     }
 
+
+
+    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList){
+        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
+        for(GroupWidget groupWidget: groupWidgets){
+            groupWidget.getReferenceForDeleteIteration(resultList);
+        }
+    }
+
+    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
+        if(isDeleteChecked)
+            throw new RuntimeException();
+        for(GroupWidget groupWidget: getGroupWidgets()){
+            if(groupWidget.isDeleteChecked){
+                resultList.add(groupWidget);
+                continue;
+            }
+            groupWidget.gatherWidgetsCheckedIteration(resultList);
+        }
+    }
+
     public void setParamCustom(EntryWidgetParam param){
-        this.listParam = (ListParam) param;
+        this.listMultiItemParam = (ListMultiItemParam) param;
+        setWidgetParam(listMultiItemParam.cloneableWidget);
     }
 }

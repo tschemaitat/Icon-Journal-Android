@@ -9,20 +9,15 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.CachedStrings.LiteralString;
-import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
-import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
-import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.ListWidgetMultipleItems;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.StaticDropDown;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
-import com.example.habittracker.Widgets.WidgetParams.ListParam;
+import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 
 public class StructureWidget implements Widget {
     private StructureWidgetHeaderView headerView = null;
@@ -174,7 +169,7 @@ public class StructureWidget implements Widget {
             }
 
             if(type.equals("list")){
-                ListParam param = (ListParam)structureWidgetList.getParam();
+                ListMultiItemParam param = (ListMultiItemParam)structureWidgetList.getParam();
                 result = param;
                 break typeSwitch;
             }

@@ -16,7 +16,7 @@ public class RefEntryString implements CachedString{
     WidgetId widgetId;
     Integer entryId;
     ArrayList<ListItemId> listIdList;
-    public RefEntryString(Structure structure, WidgetId widgetId, int entryId, ArrayList<ListItemId> listIdList){
+    public RefEntryString(Structure structure, WidgetId widgetId, Integer entryId, ArrayList<ListItemId> listIdList){
         if(structure == null)
             throw new RuntimeException();
         this.structure = structure;

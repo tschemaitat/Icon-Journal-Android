@@ -15,7 +15,7 @@ import com.example.habittracker.structures.WidgetId;
 
 import java.util.ArrayList;
 
-public class EntryDropDown extends EntryWidget {
+public class EntryDropDown extends BaseEntryWidget {
     private Structure structure = null;
     private WidgetId valueId = null;
     private ArrayList<WidgetId> groupIdList = new ArrayList<>();

@@ -1,8 +1,7 @@
-package com.example.habittracker.Widgets;
+package com.example.habittracker.Widgets.ListWidgets;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.view.KeyEvent;
 import android.view.View;
 
 import com.example.habittracker.Layouts.InterceptLinearLayout;
@@ -10,15 +9,21 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewWidgets.ListWidgetGhostManager;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.Widgets.FocusTreeParent;
+import com.example.habittracker.Widgets.FocusTreeParentHelper;
+import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.Widget;
 
 import java.util.ArrayList;
 
-public class ListWidget extends EntryWidget implements FocusTreeParent {
+public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 
 
     public static String className = "list";
@@ -47,7 +52,7 @@ public class ListWidget extends EntryWidget implements FocusTreeParent {
         return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
     }
 
-    protected ArrayList<EntryWidget> getWidgetList(){
+    protected ArrayList<EntryWidget> getEntryWidgetList(){
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();
         return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
@@ -70,6 +75,7 @@ public class ListWidget extends EntryWidget implements FocusTreeParent {
     }
 
     private void onGhostData() {
+        MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
         setViewDraggable(ghostItem);
         ghostItem = null;
@@ -77,7 +83,8 @@ public class ListWidget extends EntryWidget implements FocusTreeParent {
     }
 
     protected final EntryWidget createItem(){
-        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, onDataChangedListener());
+        MainActivity.log("list widget: creating item");
+        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, ()->onDataChangedListener().run());
         entryWidget.setFocusParent(this);
         onItemCreated(entryWidget);
         return entryWidget;
@@ -117,11 +124,15 @@ public class ListWidget extends EntryWidget implements FocusTreeParent {
 
     @Override
     public EntryWidget getFirstWidget() {
-        return (EntryWidget) layout.widgets().get(0);
+        EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
+        if(firstWidget instanceof FocusTreeParent focusTreeParent){
+            return focusTreeParent.getFirstWidget();
+        }
+        return firstWidget;
     }
     @Override
     public EntryWidget findNextWidget(EntryWidget entryWidget){
-        return FocusTreeParentHelper.findNextWidget(entryWidget, getWidgetList(), getFocusParent());
+        return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgetList(), getFocusParent(), this);
     }
 
     protected void setWidgetParam(EntryWidgetParam entryWidgetParam){
@@ -151,11 +162,34 @@ public class ListWidget extends EntryWidget implements FocusTreeParent {
     }
 
 
+    public void enableDeleteValueMode() {
+        for(EntryWidget entryWidget: getEntryWidgetList()){
+            if(entryWidget instanceof GroupWidget groupWidget){
+                groupWidget.enableDeleteValueMode();
+            }else{
+                entryWidget.enableDelete();
+            }
+        }
+    }
 
+    @Override
+    public ArrayList<RefEntryString> getReferenceForDelete() {
+        ArrayList<RefEntryString> resultList = new ArrayList<>();
+        getReferenceForDeleteIteration(resultList);
+        return resultList;
+    }
 
+    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList){
+        throw new RuntimeException();
+    }
 
+//    public ArrayList<EntryWidget> gatherWidgetsChecked() {
+//        ArrayList<EntryWidget> resultList = new ArrayList<>();
+//        gatherWidgetsCheckedIteration(resultList);
+//        return resultList;
+//    }
 
-
-
-
+    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
+        throw new RuntimeException();
+    }
 }

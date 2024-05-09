@@ -45,4 +45,7 @@ public class DropDownParam extends EntryWidgetParam {
         return "{" + getClassName() + ", " +structure + ", " +valueKey + ", " +groups + "}";
     }
 
+    public Integer getWidgetIdTracker() {
+        return widgetIdTracker;
+    }
 }

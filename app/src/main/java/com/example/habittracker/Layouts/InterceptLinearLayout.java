@@ -9,10 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
-import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -122,6 +122,12 @@ public class Margin {
         linLayout.setChildMargin(Margin.listChildMargin());
     }
 
+    public static void setListWidgetGroupWidget(LinLayout linLayout){
+        Margin padding = listPadding();
+        setPaddingAndBackground(linLayout.getView(), groupColor, padding);
+        linLayout.setChildMargin(Margin.listChildMargin());
+    }
+
     public static void setListWidgetSingleItemLayout(LinLayout linLayout){
         Margin padding = listPadding();
         setPaddingAndBackground(linLayout.getView(), groupColor, padding);

@@ -5,14 +5,20 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.EditableWidget;
+import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
@@ -21,7 +27,7 @@ import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 
-public class CustomEditText extends EntryWidget {
+public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinLayout linLayout;
@@ -38,6 +44,8 @@ public class CustomEditText extends EntryWidget {
         init();
     }
 
+
+
     public void setModeNext(){
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -45,6 +53,7 @@ public class CustomEditText extends EntryWidget {
 
     public void setModeEnter(){
         editText.setImeOptions(EditorInfo.IME_ACTION_NONE);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
     }
 
     public String getText(){
@@ -69,22 +78,29 @@ public class CustomEditText extends EntryWidget {
     }
 
     private void setModeFromToggle(boolean isEnter){
+        boolean hasFocus = editText.hasFocus();
+        if(hasFocus){
+            hideKeyboard();
+            //editText.clearFocus();
+        }
         if(isEnter)
             setModeEnter();
         else
             setModeNext();
-        if(editText.hasFocus())
-            resetKeyboard();
+        if(hasFocus){
+            //editText.requestFocus();
+            showKeyboard();
+        }
     }
 
-    private void resetKeyboard(){
-        // Force the keyboard to close
+    private void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
 
-        // Force the keyboard to open again
-        editText.requestFocus();
-        imm.showSoftInput(editText, InputMethodManager.RESULT_SHOWN);
+    private void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void init(){
@@ -117,6 +133,36 @@ public class CustomEditText extends EntryWidget {
         setTextListener();
         int MAX_CHARACTERS = 50;
 
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            return InvisibleEditTextManager.getManager().onActionListenerFromEditText(actionId);
+        });
+        EntryWidget thisEntryWidget = this;
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                MainActivity.log("edit text on focus change: " + hasFocus + ", " + thisEntryWidget);
+                if(hasFocus){
+                    InvisibleEditTextManager.getManager().setEditableWidgetThatGotFocus(thisEntryWidget);
+                }else{
+                    InvisibleEditTextManager.getManager().removeFocusedWidget();
+                }
+                thisEntryWidget.onFocusChange(hasFocus);
+            }
+        });
+
+//        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                MainActivity.log("edit text got action: " + actionId);
+//                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+//                    MainActivity.log("got action next");
+//                    keyListener(actionId);
+//                    return true;  // Handle the next action
+//                }
+//                return false;  // Let other actions be handled normally
+//            }
+//        });
+
         // Error handling from too many characters
 
     }
@@ -143,15 +189,19 @@ public class CustomEditText extends EntryWidget {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 String newText = "";
                 if(s != null)
                     newText = s.toString();
+                //MainActivity.log("afterTextChanged before: " + currentText + ", new text: " + newText);
                 String before = currentText;
                 currentText = newText;
                 //System.out.println("\t\tafter text changed listener: " + newText);
                 boolean textChanged = !before.equals(newText);
+
                 if(!textChanged)
                     return;
+                MainActivity.log("text changed");
                 onTextChange(before, newText);
             }
         });

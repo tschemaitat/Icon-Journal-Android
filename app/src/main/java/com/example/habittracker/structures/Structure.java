@@ -6,13 +6,16 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.ArrayString;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class Structure {
@@ -206,5 +209,57 @@ public class Structure {
 
     public ArrayList<WidgetId> getWidgetIdList() {
         return new ArrayList<>(widgetMap.keySet());
+    }
+
+    public ArrayList<WidgetId> references(WidgetId widgetId){
+        ArrayList<WidgetId> references = new ArrayList<>();
+        for(Map.Entry<WidgetId, Header.WidgetInfo> widgetSet: widgetMap.entrySet()){
+            WidgetId reference = widgetSet.getValue().getReference();
+            if(reference != null)
+                references.add(reference);
+        }
+        return references;
+    }
+
+    public ArrayList<DeleteValuePair> getReferenceLocations(ArrayList<RefEntryString> refEntryStringList, WidgetId widgetId){
+        ArrayList<DeleteValuePair> deleteValuePairList = new ArrayList<>();
+        for(Entry entry: entries.values()){
+            ArrayList<BaseWidgetValue> baseWidgetValueList = entry.getGroupValue().getValuesFromWidgetPath(widgetId.getWidgetInfo().getWidgetPath());
+            for(BaseWidgetValue baseWidgetValue: baseWidgetValueList){
+                if(baseWidgetValue instanceof WidgetValueStringPath widgetValueStringPath){
+                    CachedString cachedString = widgetValueStringPath.getRefItemPath().getLast();
+                    if(cachedString instanceof RefEntryString refEntryString){
+                        if(refEntryStringList.contains(refEntryString)){
+                            deleteValuePairList.add(new DeleteValuePair(this, entry, refEntryString));
+                        }
+                    }
+                }
+            }
+        }
+        return deleteValuePairList;
+    }
+
+    public static class DeleteValuePair{
+        private Structure structure;
+        private Entry entry;
+        private RefEntryString refEntryString;
+
+        public DeleteValuePair(Structure structure, Entry entry, RefEntryString refEntryString) {
+            this.structure = structure;
+            this.entry = entry;
+            this.refEntryString = refEntryString;
+        }
+
+        public Structure getStructure() {
+            return structure;
+        }
+
+        public Entry getEntry() {
+            return entry;
+        }
+
+        public RefEntryString getRefEntryString() {
+            return refEntryString;
+        }
     }
 }

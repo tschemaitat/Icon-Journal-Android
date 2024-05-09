@@ -10,7 +10,7 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.ListParam;
+import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class StructureWidgetList implements Widget{
         if(entryWidgetParams.size() == 1){
             return new ListSingleItemParam(null, entryWidgetParams.get(0));
         }else{
-            return new ListParam(null, new GroupWidgetParam(null, entryWidgetParams));
+            return new ListMultiItemParam(null, new GroupWidgetParam(null, entryWidgetParams));
         }
 
 
@@ -69,8 +69,8 @@ public class StructureWidgetList implements Widget{
 
     @Override
     public void setParam(EntryWidgetParam params) {
-        ListParam listParam = (ListParam) params;
-        ArrayList<EntryWidgetParam> children = listParam.cloneableWidget.params;
+        ListMultiItemParam listMultiItemParam = (ListMultiItemParam) params;
+        ArrayList<EntryWidgetParam> children = listMultiItemParam.cloneableWidget.params;
         for(EntryWidgetParam entryWidgetParam: children){
             StructureWidget structureWidget = addStructureWidget();
             structureWidget.setParam(entryWidgetParam);

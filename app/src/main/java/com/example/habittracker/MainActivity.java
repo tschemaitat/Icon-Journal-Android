@@ -22,6 +22,8 @@ import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
+import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
@@ -40,10 +42,15 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity mainActivity;
     public static RelativeLayout popUpLayout;
     public static LinearLayout menuBarLayout;
+    public static LinearLayout invisibleMenuBarLayout;
+
+    private static EntryEditorMenuBar entryEditorMenuBar;
 
     private LinearLayout currentMenuBar = null;
 
     static Inflatable currentLayout;
+
+    private Drag drag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +77,12 @@ public class MainActivity extends AppCompatActivity {
         currentMenuBar = pageButtonLayout;
         popUpLayout = findViewById(R.id.popUpLayout);
         menuBarLayout = findViewById(R.id.menuBarLayout);
+        invisibleMenuBarLayout = findViewById(R.id.invisibleMenuBarLayout);
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);
+
+        InvisibleEditTextManager.createManager(constraintLayout, context);
 
         //currentLayout = testWidgetGroup;
         setupLayoutButtons();
@@ -86,13 +96,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static void showEntryMenuBar(){
         MainActivity.log("adding entry menu bar");
-        KeyBoardActionManager.makeNewManager(context, menuBarLayout);
+        //KeyBoardActionManager.makeNewManager(context, menuBarLayout);
+        EntryEditorMenuBar.make(menuBarLayout, context);
+        entryEditorMenuBar = EntryEditorMenuBar.get();
     }
 
     public static void removeEntryMenuBar(){
-        if(KeyBoardActionManager.hasManager()){
+
+        if(entryEditorMenuBar != null){
             MainActivity.log("removing menu bar");
-            KeyBoardActionManager.removeManager();
+            menuBarLayout.removeView(entryEditorMenuBar.getView());
         }
 
     }
@@ -171,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(className + "." + methodName + "():" + lineNumber, "<CustLogzzz> " + message);
     }
-    private Drag drag;
+
     public void setDragListener(Drag drag){
         this.drag = drag;
         scrollView.setScrollingEnabled(false);

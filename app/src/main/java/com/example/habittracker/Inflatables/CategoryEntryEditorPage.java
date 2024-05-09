@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
@@ -107,7 +108,7 @@ public class CategoryEntryEditorPage implements Inflatable{
             MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
         }
 
-
+        EntryEditorMenuBar.get().setGroupWidget(groupWidget);
 
     }
 

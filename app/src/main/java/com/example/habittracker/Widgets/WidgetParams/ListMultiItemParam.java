@@ -2,16 +2,14 @@ package com.example.habittracker.Widgets.WidgetParams;
 
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
-import com.example.habittracker.Widgets.ListWidgetMultipleItems;
+import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
 
-public class ListParam extends EntryWidgetParam {
+public class ListMultiItemParam extends EntryWidgetParam {
     public GroupWidgetParam cloneableWidget;
 
-    public ListParam(String name, GroupWidgetParam cloneableWidget){
+    public ListMultiItemParam(String name, GroupWidgetParam cloneableWidget){
         super(name, ListWidgetMultipleItems.className);
         this.cloneableWidget = cloneableWidget;
         if(cloneableWidget.params.size() == 1)

@@ -4,12 +4,11 @@ import android.content.Context;
 
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
+import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.structures.Structure;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class UnitTests {
         DropDownParam exerciseDropDown = new DropDownParam("genre",
                 genreStructure, genreWidgetId, new ArrayList<>());
         EditTextParam genreDesc = new EditTextParam("genreDesc");
-        ListSingleItemParam genreList = new ListSingleItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
+        ListMultiItemParam genreList = new ListMultiItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
                 exerciseDropDown,
                 genreDesc,
         }));

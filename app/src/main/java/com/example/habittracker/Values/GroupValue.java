@@ -182,4 +182,8 @@ public class GroupValue extends WidgetValue{
         }
         this.listItemId = listItemId;
     }
+
+    public ArrayList<WidgetValue> getValues() {
+        return values;
+    }
 }

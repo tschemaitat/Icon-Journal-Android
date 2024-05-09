@@ -1,41 +1,53 @@
 package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
-import com.example.habittracker.Layouts.ViewWrapper;
+import com.example.habittracker.StaticStateManagers.DeleteValueManager;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidget;
+import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.structures.ListItemId;
 import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.structures.Structure;
 
+import java.util.ArrayList;
+
 public abstract class EntryWidget implements Widget {
+    public static int widgetDebugIdCounter = 0;
+    public int widgetDebugId;
     private Runnable onDataChanged;
     private EntryWidgetParam entryWidgetParam;
-    private ViewWrapper viewWrapper;
+    ViewWrapper viewWrapper;
     private boolean dataSet = false;
     private Integer widgetIdTracker;
-    private boolean enabled = true;
+
+
     private Context context;
-    private ListItemId listItemId;
     private FocusTreeParent focusParent;
+
+    boolean deleteEnabled = false;
+    private boolean listGhostEnabled = true;
+    public boolean isDeleteChecked = false;
+
 
 
     public EntryWidget(Context context){
         this.context = context;
-
+        widgetDebugId = widgetDebugIdCounter;
+        widgetDebugIdCounter++;
         viewWrapper = new ViewWrapper(context);
         viewWrapper.getView().setId(R.id.entryWidgetWrapper);
     }
@@ -43,14 +55,53 @@ public abstract class EntryWidget implements Widget {
     public void setOnDataChangedListener(Runnable runnable){
         if(runnable == null)
             throw new RuntimeException();
+        //MainActivity.log("set listener on: "+this+"\nrunnable: " + runnable);
         this.onDataChanged = runnable;
     }
 
-    public void disable(){
-        if(!enabled)
+    void disableNoVisual(){
+        if(!listGhostEnabled)
             throw new RuntimeException();
-        enabled = false;
+        listGhostEnabled = false;
         viewWrapper.disable();
+    }
+
+    private void enableNoVisual(){
+        if(listGhostEnabled)
+            throw new RuntimeException();
+        viewWrapper.enable();
+        listGhostEnabled = true;
+    }
+
+
+    public void enableDelete(){
+        deleteEnabled = true;
+        disableNoVisual();
+        viewWrapper.showCheckBox((boolean isChecked)->onDeleteCheck(isChecked));
+    }
+
+    public abstract ArrayList<RefEntryString> getReferenceForDelete();
+
+
+    public final void onDeleteCheck(boolean isChecked){
+        isDeleteChecked = isChecked;
+    }
+
+    public void disableDelete(){
+        deleteEnabled = false;
+        enableNoVisual();
+        viewWrapper.hideCheckBox();
+    }
+
+    public void disableWithGrayOut(){
+        if(listGhostEnabled)
+            throw new RuntimeException();
+        listGhostEnabled = true;
+        viewWrapper.disable();
+        setForegroundOfDisable();
+    }
+
+    private void setForegroundOfDisable(){
         Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
         Margin currentPadding = Margin.getPadding(getView());
         getView().setForeground(foregroundDrawable);
@@ -63,22 +114,22 @@ public abstract class EntryWidget implements Widget {
     }
 
     public void enable(){
-        if(enabled)
+        if(!listGhostEnabled)
             throw new RuntimeException();
         viewWrapper.enable();
-        enabled = true;
+        listGhostEnabled = false;
         getView().setForeground(null);
     }
-
-
 
     protected final void setViewWrapperChild(View view){
         viewWrapper.setChildView(view);
     }
 
     public final Runnable onDataChangedListener(){
+        //MainActivity.log("getting on data changed listener: " + this);
         return onDataChanged;
     }
+
     protected abstract WidgetValue getEntryValueTreeCustom();
 
     public final WidgetValue getValue(){
@@ -87,28 +138,34 @@ public abstract class EntryWidget implements Widget {
         return tree;
     }
 
-    public void setListItemId(ListItemId listItemId){
-        if(listItemId == null){
-            MainActivity.log("name: " + getName());
-            throw new RuntimeException();
-        }
-        this.listItemId = listItemId;
-    }
-
     public void setFocusParent(FocusTreeParent parent){
         this.focusParent = parent;
         this.getView().setFocusable(true);
         this.getView().setFocusableInTouchMode(true);
-        this.getView().setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                EntryWidget nextWidget = parent.findNextWidget(this);
-                this.getView().clearFocus();
-                if(nextWidget != null)
-                    nextWidget.getView().requestFocus();
-            }
-            return false;
-        });
 
+
+
+
+
+//        this.viewWrapper.getInvisibleEditText().setOnKeyListener((v, keyCode, event) -> {
+//            MainActivity.log("got key in action key listener: " + keyCode);
+//            if(event.getAction() == KeyEvent.ACTION_DOWN){
+//                keyListener(keyCode);
+//            }
+//            return true;
+//        });
+
+    }
+
+    public void keyListener(int keyCode){
+        MainActivity.log("entry widget key listener: " + keyCode);
+        if (keyCode == EditorInfo.IME_ACTION_NEXT) {
+
+            EntryWidget nextWidget = focusParent.findNextWidget(this);
+            InvisibleEditTextManager.getManager().removeFocusedWidget();
+            if(nextWidget != null)
+                InvisibleEditTextManager.getManager().setFocusedWidget(nextWidget);
+        }
     }
 
     public FocusTreeParent getFocusParent(){
@@ -116,9 +173,7 @@ public abstract class EntryWidget implements Widget {
 
     }
 
-    public ListItemId getListItemId(){
-        return listItemId;
-    }
+
 
     public WidgetId getWidgetId(){
         return entryWidgetParam.getWidgetId();
@@ -138,7 +193,14 @@ public abstract class EntryWidget implements Widget {
 
     protected abstract void setHint(String hintString);
 
-
+    public void onFocusChange(boolean hasFocus){
+        MainActivity.log("entry widget on focus change: " + this);
+        if(hasFocus){
+            viewWrapper.showBorderView();
+        }else{
+            viewWrapper.hideBorderView();
+        }
+    }
 
     public final ViewWrapper getViewWrapper(){
         return viewWrapper;
@@ -176,4 +238,13 @@ public abstract class EntryWidget implements Widget {
     public Structure getStructure(){
         return entryWidgetParam.getStructure();
     }
+
+    public final String toString(){
+        String className = "no param";
+        if(entryWidgetParam != null)
+            className = entryWidgetParam.getClassName();
+        return "<" + className + ": " + widgetDebugId + ">";
+    }
+
+
 }

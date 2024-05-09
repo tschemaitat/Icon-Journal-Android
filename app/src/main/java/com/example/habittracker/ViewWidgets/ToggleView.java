@@ -17,7 +17,7 @@ public class ToggleView {
     private LinearLayout parent;
     private OnToggleListener onToggleListener;
 
-    private LinearLayout menuLinearLayout;
+
     private RelativeLayout toggleRelativeLayout;
     private TextView toggleTitle;
     private RelativeLayout toggleTextRelLayout;
@@ -40,8 +40,8 @@ public class ToggleView {
     }
 
     private void init(String title, String left, String right){
-        menuLinearLayout = makeMenuLinearLayout(parent, context);
-        toggleRelativeLayout = makeToggleRelativeLayout(menuLinearLayout, context, width, height);
+
+        toggleRelativeLayout = makeToggleRelativeLayout(parent, context, width, height);
         toggleTitle = makeToggleTitle(toggleRelativeLayout, context);
         toggleTextRelLayout = makeToggleTextRelLayout(toggleRelativeLayout, toggleTitle, context);
         animatedHighlightView = makeAnimatedHighlightView(toggleTextRelLayout, onToggleListener, context);
@@ -49,16 +49,13 @@ public class ToggleView {
         rightText = makeRightText(toggleTextRelLayout, context, width, right);
     }
 
-    private static LinearLayout makeMenuLinearLayout(LinearLayout parent, Context context){
-        LinearLayout menuLinearLayout = new LinearLayout(context);
-        MainActivity.log("adding menu to parent");
-        parent.addView(menuLinearLayout);
-        menuLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        return menuLinearLayout;
-    }
+
     private static RelativeLayout makeToggleRelativeLayout(LinearLayout menuLinearLayout, Context context, int width, int height){
         RelativeLayout toggleRelativeLayout = new RelativeLayout(context);
-        toggleRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(width, height);
+        layoutParam.gravity = Gravity.CENTER_VERTICAL;
+        toggleRelativeLayout.setLayoutParams(layoutParam);
         menuLinearLayout.addView(toggleRelativeLayout);
         return toggleRelativeLayout;
     }
@@ -124,7 +121,7 @@ public class ToggleView {
     }
 
     public View getView() {
-        return menuLinearLayout;
+        return toggleRelativeLayout;
     }
 
     public interface OnToggleListener{

@@ -1,17 +1,22 @@
-package com.example.habittracker.Widgets;
+package com.example.habittracker.Widgets.ListWidgets;
 
 import android.content.Context;
 
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticStateManagers.DeleteValueManager;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
+import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import java.util.ArrayList;
@@ -33,9 +38,9 @@ public class ListWidgetSingleItem extends ListWidget {
 
     @Override
     public WidgetValue getEntryValueTreeCustom() {
-        ArrayList<EntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (EntryWidget) widget);
+        ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
-        for(EntryWidget entryWidget: entryWidgetList){
+        for(BaseEntryWidget entryWidget: entryWidgetList){
             WidgetValue widgetValue = entryWidget.getValue();
             ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
             widgetValueList.add(widgetValue);
@@ -58,14 +63,29 @@ public class ListWidgetSingleItem extends ListWidget {
         EntryWidgetParam entryWidgetParam = param.widgetParam;
         ArrayList<GroupValue> groupValueList = listValue.getGroupValueList();
         for(GroupValue groupValue: groupValueList){
-            EntryWidget item = createItem();
+            BaseEntryWidget item = (BaseEntryWidget)createItem();
             layout.add(item);
             WidgetValue valueInGroup = groupValue.getWidgetValueByWidget(entryWidgetParam.getWidgetId());
             item.setValue(valueInGroup);
-            item.setListItemId(groupValue.getListItemId());
+            item.setListItemIdProvider(new SingleItemIdProvider(groupValue.getListItemId()));
         }
         addGhostItem(createItem());
 
+    }
+
+    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList){
+        ArrayList<BaseEntryWidget> baseEntryWidgets = EnumLoop.makeList(getEntryWidgetList(), (entryWidget -> (BaseEntryWidget) entryWidget));
+        DeleteValueManager.gatherRefForDeleteWidgetsAndList(baseEntryWidgets, resultList,
+                getStructure(), getListItemIdProvider().getListItemIdList());
+    }
+
+    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
+        if(isDeleteChecked)
+            throw new RuntimeException();
+        for(EntryWidget entryWidget: getEntryWidgetList()){
+            if(entryWidget.isDeleteChecked)
+                resultList.add(entryWidget);
+        }
     }
 
     @Override
