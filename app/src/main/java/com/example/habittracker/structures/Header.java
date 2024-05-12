@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 public class Header {
     private HeaderNode parentNode;
-    HashMap<WidgetId, WidgetInfo> widgetMap = new HashMap<>();
+    HashMap<WidgetInStructure, WidgetInfo> widgetMap = new HashMap<>();
     private Structure structure;
 
     public Header(GroupWidgetParam groupWidgetParam, Structure structure){
@@ -27,21 +27,21 @@ public class Header {
         ArrayList<HeaderNode> headerNodeList = parentNode.gatherNodes();
         headerNodeList.remove(parentNode);
         MainActivity.log("header nodes after gather: \n" + parentNode.hierarchyString(0));
-        HashSet<WidgetId> currentWidgetIds = new HashSet<>();
+        HashSet<WidgetInStructure> currentWidgetInStructures = new HashSet<>();
         for(HeaderNode headerNode: headerNodeList){
-            WidgetId widgetId = headerNode.getWidgetParam().getWidgetId();
-            if(widgetId != null)
-                currentWidgetIds.add(widgetId);
+            WidgetInStructure widgetInStructure = headerNode.getWidgetParam().getWidgetId();
+            if(widgetInStructure != null)
+                currentWidgetInStructures.add(widgetInStructure);
         }
 
         int idCounter = 0;
-        for(WidgetId widgetId: currentWidgetIds)
-            idCounter = Math.max(idCounter, widgetId.getId());
+        for(WidgetInStructure widgetInStructure : currentWidgetInStructures)
+            idCounter = Math.max(idCounter, widgetInStructure.getWidgetId());
         idCounter++;
         for(HeaderNode headerNode: headerNodeList){
             if(headerNode.getWidgetParam().getWidgetId() == null){
                 headerNode.getWidgetParam().setWidgetId(idCounter);
-                currentWidgetIds.add(headerNode.getWidgetParam().getWidgetId());
+                currentWidgetInStructures.add(headerNode.getWidgetParam().getWidgetId());
                 idCounter++;
             }
         }
@@ -105,29 +105,29 @@ public class Header {
         return parentNode;
     }
 
-    public WidgetPath getWidgetPath(WidgetId widgetId){
-        return widgetMap.get(widgetId).getWidgetPath();
+    public WidgetPath getWidgetPath(WidgetInStructure widgetInStructure){
+        return widgetMap.get(widgetInStructure).getWidgetPath();
     }
 
-    public ArrayList<WidgetPath> getWidgetPathList(ArrayList<WidgetId> widgetIdList){
+    public ArrayList<WidgetPath> getWidgetPathList(ArrayList<WidgetInStructure> widgetInStructureList){
         ArrayList<WidgetPath> pathList = new ArrayList<>();
-        for(WidgetId widgetId : widgetIdList)
-            pathList.add(getWidgetPath(widgetId));
+        for(WidgetInStructure widgetInStructure : widgetInStructureList)
+            pathList.add(getWidgetPath(widgetInStructure));
         return pathList;
     }
 
 
 
-    public WidgetInfo getWidgetInfo(WidgetId widgetId){
-        return widgetMap.get(widgetId);
+    public WidgetInfo getWidgetInfo(WidgetInStructure widgetInStructure){
+        return widgetMap.get(widgetInStructure);
     }
 
-    public ArrayList<WidgetId> getWidgetIdList() {
+    public ArrayList<WidgetInStructure> getWidgetIdList() {
         return new ArrayList<>(widgetMap.keySet());
     }
 
-    public EntryWidgetParam getWidgetParamFromId(WidgetId widgetId) {
-        return widgetMap.get(widgetId).getEntryWidgetParam();
+    public EntryWidgetParam getWidgetParamFromId(WidgetInStructure widgetInStructure) {
+        return widgetMap.get(widgetInStructure).getEntryWidgetParam();
     }
 
 
@@ -149,7 +149,7 @@ public class Header {
             return widgetPath;
         }
 
-        private WidgetId reference;
+        private WidgetInStructure reference;
         private void compileReference(){
             if(entryWidgetParam instanceof DropDownParam dropDownParam){
                 reference = dropDownParam.getWidgetId();
@@ -158,7 +158,7 @@ public class Header {
             }
         }
 
-        public WidgetId getReference(){
+        public WidgetInStructure getReference(){
             return reference;
         }
     }

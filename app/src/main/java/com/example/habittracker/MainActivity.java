@@ -24,6 +24,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
+import com.example.habittracker.StaticStateManagers.InvisibleMenuBarManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
@@ -43,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     public static RelativeLayout popUpLayout;
     public static LinearLayout menuBarLayout;
     public static LinearLayout invisibleMenuBarLayout;
-
-    private static EntryEditorMenuBar entryEditorMenuBar;
 
     private LinearLayout currentMenuBar = null;
 
@@ -79,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         menuBarLayout = findViewById(R.id.menuBarLayout);
         invisibleMenuBarLayout = findViewById(R.id.invisibleMenuBarLayout);
 
+        InvisibleMenuBarManager.createManager(context, invisibleMenuBarLayout);
+        EntryEditorMenuBar.make(menuBarLayout, context);
+
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);
 
@@ -94,22 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void showEntryMenuBar(){
-        MainActivity.log("adding entry menu bar");
-        //KeyBoardActionManager.makeNewManager(context, menuBarLayout);
-        EntryEditorMenuBar.make(menuBarLayout, context);
-        entryEditorMenuBar = EntryEditorMenuBar.get();
-    }
-
-    public static void removeEntryMenuBar(){
-
-        if(entryEditorMenuBar != null){
-            MainActivity.log("removing menu bar");
-            menuBarLayout.removeView(entryEditorMenuBar.getView());
-        }
-
-    }
-
     public static void changePage(Inflatable newLayout){
         log("inflating: " + newLayout.getClass().getSimpleName());
         if(currentLayout != null){
@@ -119,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 log("remove: " + currentLayout.getClass().getName() + " failed");
                 return;
             }
-            removeEntryMenuBar();
             inflateLayout.removeView(currentLayout.getView());
             currentLayout.onRemoved();
         }

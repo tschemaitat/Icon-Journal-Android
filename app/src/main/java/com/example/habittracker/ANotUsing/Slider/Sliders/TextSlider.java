@@ -3,7 +3,9 @@ package com.example.habittracker.ANotUsing.Slider.Sliders;
 import android.content.Context;
 
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
@@ -11,7 +13,7 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 
 import java.util.ArrayList;
 
-public class TextSlider extends EntryWidget {
+public class TextSlider extends BaseEntryWidget {
     public static final String className = "text slider";
     Context context;
     SliderWithLabels sliderWithLabels;
@@ -41,6 +43,11 @@ public class TextSlider extends EntryWidget {
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
         onDataChangedListener = runnable;
+    }
+
+    @Override
+    public ArrayList<RefEntryString> getReferenceForDelete() {
+        return null;
     }
 
     @Override

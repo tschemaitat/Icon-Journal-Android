@@ -2,7 +2,10 @@ package com.example.habittracker.Structs;
 
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class EntryWidgetParam {
 
@@ -36,11 +39,11 @@ public abstract class EntryWidgetParam {
         return structure;
     }
 
-    public WidgetId getWidgetId(){
+    public WidgetInStructure getWidgetId(){
         if(widgetIdTracker == null){
             return null;
         }
-        return new WidgetId(widgetIdTracker, structure);
+        return new WidgetInStructure(widgetIdTracker, structure);
     }
 
     public void setStructureCustom(Structure structure){
@@ -54,4 +57,15 @@ public abstract class EntryWidgetParam {
     public String getClassName() {
         return className;
     }
+
+    public final JSONObject getJSON() throws JSONException{
+        JSONObject jsonObject = getJSONCustom();
+        jsonObject.put("name", name);
+        jsonObject.put("idTracker", widgetIdTracker);
+        jsonObject.put("is unique attribute", isUniqueAttribute);
+        jsonObject.put("class name", className);
+        return jsonObject;
+    }
+
+    protected abstract JSONObject getJSONCustom() throws JSONException;
 }

@@ -11,14 +11,14 @@ import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 
 import java.util.ArrayList;
 
 public class EntryDropDown extends BaseEntryWidget {
     private Structure structure = null;
-    private WidgetId valueId = null;
-    private ArrayList<WidgetId> groupIdList = new ArrayList<>();
+    private WidgetInStructure valueId = null;
+    private ArrayList<WidgetInStructure> groupIdList = new ArrayList<>();
 
     private DropDown dropDown;
 

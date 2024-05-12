@@ -5,9 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.example.habittracker.StaticStateManagers.DeleteValueManager;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -15,10 +13,7 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
-import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
-import com.example.habittracker.structures.ListItemId;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.structures.Structure;
@@ -175,7 +170,7 @@ public abstract class EntryWidget implements Widget {
 
 
 
-    public WidgetId getWidgetId(){
+    public WidgetInStructure getWidgetId(){
         return entryWidgetParam.getWidgetId();
     }
 

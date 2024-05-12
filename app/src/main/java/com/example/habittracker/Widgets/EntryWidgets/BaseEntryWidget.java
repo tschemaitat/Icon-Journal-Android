@@ -2,12 +2,15 @@ package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticStateManagers.DeleteValueManager;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.structures.ListItemId;
+
+import java.util.ArrayList;
 
 public abstract class BaseEntryWidget extends EntryWidget{
     private ListItemIdProvider listItemIdProvider;
@@ -27,16 +30,29 @@ public abstract class BaseEntryWidget extends EntryWidget{
         return listItemIdProvider.getListItemId();
     }
 
-
-
-    public void onDeleteCheck(boolean isChecked){
-        DeleteValueManager deleteValueManager = DeleteValueManager.getManager();
-        if(isChecked){
-            WidgetValue widgetValue = this.getValue();
-            deleteValueManager.addValue(new RefEntryString(getStructure(), getWidgetId(),
-                    null, listItemIdProvider.getListItemIdList()));
+    @Override
+    public ArrayList<RefEntryString> getReferenceForDelete() {
+        if(listItemIdProvider == null){
+            MainActivity.log("provider null: " + this);
+            throw new RuntimeException();
         }
+        ArrayList<RefEntryString> resultList = new ArrayList<>();
+        RefEntryString result = new RefEntryString(getStructure(), getWidgetId(),
+                    null, listItemIdProvider.getListItemIdList());
+        resultList.add(result);
+        return resultList;
     }
+
+
+
+//    public void onDeleteCheck(boolean isChecked){
+//        DeleteValueManager deleteValueManager = DeleteValueManager.getManager();
+//        if(isChecked){
+//            WidgetValue widgetValue = this.getValue();
+//            deleteValueManager.addValue(new RefEntryString(getStructure(), getWidgetId(),
+//                    null, listItemIdProvider.getListItemIdList()));
+//        }
+//    }
 
 
 }

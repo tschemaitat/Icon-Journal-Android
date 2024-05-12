@@ -1,0 +1,8 @@
+- separate viewWrapper and widgets
+- consolidate code in list classes by using different wrappers in each case
+- figure out a widget class hierarchy
+- look at how widgets are inflated and see if improvement for compile time safety are possible
+	- setting list id's
+	- setting structure pointer
+- add String function to widget to print out hierarchy position using visual index's
+- change menubar to be a class that allows for adding views

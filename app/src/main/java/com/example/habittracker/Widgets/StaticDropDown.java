@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 
 import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
@@ -22,6 +23,11 @@ public class StaticDropDown extends EntryWidget {
         super(context);
         this.context = context;
         init();
+    }
+
+    @Override
+    public ArrayList<RefEntryString> getReferenceForDelete() {
+        return null;
     }
 
     public StaticDropDown(Context context, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){

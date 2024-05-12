@@ -1,7 +1,7 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 public class DropDownParam extends EntryWidgetParam {
     public Structure structure;
-    public WidgetId valueKey;
-    public ArrayList<WidgetId> groups;
+    public WidgetInStructure valueKey;
+    public ArrayList<WidgetInStructure> groups;
     public String name = "null";
 
     public DropDownParam(String name, Structure structure,
-                         WidgetId valueKey, ArrayList<WidgetId> groups){
+                         WidgetInStructure valueKey, ArrayList<WidgetInStructure> groups){
         super(name, DropDown.className);
         if(structure == null)
             throw new RuntimeException();

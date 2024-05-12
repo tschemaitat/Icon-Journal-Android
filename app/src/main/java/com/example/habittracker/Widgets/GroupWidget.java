@@ -9,7 +9,6 @@ import com.example.habittracker.StaticStateManagers.DeleteValueManager;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
-import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -18,7 +17,6 @@ import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structures.ListItemId;
-import com.example.habittracker.structures.WidgetId;
 
 import java.util.ArrayList;
 
@@ -109,10 +107,12 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         ArrayList<BaseEntryWidget> entryWidgets = getBaseEntryWidgets();
         for(int i = 0; i < entryWidgets.size(); i++){
 
+
             BaseEntryWidget entryWidget = entryWidgets.get(i);
             MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetId());
             entryWidget.setValue(groupValue.getWidgetValueByWidget(entryWidget.getWidgetId()));
-            entryWidget.setListItemIdProvider(this);
+
+            MainActivity.log("group set list id provider: " + entryWidget);
         }
     }
 
@@ -125,8 +125,9 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     public void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
         layout.inflateAll(groupParams.params, ()->onDataChangedListener().run());
-        for(EntryWidget widget: getBaseEntryWidgets()){
+        for(BaseEntryWidget widget: getBaseEntryWidgets()){
             widget.setFocusParent(this);
+            widget.setListItemIdProvider(this);
         }
     }
 

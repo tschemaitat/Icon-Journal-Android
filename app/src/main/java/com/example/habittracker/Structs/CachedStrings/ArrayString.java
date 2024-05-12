@@ -3,6 +3,9 @@ package com.example.habittracker.Structs.CachedStrings;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Margin;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ArrayString implements CachedString{
@@ -23,6 +26,11 @@ public class ArrayString implements CachedString{
         result = builder.toString();
         MainActivity.log("getting string from: " + stringList + " \nresult: " + result);
         return result;
+    }
+
+    @Override
+    public JSONObject getJSON() throws JSONException {
+        throw new RuntimeException();
     }
 
     @Override

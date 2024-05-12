@@ -1,19 +1,23 @@
 package com.example.habittracker.Values;
 
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.ListItemId;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public abstract class WidgetValue {
-    private WidgetId widgetId;
+    public static final String classNameKey = "value type";
+    private Integer widgetId;
     private GroupValue parent;
-    public WidgetValue(WidgetId widgetId){
+    public WidgetValue(Integer widgetId){
         this.widgetId = widgetId;
     }
 
 
-    public WidgetId getWidgetId() {
+    public Integer getWidgetId() {
         return widgetId;
     }
 
@@ -41,4 +45,5 @@ public abstract class WidgetValue {
     }
 
 
+    protected abstract JSONObject getJSON() throws JSONException;
 }

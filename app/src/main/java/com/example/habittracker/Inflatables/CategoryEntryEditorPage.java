@@ -97,7 +97,7 @@ public class CategoryEntryEditorPage implements Inflatable{
 
     @Override
     public void onOpened() {
-        MainActivity.showEntryMenuBar();
+
         groupWidget = new GroupWidget(context);
         groupWidget.setOnDataChangedListener(()->onDataChanged());
         linearLayout.addView(groupWidget.getView());
@@ -107,8 +107,10 @@ public class CategoryEntryEditorPage implements Inflatable{
             groupWidget.setValue(entry.getGroupValue());
             MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
         }
-
-        EntryEditorMenuBar.get().setGroupWidget(groupWidget);
+        Integer entryId = -1;
+        if(entry != null)
+            entryId = entry.getId();
+        EntryEditorMenuBar.getManager().show(groupWidget, entryId);
 
     }
 

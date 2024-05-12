@@ -14,7 +14,7 @@ import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StaticDropDown;
 import com.example.habittracker.Widgets.Widget;
@@ -114,9 +114,9 @@ public class StructureWidgetDropDown implements Widget {
     //region value
 
     private DropDownPage createValuePage(){
-        ArrayList<WidgetId> widgetIdList = getSelectedStructure().getWidgetIdList();
-        ArrayList<RefItemPath> itemPathList = EnumLoop.makeList(widgetIdList, widgetId -> widgetId.getNameWithPath());
-        ArrayList<Object> payloadList = EnumLoop.makeList(widgetIdList, widgetId -> widgetId);
+        ArrayList<WidgetInStructure> widgetInStructureList = getSelectedStructure().getWidgetIdList();
+        ArrayList<RefItemPath> itemPathList = EnumLoop.makeList(widgetInStructureList, widgetId -> widgetId.getNameWithPath());
+        ArrayList<Object> payloadList = EnumLoop.makeList(widgetInStructureList, widgetId -> widgetId);
         MainActivity.log("itemPathList: " + itemPathList);
         MainActivity.log("payloadList: " + payloadList);
         DropDownPage valuePage = DropDownPage.fromItemPathWithPayload(itemPathList, payloadList);;
@@ -134,7 +134,7 @@ public class StructureWidgetDropDown implements Widget {
         if(valueKeyDropDown != null)
             throw new RuntimeException();
         valueKeyDropDown = new StaticDropDown(context, null, (itemPath, payload, prevItemPath, prevPayload) -> {
-            onValueKeyChange((WidgetId) payload, (WidgetId)prevPayload);
+            onValueKeyChange((WidgetInStructure) payload, (WidgetInStructure)prevPayload);
         });
         customLinearLayout.add(valueKeyDropDown.getView());
         valueKeyDropDown.setHint("item to be selected");
@@ -151,7 +151,7 @@ public class StructureWidgetDropDown implements Widget {
     }
 
 
-    private void onValueKeyChange(WidgetId value, WidgetId prevValue){
+    private void onValueKeyChange(WidgetInStructure value, WidgetInStructure prevValue){
         if(prevValue == null && value == null)
             return;
         if(value == null){
@@ -174,18 +174,18 @@ public class StructureWidgetDropDown implements Widget {
 
     }
 
-    private WidgetId getSelectedValueWidget(){
-        return (WidgetId) valueKeyDropDown.getPayload();
+    private WidgetInStructure getSelectedValueWidget(){
+        return (WidgetInStructure) valueKeyDropDown.getPayload();
     }
 
 //endregion
 
     //region group
 
-    private ArrayList<WidgetId> getGroupValueList(){
+    private ArrayList<WidgetInStructure> getGroupValueList(){
         ArrayList<StaticDropDown> groupDropDownList = getGroupDropDownList();
-        ArrayList<WidgetId> groupValues = EnumLoop.makeList(groupDropDownList, (dropDown)->
-            (WidgetId) dropDown.getPayload()
+        ArrayList<WidgetInStructure> groupValues = EnumLoop.makeList(groupDropDownList, (dropDown)->
+            (WidgetInStructure) dropDown.getPayload()
         );
         return groupValues;
     }
@@ -219,27 +219,27 @@ public class StructureWidgetDropDown implements Widget {
 
 
     private DropDownPage createGroupPage(){
-        ArrayList<WidgetId> widgetIdList = getGroupWidgetCandidates();
-        ArrayList<RefItemPath> itemPathList = EnumLoop.makeList(widgetIdList, widgetId -> widgetId.getNameWithPath());
-        return DropDownPage.fromItemPathWithPayload(itemPathList, EnumLoop.makeList(widgetIdList, (obj)->obj));
+        ArrayList<WidgetInStructure> widgetInStructureList = getGroupWidgetCandidates();
+        ArrayList<RefItemPath> itemPathList = EnumLoop.makeList(widgetInStructureList, widgetId -> widgetId.getNameWithPath());
+        return DropDownPage.fromItemPathWithPayload(itemPathList, EnumLoop.makeList(widgetInStructureList, (obj)->obj));
     }
 
-    private ArrayList<WidgetId> getGroupWidgetCandidates(){
+    private ArrayList<WidgetInStructure> getGroupWidgetCandidates(){
 
-        ArrayList<WidgetId> widgetIdList = getSelectedStructure().getWidgetIdList();
+        ArrayList<WidgetInStructure> widgetInStructureList = getSelectedStructure().getWidgetIdList();
         //MainActivity.log("getting group candidates from: " + widgetIdList);
-        widgetIdList.remove(getSelectedValueWidget());
-        for(WidgetId widgetId: getGroupValueList())
-            widgetIdList.remove(widgetId);
+        widgetInStructureList.remove(getSelectedValueWidget());
+        for(WidgetInStructure widgetInStructure : getGroupValueList())
+            widgetInStructureList.remove(widgetInStructure);
         //MainActivity.log("result: " + widgetIdList);
-        return widgetIdList;
+        return widgetInStructureList;
     }
 
     private void addGroupBy(){
         ArrayList<StaticDropDown> groupDropDowns = getGroupDropDownList();
         int newIndex = groupDropDowns.size();
         StaticDropDown dropDown = new StaticDropDown(context, createGroupPage(), (itemPath, payload, prevItemPath, prevPayload) -> {
-            onGroupValueChange((WidgetId) payload, (WidgetId) prevPayload, newIndex);
+            onGroupValueChange((WidgetInStructure) payload, (WidgetInStructure) prevPayload, newIndex);
         });
         dropDown.setHint("select group");
         groupDropDowns.add(dropDown);
@@ -249,9 +249,9 @@ public class StructureWidgetDropDown implements Widget {
             groupLayout.getLinLayout().removeButton();
     }
 
-    private void onGroupValueChange(WidgetId payload, WidgetId prevPayload, int index){
+    private void onGroupValueChange(WidgetInStructure payload, WidgetInStructure prevPayload, int index){
         ArrayList<StaticDropDown> groupDropDowns = getGroupDropDownList();
-        ArrayList<WidgetId> groupValues = getGroupValueList();
+        ArrayList<WidgetInStructure> groupValues = getGroupValueList();
         if(groupValues.size() < index)
             throw new RuntimeException();
         int changedIndex = index;
@@ -308,7 +308,7 @@ public class StructureWidgetDropDown implements Widget {
     }
 
     private int maxNumGroups(){
-        ArrayList<WidgetId> totalPossibleWidgets = getSelectedStructure().getWidgetIdList();
+        ArrayList<WidgetInStructure> totalPossibleWidgets = getSelectedStructure().getWidgetIdList();
         //MainActivity.log("candidate widgets: " + totalPossibleWidgets + ", groupValues: " + groupValues);
         return totalPossibleWidgets.size() - 1;
     }
@@ -336,7 +336,7 @@ public class StructureWidgetDropDown implements Widget {
         if(groupLayout != null){
             boolean error = false;
             ArrayList<StaticDropDown> groupDropDowns = getGroupDropDownList();
-            ArrayList<WidgetId> groupValues = getGroupValueList();
+            ArrayList<WidgetInStructure> groupValues = getGroupValueList();
             if(groupValues.size() == 0)
                 break checkingGroup;
             for(StaticDropDown dropDown: groupDropDowns){
@@ -370,10 +370,10 @@ public class StructureWidgetDropDown implements Widget {
         onValueKeyChange(dropDownParam.valueKey, null);
         //onValueKeyChange(valueWidget);
         for(int i = 0; i < dropDownParam.groups.size(); i++){
-            WidgetId widgetId = dropDownParam.groups.get(i);
+            WidgetInStructure widgetInStructure = dropDownParam.groups.get(i);
             addGroupBy();
-            getGroupDropDownList().get(i).setSelectedByPayload(widgetId);
-            onGroupValueChange(widgetId, null, i);
+            getGroupDropDownList().get(i).setSelectedByPayload(widgetInStructure);
+            onGroupValueChange(widgetInStructure, null, i);
         }
     }
 

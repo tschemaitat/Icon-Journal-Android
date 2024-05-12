@@ -3,13 +3,18 @@ package com.example.habittracker;
 import android.content.Context;
 
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structures.WidgetPath;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,9 +45,9 @@ public class UnitTests {
         String spreadSheetName = "shows";
         EditTextParam nameEditText = new EditTextParam("name");
         nameEditText.isUniqueAttribute = true;
-        WidgetId genreWidgetId = getWidgetFromStructure("name", genreStructure);
+        WidgetInStructure genreWidgetInStructure = getWidgetFromStructure("name", genreStructure);
         DropDownParam exerciseDropDown = new DropDownParam("genre",
-                genreStructure, genreWidgetId, new ArrayList<>());
+                genreStructure, genreWidgetInStructure, new ArrayList<>());
         EditTextParam genreDesc = new EditTextParam("genreDesc");
         ListMultiItemParam genreList = new ListMultiItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
                 exerciseDropDown,
@@ -95,8 +100,8 @@ public class UnitTests {
         String spreadSheetName = "exercise routine";
         EditTextParam nameEditText = new EditTextParam("name");
         nameEditText.isUniqueAttribute = true;
-        WidgetId exerciseName = getWidgetFromStructure("name", exerciseStructure);
-        WidgetId bodyPart = getWidgetFromStructure("body part", exerciseStructure);
+        WidgetInStructure exerciseName = getWidgetFromStructure("name", exerciseStructure);
+        WidgetInStructure bodyPart = getWidgetFromStructure("body part", exerciseStructure);
         DropDownParam exerciseDropDown = new DropDownParam("exercise",
                 exerciseStructure, exerciseName, new ArrayList<>(Collections.singleton(bodyPart)));
         exerciseDropDown.isUniqueAttribute = true;
@@ -110,15 +115,27 @@ public class UnitTests {
 
     }
 
-    public WidgetId getWidgetFromStructure(String widgetName, Structure structure){
-        ArrayList<WidgetId> widgets = structure.getWidgetIdList();
-        for(WidgetId widget: widgets){
+    public WidgetInStructure getWidgetFromStructure(String widgetName, Structure structure){
+        ArrayList<WidgetInStructure> widgets = structure.getWidgetIdList();
+        for(WidgetInStructure widget: widgets){
             if(widgetName.equals(widget.getNameWithPath().getLast().getString())){
                 return widget;
             }
         }
         MainActivity.log("name: " + widgetName + ", widgets: \n" + widgets);
         throw new RuntimeException("tried to find widget by name");
+    }
+
+    public void addValues(ArrayList<String> values, WidgetInStructure widgetInStructure, Structure structure){
+        GroupWidgetParam groupWidgetParam = structure.getWidgetParam();
+        GroupWidget groupWidget = (GroupWidget)GLib.inflateWidget(context, groupWidgetParam, ()->{});
+        GroupValue groupValue = (GroupValue)groupWidget.getValue();
+        WidgetPath widgetPath = widgetInStructure.getWidgetInfo().getWidgetPath();
+        WidgetValue currentValue = groupValue;
+        for(int i = 0; i < widgetPath.size(); i++){
+            WidgetInStructure currentWidgetInStructure = widgetPath.get(i);
+
+        }
     }
 
 

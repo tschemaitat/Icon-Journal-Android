@@ -2,20 +2,27 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.structures.WidgetPath;
 import com.example.habittracker.structures.ListItemId;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class ListValue extends WidgetValue {
+    public static final String className = "list value";
     private ArrayList<GroupValue> groupValueList;
-    public ListValue(WidgetId widgetId, ArrayList<GroupValue> groupValueList){
+    public ListValue(Integer widgetId, ArrayList<GroupValue> groupValueList){
         super(widgetId);
         this.groupValueList = groupValueList;
         for(GroupValue groupValue: groupValueList)
             groupValue.setParentListValue(this);
     }
+
+
 
     public ArrayList<GroupValue> getGroupValueList() {
         return (ArrayList<GroupValue>) groupValueList.clone();
@@ -88,5 +95,33 @@ public class ListValue extends WidgetValue {
         }
         for(GroupValue groupValue: groupValueList)
             groupValue.setIdOfTree();
+    }
+
+    public JSONObject getJSON() throws JSONException{
+        JSONArray jsonArray = new JSONArray();
+
+        for(GroupValue groupValue: getGroupValueList()){
+            jsonArray.put(groupValue.getJSON());
+        }
+        JSONObject result = new JSONObject();
+        result.put("array", jsonArray);
+        result.put("array size", getGroupValueList().size());
+        result.put("widget id", getWidgetId().intValue());
+        result.put(WidgetValue.classNameKey, "list");
+        return result;
+    }
+
+    public static ListValue getFromJSON(JSONObject jsonObject) throws JSONException{
+        int arraySize = jsonObject.getInt("array size");
+        int widgetId = jsonObject.getInt("widget id");
+        JSONArray jsonArray = jsonObject.getJSONArray("array");
+        ArrayList<GroupValue> groupValues = new ArrayList<>();
+        for(int i = 0; i < arraySize; i++){
+            JSONObject groupJSON = jsonArray.getJSONObject(i);
+            GroupValue groupValue = (GroupValue) StructureTokenizer.getWidgetValue(groupJSON);
+            groupValues.add(groupValue);
+        }
+        ListValue listValue = new ListValue(widgetId, groupValues);
+        return listValue;
     }
 }

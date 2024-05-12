@@ -27,18 +27,18 @@ public class HeaderNode{
         return widgetParam.name;
     }
 
-    public HeaderNode getByWidget(WidgetId widgetId){
+    public HeaderNode getByWidget(WidgetInStructure widgetInStructure){
         for(HeaderNode headerNode: children){
-            if(headerNode.widgetParam.widgetIdTracker == widgetId.getId()){
+            if(headerNode.widgetParam.widgetIdTracker == widgetInStructure.getWidgetId()){
                 return headerNode;
             }
         }
-        MainActivity.log("tried to find headerNode from widget: " + widgetId);
+        MainActivity.log("tried to find headerNode from widget: " + widgetInStructure);
         MainActivity.log("available widget ids: " + getWidgetIdListOfChildren());
         throw new RuntimeException();
     }
 
-    private ArrayList<WidgetId> getWidgetIdListOfChildren() {
+    private ArrayList<WidgetInStructure> getWidgetIdListOfChildren() {
         return EnumLoop.makeList(children, (headerNode -> headerNode.widgetParam.getWidgetId()));
     }
 
@@ -56,13 +56,13 @@ public class HeaderNode{
     }
 
     public WidgetPath getWidgetPath(){
-        ArrayList<WidgetId> widgetIdList = new ArrayList<>();
-        getWidgetPathIteration(widgetIdList);
-        widgetIdList.remove(0);
-        return new WidgetPath(widgetIdList);
+        ArrayList<WidgetInStructure> widgetInStructureList = new ArrayList<>();
+        getWidgetPathIteration(widgetInStructureList);
+        widgetInStructureList.remove(0);
+        return new WidgetPath(widgetInStructureList);
     }
 
-    public void getWidgetPathIteration(ArrayList<WidgetId> currentWidgetPath){
+    public void getWidgetPathIteration(ArrayList<WidgetInStructure> currentWidgetPath){
         if(parent != null)
             parent.getWidgetPathIteration(currentWidgetPath);
         currentWidgetPath.add(widgetParam.getWidgetId());
@@ -75,7 +75,7 @@ public class HeaderNode{
         String tabString = GLib.tabs(numTabs);
         Integer id = null;
         if(widgetParam.getWidgetId() != null)
-            id = widgetParam.getWidgetId().getId();
+            id = widgetParam.getWidgetId().getWidgetId();
         String result = tabString + "(" + getChildren().size() + ")" +getName() + ", id: "+id+"\n";
 
         for(HeaderNode node: getChildren()){

@@ -10,7 +10,7 @@ import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetId;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.WidgetPath;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DropDownPageFactory {
-    public static DropDownPage getGroupedPages(Structure structure, WidgetId valueId, ArrayList<WidgetId> groupIdList){
+    public static DropDownPage getGroupedPages(Structure structure, WidgetInStructure valueId, ArrayList<WidgetInStructure> groupIdList){
         //MainActivity.log("getting grouped pages");
         ArrayList<Entry> entries = structure.getEntries();
         ArrayList<WidgetPath> groupPathList = EnumLoop.makeList(groupIdList, (widgetId)->widgetId.getWidgetInfo().getWidgetPath());
@@ -81,12 +81,12 @@ public class DropDownPageFactory {
         return parentPage;
     }
 
-    public static RefEntryString getRefEntryString(Structure structure, WidgetId widgetId, Integer entryId,
+    public static RefEntryString getRefEntryString(Structure structure, WidgetInStructure widgetInStructure, Integer entryId,
                                                    BaseWidgetValue tree){
         if(entryId == null)
             throw new RuntimeException();
         if(tree.getStandardFormOfCachedString() instanceof LiteralString){
-            return new RefEntryString(structure, widgetId, entryId, tree.getListItemIds());
+            return new RefEntryString(structure, widgetInStructure, entryId, tree.getListItemIds());
         }
         return (RefEntryString) tree.getStandardFormOfCachedString();
     }

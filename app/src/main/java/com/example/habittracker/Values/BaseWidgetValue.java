@@ -1,12 +1,11 @@
 package com.example.habittracker.Values;
 
 import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.structures.WidgetId;
 
 public abstract class BaseWidgetValue extends WidgetValue{
 
-    public BaseWidgetValue(WidgetId widgetId) {
-        super(widgetId);
+    public BaseWidgetValue(Integer widgetInStructure) {
+        super(widgetInStructure);
     }
 
     public abstract CachedString getDisplayCachedString();

@@ -3,6 +3,7 @@ package com.example.habittracker.StaticStateManagers;
 import android.content.Context;
 import android.widget.Button;
 
+import com.example.habittracker.Algorithms.HandleDeletedValues;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -11,34 +12,45 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.structures.ListItemId;
 import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetId;
 
 import java.util.ArrayList;
 
 public class DeleteValueManager {
-    private static DeleteValueManager manager;
-
-    public static void createManager(Context context, GroupWidget groupWidget, Button button){
-        manager = new DeleteValueManager(context, groupWidget, button);
-    }
-    public static DeleteValueManager getManager(){
-        return manager;
-    }
-
-    public static boolean hasManager(){
-        return manager != null;
-    }
+//    private static DeleteValueManager manager;
+//
+//    public static void createManager(Context context, GroupWidget groupWidget, Button button){
+//        manager = new DeleteValueManager(context, groupWidget, button, entryId);
+//    }
+//    public static DeleteValueManager getManager(){
+//        return manager;
+//    }
+//
+//    public static boolean hasManager(){
+//        return manager != null;
+//    }
 
     private Context context;
     private GroupWidget groupWidget;
     private ArrayList<RefEntryString> valuesToDelete = new ArrayList<>();
     private Button button;
+    private Integer entryId;
 
-    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button) {
+    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, Integer entryId) {
+        this.entryId = entryId;
         this.button = button;
         this.context = context;
         this.groupWidget = groupWidget;
         init();
+    }
+
+    private void init(){
+        if(entryId == null)
+            entryId = -1;
+        groupWidget.enableDeleteValueMode();
+    }
+
+    public void onCancel() {
+        MainActivity.log("on cancel");
     }
 
     public void addValue(RefEntryString refEntryString){
@@ -59,7 +71,8 @@ public class DeleteValueManager {
         button.setOnClickListener((view -> onConfirm()));
     }
 
-    private void onConfirm(){
+    public void onConfirm(){
+        MainActivity.log("on confirm");
         ArrayList<EntryWidget> entryWidgets = groupWidget.gatherWidgetsChecked();
         ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
         for(EntryWidget entryWidget: entryWidgets){
@@ -71,14 +84,16 @@ public class DeleteValueManager {
             MainActivity.log("checked: " + entryWidget);
             for(int r = 0; r < refList.size(); r++){
                 RefEntryString refEntryString = refList.get(r);
-                MainActivity.log("\t" + refEntryString);
+                refEntryString = new RefEntryString(refEntryString.getStructure(),
+                        refEntryString.getWidgetInStructure(), entryId, refEntryString.getListIdList());
+                MainActivity.log("\t" + refEntryString.getLocationString());
             }
         }
+
+        ArrayList<Structure.DeleteValuePair> references = HandleDeletedValues.getStructures(refListList);
     }
 
-    private void init(){
-        groupWidget.enableDeleteValueMode();
-    }
+
 
 
     public static void gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets, ArrayList<RefEntryString> resultList,

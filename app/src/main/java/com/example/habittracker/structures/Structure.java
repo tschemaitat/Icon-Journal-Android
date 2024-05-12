@@ -26,7 +26,7 @@ public class Structure {
     private GroupWidgetParam widgetParam;
     private String type;
     private HashMap<Integer, Entry> entries;
-    private HashMap<WidgetId, Header.WidgetInfo> widgetMap;
+    private HashMap<WidgetInStructure, Header.WidgetInfo> widgetMap;
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type){
@@ -130,8 +130,8 @@ public class Structure {
         return type;
     }
 
-    public Header.WidgetInfo getWidgetInfo(WidgetId widgetId){
-        return widgetMap.get(widgetId);
+    public Header.WidgetInfo getWidgetInfo(WidgetInStructure widgetInStructure){
+        return widgetMap.get(widgetInStructure);
     }
 
 
@@ -178,19 +178,19 @@ public class Structure {
         return "<structure> " + getCachedName().getString() + ", id: " + getId();
     }
 
-    public EntryWidgetParam getWidgetParamFromId(WidgetId widgetId) {
-        return widgetMap.get(widgetId).getEntryWidgetParam();
+    public EntryWidgetParam getWidgetParamFromId(WidgetInStructure widgetInStructure) {
+        return widgetMap.get(widgetInStructure).getEntryWidgetParam();
     }
 
     protected CachedString getEntryName(Entry entry) {
         MainActivity.log("getting entry name");
 
-        ArrayList<WidgetId> importantWidgetList = getImportantWidgets();
+        ArrayList<WidgetInStructure> importantWidgetList = getImportantWidgets();
         ArrayList<CachedString> arrayStringList = new ArrayList<>();
         MainActivity.log("important widgets: " + importantWidgetList);
-        for(WidgetId widgetId: importantWidgetList){
+        for(WidgetInStructure widgetInStructure : importantWidgetList){
 
-            ArrayList<BaseWidgetValue> widgetValueList = entry.getGroupValue().getValuesFromWidgetPath(getWidgetInfo(widgetId).getWidgetPath());
+            ArrayList<BaseWidgetValue> widgetValueList = entry.getGroupValue().getValuesFromWidgetPath(getWidgetInfo(widgetInStructure).getWidgetPath());
             ArrayString string = new ArrayString(EnumLoop.makeList(widgetValueList, (widgetValue)->widgetValue.getDisplayCachedString()));
             MainActivity.log("getting values from widgetId: " + widgetValueList);
             arrayStringList.add(string);
@@ -198,33 +198,43 @@ public class Structure {
         return new ArrayString(arrayStringList);
     }
 
-    public ArrayList<WidgetId> getImportantWidgets(){
-        ArrayList<WidgetId> result = new ArrayList<>();
-        for(WidgetId widgetId: widgetMap.keySet()){
-            if(widgetId.getWidgetParam().isUniqueAttribute)
-                result.add(widgetId);
+    public ArrayList<WidgetInStructure> getImportantWidgets(){
+        ArrayList<WidgetInStructure> result = new ArrayList<>();
+        for(WidgetInStructure widgetInStructure : widgetMap.keySet()){
+            if(widgetInStructure.getWidgetParam().isUniqueAttribute)
+                result.add(widgetInStructure);
         }
         return result;
     }
 
-    public ArrayList<WidgetId> getWidgetIdList() {
+    public ArrayList<WidgetInStructure> getWidgetIdList() {
         return new ArrayList<>(widgetMap.keySet());
     }
 
-    public ArrayList<WidgetId> references(WidgetId widgetId){
-        ArrayList<WidgetId> references = new ArrayList<>();
-        for(Map.Entry<WidgetId, Header.WidgetInfo> widgetSet: widgetMap.entrySet()){
-            WidgetId reference = widgetSet.getValue().getReference();
-            if(reference != null)
+    public ArrayList<DeleteValuePair> getReferenceOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
+        ArrayList<DeleteValuePair> result = new ArrayList<>();
+        ArrayList<WidgetInStructure> widgetThatRefTheSourceList = references(sourceWidget);
+        for(WidgetInStructure widgetThatRefTheSource: widgetThatRefTheSourceList){
+            ArrayList<DeleteValuePair> reference = getReferenceLocations(sourcesToCheck, widgetThatRefTheSource);
+            result.addAll(reference);
+        }
+        return result;
+    }
+
+    public ArrayList<WidgetInStructure> references(WidgetInStructure sourceWidget){
+        ArrayList<WidgetInStructure> references = new ArrayList<>();
+        for(Map.Entry<WidgetInStructure, Header.WidgetInfo> widgetSet: widgetMap.entrySet()){
+            WidgetInStructure reference = widgetSet.getValue().getReference();
+            if(reference.equals(sourceWidget))
                 references.add(reference);
         }
         return references;
     }
 
-    public ArrayList<DeleteValuePair> getReferenceLocations(ArrayList<RefEntryString> refEntryStringList, WidgetId widgetId){
+    private ArrayList<DeleteValuePair> getReferenceLocations(ArrayList<RefEntryString> refEntryStringList, WidgetInStructure widgetThatRefTheSource){
         ArrayList<DeleteValuePair> deleteValuePairList = new ArrayList<>();
         for(Entry entry: entries.values()){
-            ArrayList<BaseWidgetValue> baseWidgetValueList = entry.getGroupValue().getValuesFromWidgetPath(widgetId.getWidgetInfo().getWidgetPath());
+            ArrayList<BaseWidgetValue> baseWidgetValueList = entry.getGroupValue().getValuesFromWidgetPath(widgetThatRefTheSource.getWidgetInfo().getWidgetPath());
             for(BaseWidgetValue baseWidgetValue: baseWidgetValueList){
                 if(baseWidgetValue instanceof WidgetValueStringPath widgetValueStringPath){
                     CachedString cachedString = widgetValueStringPath.getRefItemPath().getLast();

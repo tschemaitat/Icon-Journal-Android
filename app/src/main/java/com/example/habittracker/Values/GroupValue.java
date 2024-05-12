@@ -2,13 +2,19 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.WidgetPath;
-import com.example.habittracker.structures.WidgetId;
 import com.example.habittracker.structures.ListItemId;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class GroupValue extends WidgetValue{
+    public static final String className = "group value";
     private ListItemId listItemId = null;
     private ArrayList<WidgetValue> values = new ArrayList<>();
     private ListValue parent;
@@ -28,39 +34,41 @@ public class GroupValue extends WidgetValue{
         values = new ArrayList<>();
     }
 
+
+
     public void setParentListValue(ListValue listValue){
         this.parent = listValue;
     }
 
-    public ListValue getListValueByWidget(WidgetId widgetId){
-        WidgetValue widgetValue = getWidgetValueByWidget(widgetId);
+    public ListValue getListValueByWidget(WidgetInStructure widgetInStructure){
+        WidgetValue widgetValue = getWidgetValueByWidget(widgetInStructure);
         if(widgetValue instanceof ListValue listValue)
             return listValue;
-        logErrorFindingWidgetValue(widgetId);
+        logErrorFindingWidgetValue(widgetInStructure);
         throw new RuntimeException();
     }
 
-    public void logErrorFindingWidgetValue(WidgetId widgetId){
-        MainActivity.log("tried to find: " + widgetId + ", from: \n" + values);
+    public void logErrorFindingWidgetValue(WidgetInStructure widgetInStructure){
+        MainActivity.log("tried to find: " + widgetInStructure + ", from: \n" + values);
         MainActivity.log("available widgetIds: " + getWidgetIdList());
     }
 
-    public WidgetValue getWidgetValueByWidget(WidgetId widgetId) {
+    public WidgetValue getWidgetValueByWidget(WidgetInStructure widgetInStructure) {
         for(WidgetValue widgetValue : values)
-            if(widgetValue.getWidgetId().equals(widgetId))
+            if(widgetValue.getWidgetId().equals(widgetInStructure))
                 return widgetValue;
-        logErrorFindingWidgetValue(widgetId);
+        logErrorFindingWidgetValue(widgetInStructure);
         throw new RuntimeException();
     }
-    public BaseWidgetValue getBaseWidgetValueByWidget(WidgetId widgetId) {
-        WidgetValue widgetValue = getWidgetValueByWidget(widgetId);
+    public BaseWidgetValue getBaseWidgetValueByWidget(WidgetInStructure widgetInStructure) {
+        WidgetValue widgetValue = getWidgetValueByWidget(widgetInStructure);
         if(widgetValue instanceof BaseWidgetValue baseWidgetValue)
             return baseWidgetValue;
-        logErrorFindingWidgetValue(widgetId);
+        logErrorFindingWidgetValue(widgetInStructure);
         throw new RuntimeException();
     }
 
-    public ArrayList<WidgetId> getWidgetIdList(){
+    public ArrayList<Integer> getWidgetIdList(){
         return EnumLoop.makeList(values, (value)->value.getWidgetId());
     }
 
@@ -113,26 +121,26 @@ public class GroupValue extends WidgetValue{
             groupValueList = processList(groupValueList, widgetPath.get(i));
         }
         ArrayList<BaseWidgetValue> baseWidgetValueList = new ArrayList<>();
-        WidgetId lastWidgetId = widgetPath.getLast();
+        WidgetInStructure lastWidgetInStructure = widgetPath.getLast();
         for(GroupValue groupValue: groupValueList){
-            baseWidgetValueList.add(groupValue.getBaseWidgetValueByWidget(lastWidgetId));
+            baseWidgetValueList.add(groupValue.getBaseWidgetValueByWidget(lastWidgetInStructure));
         }
 
         return baseWidgetValueList;
     }
 
-    public static ArrayList<GroupValue> processList(ArrayList<GroupValue> groupValueList, WidgetId widgetId){
-        ArrayList<ListValue> currentTrees = getListArrayFromGroupValueList(groupValueList, widgetId);
+    public static ArrayList<GroupValue> processList(ArrayList<GroupValue> groupValueList, WidgetInStructure widgetInStructure){
+        ArrayList<ListValue> currentTrees = getListArrayFromGroupValueList(groupValueList, widgetInStructure);
         return ListValue.gatherGroupValuesFromList(currentTrees);
     }
 
 
 
-    public static ArrayList<ListValue> getListArrayFromGroupValueList(ArrayList<GroupValue> groupValueList, WidgetId widgetId){
+    public static ArrayList<ListValue> getListArrayFromGroupValueList(ArrayList<GroupValue> groupValueList, WidgetInStructure widgetInStructure){
         ArrayList<ListValue> result = new ArrayList<>();
         for(GroupValue groupValue: groupValueList){
             //System.out.println("index from tree: " + tree.nameAndLength());
-            result.add(groupValue.getListValueByWidget(widgetId));
+            result.add(groupValue.getListValueByWidget(widgetInStructure));
         }
         return result;
     }
@@ -185,5 +193,34 @@ public class GroupValue extends WidgetValue{
 
     public ArrayList<WidgetValue> getValues() {
         return values;
+    }
+
+    public JSONObject getJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("list id", listItemId.getId().intValue());
+        JSONArray jsonArray = new JSONArray();
+        for(WidgetValue widgetValue: getValues()){
+            jsonArray.put(widgetValue.getJSON());
+        }
+        json.put("array", jsonArray);
+        json.put("array size", getValues().size());
+        json.put(WidgetValue.classNameKey, "group");
+
+        return json;
+    }
+
+    public static GroupValue getFromJSON(JSONObject jsonObject) throws JSONException{
+        int listId = jsonObject.getInt("list id");
+        int arraySize = jsonObject.getInt("array size");
+        JSONArray jsonArray = jsonObject.getJSONArray("array");
+        ArrayList<WidgetValue> widgetValues = new ArrayList<>();
+        for(int i = 0; i < arraySize; i++){
+            JSONObject widgetValueJSON = jsonArray.getJSONObject(i);
+            WidgetValue widgetValue = StructureTokenizer.getWidgetValue(widgetValueJSON);
+            widgetValues.add(widgetValue);
+        }
+        GroupValue groupValue = new GroupValue(widgetValues);
+        groupValue.setListItemId(new ListItemId(listId));
+        return groupValue;
     }
 }
