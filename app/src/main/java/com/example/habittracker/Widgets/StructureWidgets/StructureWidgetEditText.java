@@ -31,7 +31,7 @@ public class StructureWidgetEditText implements Widget {
     }
 
     public EntryWidgetParam getParam() {
-        EditTextParam editTextParam = new EditTextParam(null);
+        EditTextParam editTextParam = new EditTextParam((String) null);
         return editTextParam;
     }
 

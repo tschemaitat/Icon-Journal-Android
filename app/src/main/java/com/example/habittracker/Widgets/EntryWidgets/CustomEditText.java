@@ -5,13 +5,11 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
@@ -22,13 +20,10 @@ import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
-
-import java.util.ArrayList;
 
 public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public static final String className = "edit text";
@@ -231,7 +226,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public WidgetValue getEntryValueTreeCustom() {
         //MainActivity.log("returning data tree");
         //MainActivity.log("getText() = " + getText());
-        return new WidgetValueString(getWidgetId(), new LiteralString(getText()));
+        return new WidgetValueString(getWidgetIdTracker(), new LiteralString(getText()));
     }
 
     @Override

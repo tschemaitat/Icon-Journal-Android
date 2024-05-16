@@ -170,8 +170,8 @@ public abstract class EntryWidget implements Widget {
 
 
 
-    public WidgetInStructure getWidgetId(){
-        return entryWidgetParam.getWidgetId();
+    public WidgetInStructure getWidgetInStructure(){
+        return entryWidgetParam.getWidgetInStructure();
     }
 
     protected abstract void setValueCustom(WidgetValue widgetValue);
@@ -232,6 +232,10 @@ public abstract class EntryWidget implements Widget {
 
     public Structure getStructure(){
         return entryWidgetParam.getStructure();
+    }
+
+    public Integer getStructureId(){
+        return entryWidgetParam.getWidgetInStructure().getStructureId();
     }
 
     public final String toString(){

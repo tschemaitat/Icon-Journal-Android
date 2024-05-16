@@ -187,7 +187,7 @@ public class StructureEditor implements Inflatable{
 
 
 
-        return new GroupWidgetParam(null, widgetInfoList);
+        return new GroupWidgetParam((String) null, widgetInfoList);
     }
 
 

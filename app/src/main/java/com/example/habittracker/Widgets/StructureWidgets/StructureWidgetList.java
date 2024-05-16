@@ -58,9 +58,9 @@ public class StructureWidgetList implements Widget{
         if(entryWidgetParams.size() == 0)
             return null;
         if(entryWidgetParams.size() == 1){
-            return new ListSingleItemParam(null, entryWidgetParams.get(0));
+            return new ListSingleItemParam((String) null, entryWidgetParams.get(0));
         }else{
-            return new ListMultiItemParam(null, new GroupWidgetParam(null, entryWidgetParams));
+            return new ListMultiItemParam((String) null, new GroupWidgetParam((String) null, entryWidgetParams));
         }
 
 

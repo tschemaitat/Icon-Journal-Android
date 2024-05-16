@@ -14,8 +14,6 @@ import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
@@ -48,7 +46,7 @@ public class ListWidgetSingleItem extends ListWidget {
             groupValue.setListItemId(entryWidget.getListItemId());
             groupValueList.add(groupValue);
         }
-        return new ListValue(param.getWidgetId(), groupValueList);
+        return new ListValue(param.getWidgetInStructure().getWidgetId(), groupValueList);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class ListWidgetSingleItem extends ListWidget {
         for(GroupValue groupValue: groupValueList){
             BaseEntryWidget item = (BaseEntryWidget)createItem();
             layout.add(item);
-            WidgetValue valueInGroup = groupValue.getWidgetValueByWidget(entryWidgetParam.getWidgetId());
+            WidgetValue valueInGroup = groupValue.getWidgetValueByWidget(entryWidgetParam.getWidgetInStructure());
             item.setValue(valueInGroup);
             item.setListItemIdProvider(new SingleItemIdProvider(groupValue.getListItemId()));
         }

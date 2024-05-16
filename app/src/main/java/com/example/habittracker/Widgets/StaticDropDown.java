@@ -12,6 +12,9 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class StaticDropDown extends EntryWidget {
@@ -148,6 +151,11 @@ public class StaticDropDown extends EntryWidget {
         @Override
         public HeaderNode createHeaderNode() {
             throw new RuntimeException();
+        }
+
+        @Override
+        protected JSONObject getJSONCustom() throws JSONException {
+            return null;
         }
 
 

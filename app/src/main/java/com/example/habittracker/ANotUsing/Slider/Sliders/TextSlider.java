@@ -11,6 +11,9 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class TextSlider extends BaseEntryWidget {
@@ -85,6 +88,11 @@ public class TextSlider extends BaseEntryWidget {
 
         @Override
         public HeaderNode createHeaderNode() {
+            return null;
+        }
+
+        @Override
+        protected JSONObject getJSONCustom() throws JSONException {
             return null;
         }
     }

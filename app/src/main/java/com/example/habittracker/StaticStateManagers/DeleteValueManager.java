@@ -84,8 +84,8 @@ public class DeleteValueManager {
             MainActivity.log("checked: " + entryWidget);
             for(int r = 0; r < refList.size(); r++){
                 RefEntryString refEntryString = refList.get(r);
-                refEntryString = new RefEntryString(refEntryString.getStructure(),
-                        refEntryString.getWidgetInStructure(), entryId, refEntryString.getListIdList());
+                refEntryString = new RefEntryString(refEntryString.getWidgetInStructure(),
+                        entryId, refEntryString.getListIdList());
                 MainActivity.log("\t" + refEntryString.getLocationString());
             }
         }
@@ -103,7 +103,7 @@ public class DeleteValueManager {
                 listWidget.getReferenceForDeleteIteration(resultList);
                 continue;
             }
-            resultList.add(new RefEntryString(structure, baseEntryWidget.getWidgetId(),
+            resultList.add(new RefEntryString(baseEntryWidget.getWidgetInStructure(),
                     null, listItemIds));
         }
     }

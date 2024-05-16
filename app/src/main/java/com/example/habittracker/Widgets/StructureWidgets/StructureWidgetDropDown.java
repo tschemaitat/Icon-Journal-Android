@@ -354,7 +354,8 @@ public class StructureWidgetDropDown implements Widget {
                 return null;
         }
 
-        return new DropDownParam(null, getSelectedStructure(), getSelectedValueWidget(), getGroupValueList());
+        return new DropDownParam((String) null, getSelectedStructure().getId(), getSelectedValueWidget().getWidgetId(),
+                EnumLoop.makeList(getGroupValueList(), (widgetInStructure)-> widgetInStructure.getWidgetId()));
     }
 
     @Override
@@ -362,15 +363,15 @@ public class StructureWidgetDropDown implements Widget {
         DropDownParam dropDownParam = ((DropDownParam) param);
         //structure = dropDownParam.structure;
         //createStructureKeyDropDown();
-        structureKeyDropDown.setSelectedByPayload(dropDownParam.structure);
-        onStructureKeyChange(dropDownParam.structure, null);
+        structureKeyDropDown.setSelectedByPayload(dropDownParam.getStructure());
+        onStructureKeyChange(dropDownParam.getStructure(), null);
         //onStructureKeyChange(structure);
         //valueWidget = dropDownParam.valueKey;
-        valueKeyDropDown.setSelectedByPayload(dropDownParam.valueKey);
-        onValueKeyChange(dropDownParam.valueKey, null);
+        valueKeyDropDown.setSelectedByPayload(dropDownParam.getValueWidget());
+        onValueKeyChange(dropDownParam.getValueWidget(), null);
         //onValueKeyChange(valueWidget);
-        for(int i = 0; i < dropDownParam.groups.size(); i++){
-            WidgetInStructure widgetInStructure = dropDownParam.groups.get(i);
+        for(int i = 0; i < dropDownParam.getGroupWidgets().size(); i++){
+            WidgetInStructure widgetInStructure = dropDownParam.getGroupWidgets().get(i);
             addGroupBy();
             getGroupDropDownList().get(i).setSelectedByPayload(widgetInStructure);
             onGroupValueChange(widgetInStructure, null, i);

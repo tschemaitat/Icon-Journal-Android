@@ -16,7 +16,7 @@ import com.example.habittracker.structures.WidgetInStructure;
 import java.util.ArrayList;
 
 public class EntryDropDown extends BaseEntryWidget {
-    private Structure structure = null;
+    private Structure referenceStructure = null;
     private WidgetInStructure valueId = null;
     private ArrayList<WidgetInStructure> groupIdList = new ArrayList<>();
 
@@ -71,16 +71,19 @@ public class EntryDropDown extends BaseEntryWidget {
     @Override
     public WidgetValue getEntryValueTreeCustom() {
         MainActivity.log("saving value path: " + dropDown.getSelectedPath());
-        return new WidgetValueStringPath(getWidgetId(), dropDown.getSelectedPath());
+        return new WidgetValueStringPath(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath());
     }
 
     @Override
     public void setParamCustom(EntryWidgetParam param){
         DropDownParam dropDownParams = ((DropDownParam) param);
-        dropDownPage = DropDownPageFactory.getGroupedPages(dropDownParams.structure, dropDownParams.valueKey, dropDownParams.groups);
-        structure = dropDownParams.structure;
-        valueId = dropDownParams.valueKey;
-        groupIdList = dropDownParams.groups;
+        referenceStructure = dropDownParams.getReferenceStructure();
+        valueId = dropDownParams.getValueWidget();
+        valueId.getWidgetInfo();
+        groupIdList = dropDownParams.getGroupWidgets();
+        dropDownPage = DropDownPageFactory.getGroupedPages(referenceStructure, valueId, groupIdList);
+
+
         dropDown.setDropDownPage(dropDownPage);
     }
 

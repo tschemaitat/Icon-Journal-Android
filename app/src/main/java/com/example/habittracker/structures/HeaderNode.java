@@ -11,7 +11,12 @@ public class HeaderNode{
     private ArrayList<HeaderNode> children;
     private EntryWidgetParam widgetParam;
     private HeaderNode parent;
+    public static int debugIdCounter = 0;
+    public int debugId;
+    private boolean isParent = false;
     public HeaderNode(EntryWidgetParam widgetParam){
+        debugId = debugIdCounter;
+        debugIdCounter++;
         if(widgetParam == null)
             throw new RuntimeException();
         //MainActivity.log("saving headerNode, name: " + name + ", widgetParam: " + widgetParam.name);
@@ -29,7 +34,7 @@ public class HeaderNode{
 
     public HeaderNode getByWidget(WidgetInStructure widgetInStructure){
         for(HeaderNode headerNode: children){
-            if(headerNode.widgetParam.widgetIdTracker == widgetInStructure.getWidgetId()){
+            if(headerNode.widgetParam.getWidgetId() == widgetInStructure.getWidgetId()){
                 return headerNode;
             }
         }
@@ -39,7 +44,7 @@ public class HeaderNode{
     }
 
     private ArrayList<WidgetInStructure> getWidgetIdListOfChildren() {
-        return EnumLoop.makeList(children, (headerNode -> headerNode.widgetParam.getWidgetId()));
+        return EnumLoop.makeList(children, (headerNode -> headerNode.widgetParam.getWidgetInStructure()));
     }
 
     public ArrayList<HeaderNode> getChildren(){
@@ -58,14 +63,14 @@ public class HeaderNode{
     public WidgetPath getWidgetPath(){
         ArrayList<WidgetInStructure> widgetInStructureList = new ArrayList<>();
         getWidgetPathIteration(widgetInStructureList);
-        widgetInStructureList.remove(0);
         return new WidgetPath(widgetInStructureList);
     }
 
     public void getWidgetPathIteration(ArrayList<WidgetInStructure> currentWidgetPath){
-        if(parent != null)
+        if(!isParent){
             parent.getWidgetPathIteration(currentWidgetPath);
-        currentWidgetPath.add(widgetParam.getWidgetId());
+            currentWidgetPath.add(widgetParam.getWidgetInStructure());
+        }
     }
 
 
@@ -73,10 +78,8 @@ public class HeaderNode{
 
     public String hierarchyString(int numTabs){
         String tabString = GLib.tabs(numTabs);
-        Integer id = null;
-        if(widgetParam.getWidgetId() != null)
-            id = widgetParam.getWidgetId().getWidgetId();
-        String result = tabString + "(" + getChildren().size() + ")" +getName() + ", id: "+id+"\n";
+        Integer id = widgetParam.getWidgetIdNullable();
+        String result = tabString + "(" + getChildren().size() + ")" +getName() + ", nodeId: " + debugId + ", widgetId: "+id+"\n";
 
         for(HeaderNode node: getChildren()){
             result += node.hierarchyString(numTabs+1);
@@ -94,5 +97,9 @@ public class HeaderNode{
             headerNode.parent = this;
             headerNode.setDoublePointers();
         }
+    }
+
+    public void setAsParent() {
+        this.isParent = true;
     }
 }

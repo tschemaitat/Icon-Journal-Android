@@ -30,6 +30,7 @@ public class Structure {
 
 
     public Structure(String name, GroupWidgetParam widgetParam, String type){
+        createId();
         initVariables(name, widgetParam, type, null, null);
     }
 
@@ -45,12 +46,14 @@ public class Structure {
 
     public void initVariables(String name, GroupWidgetParam widgetParam, String type,
                               ArrayList<Entry> entries, Integer id){
-        this.id = id;
+        if(id != null)
+            this.id = id;
         this.name = name;
         this.widgetParam = widgetParam;
         this.type = type;
         this.entries = new HashMap();
-        widgetParam.setStructure(this);
+
+        widgetParam.setStructure(id);
         if(entries == null)
             this.entries = new HashMap<>();
         else{
@@ -65,8 +68,10 @@ public class Structure {
     }
 
     private void init(){
+        MainActivity.log("\ninit name: " + name + ", id: " + id);
         Header header = new Header(widgetParam, this);
         widgetMap = header.widgetMap;
+        MainActivity.log("set structure's map: " + widgetMap.keySet());
     }
 
     public void createId(){
@@ -131,7 +136,13 @@ public class Structure {
     }
 
     public Header.WidgetInfo getWidgetInfo(WidgetInStructure widgetInStructure){
-        return widgetMap.get(widgetInStructure);
+        Header.WidgetInfo widgetInfo = widgetMap.get(widgetInStructure);
+        if(widgetInfo == null){
+            MainActivity.log("couldnt find " + widgetInStructure + "in structure: (" + name + ", " + id + ")");
+            MainActivity.log("keys: " + widgetMap.keySet());
+            throw new RuntimeException();
+        }
+        return widgetInfo;
     }
 
 
@@ -208,7 +219,12 @@ public class Structure {
     }
 
     public ArrayList<WidgetInStructure> getWidgetIdList() {
-        return new ArrayList<>(widgetMap.keySet());
+        ArrayList<WidgetInStructure> widgetInStructures = new ArrayList<>(widgetMap.keySet());
+        for(WidgetInStructure widgetInStructure: widgetInStructures){
+            if(widgetInStructure == null)
+                throw new RuntimeException("widgetMap key set has null key(s)");
+        }
+        return widgetInStructures;
     }
 
     public ArrayList<DeleteValuePair> getReferenceOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
@@ -248,6 +264,8 @@ public class Structure {
         }
         return deleteValuePairList;
     }
+
+
 
     public static class DeleteValuePair{
         private Structure structure;

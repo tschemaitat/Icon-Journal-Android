@@ -26,7 +26,7 @@ public class WidgetInStructure {
     }
 
     public String toString(){
-        return "widget id: " + widgetId + ", path: " + getNameWithPath();
+        return "<widgetInStructure, widgetId: " + widgetId + ", structureId: " + structureId + ">";
     }
 
     @Override
@@ -77,4 +77,6 @@ public class WidgetInStructure {
     public Integer getStructureId() {
         return structureId;
     }
+
+
 }

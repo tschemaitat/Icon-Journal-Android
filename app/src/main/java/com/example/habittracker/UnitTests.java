@@ -47,7 +47,7 @@ public class UnitTests {
         nameEditText.isUniqueAttribute = true;
         WidgetInStructure genreWidgetInStructure = getWidgetFromStructure("name", genreStructure);
         DropDownParam exerciseDropDown = new DropDownParam("genre",
-                genreStructure, genreWidgetInStructure, new ArrayList<>());
+                genreStructure.getId(), genreWidgetInStructure.getWidgetId(), new ArrayList<>());
         EditTextParam genreDesc = new EditTextParam("genreDesc");
         ListMultiItemParam genreList = new ListMultiItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
                 exerciseDropDown,
@@ -103,7 +103,7 @@ public class UnitTests {
         WidgetInStructure exerciseName = getWidgetFromStructure("name", exerciseStructure);
         WidgetInStructure bodyPart = getWidgetFromStructure("body part", exerciseStructure);
         DropDownParam exerciseDropDown = new DropDownParam("exercise",
-                exerciseStructure, exerciseName, new ArrayList<>(Collections.singleton(bodyPart)));
+                exerciseStructure.getId(), exerciseName.getWidgetId(), new ArrayList<>(Collections.singleton(bodyPart.getWidgetId())));
         exerciseDropDown.isUniqueAttribute = true;
         EditTextParam repEditText = new EditTextParam("reps");
         GroupWidgetParam groupWidgetParam = new GroupWidgetParam(null, new EntryWidgetParam[]{

@@ -46,7 +46,7 @@ public class Dictionary {
             throw new RuntimeException("saved structure with null type");
 
         Structure newStructure = new Structure(name, param, type);
-        newStructure.createId();
+        //newStructure.createId();
 
         MainActivity.log("saving structure with name: " + newStructure.getCachedName() + "and id: " + newStructure.getId());
 

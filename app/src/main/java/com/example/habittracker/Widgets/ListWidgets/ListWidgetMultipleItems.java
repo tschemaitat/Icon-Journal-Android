@@ -12,10 +12,8 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 
@@ -66,7 +64,7 @@ public class ListWidgetMultipleItems extends ListWidget {
                 groupValue.setListItemId(groupValue.getListItemId());
             groupValueList.add(groupValue);
         }
-        return new ListValue(getWidgetId(), groupValueList);
+        return new ListValue(getWidgetInStructure().getWidgetId(), groupValueList);
     }
 
 

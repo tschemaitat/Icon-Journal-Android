@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class WidgetPath {
     private ArrayList<WidgetInStructure> widgetInStructureList;
     public WidgetPath(ArrayList<WidgetInStructure> intList){
+        if(intList.size() == 0)
+            throw new RuntimeException();
         this.widgetInStructureList = (ArrayList<WidgetInStructure>)intList.clone();
     }
 

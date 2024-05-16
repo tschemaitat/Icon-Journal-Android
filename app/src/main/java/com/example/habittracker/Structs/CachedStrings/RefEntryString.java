@@ -28,6 +28,13 @@ public class RefEntryString implements CachedString{
         this.entryId = entryId;
         this.listIdList = listIdList;
     }
+    public RefEntryString(WidgetInStructure widgetInStructure, Integer entryId, ArrayList<ListItemId> listIdList){
+        if(widgetInStructure == null)
+            throw new RuntimeException();
+        this.widgetInStructure = widgetInStructure;
+        this.entryId = entryId;
+        this.listIdList = listIdList;
+    }
 
 
 
@@ -75,6 +82,9 @@ public class RefEntryString implements CachedString{
     public Structure getStructure() {
         Structure structure = Dictionary.getStructure(widgetInStructure.getStructureId());
         return structure;
+    }
+    public Integer getStructureId() {
+        return widgetInStructure.getStructureId();
     }
 
     public WidgetInStructure getWidgetInStructure() {

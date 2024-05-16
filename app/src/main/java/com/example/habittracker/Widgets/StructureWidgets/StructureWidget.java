@@ -195,7 +195,7 @@ public class StructureWidget implements Widget {
         if(result != null){
             result.name = headerView.nameEditor.getText();
             result.setIsUniqueAttribute(headerView.getStarOn());
-            result.widgetIdTracker = widgetIdTracker;
+            result.setWidgetId(widgetIdTracker);
         }
 
         return result;
@@ -209,7 +209,7 @@ public class StructureWidget implements Widget {
         String type = param.getClassName();
         headerView.nameEditor.setText(param.name);
         typeDropDown.setSelectedByPayload(type);
-        widgetIdTracker = param.widgetIdTracker;
+        widgetIdTracker = param.getWidgetId();
         MainActivity.log(param.name + ": " + param.isUniqueAttribute);
         setType();
         headerView.setStarOn(param.isUniqueAttribute);

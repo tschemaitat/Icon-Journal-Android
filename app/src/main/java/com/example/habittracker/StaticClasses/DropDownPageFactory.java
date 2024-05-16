@@ -86,7 +86,7 @@ public class DropDownPageFactory {
         if(entryId == null)
             throw new RuntimeException();
         if(tree.getStandardFormOfCachedString() instanceof LiteralString){
-            return new RefEntryString(structure, widgetInStructure, entryId, tree.getListItemIds());
+            return new RefEntryString(widgetInStructure.getStructureId(), widgetInStructure.getWidgetId(), entryId, tree.getListItemIds());
         }
         return (RefEntryString) tree.getStandardFormOfCachedString();
     }

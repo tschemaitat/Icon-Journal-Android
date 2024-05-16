@@ -3,10 +3,7 @@ package com.example.habittracker.Widgets.EntryWidgets;
 import android.content.Context;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.StaticStateManagers.DeleteValueManager;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.structures.ListItemId;
 
@@ -37,7 +34,7 @@ public abstract class BaseEntryWidget extends EntryWidget{
             throw new RuntimeException();
         }
         ArrayList<RefEntryString> resultList = new ArrayList<>();
-        RefEntryString result = new RefEntryString(getStructure(), getWidgetId(),
+        RefEntryString result = new RefEntryString(getStructureId(), getWidgetIdTracker(),
                     null, listItemIdProvider.getListItemIdList());
         resultList.add(result);
         return resultList;
