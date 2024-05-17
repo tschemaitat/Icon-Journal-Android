@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static RelativeLayout popUpLayout;
     public static LinearLayout menuBarLayout;
     public static LinearLayout invisibleMenuBarLayout;
+    public static ImageButton menuHideButton;
 
     private LinearLayout currentMenuBar = null;
 
@@ -77,9 +80,10 @@ public class MainActivity extends AppCompatActivity {
         popUpLayout = findViewById(R.id.popUpLayout);
         menuBarLayout = findViewById(R.id.menuBarLayout);
         invisibleMenuBarLayout = findViewById(R.id.invisibleMenuBarLayout);
+        menuHideButton = findViewById(R.id.menuHideButton);
 
         InvisibleMenuBarManager.createManager(context, invisibleMenuBarLayout);
-        EntryEditorMenuBar.make(menuBarLayout, context);
+        EntryEditorMenuBar.make(menuBarLayout, menuHideButton, context);
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);

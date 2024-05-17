@@ -4,6 +4,7 @@ import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.CachedStrings.ArrayString;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.RefItemPath;
+import com.example.habittracker.Structs.WidgetId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class WidgetValueStringPath extends BaseWidgetValue{
     public static final String className = "widget value string path";
     private RefItemPath refItemPath;
-    public WidgetValueStringPath(Integer widgetId, RefItemPath refItemPath){
+    public WidgetValueStringPath(WidgetId widgetId, RefItemPath refItemPath){
         super(widgetId);
         this.refItemPath = refItemPath;
     }
@@ -65,6 +66,6 @@ public class WidgetValueStringPath extends BaseWidgetValue{
             cachedStrings.add(childCachedString);
         }
         RefItemPath refItemPath = new RefItemPath(cachedStrings);
-        return new WidgetValueStringPath(widgetId, refItemPath);
+        return new WidgetValueStringPath(new WidgetId(widgetId), refItemPath);
     }
 }

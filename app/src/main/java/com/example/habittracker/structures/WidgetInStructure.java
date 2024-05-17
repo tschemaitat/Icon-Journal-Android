@@ -6,76 +6,79 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.RefItemPath;
+import com.example.habittracker.Structs.StructureId;
+import com.example.habittracker.Structs.WidgetId;
 
 import java.util.Objects;
 
 public class WidgetInStructure {
-    private Integer widgetId;
-    private Integer structureId;
-    public WidgetInStructure(Integer widgetId, Integer structureId){
-        if(widgetId == null)
+    private Structure structure;
+    private Header.WidgetInfo widgetInfo;
+    public WidgetInStructure(Structure structure){
+
+        if(structure == null)
             throw new RuntimeException();
-        if(structureId == null)
-            throw new RuntimeException();
-        this.widgetId = widgetId;
-        this.structureId = structureId;
+        this.structure = structure;
     }
 
-    public Integer getWidgetId(){
-        return widgetId;
+    public void setWidgetInfo(Header.WidgetInfo widgetInfo){
+        this.widgetInfo = widgetInfo;
+    }
+
+    public WidgetId getWidgetId(){
+        return widgetInfo.getEntryWidgetParam().getWidgetId();
     }
 
     public String toString(){
-        return "<widgetInStructure, widgetId: " + widgetId + ", structureId: " + structureId + ">";
+        return "<widgetInStructure, widgetId: " + getWidgetId() + ", structureId: " + structure + ">";
     }
 
     @Override
     public int hashCode(){
-        return Integer.hashCode(widgetId);
+        return Integer.hashCode(getWidgetId().getId());
     }
     @Override
     public boolean equals(Object object){
         if( ! (object instanceof WidgetInStructure widgetInStructure))
             return false;
 
-        if(!Objects.equals(widgetInStructure.widgetId, widgetId))
+        if(!Objects.equals(widgetInStructure.getWidgetId(), getWidgetId()))
             return false;
-        if(!Objects.equals(widgetInStructure.structureId, structureId))
+        if(!Objects.equals(widgetInStructure.structure, structure))
             return false;
 
         return true;
     }
 
     public RefItemPath getNameWithPath(){
-        WidgetPath widgetPath = getStructure().getWidgetInfo(this).getWidgetPath();
+        WidgetPath widgetPath = widgetInfo.getWidgetPath();
         return new RefItemPath(EnumLoop.makeList(widgetPath.getList(), (widgetId)->widgetId.getName()));
     }
 
     public CachedString getName(){
-        return new LiteralString(getStructure().getWidgetInfo(this).getEntryWidgetParam().name);
+        return new LiteralString(widgetInfo.getEntryWidgetParam().name);
     }
 
 
 
     public EntryWidgetParam getWidgetParam() {
-        return getStructure().getWidgetParamFromId(this);
+        return widgetInfo.getEntryWidgetParam();
     }
 
     public Structure getStructure(){
-        return Dictionary.getStructure(structureId);
+        return structure;
     }
 
     public Header.WidgetInfo getWidgetInfo() {
-        return getStructure().getWidgetInfo(this);
+        return widgetInfo;
     }
 
     public WidgetPath getWidgetPath() {
-        Structure structure = getStructure();
-        return structure.getWidgetInfo(this).getWidgetPath();
+        return widgetInfo.getWidgetPath();
     }
 
-    public Integer getStructureId() {
-        return structureId;
+    public StructureId getStructureId() {
+        return structure.getId();
     }
 
 

@@ -4,6 +4,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.WidgetId;
 
 import java.util.ArrayList;
 
@@ -78,7 +79,7 @@ public class HeaderNode{
 
     public String hierarchyString(int numTabs){
         String tabString = GLib.tabs(numTabs);
-        Integer id = widgetParam.getWidgetIdNullable();
+        WidgetId id = widgetParam.getWidgetIdNullable();
         String result = tabString + "(" + getChildren().size() + ")" +getName() + ", nodeId: " + debugId + ", widgetId: "+id+"\n";
 
         for(HeaderNode node: getChildren()){

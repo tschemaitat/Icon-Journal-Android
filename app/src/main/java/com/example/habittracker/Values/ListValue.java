@@ -3,6 +3,7 @@ package com.example.habittracker.Values;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structures.WidgetPath;
 import com.example.habittracker.structures.ListItemId;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class ListValue extends WidgetValue {
     public static final String className = "list value";
     private ArrayList<GroupValue> groupValueList;
-    public ListValue(Integer widgetId, ArrayList<GroupValue> groupValueList){
+    public ListValue(WidgetId widgetId, ArrayList<GroupValue> groupValueList){
         super(widgetId);
         this.groupValueList = groupValueList;
         for(GroupValue groupValue: groupValueList)
@@ -106,7 +107,7 @@ public class ListValue extends WidgetValue {
         JSONObject result = new JSONObject();
         result.put("array", jsonArray);
         result.put("array size", getGroupValueList().size());
-        result.put("widget id", getWidgetId().intValue());
+        result.put("widget id", getWidgetId().getId().intValue());
         result.put(WidgetValue.classNameKey, "list");
         return result;
     }
@@ -121,7 +122,7 @@ public class ListValue extends WidgetValue {
             GroupValue groupValue = (GroupValue) StructureTokenizer.getWidgetValue(groupJSON);
             groupValues.add(groupValue);
         }
-        ListValue listValue = new ListValue(widgetId, groupValues);
+        ListValue listValue = new ListValue(new WidgetId(widgetId), groupValues);
         return listValue;
     }
 }

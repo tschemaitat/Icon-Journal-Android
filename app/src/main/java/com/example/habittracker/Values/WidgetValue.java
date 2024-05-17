@@ -1,5 +1,6 @@
 package com.example.habittracker.Values;
 
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.ListItemId;
 
@@ -10,14 +11,14 @@ import java.util.ArrayList;
 
 public abstract class WidgetValue {
     public static final String classNameKey = "value type";
-    private Integer widgetId;
+    private WidgetId widgetId;
     private GroupValue parent;
-    public WidgetValue(Integer widgetId){
+    public WidgetValue(WidgetId widgetId){
         this.widgetId = widgetId;
     }
 
 
-    public Integer getWidgetId() {
+    public WidgetId getWidgetId() {
         return widgetId;
     }
 

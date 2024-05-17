@@ -77,6 +77,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     private void onGhostData() {
         MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
+        ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
         setViewDraggable(ghostItem);
         ghostItem = null;
         addGhostItem(createItem());

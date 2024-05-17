@@ -2,16 +2,18 @@ package com.example.habittracker.structures;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Header {
     private HeaderNode parentNode;
-    HashMap<WidgetInStructure, WidgetInfo> widgetMap = new HashMap<>();
+    Set<WidgetInStructure> widgetMap = new HashSet<>();
     private Structure structure;
 
     public Header(GroupWidgetParam groupWidgetParam, Structure structure){
@@ -35,7 +37,7 @@ public class Header {
         }
         MainActivity.log(headerNodePrintOut);
         MainActivity.log("header nodes after gather: \n" + parentNode.hierarchyString(0));
-        HashSet<Integer> currentWidgets = new HashSet<>();
+        HashSet<WidgetId> currentWidgets = new HashSet<>();
         for(HeaderNode headerNode: headerNodeList){
             EntryWidgetParam entryWidgetParam = headerNode.getWidgetParam();
             if(entryWidgetParam.hasWidgetId()){
@@ -46,13 +48,13 @@ public class Header {
         }
 
         int idCounter = -1;
-        for(Integer widgetId : currentWidgets)
-            idCounter = Math.max(idCounter, widgetId);
+        for(WidgetId widgetId : currentWidgets)
+            idCounter = Math.max(idCounter, widgetId.getId());
         idCounter++;
         for(HeaderNode headerNode: headerNodeList){
             if( ! headerNode.getWidgetParam().hasWidgetId()){
                 MainActivity.log("headerNode: " + headerNode.debugId + ", setting widgetId: " + idCounter);
-                headerNode.getWidgetParam().setWidgetId(idCounter);
+                headerNode.getWidgetParam().setWidgetId(new WidgetId(idCounter));
                 currentWidgets.add(headerNode.getWidgetParam().getWidgetId());
                 idCounter++;
                 MainActivity.log("checking if set worked: " + headerNode.getWidgetParam().getWidgetId());
@@ -60,19 +62,19 @@ public class Header {
         }
         MainActivity.log("header nodes after setting ids: \n" + parentNode.hierarchyString(0));
         for(HeaderNode headerNode: headerNodeList){
-            MainActivity.log("final loop, header node: " + headerNode.debugId);
-            headerNode.getWidgetParam().setStructure(structure.getId());
-            WidgetInfo widgetInfo = new WidgetInfo(headerNode.getWidgetParam(), headerNode.getWidgetPath());
-            WidgetInStructure widgetInStructure = headerNode.getWidgetParam().getWidgetInStructure();
-            if(widgetInStructure == null){
-
-                throw new RuntimeException();
-            }
-
-            widgetMap.put(widgetInStructure, widgetInfo);
+            headerNode.getWidgetParam().setWidgetInStructure(new WidgetInStructure(structure));
         }
 
-        MainActivity.log("map keys generated: " + widgetMap.keySet());
+        for(HeaderNode headerNode: headerNodeList){
+            MainActivity.log("final loop, header node: " + headerNode.debugId);
+            WidgetInfo widgetInfo = new WidgetInfo(headerNode.getWidgetParam(), headerNode.getWidgetPath());
+            WidgetInStructure widgetInStructure = headerNode.getWidgetParam().getWidgetInStructure();
+            widgetInStructure.setWidgetInfo(widgetInfo);
+
+            widgetMap.add(widgetInStructure);
+        }
+
+        MainActivity.log("map keys generated: " + widgetMap);
         MainActivity.log("\n\n");
     }
 
@@ -128,31 +130,6 @@ public class Header {
         return parentNode;
     }
 
-    public WidgetPath getWidgetPath(WidgetInStructure widgetInStructure){
-        return widgetMap.get(widgetInStructure).getWidgetPath();
-    }
-
-    public ArrayList<WidgetPath> getWidgetPathList(ArrayList<WidgetInStructure> widgetInStructureList){
-        ArrayList<WidgetPath> pathList = new ArrayList<>();
-        for(WidgetInStructure widgetInStructure : widgetInStructureList)
-            pathList.add(getWidgetPath(widgetInStructure));
-        return pathList;
-    }
-
-
-
-    public WidgetInfo getWidgetInfo(WidgetInStructure widgetInStructure){
-        return widgetMap.get(widgetInStructure);
-    }
-
-    public ArrayList<WidgetInStructure> getWidgetIdList() {
-        return new ArrayList<>(widgetMap.keySet());
-    }
-
-    public EntryWidgetParam getWidgetParamFromId(WidgetInStructure widgetInStructure) {
-        return widgetMap.get(widgetInStructure).getEntryWidgetParam();
-    }
-
 
 
     public static class WidgetInfo{
@@ -181,7 +158,7 @@ public class Header {
         }
 
         public WidgetInStructure getReference(){
-            return entryWidgetParam.getWidgetInStructure();
+            throw new RuntimeException();
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets.WidgetParams;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.structures.Structure;
@@ -25,11 +26,6 @@ public class ListMultiItemParam extends EntryWidgetParam {
         this.cloneableWidget = cloneableWidget;
         if(cloneableWidget.params.size() == 1)
             throw new RuntimeException();
-    }
-
-    @Override
-    public void setStructureCustom(Integer structureId){
-        cloneableWidget.setStructure(structureId);
     }
 
     @Override

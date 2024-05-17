@@ -4,6 +4,7 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
@@ -81,7 +82,7 @@ public class DropDownPageFactory {
         return parentPage;
     }
 
-    public static RefEntryString getRefEntryString(Structure structure, WidgetInStructure widgetInStructure, Integer entryId,
+    public static RefEntryString getRefEntryString(Structure structure, WidgetInStructure widgetInStructure, EntryId entryId,
                                                    BaseWidgetValue tree){
         if(entryId == null)
             throw new RuntimeException();

@@ -3,6 +3,9 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.Structs.EntryId;
+import com.example.habittracker.Structs.StructureId;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.WidgetPath;
 import com.example.habittracker.Values.BaseWidgetValue;
@@ -18,20 +21,23 @@ import java.util.ArrayList;
 
 public class RefEntryString implements CachedString{
     public static final String className = "refEntryString";
-    WidgetInStructure widgetInStructure;
-    Integer entryId;
+    StructureId structureId;
+    WidgetId widgetId;
+    EntryId entryId;
     ArrayList<ListItemId> listIdList;
-    public RefEntryString(Integer structureId, Integer widgetIdTracker, Integer entryId, ArrayList<ListItemId> listIdList){
+    public RefEntryString(StructureId structureId, WidgetId widgetId, EntryId entryId, ArrayList<ListItemId> listIdList){
         if(structureId == null)
             throw new RuntimeException();
-        this.widgetInStructure = new WidgetInStructure(structureId, widgetIdTracker);
+        this.structureId = structureId;
+        this.widgetId = widgetId;
         this.entryId = entryId;
         this.listIdList = listIdList;
     }
-    public RefEntryString(WidgetInStructure widgetInStructure, Integer entryId, ArrayList<ListItemId> listIdList){
+    public RefEntryString(WidgetInStructure widgetInStructure, EntryId entryId, ArrayList<ListItemId> listIdList){
         if(widgetInStructure == null)
             throw new RuntimeException();
-        this.widgetInStructure = widgetInStructure;
+        this.structureId = widgetInStructure.getStructureId();
+        this.widgetId = widgetInStructure.getWidgetId();
         this.entryId = entryId;
         this.listIdList = listIdList;
     }
@@ -39,6 +45,7 @@ public class RefEntryString implements CachedString{
 
 
     public String getString(){
+        WidgetInStructure widgetInStructure = Dictionary.getStructure(structureId).getWidgetInStructureFromId(widgetId);
         WidgetPath path = widgetInStructure.getWidgetPath();
         widgetInStructure.getStructure();
 
@@ -54,9 +61,9 @@ public class RefEntryString implements CachedString{
     public JSONObject getJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CachedString.typeOfClassKey, className);
-        jsonObject.put("structure id", widgetInStructure.getStructureId().intValue());
-        jsonObject.put("widget id", widgetInStructure.getWidgetId().intValue());
-        jsonObject.put("entry id", entryId.intValue());
+        jsonObject.put("structure id", structureId.getId().intValue());
+        jsonObject.put("widget id", widgetId.getId().intValue());
+        jsonObject.put("entry id", entryId.getId().intValue());
         JSONArray listIdArray = new JSONArray();
         for(ListItemId listItemId: listIdList){
             listIdArray.put(listItemId.getId().intValue());
@@ -76,22 +83,22 @@ public class RefEntryString implements CachedString{
             int listIdInt = listIdJSON.getInt(i);
             listIdList.add(new ListItemId(listIdInt));
         }
-        return new RefEntryString(structureId,widgetIdInt, entryIdInt, listIdList);
+        return new RefEntryString(new StructureId(structureId),new WidgetId(widgetIdInt), new EntryId(entryIdInt), listIdList);
     }
 
     public Structure getStructure() {
-        Structure structure = Dictionary.getStructure(widgetInStructure.getStructureId());
+        Structure structure = Dictionary.getStructure(structureId);
         return structure;
     }
-    public Integer getStructureId() {
-        return widgetInStructure.getStructureId();
+    public StructureId getStructureId() {
+        return structureId;
     }
 
     public WidgetInStructure getWidgetInStructure() {
-        return widgetInStructure;
+        return getStructure().getWidgetInStructureFromId(widgetId);
     }
 
-    public int getEntryId() {
+    public EntryId getEntryId() {
         return entryId;
     }
 
@@ -103,10 +110,10 @@ public class RefEntryString implements CachedString{
     public boolean equals(Object object){
         if(object instanceof CachedString){
             RefEntryString cachedString = (RefEntryString) object;
-            if( ! widgetInStructure.equals(cachedString.widgetInStructure))
+            if( ! structureId.equals(cachedString.structureId))
                 return false;
-//            if( ! widgetId.equals(cachedString.widgetId))
-//                return false;
+            if( ! widgetId.equals(cachedString.widgetId))
+                return false;
             if( ! entryId.equals(cachedString.entryId))
                 return false;
             if( ! listIdList.equals(cachedString.listIdList))
@@ -118,7 +125,7 @@ public class RefEntryString implements CachedString{
     }
 
     public String getLocationString(){
-        return "ref: " + widgetInStructure.getStructureId() + ", <" + widgetInStructure.getWidgetId() + ">, " + entryId + ", " + listIdList;
+        return "ref: " + structureId + ", <" + widgetId + ">, " + entryId + ", " + listIdList;
     }
 
     @Override

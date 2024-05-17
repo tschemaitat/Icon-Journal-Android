@@ -110,7 +110,9 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
 
             BaseEntryWidget entryWidget = entryWidgets.get(i);
             MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetInStructure());
-            entryWidget.setValue(groupValue.getWidgetValueByWidget(entryWidget.getWidgetInStructure()));
+            WidgetValue childWidgetValue = groupValue.getWidgetValueByWidget(entryWidget.getWidgetInStructure());
+            if(childWidgetValue != null)
+                entryWidget.setValue(childWidgetValue);
 
             MainActivity.log("group set list id provider: " + entryWidget);
         }

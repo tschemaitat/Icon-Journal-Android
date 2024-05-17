@@ -67,10 +67,13 @@ public class InvisibleEditTextManager {
     public void removeFocusedWidget(){
         focusedWidget.getView().clearFocus();
         invisibleEditText.clearFocus();
-        if( ! (focusedWidget instanceof EditableWidget)){
-            focusedWidget.onFocusChange(false);
+        if(focusedWidget != null){
+            if( ! (focusedWidget instanceof EditableWidget)){
+                focusedWidget.onFocusChange(false);
+            }
+            focusedWidget = null;
         }
-        focusedWidget = null;
+
     }
 
     public void setFocusedWidget(EntryWidget entryWidget){

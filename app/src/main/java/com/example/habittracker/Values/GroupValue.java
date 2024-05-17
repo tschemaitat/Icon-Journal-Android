@@ -3,6 +3,7 @@ package com.example.habittracker.Values;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.structures.WidgetPath;
 import com.example.habittracker.structures.ListItemId;
@@ -55,7 +56,7 @@ public class GroupValue extends WidgetValue{
 
     public WidgetValue getWidgetValueByWidget(WidgetInStructure widgetInStructure) {
         for(WidgetValue widgetValue : values)
-            if(widgetValue.getWidgetId().equals(widgetInStructure))
+            if(widgetValue.getWidgetId().equals(widgetInStructure.getWidgetId()))
                 return widgetValue;
         logErrorFindingWidgetValue(widgetInStructure);
         throw new RuntimeException();
@@ -68,7 +69,7 @@ public class GroupValue extends WidgetValue{
         throw new RuntimeException();
     }
 
-    public ArrayList<Integer> getWidgetIdList(){
+    public ArrayList<WidgetId> getWidgetIdList(){
         return EnumLoop.makeList(values, (value)->value.getWidgetId());
     }
 

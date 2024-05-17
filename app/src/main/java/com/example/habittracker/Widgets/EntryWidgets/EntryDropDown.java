@@ -45,12 +45,12 @@ public class EntryDropDown extends BaseEntryWidget {
     @Override
     public void setValueCustom(WidgetValue widgetValue) {
         WidgetValueStringPath widgetValueStringPath = (WidgetValueStringPath) widgetValue;
-        if(widgetValueStringPath.getRefItemPath() == null){
-            //MainActivity.log(widgetValueStringPath.getParent().hierarchy());
-            throw new RuntimeException();
-        }
-
-        setSelected(widgetValueStringPath.getRefItemPath());
+//        if(widgetValueStringPath.getRefItemPath() == null){
+//            //MainActivity.log(widgetValueStringPath.getParent().hierarchy());
+//            throw new RuntimeException();
+//        }
+        if(widgetValueStringPath.getRefItemPath() != null)
+            setSelected(widgetValueStringPath.getRefItemPath());
     }
 
     @Override

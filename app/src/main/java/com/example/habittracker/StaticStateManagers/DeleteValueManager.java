@@ -6,6 +6,7 @@ import android.widget.Button;
 import com.example.habittracker.Algorithms.HandleDeletedValues;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -33,9 +34,9 @@ public class DeleteValueManager {
     private GroupWidget groupWidget;
     private ArrayList<RefEntryString> valuesToDelete = new ArrayList<>();
     private Button button;
-    private Integer entryId;
+    private EntryId entryId;
 
-    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, Integer entryId) {
+    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, EntryId entryId) {
         this.entryId = entryId;
         this.button = button;
         this.context = context;
@@ -44,8 +45,6 @@ public class DeleteValueManager {
     }
 
     private void init(){
-        if(entryId == null)
-            entryId = -1;
         groupWidget.enableDeleteValueMode();
     }
 

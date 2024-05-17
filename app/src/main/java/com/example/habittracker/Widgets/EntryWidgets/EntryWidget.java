@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.Structs.StructureId;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -27,7 +29,6 @@ public abstract class EntryWidget implements Widget {
     private EntryWidgetParam entryWidgetParam;
     ViewWrapper viewWrapper;
     private boolean dataSet = false;
-    private Integer widgetIdTracker;
 
 
     private Context context;
@@ -224,8 +225,8 @@ public abstract class EntryWidget implements Widget {
     }
 
 
-    protected Integer getWidgetIdTracker() {
-        return widgetIdTracker;
+    protected WidgetId getWidgetIdTracker() {
+        return entryWidgetParam.getWidgetId();
     }
 
 
@@ -234,7 +235,7 @@ public abstract class EntryWidget implements Widget {
         return entryWidgetParam.getStructure();
     }
 
-    public Integer getStructureId(){
+    public StructureId getStructureId(){
         return entryWidgetParam.getWidgetInStructure().getStructureId();
     }
 

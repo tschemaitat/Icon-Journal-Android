@@ -43,11 +43,6 @@ public class GroupWidgetParam extends EntryWidgetParam {
 
 
 
-    @Override
-    public void setStructureCustom(Integer structureId){
-        for(EntryWidgetParam entryWidgetParam: params)
-            entryWidgetParam.setStructure(structureId);
-    }
 
     @Override
     protected JSONObject getJSONCustom() throws JSONException{

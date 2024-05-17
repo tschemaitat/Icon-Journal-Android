@@ -9,6 +9,7 @@ import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
@@ -28,7 +29,7 @@ public class StructureWidget implements Widget {
     private StructureWidgetDropDown structureWidgetDropDown = null;
     private StructureWidgetEditText structureWidgetEditText = null;
 
-    private Integer widgetIdTracker;
+    private WidgetId widgetIdTracker;
 
     private Runnable onDelete;
 

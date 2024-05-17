@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
+import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.Structure;
@@ -91,7 +92,7 @@ public class CategoryEntryEditorPage implements Inflatable{
 
     @Override
     public void onRemoved() {
-
+        EntryEditorMenuBar.getManager().hide();
         System.out.println("category entry editor removed");
     }
 
@@ -107,7 +108,7 @@ public class CategoryEntryEditorPage implements Inflatable{
             groupWidget.setValue(entry.getGroupValue());
             MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
         }
-        Integer entryId = -1;
+        EntryId entryId = null;
         if(entry != null)
             entryId = entry.getId();
         EntryEditorMenuBar.getManager().show(groupWidget, entryId);

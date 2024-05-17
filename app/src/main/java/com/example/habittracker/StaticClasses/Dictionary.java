@@ -9,6 +9,7 @@ package com.example.habittracker.StaticClasses;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structures.Structure;
 import com.example.habittracker.Widgets.GroupWidget.*;
@@ -26,7 +27,7 @@ public class Dictionary {
 
     //static HashMap<String, DictEntry> dictEntryMap = new HashMap<>();
 
-    private static HashMap<Integer, Structure> structures = new HashMap<>();
+    private static HashMap<StructureId, Structure> structures = new HashMap<>();
 
 
 
@@ -114,7 +115,7 @@ public class Dictionary {
 
 
 
-    public static Structure getStructure(Integer id){
+    public static Structure getStructure(StructureId id){
         if(id == null)
             throw new RuntimeException();
         Structure structure = structures.get(id);

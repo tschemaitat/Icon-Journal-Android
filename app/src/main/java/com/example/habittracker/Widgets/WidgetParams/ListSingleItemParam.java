@@ -35,10 +35,7 @@ public class ListSingleItemParam extends EntryWidgetParam {
 
 
 
-    @Override
-    public void setStructureCustom(Integer structureId){
-        widgetParam.setStructure(structureId);
-    }
+
 
     @Override
     protected JSONObject getJSONCustom() throws JSONException{

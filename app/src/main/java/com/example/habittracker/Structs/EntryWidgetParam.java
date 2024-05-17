@@ -15,8 +15,8 @@ public abstract class EntryWidgetParam {
     public String name;
     private String className;
     public Boolean isUniqueAttribute = false;
-    private Integer widgetIdTracker = null;
-    private Integer structureId;
+    private WidgetId widgetIdTracker = null;
+    private WidgetInStructure widgetInStructure;
 
     public EntryWidgetParam(String name, String className){
         this.name = name;
@@ -28,14 +28,13 @@ public abstract class EntryWidgetParam {
         this.className = className;
         this.isUniqueAttribute = builder.isUniqueAttribute;
         this.widgetIdTracker = builder.widgetIdTracker;
-        this.structureId = builder.structureId;
     }
 
     public void setIsUniqueAttribute(Boolean isUniqueAttribute){
         this.isUniqueAttribute = isUniqueAttribute;
     }
 
-    public Integer getWidgetId(){
+    public WidgetId getWidgetId(){
         if(widgetIdTracker == null)
             throw new RuntimeException();
         return widgetIdTracker;
@@ -47,22 +46,21 @@ public abstract class EntryWidgetParam {
     public abstract String hierarchyString(int numTabs);
     public abstract HeaderNode createHeaderNode();
 
-    public final void setStructure(Integer structureId) {
-        this.structureId = structureId;
-        setStructureCustom(structureId);
+
+    public void setWidgetInStructure(WidgetInStructure widgetInStructure){
+        this.widgetInStructure = widgetInStructure;
     }
 
 
 
 
     public Structure getStructure(){
-        return Dictionary.getStructure(structureId);
+        return widgetInStructure.getStructure();
     }
 
     public WidgetInStructure getWidgetInStructure(){
-        WidgetInStructure widgetInStructure = getWidgetInStructureNullable();
         if(widgetInStructure == null){
-            MainActivity.log("widget id: " + widgetIdTracker + ", structureId: " + structureId);
+            MainActivity.log("widget id: " + widgetIdTracker);
             throw new RuntimeException();
         }
         return widgetInStructure;
@@ -70,21 +68,18 @@ public abstract class EntryWidgetParam {
     }
 
     public WidgetInStructure getWidgetInStructureNullable(){
-        if(widgetIdTracker == null || structureId == null){
-            return null;
-        }
-        return new WidgetInStructure(widgetIdTracker, structureId);
+        return widgetInStructure;
     }
 
     public boolean hasWidgetInStructure() {
         return getWidgetInStructureNullable() != null;
     }
 
-    public void setStructureCustom(Integer structureId){
+    public void setStructureCustom(StructureId structureId){
 
     }
 
-    public void setWidgetId(int idCounter) {
+    public void setWidgetId(WidgetId idCounter) {
         widgetIdTracker = idCounter;
     }
 
@@ -95,20 +90,18 @@ public abstract class EntryWidgetParam {
     public final JSONObject getJSON() throws JSONException{
         JSONObject jsonObject = getJSONCustom();
         jsonObject.put("name", name);
-        jsonObject.put("idTracker", widgetIdTracker.intValue());
+        jsonObject.put("idTracker", widgetIdTracker.getId().intValue());
         jsonObject.put("isUniqueAttribute", isUniqueAttribute);
         //don't need to put className in builder because it is used by the switch, the variable is put in by the inheriting class
         jsonObject.put("className", className);
-        jsonObject.put("structureId", structureId.intValue());
         return jsonObject;
     }
 
     public static EntryWidgetParamBuilder getBuilderFromJSON(JSONObject jsonObject) throws JSONException{
         String name = jsonObject.getString("name");
         boolean isUniqueAttribute = jsonObject.getBoolean("isUniqueAttribute");
-        int widgetIdTracker = jsonObject.getInt("idTracker");
-        int structureId = jsonObject.getInt("structureId");
-        return new EntryWidgetParamBuilder(name, isUniqueAttribute, widgetIdTracker, structureId);
+        WidgetId widgetIdTracker = new WidgetId(jsonObject.getInt("idTracker"));
+        return new EntryWidgetParamBuilder(name, isUniqueAttribute, widgetIdTracker);
     }
 
     protected abstract JSONObject getJSONCustom() throws JSONException;
@@ -117,32 +110,31 @@ public abstract class EntryWidgetParam {
         return widgetIdTracker != null;
     }
 
-    public Integer getWidgetIdNullable() {
+    public WidgetId getWidgetIdNullable() {
         return widgetIdTracker;
     }
 
-    public Integer getStructureId() {
-        if(structureId == null)
+    public StructureId getStructureId() {
+        if(widgetInStructure.getStructureId() == null)
             throw new RuntimeException();
-        return structureId;
+        return widgetInStructure.getStructureId();
     }
 
     public boolean hasStructure(){
-        return structureId != null;
+        return widgetInStructure.getStructureId() != null;
     }
 
 
     public static class EntryWidgetParamBuilder{
         public String name;
         public Boolean isUniqueAttribute = false;
-        public Integer widgetIdTracker = null;
-        private Integer structureId;
+        public WidgetId widgetIdTracker = null;
 
-        public EntryWidgetParamBuilder(String name, Boolean isUniqueAttribute, Integer widgetIdTracker, Integer structureId) {
+        public EntryWidgetParamBuilder(String name, Boolean isUniqueAttribute, WidgetId widgetIdTracker) {
             this.name = name;
             this.isUniqueAttribute = isUniqueAttribute;
             this.widgetIdTracker = widgetIdTracker;
-            this.structureId = structureId;
+
         }
 
 
