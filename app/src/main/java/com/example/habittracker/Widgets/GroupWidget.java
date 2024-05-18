@@ -16,6 +16,7 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
+import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.ListItemId;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete() {
+    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
         if(!isDeleteChecked)
             throw new RuntimeException();
         ArrayList<RefEntryString> resultList = new ArrayList<>();

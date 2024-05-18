@@ -20,6 +20,7 @@ import com.example.habittracker.Widgets.FocusTreeParent;
 import com.example.habittracker.Widgets.FocusTreeParentHelper;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.structures.Entry;
 
 import java.util.ArrayList;
 
@@ -174,7 +175,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete() {
+    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
         ArrayList<RefEntryString> resultList = new ArrayList<>();
         getReferenceForDeleteIteration(resultList);
         return resultList;

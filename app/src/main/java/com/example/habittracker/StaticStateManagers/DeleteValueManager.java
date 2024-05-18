@@ -11,6 +11,7 @@ import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
+import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.ListItemId;
 import com.example.habittracker.structures.Structure;
 
@@ -34,10 +35,10 @@ public class DeleteValueManager {
     private GroupWidget groupWidget;
     private ArrayList<RefEntryString> valuesToDelete = new ArrayList<>();
     private Button button;
-    private EntryId entryId;
+    private Entry entry;
 
-    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, EntryId entryId) {
-        this.entryId = entryId;
+    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, Entry entry) {
+        this.entry = entry;
         this.button = button;
         this.context = context;
         this.groupWidget = groupWidget;
@@ -75,7 +76,7 @@ public class DeleteValueManager {
         ArrayList<EntryWidget> entryWidgets = groupWidget.gatherWidgetsChecked();
         ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
         for(EntryWidget entryWidget: entryWidgets){
-            refListList.add(entryWidget.getReferenceForDelete());
+            refListList.add(entryWidget.getReferenceForDelete(entry));
         }
         for(int w = 0; w < refListList.size(); w++){
             ArrayList<RefEntryString> refList = refListList.get(w);
@@ -83,8 +84,6 @@ public class DeleteValueManager {
             MainActivity.log("checked: " + entryWidget);
             for(int r = 0; r < refList.size(); r++){
                 RefEntryString refEntryString = refList.get(r);
-                refEntryString = new RefEntryString(refEntryString.getWidgetInStructure(),
-                        entryId, refEntryString.getListIdList());
                 MainActivity.log("\t" + refEntryString.getLocationString());
             }
         }

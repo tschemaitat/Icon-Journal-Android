@@ -25,15 +25,7 @@ public class RefEntryString implements CachedString{
     WidgetId widgetId;
     EntryId entryId;
     ArrayList<ListItemId> listIdList;
-    public RefEntryString(StructureId structureId, WidgetId widgetId, EntryId entryId, ArrayList<ListItemId> listIdList){
-        if(structureId == null)
-            throw new RuntimeException();
-        this.structureId = structureId;
-        this.widgetId = widgetId;
-        this.entryId = entryId;
-        this.listIdList = listIdList;
-    }
-    public RefEntryString(WidgetInStructure widgetInStructure, EntryId entryId, ArrayList<ListItemId> listIdList){
+    public RefEntryString(WidgetInStructure widgetInStructure, Entry entry, ArrayList<ListItemId> listIdList){
         if(widgetInStructure == null)
             throw new RuntimeException();
         this.structureId = widgetInStructure.getStructureId();
@@ -72,19 +64,7 @@ public class RefEntryString implements CachedString{
         return jsonObject;
     }
 
-    public static CachedString getFromJSON(JSONObject jsonObject) throws JSONException {
-        int structureId = jsonObject.getInt("structure id");
-        int widgetIdInt = jsonObject.getInt("widget id");
-        int entryIdInt = jsonObject.getInt("entry id");
-        int listIdArraySize = jsonObject.getInt("listIdArray size");
-        JSONArray listIdJSON = jsonObject.getJSONArray("list id array");
-        ArrayList<ListItemId> listIdList = new ArrayList<>();
-        for(int i = 0; i < listIdArraySize; i++){
-            int listIdInt = listIdJSON.getInt(i);
-            listIdList.add(new ListItemId(listIdInt));
-        }
-        return new RefEntryString(new StructureId(structureId),new WidgetId(widgetIdInt), new EntryId(entryIdInt), listIdList);
-    }
+
 
     public Structure getStructure() {
         Structure structure = Dictionary.getStructure(structureId);

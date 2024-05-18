@@ -9,6 +9,7 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
 
@@ -29,7 +30,7 @@ public class StaticDropDown extends EntryWidget {
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete() {
+    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
         return null;
     }
 

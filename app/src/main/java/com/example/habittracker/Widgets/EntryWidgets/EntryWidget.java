@@ -15,6 +15,7 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
+import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.WidgetInStructure;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
@@ -76,7 +77,7 @@ public abstract class EntryWidget implements Widget {
         viewWrapper.showCheckBox((boolean isChecked)->onDeleteCheck(isChecked));
     }
 
-    public abstract ArrayList<RefEntryString> getReferenceForDelete();
+    public abstract ArrayList<RefEntryString> getReferenceForDelete(Entry entry);
 
 
     public final void onDeleteCheck(boolean isChecked){

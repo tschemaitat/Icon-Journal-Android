@@ -6,8 +6,8 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
+import com.example.habittracker.structures.Entry;
 import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Structs.EntryWidgetParam;
 
 
@@ -49,7 +49,7 @@ public class TextSlider extends BaseEntryWidget {
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete() {
+    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
         return null;
     }
 

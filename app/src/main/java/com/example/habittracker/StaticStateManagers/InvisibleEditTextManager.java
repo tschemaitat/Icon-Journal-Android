@@ -5,11 +5,13 @@ import android.text.InputType;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.ViewWidgets.LockableScrollView;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
 public class InvisibleEditTextManager {
@@ -82,6 +84,8 @@ public class InvisibleEditTextManager {
             MainActivity.log("tried to set new widget.\nold widget: " + focusedWidget + "\nnew widget: " + entryWidget);
             throw new RuntimeException();
         }
+        LockableScrollView scrollView = MainActivity.scrollView;
+        scrollView.scrollToChildPublic(entryWidget.getView());
         focusedWidget = entryWidget;
         if(focusedWidget instanceof EditableWidget editableWidget){
             editableWidget.getEditText().requestFocus();

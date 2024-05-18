@@ -1,11 +1,15 @@
 package com.example.habittracker.ViewWidgets;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.Rectangle;
 
 public class LockableScrollView extends ScrollView {
 
@@ -67,6 +71,98 @@ public class LockableScrollView extends ScrollView {
             default:
                 return super.onTouchEvent(ev);
         }
+    }
+
+    public void scrollToChildPublic(View view){
+        Rectangle childRectangleScreen = getScreenRect(view);
+        Rectangle scrollRectangleScreen = getScreenRect(this);
+        Rectangle scrollParentRectangleScreen = getScreenRect((View)this.getParent());
+        Rectangle childRelRectangle = getRelativeRectangle(scrollRectangleScreen, childRectangleScreen, getScrollY());
+        MainActivity.log("child relative to scroll: " + childRelRectangle);
+        MainActivity.log("scroll rect: " + scrollRectangleScreen);
+        MainActivity.log("current scroll: " + this.getScrollY());
+        Rect stupidRect = getStupidRect(childRelRectangle);
+        int scrollAmount = computeScrollDeltaToGetChildRectOnScreen(stupidRect);
+        MainActivity.log("scroll amount for view: " + scrollAmount);
+        scrollBy(0, scrollAmount);
+    }
+
+    public Rectangle getScreenRect(View view){
+        int[] screenOut = new int[2];
+        view.getLocationOnScreen(screenOut);
+        return new Rectangle(screenOut[0], screenOut[1], view.getWidth(), view.getHeight());
+    }
+
+    public Rectangle getRelativeRectangle(Rectangle layout, Rectangle view, int scroll){
+        return new Rectangle(view.getX() - layout.getX(), view.getY() - layout.getY() + scroll, view.getWidth(), view.getHeight());
+    }
+
+    public Rect getStupidRect(Rectangle rectangle){
+        return new Rect(rectangle.getX(), rectangle.getY(),
+                rectangle.getX() + rectangle.getWidth(), rectangle.getY() + rectangle.getHeight());
+    }
+
+    protected int computeScrollDeltaToGetChildRectOnScreen(Rect rect) {
+        if (getChildCount() == 0) return 0;
+        int height = getHeight();
+        int screenTop = getScrollY();
+        int screenBottom = screenTop + height;
+        MainActivity.log("screen top and bottom before adding fading edge: " + screenTop + ", " + screenBottom);
+        int fadingEdge = getVerticalFadingEdgeLength();
+        int bufferFromEdge = height/5;
+        // leave room for top fading edge as long as rect isn't at very top
+        if (rect.top > 0) {
+            screenTop += fadingEdge;
+        }
+        // leave room for bottom fading edge as long as rect isn't at very bottom
+        if (rect.bottom < getChildAt(0).getHeight()) {
+            screenBottom -= fadingEdge;
+        }
+        int scrollYDelta = 0;
+
+
+        if (rect.bottom > screenBottom - bufferFromEdge && rect.top > screenTop + bufferFromEdge) {
+            // need to move down to get it in view: move down just enough so
+            // that the entire rectangle is in view (or at least the first
+            // screen size chunk).
+            if (rect.height() > height) {
+                // just enough to get screen size chunk on
+                MainActivity.log("scroll amount result: (rect.top - (screenTop + bufferFromEdge)" +
+                        rect.top +", " + screenTop +", " + bufferFromEdge);
+                scrollYDelta += (rect.top - (screenTop + bufferFromEdge));
+            } else {
+                // get entire rect at bottom of screen
+                MainActivity.log("scroll amount result: (rect.bottom - (screenBottom - bufferFromEdge)" +
+                        rect.bottom +", " + screenBottom +", " + bufferFromEdge);
+                scrollYDelta += (rect.bottom - (screenBottom - bufferFromEdge));
+            }
+            // make sure we aren't scrolling beyond the end of our content
+            int bottom = getChildAt(0).getBottom();
+            int distanceToBottom = bottom - screenBottom;
+            scrollYDelta = Math.min(scrollYDelta, distanceToBottom);
+        } else if (rect.top < screenTop + bufferFromEdge && rect.bottom < screenBottom - bufferFromEdge) {
+            // need to move up to get it in view: move up just enough so that
+            // entire rectangle is in view (or at least the first screen
+            // size chunk of it).
+            if (rect.height() > height) {
+                // screen size chunk
+                MainActivity.log("scroll amount result: ((screenBottom - bufferFromEdge) - rect.bottom" +
+                        screenBottom +", " + bufferFromEdge +", " + rect.bottom);
+                scrollYDelta -= ((screenBottom - bufferFromEdge) - rect.bottom);
+            } else {
+                // entire rect at top
+                MainActivity.log("scroll amount result: ((screenTop + bufferFromEdge) - rect.top)" +
+                        screenTop +", " + bufferFromEdge +", " + rect.top);
+                scrollYDelta -= ((screenTop + bufferFromEdge) - rect.top);
+            }
+            // make sure we aren't scrolling any further than the top our content
+            scrollYDelta = Math.max(scrollYDelta, -getScrollY());
+        }else{
+            MainActivity.log("scroll amount result: deemed to already been shown scroll top/bot: " +
+                    screenTop + ", " + screenBottom + ", view top/bot: " +
+                    rect.top + ", " + rect.bottom);
+        }
+        return scrollYDelta;
     }
 
     @Override

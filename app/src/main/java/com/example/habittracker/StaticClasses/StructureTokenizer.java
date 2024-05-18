@@ -5,6 +5,7 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
@@ -41,28 +42,71 @@ public class StructureTokenizer {
         }
     }
 
-    private static JSONArray getStructureArrayTokenThrows() throws JSONException {
+    private static JSONObject getStructureArrayTokenThrows() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+
         ArrayList<Structure> structures = Dictionary.getStructures();
+        jsonObject.put("arraySize", structures.size());
         JSONArray jsonArray = new JSONArray();
         for(Structure structure: structures){
             JSONObject json = jsonFromStructure(structure);
             jsonArray.put(json);
         }
-        return jsonArray;
+        jsonObject.put("structures", jsonArray);
+        return jsonObject;
     }
 
     public static JSONObject jsonFromStructure(Structure structure) throws JSONException{
         JSONObject json = new JSONObject();
         json.put("name", structure.getCachedName().getString());
-        json.put("id", structure.getId());
-        json.put("widget params", structure.getWidgetParam().getJSON());
+        json.put("id", structure.getId().getId().intValue());
+        json.put("widgetParams", structure.getWidgetParam().getJSON());
+        json.put("type", structure.getType());
         JSONArray entriesJSON = new JSONArray();
         for(Entry entry: structure.getEntries()){
             JSONObject entryJSON = new JSONObject();
             entryJSON.put("id", entry.getId());
             entryJSON.put("value", entry.getGroupValue().getJSON());
         }
+        json.put("entries", entriesJSON);
         return json;
+    }
+
+    public static class StructureWithEntryTokens{
+        public Structure structure;
+        public JSONObject entriesJSON;
+
+        public StructureWithEntryTokens(Structure structure, JSONObject entriesJSON) {
+            this.structure = structure;
+            this.entriesJSON = entriesJSON;
+        }
+    }
+
+    public static void setStructures(JSONObject jsonObject) throws JSONException{
+        int arraySize = jsonObject.getInt("arraySize");
+        JSONArray structuresJSON = jsonObject.getJSONArray("structures");
+        ArrayList<StructureWithEntryTokens> tokenStructures = new ArrayList<>();
+        for(int i = 0; i < arraySize; i++){
+            JSONObject structureJSON = structuresJSON.getJSONObject(i);
+            StructureWithEntryTokens tokenStructure = getStructureFromJSON(structureJSON);
+            tokenStructures.add(tokenStructure);
+        }
+
+        for(StructureWithEntryTokens structureWithEntryTokens: tokenStructures){
+            
+        }
+    }
+
+    public static StructureWithEntryTokens getStructureFromJSON(JSONObject jsonObject) throws JSONException{
+        String name = jsonObject.getString("name");
+        String type = jsonObject.getString("type");
+        StructureId structureId = new StructureId(jsonObject.getInt("id"));
+        JSONObject widgetParamsJSON = jsonObject.getJSONObject("widgetParams");
+        EntryWidgetParam entryWidgetParam = getWidgetParam(widgetParamsJSON);
+        GroupWidgetParam groupWidgetParam = (GroupWidgetParam)entryWidgetParam;
+        JSONObject entriesJSON = jsonObject.getJSONObject("entries");
+        Structure structure = Dictionary.addStructure(name, groupWidgetParam, type);
+        return new StructureWithEntryTokens(structure, entriesJSON);
     }
 
 

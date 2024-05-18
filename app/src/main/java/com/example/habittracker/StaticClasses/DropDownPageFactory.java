@@ -59,7 +59,7 @@ public class DropDownPageFactory {
                         if(baseWidgetValue.getStandardFormOfCachedString() instanceof LiteralString){
 
                         }
-                        newPages.add(page.getOrAdd(new PayloadOption(getRefEntryString(structure, groupIdList.get(groupIndex), entry.getId(), baseWidgetValue), null)));
+                        newPages.add(page.getOrAdd(new PayloadOption(getRefEntryString(structure, groupIdList.get(groupIndex), entry, baseWidgetValue), null)));
                     }
                 }
                 parentPages = newPages;
@@ -71,7 +71,7 @@ public class DropDownPageFactory {
                     valuesOfPages.add(pages.get(i).getCachedName());
                 for(BaseWidgetValue baseWidgetValue: entryValueList){
                     ArrayList<CachedString> copied = (ArrayList<CachedString>) valuesOfPages.clone();
-                    RefEntryString entryValueRefString = getRefEntryString(structure, valueId, entry.getId(), baseWidgetValue);
+                    RefEntryString entryValueRefString = getRefEntryString(structure, valueId, entry, baseWidgetValue);
                     copied.add(entryValueRefString);
 
                     page.add(new PayloadOption(entryValueRefString, new RefItemPath(copied)));
@@ -82,12 +82,12 @@ public class DropDownPageFactory {
         return parentPage;
     }
 
-    public static RefEntryString getRefEntryString(Structure structure, WidgetInStructure widgetInStructure, EntryId entryId,
+    public static RefEntryString getRefEntryString(Structure structure, WidgetInStructure widgetInStructure, Entry entry,
                                                    BaseWidgetValue tree){
-        if(entryId == null)
+        if(entry == null)
             throw new RuntimeException();
         if(tree.getStandardFormOfCachedString() instanceof LiteralString){
-            return new RefEntryString(widgetInStructure.getStructureId(), widgetInStructure.getWidgetId(), entryId, tree.getListItemIds());
+            return new RefEntryString(widgetInStructure, entry, tree.getListItemIds());
         }
         return (RefEntryString) tree.getStandardFormOfCachedString();
     }
