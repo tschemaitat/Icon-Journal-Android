@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.Structure;
 
 public class CategorySelectionPage implements Inflatable{
     private Context context;

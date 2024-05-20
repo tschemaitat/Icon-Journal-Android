@@ -1,6 +1,5 @@
-package com.example.habittracker.structures;
+package com.example.habittracker.structurePack;
 
-import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
@@ -35,7 +34,7 @@ public class WidgetInStructure {
 
     @Override
     public int hashCode(){
-        return Integer.hashCode(getWidgetId().getId());
+        return Integer.hashCode(getWidgetId().getInteger());
     }
     @Override
     public boolean equals(Object object){

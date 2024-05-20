@@ -1,7 +1,7 @@
 package com.example.habittracker.Widgets.ListWidgets;
 
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.ListItemId;
 
 public class ListWidgetItemWrapper {
     private EntryWidget entryWidget;

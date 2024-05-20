@@ -3,7 +3,7 @@ package com.example.habittracker.Inflatables;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 

@@ -14,6 +14,7 @@ import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
@@ -71,10 +72,11 @@ public class ListWidgetSingleItem extends ListWidget {
 
     }
 
-    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList){
-        ArrayList<BaseEntryWidget> baseEntryWidgets = EnumLoop.makeList(getEntryWidgetList(), (entryWidget -> (BaseEntryWidget) entryWidget));
-        DeleteValueManager.gatherRefForDeleteWidgetsAndList(baseEntryWidgets, resultList,
-                getStructure(), getListItemIdProvider().getListItemIdList());
+    @Override
+    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration(){
+        ArrayList<BaseEntryWidget> baseEntryWidgets = EnumLoop.makeList(getEntryWidgetList(),
+                (entryWidget -> (BaseEntryWidget) entryWidget));
+        return DeleteValueManager.gatherRefForDeleteWidgetsAndList(baseEntryWidgets);
     }
 
     public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {

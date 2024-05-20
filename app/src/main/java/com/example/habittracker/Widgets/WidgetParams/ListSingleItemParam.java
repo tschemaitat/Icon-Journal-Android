@@ -4,13 +4,16 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
-import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.HeaderNode;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class ListSingleItemParam extends EntryWidgetParam {
     public EntryWidgetParam widgetParam;
@@ -68,5 +71,20 @@ public class ListSingleItemParam extends EntryWidgetParam {
         result.add(tree);
 
         return result;
+    }
+
+
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof ListSingleItemParam listSingleItemParam))
+            return false;
+        if( ! Objects.equals(widgetParam, listSingleItemParam.widgetParam))
+            return false;
+        if( ! Objects.equals(name, listSingleItemParam.name))
+            return false;
+        if( ! Objects.equals(getWidgetId(), listSingleItemParam.getWidgetId()))
+            return false;
+        return true;
     }
 }

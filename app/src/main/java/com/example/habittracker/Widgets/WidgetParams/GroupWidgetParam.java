@@ -3,9 +3,9 @@ package com.example.habittracker.Widgets.WidgetParams;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.HeaderNode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GroupWidgetParam extends EntryWidgetParam {
     public ArrayList<EntryWidgetParam> params;
@@ -96,5 +97,16 @@ public class GroupWidgetParam extends EntryWidgetParam {
             result += widgetParam.hierarchyString(numTabs + 1);
         }
         return result;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof GroupWidgetParam groupWidgetParam))
+            return false;
+        if( ! Objects.equals(params, groupWidgetParam.params))
+            return false;
+        if( ! Objects.equals(getWidgetId(), groupWidgetParam.getWidgetId()))
+            return false;
+        return true;
     }
 }

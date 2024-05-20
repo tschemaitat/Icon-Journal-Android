@@ -1,4 +1,4 @@
-package com.example.habittracker.structures;
+package com.example.habittracker.structurePack;
 
 import java.util.ArrayList;
 

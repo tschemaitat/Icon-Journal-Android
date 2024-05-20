@@ -9,7 +9,7 @@ public class EntryId {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Integer getInteger() {
         return id;
     }
 
@@ -17,7 +17,7 @@ public class EntryId {
     public boolean equals(Object object){
         if( ! (object instanceof EntryId entryId))
             return false;
-        if(!Objects.equals(entryId.id, id))
+        if( ! Objects.equals(entryId.id, id))
             return false;
         return true;
     }

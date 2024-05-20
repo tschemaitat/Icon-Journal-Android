@@ -1,13 +1,11 @@
-package com.example.habittracker.structures;
+package com.example.habittracker.structurePack;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,7 +47,7 @@ public class Header {
 
         int idCounter = -1;
         for(WidgetId widgetId : currentWidgets)
-            idCounter = Math.max(idCounter, widgetId.getId());
+            idCounter = Math.max(idCounter, widgetId.getInteger());
         idCounter++;
         for(HeaderNode headerNode: headerNodeList){
             if( ! headerNode.getWidgetParam().hasWidgetId()){

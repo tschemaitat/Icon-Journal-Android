@@ -9,8 +9,8 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.HeaderNode;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
 
 import org.json.JSONException;
@@ -30,7 +30,7 @@ public class StaticDropDown extends EntryWidget {
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
+    public ArrayList<RefEntryString> getReferenceForDelete(EntryInStructure entryInStructure) {
         return null;
     }
 

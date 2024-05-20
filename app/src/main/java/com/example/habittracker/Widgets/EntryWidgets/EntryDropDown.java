@@ -10,8 +10,8 @@ import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Structs.RefItemPath;
-import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetInStructure;
+import com.example.habittracker.structurePack.Structure;
+import com.example.habittracker.structurePack.WidgetInStructure;
 
 import java.util.ArrayList;
 

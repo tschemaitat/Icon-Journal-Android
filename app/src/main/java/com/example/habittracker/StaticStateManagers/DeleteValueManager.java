@@ -6,14 +6,14 @@ import android.widget.Button;
 import com.example.habittracker.Algorithms.HandleDeletedValues;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryId;
+import com.example.habittracker.ViewWidgets.CustomDialog;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.ListItemId;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.ListItemId;
+import com.example.habittracker.structurePack.Structure;
 
 import java.util.ArrayList;
 
@@ -35,10 +35,10 @@ public class DeleteValueManager {
     private GroupWidget groupWidget;
     private ArrayList<RefEntryString> valuesToDelete = new ArrayList<>();
     private Button button;
-    private Entry entry;
+    private EntryInStructure entryInStructure;
 
-    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, Entry entry) {
-        this.entry = entry;
+    public DeleteValueManager(Context context, GroupWidget groupWidget, Button button, EntryInStructure entryInStructure) {
+        this.entryInStructure = entryInStructure;
         this.button = button;
         this.context = context;
         this.groupWidget = groupWidget;
@@ -74,10 +74,20 @@ public class DeleteValueManager {
     public void onConfirm(){
         MainActivity.log("on confirm");
         ArrayList<EntryWidget> entryWidgets = groupWidget.gatherWidgetsChecked();
-        ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
+        ArrayList<ArrayList<BaseEntryWidget>> widgetGroupedByCheckedWidget = new ArrayList<>();
         for(EntryWidget entryWidget: entryWidgets){
-            refListList.add(entryWidget.getReferenceForDelete(entry));
+            widgetGroupedByCheckedWidget.add(entryWidget.getWidgetsForDelete());
         }
+        ArrayList<BaseEntryWidget> widgetList = new ArrayList<>();
+        ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
+        for(ArrayList<BaseEntryWidget> widgetsInGroup: widgetGroupedByCheckedWidget){
+            widgetList.addAll(widgetsInGroup);
+        }
+        for(BaseEntryWidget baseEntryWidget: widgetList){
+            refListList.add(baseEntryWidget.getReference(entryInStructure));
+        }
+
+
         for(int w = 0; w < refListList.size(); w++){
             ArrayList<RefEntryString> refList = refListList.get(w);
             EntryWidget entryWidget = entryWidgets.get(w);
@@ -88,21 +98,40 @@ public class DeleteValueManager {
             }
         }
 
-        ArrayList<Structure.DeleteValuePair> references = HandleDeletedValues.getStructures(refListList);
+        ArrayList<ArrayList<RefEntryString>> referencesList = HandleDeletedValues.getReferencesList(refListList);
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int widgetIndex = 0; widgetIndex < referencesList.size(); widgetIndex++){
+            BaseEntryWidget sourceWidget = widgetList.get(widgetIndex);
+            ArrayList<RefEntryString> referencesOfWidget = referencesList.get(widgetIndex);
+            ArrayList<RefEntryString> sourceLocationList = refListList.get(widgetIndex);
+            stringBuilder.append("source widget: ").append(sourceWidget).append(", ").append(sourceWidget.getName()).append("\n");
+            stringBuilder.append("\tsource values: ");
+            for(RefEntryString sourceValue: sourceLocationList){
+                stringBuilder.append(" [" + sourceValue + ": " + sourceValue.getString() + "]");
+            }
+            stringBuilder.append("\n");
+            stringBuilder.append("\treference values: ");
+            for(RefEntryString reference: referencesOfWidget){
+                stringBuilder.append(" [" + reference + ": " + reference.getString() + "]");
+            }
+        }
+
+        CustomDialog customDialog = new CustomDialog(context, stringBuilder.toString());
+        customDialog.show();
     }
 
 
 
 
-    public static void gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets, ArrayList<RefEntryString> resultList,
-                                                        Structure structure, ArrayList<ListItemId> listItemIds){
+    public static ArrayList<BaseEntryWidget> gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets){
+        ArrayList<BaseEntryWidget> resultList = new ArrayList<>();
         for(BaseEntryWidget baseEntryWidget: baseEntryWidgets){
             if(baseEntryWidget instanceof ListWidget listWidget){
-                listWidget.getReferenceForDeleteIteration(resultList);
+                resultList.addAll(listWidget.getWidgetsForDeleteIteration());
                 continue;
             }
-            resultList.add(new RefEntryString(baseEntryWidget.getWidgetInStructure(),
-                    null, listItemIds));
+            resultList.add(baseEntryWidget);
         }
+        return resultList;
     }
 }

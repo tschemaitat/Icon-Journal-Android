@@ -14,13 +14,11 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidget;
-import com.example.habittracker.Widgets.GroupWidget.*;
 
 import java.util.ArrayList;
 

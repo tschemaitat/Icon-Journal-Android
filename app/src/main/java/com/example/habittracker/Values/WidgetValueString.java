@@ -7,6 +7,8 @@ import com.example.habittracker.Structs.WidgetId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class WidgetValueString extends BaseWidgetValue {
     public static final String className = "widget value string";
     private CachedString cachedString;
@@ -36,7 +38,7 @@ public class WidgetValueString extends BaseWidgetValue {
     protected JSONObject getJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("value type", "widget value string");
-        jsonObject.put("widget id", getWidgetId().getId().intValue());
+        jsonObject.put("widget id", getWidgetId().getInteger().intValue());
         jsonObject.put("cached string", cachedString.getJSON());
 
         return jsonObject;
@@ -47,5 +49,16 @@ public class WidgetValueString extends BaseWidgetValue {
         int widgetId = jsonObject.getInt("widget id");
         CachedString cachedString = StructureTokenizer.getCachedString(cachedStringJSON);
         return new WidgetValueString(new WidgetId(widgetId), cachedString);
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof WidgetValueString widgetValueString))
+            return false;
+        if( ! Objects.equals(getWidgetId(), widgetValueString.getWidgetId()))
+            return false;
+        if( ! Objects.equals(cachedString, widgetValueString.cachedString))
+            return false;
+        return true;
     }
 }

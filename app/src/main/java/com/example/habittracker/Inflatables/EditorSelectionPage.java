@@ -10,7 +10,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.Structs.PayloadOption;
 
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.Structure;
 
 import java.util.ArrayList;
 

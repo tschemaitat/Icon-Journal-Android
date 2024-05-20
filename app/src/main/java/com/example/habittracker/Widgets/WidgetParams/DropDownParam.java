@@ -6,16 +6,17 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetInStructure;
+import com.example.habittracker.structurePack.Structure;
+import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
-import com.example.habittracker.structures.HeaderNode;
+import com.example.habittracker.structurePack.HeaderNode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DropDownParam extends EntryWidgetParam {
     public StructureId referenceStructureId;
@@ -67,12 +68,12 @@ public class DropDownParam extends EntryWidgetParam {
     @Override
     protected JSONObject getJSONCustom() throws JSONException{
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("structureId", referenceStructureId.getId().intValue());
-        jsonObject.put("valueId", valueId.getId().intValue());
+        jsonObject.put("structureId", referenceStructureId.getInteger().intValue());
+        jsonObject.put("valueId", valueId.getInteger().intValue());
         jsonObject.put("groupSize", groups.size());
         JSONArray groupsJSON = new JSONArray();
         for(WidgetId groupId: groups)
-            groupsJSON.put(groupId.getId().intValue());
+            groupsJSON.put(groupId.getInteger().intValue());
         jsonObject.put("groups", groupsJSON);
         return null;
     }
@@ -106,5 +107,22 @@ public class DropDownParam extends EntryWidgetParam {
 
     public Structure getReferenceStructure() {
         return Dictionary.getStructure(referenceStructureId);
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof DropDownParam dropDownParam))
+            return false;
+        if( ! Objects.equals(groups, dropDownParam.groups))
+            return false;
+        if( ! Objects.equals(valueId, dropDownParam.valueId))
+            return false;
+        if( ! Objects.equals(name, dropDownParam.name))
+            return false;
+        if( ! Objects.equals(referenceStructureId, dropDownParam.referenceStructureId))
+            return false;
+        if( ! Objects.equals(getWidgetId(), dropDownParam.getWidgetId()))
+            return false;
+        return true;
     }
 }

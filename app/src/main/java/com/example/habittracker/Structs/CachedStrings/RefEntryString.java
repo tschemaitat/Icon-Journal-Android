@@ -3,83 +3,110 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.structures.WidgetInStructure;
-import com.example.habittracker.structures.WidgetPath;
+import com.example.habittracker.Values.WidgetValueStringPath;
+import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Values.BaseWidgetValue;
-import com.example.habittracker.structures.ListItemId;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.ListItemId;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.Structure;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RefEntryString implements CachedString{
     public static final String className = "refEntryString";
-    StructureId structureId;
-    WidgetId widgetId;
-    EntryId entryId;
+    WidgetInStructure widgetInStructure;
+    EntryInStructure entryInStructure;
     ArrayList<ListItemId> listIdList;
-    public RefEntryString(WidgetInStructure widgetInStructure, Entry entry, ArrayList<ListItemId> listIdList){
+    public RefEntryString(WidgetInStructure widgetInStructure, EntryInStructure entryInStructure, ArrayList<ListItemId> listIdList){
         if(widgetInStructure == null)
             throw new RuntimeException();
-        this.structureId = widgetInStructure.getStructureId();
-        this.widgetId = widgetInStructure.getWidgetId();
-        this.entryId = entryId;
+        this.widgetInStructure = widgetInStructure;
+        this.entryInStructure = entryInStructure;
         this.listIdList = listIdList;
     }
 
 
+    public BaseWidgetValue getBaseWidgetValue(){
+        return entryInStructure.getGroupValue().getValue(widgetInStructure.getWidgetPath(), listIdList);
+    }
 
     public String getString(){
-        WidgetInStructure widgetInStructure = Dictionary.getStructure(structureId).getWidgetInStructureFromId(widgetId);
-        WidgetPath path = widgetInStructure.getWidgetPath();
-        widgetInStructure.getStructure();
 
-        Entry entry = widgetInStructure.getStructure().getEntry(entryId);
-//        Entry entry = structure.getEntry(entryId);
-//        WidgetPath path = structure.getWidgetInfo(widgetInStructure).getWidgetPath();
-
-        BaseWidgetValue value = entry.getGroupValue().getValue(path, listIdList);
+        BaseWidgetValue value = getBaseWidgetValue();
         return value.getStandardFormOfCachedString().getString();
     }
+
+    public ArrayList<RefEntryString> getRefEntryStringListOfValue(){
+        WidgetValueStringPath value = (WidgetValueStringPath)getBaseWidgetValue();
+        ArrayList<CachedString> cachedStrings = value.getRefItemPath().getPath();
+        return EnumLoop.makeList(cachedStrings, (cachedString -> (RefEntryString) cachedString));
+    }
+
+
 
     @Override
     public JSONObject getJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CachedString.typeOfClassKey, className);
-        jsonObject.put("structure id", structureId.getId().intValue());
-        jsonObject.put("widget id", widgetId.getId().intValue());
-        jsonObject.put("entry id", entryId.getId().intValue());
+        jsonObject.put("structureId", widgetInStructure.getStructureId().getInteger().intValue());
+        jsonObject.put("widgetId", widgetInStructure.getWidgetId().getInteger().intValue());
+        jsonObject.put("entryId", entryInStructure.getId().getInteger().intValue());
+        jsonObject.put("listIdArraySize", listIdList.size());
         JSONArray listIdArray = new JSONArray();
         for(ListItemId listItemId: listIdList){
             listIdArray.put(listItemId.getId().intValue());
         }
-        jsonObject.put("list id array", listIdArray);
+        jsonObject.put("listIdArray", listIdArray);
         return jsonObject;
+    }
+
+    public static RefEntryString getFromJSON(JSONObject jsonObject) throws JSONException{
+        StructureId structureId = new StructureId(jsonObject.getInt("structureId"));
+        Structure structure = Dictionary.getStructure(structureId);
+        WidgetId widgetId = new WidgetId(jsonObject.getInt("widgetId"));
+        WidgetInStructure widgetInStructure = structure.getWidgetInStructureFromId(widgetId);
+        EntryId entryId = new EntryId(jsonObject.getInt("entryId"));
+        EntryInStructure entryInStructure = structure.getEntryInStructure(entryId);
+        int listIdArraySize = jsonObject.getInt("listIdArraySize");
+        JSONArray listIdJSON = jsonObject.getJSONArray("listIdArray");
+        ArrayList<ListItemId> listIdList = new ArrayList<>();
+        for(int i = 0; i < listIdArraySize; i++){
+            int listIdInt = listIdJSON.getInt(i);
+            listIdList.add(new ListItemId(listIdInt));
+        }
+        return new RefEntryString(widgetInStructure, entryInStructure, listIdList);
+    }
+
+    public static void getFromJSONFake(JSONObject jsonObject) throws JSONException {
+
+
+
+
+
     }
 
 
 
     public Structure getStructure() {
-        Structure structure = Dictionary.getStructure(structureId);
-        return structure;
-    }
-    public StructureId getStructureId() {
-        return structureId;
+
+        return widgetInStructure.getStructure();
     }
 
     public WidgetInStructure getWidgetInStructure() {
-        return getStructure().getWidgetInStructureFromId(widgetId);
+        return widgetInStructure;
     }
 
-    public EntryId getEntryId() {
-        return entryId;
+    public EntryInStructure getEntryInStructure() {
+        return entryInStructure;
     }
 
     public ArrayList<ListItemId> getListIdList() {
@@ -88,24 +115,20 @@ public class RefEntryString implements CachedString{
 
     @Override
     public boolean equals(Object object){
-        if(object instanceof CachedString){
-            RefEntryString cachedString = (RefEntryString) object;
-            if( ! structureId.equals(cachedString.structureId))
-                return false;
-            if( ! widgetId.equals(cachedString.widgetId))
-                return false;
-            if( ! entryId.equals(cachedString.entryId))
-                return false;
-            if( ! listIdList.equals(cachedString.listIdList))
-                return false;
-            return true;
-        }
 
-        return false;
+        if( ! (object instanceof RefEntryString refEntryString))
+            return false;
+        if( ! Objects.equals(widgetInStructure, refEntryString.widgetInStructure))
+            return false;
+        if( ! Objects.equals(entryInStructure, refEntryString.entryInStructure))
+            return false;
+        if( ! Objects.equals(listIdList, refEntryString.listIdList))
+            return false;
+        return true;
     }
 
     public String getLocationString(){
-        return "ref: " + structureId + ", <" + widgetId + ">, " + entryId + ", " + listIdList;
+        return "ref: " + widgetInStructure.getStructure() + ", <" + widgetInStructure.getWidgetId() + ">, " + entryInStructure.getId() + ", " + listIdList;
     }
 
     @Override

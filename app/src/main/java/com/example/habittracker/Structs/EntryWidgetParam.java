@@ -1,11 +1,9 @@
 package com.example.habittracker.Structs;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.structures.Structure;
-import com.example.habittracker.structures.WidgetInStructure;
+import com.example.habittracker.structurePack.HeaderNode;
+import com.example.habittracker.structurePack.Structure;
+import com.example.habittracker.structurePack.WidgetInStructure;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,7 +88,7 @@ public abstract class EntryWidgetParam {
     public final JSONObject getJSON() throws JSONException{
         JSONObject jsonObject = getJSONCustom();
         jsonObject.put("name", name);
-        jsonObject.put("idTracker", widgetIdTracker.getId().intValue());
+        jsonObject.put("idTracker", widgetIdTracker.getInteger().intValue());
         jsonObject.put("isUniqueAttribute", isUniqueAttribute);
         //don't need to put className in builder because it is used by the switch, the variable is put in by the inheriting class
         jsonObject.put("className", className);

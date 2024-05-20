@@ -4,15 +4,17 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.structures.WidgetInStructure;
-import com.example.habittracker.structures.WidgetPath;
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.Entry;
+import com.example.habittracker.structurePack.WidgetInStructure;
+import com.example.habittracker.structurePack.WidgetPath;
+import com.example.habittracker.structurePack.ListItemId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GroupValue extends WidgetValue{
     public static final String className = "group value";
@@ -223,5 +225,18 @@ public class GroupValue extends WidgetValue{
         GroupValue groupValue = new GroupValue(widgetValues);
         groupValue.setListItemId(new ListItemId(listId));
         return groupValue;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof GroupValue groupValue))
+            return false;
+        if( ! Objects.equals(listItemId, groupValue.listItemId))
+            return false;
+        if( ! Objects.equals(values, groupValue.values))
+            return false;
+        if( ! Objects.equals(getWidgetId(), groupValue.getWidgetId()))
+            return false;
+        return true;
     }
 }

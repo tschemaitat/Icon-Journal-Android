@@ -16,8 +16,8 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.ListItemId;
 
 import java.util.ArrayList;
 
@@ -37,19 +37,15 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
+    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
         if(!isDeleteChecked)
             throw new RuntimeException();
-        ArrayList<RefEntryString> resultList = new ArrayList<>();
-        getReferenceForDeleteIteration(resultList);
-        return resultList;
+        return getWidgetsForDeleteIteration();
     }
 
 
-    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList) {
-        ArrayList<BaseEntryWidget> baseEntryWidgets = getBaseEntryWidgets();
-        DeleteValueManager.gatherRefForDeleteWidgetsAndList(baseEntryWidgets, resultList,
-                getStructure(), getListItemIdList());
+    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration() {
+        return DeleteValueManager.gatherRefForDeleteWidgetsAndList(getBaseEntryWidgets());
     }
 
     public ArrayList<EntryWidget> gatherWidgetsChecked(){

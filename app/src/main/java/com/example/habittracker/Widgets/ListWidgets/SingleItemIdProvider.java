@@ -1,9 +1,8 @@
 package com.example.habittracker.Widgets.ListWidgets;
 
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.ListItemId;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SingleItemIdProvider implements ListItemIdProvider{
     private ListItemId listItemId;

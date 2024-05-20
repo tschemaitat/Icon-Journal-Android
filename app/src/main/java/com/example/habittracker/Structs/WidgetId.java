@@ -9,7 +9,7 @@ public class WidgetId {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Integer getInteger() {
         return id;
     }
 

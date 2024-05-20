@@ -11,8 +11,8 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.structures.Structure;
-import com.example.habittracker.Widgets.GroupWidget.*;
+import com.example.habittracker.structurePack.Entry;
+import com.example.habittracker.structurePack.Structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,23 +36,31 @@ public class Dictionary {
 
     }
 
-
+    public static Structure addStructureFromSave(String name, GroupWidgetParam param, String type,
+                                                 ArrayList<Entry> entries, StructureId structureId){
+        checkNull(name, param, type);
+        Structure newStructure = new Structure(name, param, type, entries, structureId);
+        structures.put(newStructure.getId(), newStructure);
+        return newStructure;
+    }
 
     public static Structure addStructure(String name, GroupWidgetParam param, String type){
+        checkNull(name, param, type);
+        Structure newStructure = new Structure(name, param, type);
+
+        MainActivity.log("saving structure with name: " + newStructure.getCachedName() + "and id: " + newStructure.getId());
+
+        structures.put(newStructure.getId(), newStructure);
+        return newStructure;
+    }
+
+    public static void checkNull(String name, GroupWidgetParam param, String type){
         if(param == null)
             throw new RuntimeException("try to save null structure");
         if(name == null)
             throw new RuntimeException("saved structure with null name");
         if(type == null)
             throw new RuntimeException("saved structure with null type");
-
-        Structure newStructure = new Structure(name, param, type);
-        //newStructure.createId();
-
-        MainActivity.log("saving structure with name: " + newStructure.getCachedName() + "and id: " + newStructure.getId());
-
-        structures.put(newStructure.getId(), newStructure);
-        return newStructure;
     }
 
     public static void editStructure(Structure structure, GroupWidgetParam param){

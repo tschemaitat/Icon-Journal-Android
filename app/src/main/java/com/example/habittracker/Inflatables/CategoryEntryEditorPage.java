@@ -8,8 +8,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -20,18 +20,18 @@ import java.util.Collections;
 public class CategoryEntryEditorPage implements Inflatable{
     private Context context;
     private Structure structure;
-    private Entry entry;
+    private EntryInStructure entryInStructure;
     private GroupWidget groupWidget;
     private LinearLayout linearLayout;
     boolean discarding = false;
-    public CategoryEntryEditorPage(Context context, Structure spreadsheet, Entry entry){
-        if(entry != null)
-            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entry.getId() +"\n"+ entry.getGroupValue().hierarchy());
+    public CategoryEntryEditorPage(Context context, Structure spreadsheet, EntryInStructure entryInStructure){
+        if(entryInStructure != null)
+            MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entryInStructure.getId() +"\n"+ entryInStructure.getGroupValue().hierarchy());
         else
             MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry: null");
         this.context = context;
         this.structure = spreadsheet;
-        this.entry = entry;
+        this.entryInStructure = entryInStructure;
         linearLayout = new LinearLayout(context);
 
     }
@@ -58,12 +58,12 @@ public class CategoryEntryEditorPage implements Inflatable{
         GroupValue data = (GroupValue)groupWidget.getValue();
         data.setIdOfTree();
         MainActivity.log("group widget children: " + groupWidget.getWidgetLayout().widgets());
-        if(entry == null){
+        if(entryInStructure == null){
             MainActivity.log("new entry, adding entry to structure");
             structure.addEntry(data);
         }else{
             MainActivity.log("editing entry, changing dataTree");
-            structure.setData(entry, data);
+            structure.editEntry(entryInStructure, data);
         }
         MainActivity.log("saving entry successful: \n" + data.hierarchy());
     }
@@ -104,13 +104,13 @@ public class CategoryEntryEditorPage implements Inflatable{
         linearLayout.addView(groupWidget.getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
         groupWidget.setParam(structure.getWidgetParam());
-        if(entry != null){
-            groupWidget.setValue(entry.getGroupValue());
-            MainActivity.log("set from entry: " + entry.getGroupValue().hierarchy());
+        if(entryInStructure != null){
+            groupWidget.setValue(entryInStructure.getGroupValue());
+            MainActivity.log("set from entry: " + entryInStructure.getGroupValue().hierarchy());
         }
         EntryId entryId = null;
-        if(entry != null)
-            entryId = entry.getId();
+        if(entryInStructure != null)
+            entryId = entryInStructure.getId();
         EntryEditorMenuBar.getManager().show(groupWidget, entryId);
 
     }

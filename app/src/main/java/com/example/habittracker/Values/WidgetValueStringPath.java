@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WidgetValueStringPath extends BaseWidgetValue{
     public static final String className = "widget value string path";
@@ -67,5 +68,16 @@ public class WidgetValueStringPath extends BaseWidgetValue{
         }
         RefItemPath refItemPath = new RefItemPath(cachedStrings);
         return new WidgetValueStringPath(new WidgetId(widgetId), refItemPath);
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof WidgetValueStringPath widgetValueStringPath))
+            return false;
+        if( ! Objects.equals(getWidgetId(), widgetValueStringPath.getWidgetId()))
+            return false;
+        if( ! Objects.equals(refItemPath, widgetValueStringPath.refItemPath))
+            return false;
+        return true;
     }
 }

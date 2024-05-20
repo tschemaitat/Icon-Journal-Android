@@ -1,7 +1,6 @@
-package com.example.habittracker.structures;
+package com.example.habittracker.structurePack;
 
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 
 public class EntryWidgetInfo {
     private EntryWidgetParam param;

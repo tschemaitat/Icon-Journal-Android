@@ -15,11 +15,11 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.WidgetInStructure;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.Structure;
 
 import java.util.ArrayList;
 
@@ -77,8 +77,9 @@ public abstract class EntryWidget implements Widget {
         viewWrapper.showCheckBox((boolean isChecked)->onDeleteCheck(isChecked));
     }
 
-    public abstract ArrayList<RefEntryString> getReferenceForDelete(Entry entry);
 
+
+    public abstract ArrayList<BaseEntryWidget> getWidgetsForDelete();
 
     public final void onDeleteCheck(boolean isChecked){
         isDeleteChecked = isChecked;
@@ -202,6 +203,7 @@ public abstract class EntryWidget implements Widget {
     public final ViewWrapper getViewWrapper(){
         return viewWrapper;
     }
+
 
 
 

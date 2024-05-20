@@ -5,8 +5,8 @@ import android.content.Context;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.ListItemId;
 
 import java.util.ArrayList;
 
@@ -28,17 +28,26 @@ public abstract class BaseEntryWidget extends EntryWidget{
         return listItemIdProvider.getListItemId();
     }
 
-    @Override
-    public ArrayList<RefEntryString> getReferenceForDelete(Entry entry) {
+
+    public ArrayList<RefEntryString> getReference(EntryInStructure entryInStructure) {
         if(listItemIdProvider == null){
             MainActivity.log("provider null: " + this);
             throw new RuntimeException();
         }
         ArrayList<RefEntryString> resultList = new ArrayList<>();
         RefEntryString result = new RefEntryString(getWidgetInStructure(),
-                entry, listItemIdProvider.getListItemIdList());
+                entryInStructure, listItemIdProvider.getListItemIdList());
         resultList.add(result);
         return resultList;
+    }
+
+    public abstract ArrayList<RefEntryString> getReferenceForDelete(EntryInStructure entryInStructure);
+
+    @Override
+    public ArrayList<BaseEntryWidget> getWidgetsForDelete(){
+        ArrayList<BaseEntryWidget> result = new ArrayList<>();
+        result.add(this);
+        return result;
     }
 
 

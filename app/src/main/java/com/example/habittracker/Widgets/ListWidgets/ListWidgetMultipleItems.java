@@ -12,6 +12,7 @@ import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
@@ -68,12 +69,14 @@ public class ListWidgetMultipleItems extends ListWidget {
     }
 
 
-
-    public void getReferenceForDeleteIteration(ArrayList<RefEntryString> resultList){
+    @Override
+    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration(){
+        ArrayList<BaseEntryWidget> result = new ArrayList<>();
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         for(GroupWidget groupWidget: groupWidgets){
-            groupWidget.getReferenceForDeleteIteration(resultList);
+            result.addAll(groupWidget.getWidgetsForDeleteIteration());
         }
+        return result;
     }
 
     public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {

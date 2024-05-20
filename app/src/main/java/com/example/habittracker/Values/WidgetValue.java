@@ -1,8 +1,10 @@
 package com.example.habittracker.Values;
 
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.structures.WidgetInStructure;
-import com.example.habittracker.structures.ListItemId;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.ListItemId;
+import com.example.habittracker.structurePack.Structure;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +45,11 @@ public abstract class WidgetValue {
         result.remove(0);
 
         return result;
+    }
+
+    public RefEntryString getReference(EntryInStructure entryInStructure){
+        Structure structure = entryInStructure.getStructure();
+        return new RefEntryString(structure.getWidgetInStructureFromId(widgetId), entryInStructure, getListItemIds());
     }
 
 

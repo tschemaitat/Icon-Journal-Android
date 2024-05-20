@@ -1,4 +1,4 @@
-package com.example.habittracker.structures;
+package com.example.habittracker.structurePack;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
@@ -8,17 +8,16 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryId;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Values.WidgetValueStringPath;
+import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Structure {
@@ -28,7 +27,7 @@ public class Structure {
     private String name;
     private GroupWidgetParam widgetParam;
     private String type;
-    private HashMap<EntryId, Entry> entries;
+    private HashMap<EntryId, EntryInStructure> entries;
     private Set<WidgetInStructure> widgetMap;
 
 
@@ -85,46 +84,51 @@ public class Structure {
     }
 
     private void insertOldEntry(Entry entry){
-        entries.put(entry.getId(), entry);
+        EntryInStructure entryInStructure = new EntryInStructure(entry.getGroupValue(), entry.getId(), this);
+        entries.put(entryInStructure.getId(), entryInStructure);
     }
 
     public void addEntry(GroupValue entryData){
         Set<EntryId> entryIdSet = entries.keySet();
         while(entryIdSet.contains(new EntryId(idCount)))
             idCount++;
-        Entry entry = new Entry(entryData, new EntryId(idCount), this);
+        EntryInStructure entryInStructure = new EntryInStructure(entryData, new EntryId(idCount), this);
         idCount++;
-        entries.put(entry.getId(), entry);
+        entries.put(entryInStructure.getId(), entryInStructure);
     }
 
-    public void setData(Entry entryToEdit, GroupValue data){
-        EntryId entryId = entryToEdit.getId();
-        Entry found = null;
-        for(Entry entry: entries.values()){
-            if(entry.getId() == entryId){
-                found = entry;
+    public void editEntry(EntryInStructure entryInStructureToEdit, GroupValue data){
+        EntryId entryId = entryInStructureToEdit.getId();
+        EntryInStructure found = null;
+        for(EntryInStructure entryInStructure : entries.values()){
+            if(entryInStructure.getId() == entryId){
+                found = entryInStructure;
                 break;
             }
         }
-        Entry newEntry = new Entry(data, entryId, this);
-        entries.put(entryId, newEntry);
+        EntryInStructure newEntryInStructure = new EntryInStructure(data, entryId, this);
+        entries.put(entryId, newEntryInStructure);
     }
 
 
 
-    public ArrayList<Entry> getEntryList(){
+    public ArrayList<EntryInStructure> getEntryList(){
         return new ArrayList<>(entries.values());
     }
 
     public ArrayList<GroupValue> getData(){
         ArrayList<GroupValue> entryValueTrees = new ArrayList<>();
-        for(Entry entry: entries.values())
-            entryValueTrees.add(entry.getGroupValue());
+        for(EntryInStructure entryInStructure : entries.values())
+            entryValueTrees.add(entryInStructure.getGroupValue());
         return entryValueTrees;
     }
 
-    public ArrayList<Entry> getEntries(){
+    public ArrayList<EntryInStructure> getEntriesInStructure(){
         return new ArrayList<>(entries.values());
+    }
+
+    public ArrayList<Entry> getEntries(){
+        return EnumLoop.makeList(getEntriesInStructure(), (entryInStructure -> entryInStructure.getEntry()));
     }
 
 
@@ -151,22 +155,21 @@ public class Structure {
         return false;
     }
 
-    public static boolean isSpreadsheet(String type){
-        if(type.equals(Dictionary.category))
-            return true;
-        return false;
-    }
 
+    @Override
     public boolean equals(Object object){
-        if(object instanceof Structure){
-            Structure other = (Structure) object;
-            if(other.getId().equals(id))
-                return true;
-        }
-        return false;
+        if( ! (object instanceof Structure structure))
+            return false;
+        if( ! Objects.equals(id, structure.id))
+            return false;
+        if( ! Objects.equals(type, structure.type))
+            return false;
+        if( ! Objects.equals(name, structure.name))
+            return false;
+        return true;
     }
 
-    public Entry getEntry(EntryId entryId) {
+    public EntryInStructure getEntryInStructure(EntryId entryId) {
         return entries.get(entryId);
     }
 
@@ -183,7 +186,7 @@ public class Structure {
         return "<structure> " + getCachedName().getString() + ", id: " + getId();
     }
 
-    protected CachedString getEntryName(Entry entry) {
+    protected CachedString getEntryName(EntryInStructure entryInStructure) {
         MainActivity.log("getting entry name");
 
         ArrayList<WidgetInStructure> importantWidgetList = getImportantWidgets();
@@ -191,7 +194,7 @@ public class Structure {
         MainActivity.log("important widgets: " + importantWidgetList);
         for(WidgetInStructure widgetInStructure : importantWidgetList){
 
-            ArrayList<BaseWidgetValue> widgetValueList = entry.getGroupValue().getValuesFromWidgetPath(widgetInStructure.getWidgetPath());
+            ArrayList<BaseWidgetValue> widgetValueList = entryInStructure.getGroupValue().getValuesFromWidgetPath(widgetInStructure.getWidgetPath());
             ArrayString string = new ArrayString(EnumLoop.makeList(widgetValueList, (widgetValue)->widgetValue.getDisplayCachedString()));
             MainActivity.log("getting values from widgetId: " + widgetValueList);
             arrayStringList.add(string);
@@ -225,11 +228,11 @@ public class Structure {
         return widgetInStructures;
     }
 
-    public ArrayList<DeleteValuePair> getReferenceOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
-        ArrayList<DeleteValuePair> result = new ArrayList<>();
+    public ArrayList<RefEntryString> getReferenceLocationsOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
+        ArrayList<RefEntryString> result = new ArrayList<>();
         ArrayList<WidgetInStructure> widgetThatRefTheSourceList = references(sourceWidget);
         for(WidgetInStructure widgetThatRefTheSource: widgetThatRefTheSourceList){
-            ArrayList<DeleteValuePair> reference = getReferenceLocations(sourcesToCheck, widgetThatRefTheSource);
+            ArrayList<RefEntryString> reference = getReferenceLocationsOfWidget(sourcesToCheck, widgetThatRefTheSource);
             result.addAll(reference);
         }
         return result;
@@ -245,47 +248,42 @@ public class Structure {
         return references;
     }
 
-    private ArrayList<DeleteValuePair> getReferenceLocations(ArrayList<RefEntryString> refEntryStringList, WidgetInStructure widgetThatRefTheSource){
-        ArrayList<DeleteValuePair> deleteValuePairList = new ArrayList<>();
-        for(Entry entry: entries.values()){
-            ArrayList<BaseWidgetValue> baseWidgetValueList = entry.getGroupValue().getValuesFromWidgetPath(widgetThatRefTheSource.getWidgetInfo().getWidgetPath());
-            for(BaseWidgetValue baseWidgetValue: baseWidgetValueList){
-                if(baseWidgetValue instanceof WidgetValueStringPath widgetValueStringPath){
-                    CachedString cachedString = widgetValueStringPath.getRefItemPath().getLast();
-                    if(cachedString instanceof RefEntryString refEntryString){
-                        if(refEntryStringList.contains(refEntryString)){
-                            deleteValuePairList.add(new DeleteValuePair(this, entry, refEntryString));
-                        }
-                    }
+    public ArrayList<RefEntryString> getReferenceLocationsOfWidget(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure widgetThatRefTheSource){
+        ArrayList<RefEntryString> referenceValues = getReferenceValuesOfWidget(widgetThatRefTheSource, getEntriesInStructure());
+        ArrayList<RefEntryString> matchedReferenceValues = extractReferencesWhoseValuesMatch(sourcesToCheck, referenceValues);
+        return referenceValues;
+    }
+
+
+
+    private static ArrayList<RefEntryString> getReferenceValuesOfWidget(WidgetInStructure widget, ArrayList<EntryInStructure> entries){
+        if( ! (widget.getWidgetParam() instanceof DropDownParam))
+            throw new RuntimeException();
+
+        ArrayList<RefEntryString> result = new ArrayList<>();
+        for(EntryInStructure entryInStructure : entries){
+            ArrayList<BaseWidgetValue> valuesFromWidget = entryInStructure.getGroupValue().getValuesFromWidgetPath(widget.getWidgetPath());
+            for(BaseWidgetValue baseWidgetValue: valuesFromWidget)
+                result.add(baseWidgetValue.getReference(entryInStructure));
+        }
+        return result;
+    }
+
+    private static ArrayList<RefEntryString> extractReferencesWhoseValuesMatch(ArrayList<RefEntryString> sourceValues,
+                                                                               ArrayList<RefEntryString> references){
+        ArrayList<RefEntryString> referenceLocationResult = new ArrayList<>();
+        for(RefEntryString reference: references){
+            ArrayList<RefEntryString> valuesOfReference = reference.getRefEntryStringListOfValue();
+            for(RefEntryString referencedValue: valuesOfReference){
+                if(sourceValues.contains(referencedValue)){
+                    referenceLocationResult.add(reference);
+                    break;
                 }
             }
         }
-        return deleteValuePairList;
+        return referenceLocationResult;
     }
 
 
 
-    public static class DeleteValuePair{
-        private Structure structure;
-        private Entry entry;
-        private RefEntryString refEntryString;
-
-        public DeleteValuePair(Structure structure, Entry entry, RefEntryString refEntryString) {
-            this.structure = structure;
-            this.entry = entry;
-            this.refEntryString = refEntryString;
-        }
-
-        public Structure getStructure() {
-            return structure;
-        }
-
-        public Entry getEntry() {
-            return entry;
-        }
-
-        public RefEntryString getRefEntryString() {
-            return refEntryString;
-        }
-    }
 }

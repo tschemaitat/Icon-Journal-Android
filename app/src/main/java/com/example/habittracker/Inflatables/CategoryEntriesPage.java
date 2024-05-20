@@ -9,8 +9,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.ViewWidgets.SelectionView;
-import com.example.habittracker.structures.Entry;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.structurePack.Structure;
 
 import java.util.ArrayList;
 
@@ -39,11 +39,11 @@ public class CategoryEntriesPage implements Inflatable{
         for(GroupValue data: dataList)
             System.out.println(data.hierarchy());
 
-        ArrayList<Entry> entryNames = structure.getEntryList();
-        ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(entryNames, entry -> new PayloadOption(entry.getCachedName(), entry));
+        ArrayList<EntryInStructure> entryInStructureNames = structure.getEntryList();
+        ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(entryInStructureNames, entry -> new PayloadOption(entry.getCachedName(), entry));
         SelectionView selectionView = new SelectionView(context, payloadOptionList, (stringValue, position, payload) -> {
-            Entry entry = (Entry)payload;
-            MainActivity.changePage(new CategoryEntryEditorPage(context, structure, entry));
+            EntryInStructure entryInStructure = (EntryInStructure)payload;
+            MainActivity.changePage(new CategoryEntryEditorPage(context, structure, entryInStructure));
         },()->{
             MainActivity.changePage(new CategoryEntryEditorPage(context, structure, null));
         });

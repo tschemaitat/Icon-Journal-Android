@@ -3,13 +3,13 @@ package com.example.habittracker.Widgets.WidgetParams;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
-import com.example.habittracker.structures.HeaderNode;
-import com.example.habittracker.structures.Structure;
+import com.example.habittracker.structurePack.HeaderNode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 public class ListMultiItemParam extends EntryWidgetParam {
     public GroupWidgetParam cloneableWidget;
@@ -60,5 +60,18 @@ public class ListMultiItemParam extends EntryWidgetParam {
             result.add(child);
 
         return result;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof ListMultiItemParam listMultiItemParam))
+            return false;
+        if( ! Objects.equals(cloneableWidget, listMultiItemParam.cloneableWidget))
+            return false;
+        if( ! Objects.equals(name, listMultiItemParam.name))
+            return false;
+        if( ! Objects.equals(getWidgetId(), listMultiItemParam.getWidgetId()))
+            return false;
+        return true;
     }
 }
