@@ -14,6 +14,8 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
+import java.util.ArrayList;
+
 public class InvisibleEditTextManager {
     private static InvisibleEditTextManager manager;
     public static InvisibleEditTextManager getManager(){
@@ -26,6 +28,7 @@ public class InvisibleEditTextManager {
 
     private EditText invisibleEditText;
     private EntryWidget focusedWidget;
+    private StringBuilder logList = new StringBuilder();
 
     private InvisibleEditTextManager(ConstraintLayout parent, Context context){
         invisibleEditText = new EditText(context);
@@ -40,11 +43,13 @@ public class InvisibleEditTextManager {
     }
 
     public void setEditableWidgetThatGotFocus(EntryWidget editableWidget){
+        logList.append("set focused that got focus: " + editableWidget.widgetDebugId + " , name: " + editableWidget.getName() + "\n");
         MainActivity.log("set focused widget from edit text press");
         if(focusedWidget != null){
             if(focusedWidget != editableWidget){
                 MainActivity.log("editable widget got focus, but focused widget isn't null\n" +
                         "editable widget: " + editableWidget + "\nfocusedWidget: " + focusedWidget);
+                MainActivity.log(logList.toString());
                 throw new RuntimeException();
             }
 
@@ -60,6 +65,7 @@ public class InvisibleEditTextManager {
         MainActivity.log("edit text got action: " + actionId);
         if (actionId == EditorInfo.IME_ACTION_NEXT) {
             MainActivity.log("invisible edit text got action next");
+            logList.append("send next action to: " + focusedWidget.widgetDebugId + " , name: " + focusedWidget.getName() + "\n");
             focusedWidget.keyListener(actionId);
             return true;  // Handle the next action
         }
@@ -67,6 +73,12 @@ public class InvisibleEditTextManager {
     }
 
     public void removeFocusedWidget(){
+        String debug = "removed focused widget: ";
+        if(focusedWidget == null)
+            debug += "focused widget was null\n";
+        else
+            debug += "focused widget was " + focusedWidget.widgetDebugId + " , name: " + focusedWidget.getName() + "\n";
+        logList.append(debug);
         focusedWidget.getView().clearFocus();
         invisibleEditText.clearFocus();
         if(focusedWidget != null){
@@ -79,9 +91,11 @@ public class InvisibleEditTextManager {
     }
 
     public void setFocusedWidget(EntryWidget entryWidget){
+        logList.append("set focused widget widgetDebugId: " + entryWidget.widgetDebugId + " , name: " + entryWidget.getName() + "\n");
         MainActivity.log("new focused widget");
         if(focusedWidget != null){
             MainActivity.log("tried to set new widget.\nold widget: " + focusedWidget + "\nnew widget: " + entryWidget);
+            MainActivity.log(logList.toString());
             throw new RuntimeException();
         }
         LockableScrollView scrollView = MainActivity.scrollView;

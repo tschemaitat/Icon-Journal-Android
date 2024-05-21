@@ -183,12 +183,6 @@ public abstract class EntryWidget implements Widget {
         setValueCustom(widgetValue);
     }
 
-    public final void setName(String name){
-        //System.out.println("set name: " + name);
-        //viewWrapper.setName(name);
-        setHint(name);
-    }
-
     protected abstract void setHint(String hintString);
 
     public void onFocusChange(boolean hasFocus){
@@ -208,6 +202,8 @@ public abstract class EntryWidget implements Widget {
 
 
     public final String getName(){
+        if(entryWidgetParam == null)
+            return null;
         return entryWidgetParam.name;
     }
 
@@ -216,7 +212,7 @@ public abstract class EntryWidget implements Widget {
             throw new RuntimeException();
         dataSet = true;
         if(param.name != null)
-            setName(param.name);
+            setHint(param.name);
         this.entryWidgetParam = param;
         setParamCustom(param);
     }

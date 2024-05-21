@@ -1,31 +1,20 @@
 package com.example.habittracker.Inflatables;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import androidx.cardview.widget.CardView;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.StaticClasses.DropDownPageFactory;
-import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.ViewWidgets.AnimatedHighlightView;
+import com.example.habittracker.StaticClasses.SaveStructures;
 import com.example.habittracker.ViewWidgets.CustomListView;
 import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
-import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
-import com.example.habittracker.ViewWidgets.CustomPopup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TestPage implements Inflatable {
@@ -38,8 +27,10 @@ public class TestPage implements Inflatable {
         linearLayout.setId(R.id.pageLayout);
         //testCustomListView();
         //testAnimatedToggle();
-        testRoundRectBorder();
+        //testRoundRectBorder();
+        addSaveAndDeleteButtons();
     }
+
 
 
 
@@ -61,6 +52,23 @@ public class TestPage implements Inflatable {
     @Override
     public boolean tryToRemove(Inflatable page) {
         return true;
+    }
+
+    private void addSaveAndDeleteButtons() {
+        Button saveButton = new Button(context);
+        saveButton.setLayoutParams(new ViewGroup.LayoutParams(-2, -2));
+        saveButton.setText("save structures");
+        saveButton.setOnClickListener((view)->{
+            SaveStructures.saveStructureFile(context);
+        });
+        linearLayout.addView(saveButton);
+        Button deleteButton = new Button(context);
+        deleteButton.setLayoutParams(new ViewGroup.LayoutParams(-2, -2));
+        deleteButton.setText("delete structures");
+        deleteButton.setOnClickListener((view)->{
+            SaveStructures.deleteStructuresFile(context);
+        });
+        linearLayout.addView(deleteButton);
     }
 
     private void testCustomListView(){

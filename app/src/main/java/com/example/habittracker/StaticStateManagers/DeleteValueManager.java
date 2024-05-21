@@ -72,17 +72,39 @@ public class DeleteValueManager {
     }
 
     public void onConfirm(){
-        MainActivity.log("on confirm");
-        ArrayList<EntryWidget> entryWidgets = groupWidget.gatherWidgetsChecked();
+        if(entryInStructure != null){
+            onCheckReferences();
+            return;
+        }
+        removeWidgetsInEditorPage();
+    }
+
+    public void removeWidgetsInEditorPage(){
+        ArrayList<BaseEntryWidget> widgetList = getWidgetsToDelete();
+        for(BaseEntryWidget baseEntryWidget: widgetList){
+
+        }
+    }
+
+    public ArrayList<BaseEntryWidget> getWidgetsToDelete(){
+        ArrayList<EntryWidget> entryWidgetsChecked = groupWidget.gatherWidgetsChecked();
         ArrayList<ArrayList<BaseEntryWidget>> widgetGroupedByCheckedWidget = new ArrayList<>();
-        for(EntryWidget entryWidget: entryWidgets){
+        for(EntryWidget entryWidget: entryWidgetsChecked){
             widgetGroupedByCheckedWidget.add(entryWidget.getWidgetsForDelete());
         }
         ArrayList<BaseEntryWidget> widgetList = new ArrayList<>();
-        ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
+
         for(ArrayList<BaseEntryWidget> widgetsInGroup: widgetGroupedByCheckedWidget){
             widgetList.addAll(widgetsInGroup);
         }
+        return widgetList;
+    }
+
+    public void onCheckReferences(){
+        MainActivity.log("on confirm");
+
+        ArrayList<BaseEntryWidget> widgetList = getWidgetsToDelete();
+        ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
         for(BaseEntryWidget baseEntryWidget: widgetList){
             refListList.add(baseEntryWidget.getReference(entryInStructure));
         }
@@ -90,7 +112,7 @@ public class DeleteValueManager {
 
         for(int w = 0; w < refListList.size(); w++){
             ArrayList<RefEntryString> refList = refListList.get(w);
-            EntryWidget entryWidget = entryWidgets.get(w);
+            EntryWidget entryWidget = widgetList.get(w);
             MainActivity.log("checked: " + entryWidget);
             for(int r = 0; r < refList.size(); r++){
                 RefEntryString refEntryString = refList.get(r);
@@ -115,8 +137,9 @@ public class DeleteValueManager {
                 stringBuilder.append(" [" + reference + ": " + reference.getString() + "]");
             }
         }
-
-        CustomDialog customDialog = new CustomDialog(context, stringBuilder.toString());
+        String dialogString = stringBuilder.toString();
+        CustomDialog customDialog = new CustomDialog(context, dialogString);
+        MainActivity.log(dialogString);
         customDialog.show();
     }
 

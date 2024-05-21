@@ -22,7 +22,6 @@ import com.example.habittracker.structurePack.ListItemId;
 import java.util.ArrayList;
 
 public class GroupWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
-    private Context context;
     private WidgetLayout layout;
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
@@ -30,7 +29,6 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     public static final String className = "group widget";
     public GroupWidget(Context context){
         super(context);
-        this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getView());
         getView().setId(R.id.groupWidget);
@@ -173,10 +171,15 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         ArrayList<ListItemId> result;
         if(listItemIdParent != null){
             result = listItemIdParent.getListItemIdList();
+            if(listItemId == null){
+                throw new RuntimeException();
+            }
+
+            result.add(listItemId);
         }else{
             result = new ArrayList<>();
         }
-        result.add(listItemId);
+
         return result;
     }
 

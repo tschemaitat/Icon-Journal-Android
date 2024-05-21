@@ -2,6 +2,7 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryId;
@@ -29,6 +30,14 @@ public class RefEntryString implements CachedString{
     public RefEntryString(WidgetInStructure widgetInStructure, EntryInStructure entryInStructure, ArrayList<ListItemId> listIdList){
         if(widgetInStructure == null)
             throw new RuntimeException();
+        if(entryInStructure == null)
+            throw new RuntimeException();
+        for(ListItemId listItemId: listIdList){
+            if(listItemId == null){
+                MainActivity.log("list has a null id: " + listIdList);
+                throw new RuntimeException("list item id is null");
+            }
+        }
         this.widgetInStructure = widgetInStructure;
         this.entryInStructure = entryInStructure;
         this.listIdList = listIdList;

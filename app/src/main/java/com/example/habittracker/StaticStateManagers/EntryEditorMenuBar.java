@@ -22,6 +22,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.ViewWidgets.OnDeleteValueCancelAndConfirm;
 import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.structurePack.Entry;
+import com.example.habittracker.structurePack.EntryInStructure;
 
 public class EntryEditorMenuBar {
     private static EntryEditorMenuBar manager;
@@ -127,10 +129,10 @@ public class EntryEditorMenuBar {
         });
     }
 
-    public void show(GroupWidget groupWidget, EntryId entryId){
+    public void show(GroupWidget groupWidget, EntryInStructure entry){
 
         parent.addView(entryEditorMenuBarLayout);
-        setGroupWidget(groupWidget, entryId);
+        setGroupWidget(groupWidget, entry);
         shown = true;
     }
 
@@ -143,11 +145,11 @@ public class EntryEditorMenuBar {
         animateShown = true;
     }
 
-    private void setGroupWidget(GroupWidget groupWidget, EntryId entryId){
+    private void setGroupWidget(GroupWidget groupWidget, EntryInStructure entry){
         deleteAndConfirm = new OnDeleteValueCancelAndConfirm(context, this::onCancel, this::onConfirm);
 
         deleteButton.setOnClickListener((view)->{
-            deleteValueManager = new DeleteValueManager(context, groupWidget, deleteButton, entryId);
+            deleteValueManager = new DeleteValueManager(context, groupWidget, deleteButton, entry);
             parent.addView(deleteAndConfirm.getView());
         });
         //MainActivity.log("parent child count: " + parent.getChildCount());

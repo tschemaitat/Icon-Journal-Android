@@ -24,6 +24,7 @@ import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.StaticClasses.SaveStructures;
 import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.InvisibleMenuBarManager;
@@ -92,12 +93,20 @@ public class MainActivity extends AppCompatActivity {
 
         //currentLayout = testWidgetGroup;
         setupLayoutButtons();
+        handlePersistentStructureLoading();
 
-        UnitTests unitTests = new UnitTests(context);
         //setOptions(dropDown);
         changePage(new TestPage(context));
 
 
+    }
+
+    private void handlePersistentStructureLoading(){
+        if(SaveStructures.hasSave(context)){
+            SaveStructures.loadStructureFromFile(context);
+        }else{
+            UnitTests unitTests = new UnitTests(context);
+        }
     }
 
     public static void changePage(Inflatable newLayout){
@@ -110,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             inflateLayout.removeView(currentLayout.getView());
+            scrollView.setScrollY(0);
             currentLayout.onRemoved();
         }
 

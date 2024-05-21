@@ -41,7 +41,7 @@ public abstract class BaseEntryWidget extends EntryWidget{
         return resultList;
     }
 
-    public abstract ArrayList<RefEntryString> getReferenceForDelete(EntryInStructure entryInStructure);
+
 
     @Override
     public ArrayList<BaseEntryWidget> getWidgetsForDelete(){

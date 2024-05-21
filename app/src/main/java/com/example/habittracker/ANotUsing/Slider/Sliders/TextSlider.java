@@ -49,11 +49,6 @@ public class TextSlider extends BaseEntryWidget {
     }
 
     @Override
-    public ArrayList<RefEntryString> getReferenceForDelete(EntryInStructure entryInStructure) {
-        return null;
-    }
-
-    @Override
     protected WidgetValue getEntryValueTreeCustom() {
         return null;
     }

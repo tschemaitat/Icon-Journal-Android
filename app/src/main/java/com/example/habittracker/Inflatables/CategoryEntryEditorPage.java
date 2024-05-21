@@ -108,10 +108,7 @@ public class CategoryEntryEditorPage implements Inflatable{
             groupWidget.setValue(entryInStructure.getGroupValue());
             MainActivity.log("set from entry: " + entryInStructure.getGroupValue().hierarchy());
         }
-        EntryId entryId = null;
-        if(entryInStructure != null)
-            entryId = entryInStructure.getId();
-        EntryEditorMenuBar.getManager().show(groupWidget, entryId);
+        EntryEditorMenuBar.getManager().show(groupWidget, entryInStructure);
 
     }
 

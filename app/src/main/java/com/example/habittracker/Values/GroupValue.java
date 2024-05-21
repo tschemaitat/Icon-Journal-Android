@@ -153,6 +153,12 @@ public class GroupValue extends WidgetValue{
     }
 
     public BaseWidgetValue getValue(WidgetPath path, ArrayList<ListItemId> listIdList) {
+        for(ListItemId listItemId: listIdList){
+            if(listItemId == null){
+                MainActivity.log("list has a null id: " + listIdList);
+                throw new RuntimeException("list item id is null");
+            }
+        }
         if(path.size() - 1 != listIdList.size()){
             MainActivity.log("widget path: " + path + "\nlist id list: " + listIdList);
         }

@@ -4,31 +4,67 @@ import android.content.Context;
 
 import com.example.habittracker.MainActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 
 public class SaveStructures {
-    public static void save(Context context){
+    public static final String structuresFileName = "structures";
+    public static void saveStructureFile(Context context){
         MainActivity.log("\n\n\nsaving file\n\n\n");
-        JSONArray structuresJSON = StructureTokenizer.getStructureArrayToken();
+        JSONObject structuresJSON = StructureTokenizer.getStructureArrayToken();
 
-        String fileName = "structures";
-        String fileContents = structuresJSON.toString();
-        saveFile(fileName, fileContents, context);
+        String fileContents = null;
+        try {
+            fileContents = structuresJSON.toString(1);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        deleteFile(structuresFileName, context);
+        saveFile(structuresFileName, fileContents, context);
+        String contentsLoaded = loadFile(structuresFileName, context);
+        MainActivity.log("\nloaded contents:\n\n" + contentsLoaded);
     }
 
-    public static void load(Context context){
-        MainActivity.log("\n\n\nloading file\n\n\n");
-        String fileName = "structures";
-        String contents = loadFile(fileName, context);
+    public static void loadStructureFromFile(Context context){
+        String contents = loadFile(structuresFileName, context);
+        JSONObject structuresJSON = null;
         try {
-            JSONArray jsonArray = new JSONArray(contents);
-            MainActivity.log(jsonArray.toString());
+            structuresJSON = new JSONObject(contents);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        StructureTokenizer.setStructures(structuresJSON);
+    }
+
+    public static void deleteStructuresFile(Context context){
+        deleteFile(structuresFileName, context);
+    }
+
+    public static boolean hasSave(Context context){
+        return fileExists(structuresFileName, context);
+    }
+
+    public static boolean deleteFile(String fileName, Context context) {
+        return context.deleteFile(fileName);
+    }
+
+    public static boolean fileExists(String fileName, Context context) {
+        File file = context.getFileStreamPath(fileName);
+        return file != null && file.exists();
+    }
+
+    public static void printStructuresContents(Context context){
+        MainActivity.log("\n\n\nloading file\n\n\n");
+        String contents = loadFile(structuresFileName, context);
+        try {
+            JSONObject json = new JSONObject(contents);
+            MainActivity.log(json.toString());
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

@@ -230,7 +230,7 @@ public class Structure {
 
     public ArrayList<RefEntryString> getReferenceLocationsOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
         ArrayList<RefEntryString> result = new ArrayList<>();
-        ArrayList<WidgetInStructure> widgetThatRefTheSourceList = references(sourceWidget);
+        ArrayList<WidgetInStructure> widgetThatRefTheSourceList = getWidgetsThatRefSource(sourceWidget);
         for(WidgetInStructure widgetThatRefTheSource: widgetThatRefTheSourceList){
             ArrayList<RefEntryString> reference = getReferenceLocationsOfWidget(sourcesToCheck, widgetThatRefTheSource);
             result.addAll(reference);
@@ -238,12 +238,12 @@ public class Structure {
         return result;
     }
 
-    public ArrayList<WidgetInStructure> references(WidgetInStructure sourceWidget){
+    public ArrayList<WidgetInStructure> getWidgetsThatRefSource(WidgetInStructure sourceWidget){
         ArrayList<WidgetInStructure> references = new ArrayList<>();
         for(WidgetInStructure widgetInStructure: widgetMap){
-            WidgetInStructure reference = widgetInStructure.getWidgetInfo().getReference();
-            if(reference.equals(sourceWidget))
-                references.add(reference);
+            ArrayList<WidgetInStructure> referencesOfWidget = widgetInStructure.getWidgetInfo().getReferences();
+            if(referencesOfWidget.contains(sourceWidget))
+                references.add(widgetInStructure);
         }
         return references;
     }

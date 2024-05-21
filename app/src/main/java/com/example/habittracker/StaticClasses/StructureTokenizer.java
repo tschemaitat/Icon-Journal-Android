@@ -48,7 +48,6 @@ public class StructureTokenizer {
         JSONObject jsonObject = new JSONObject();
 
         ArrayList<Structure> structures = Dictionary.getStructures();
-        jsonObject.put("arraySize", structures.size());
         JSONArray jsonArray = new JSONArray();
         for(Structure structure: structures){
             JSONObject structureJSON = jsonFromStructure(structure);
@@ -64,12 +63,15 @@ public class StructureTokenizer {
 
 
 
-    public static void setStructures(JSONObject jsonObject) throws JSONException{
-        int arraySize = jsonObject.getInt("arraySize");
-        JSONArray structuresJSON = jsonObject.getJSONArray("structures");
-        for(int i = 0; i < arraySize; i++){
-            JSONObject structureJSON = structuresJSON.getJSONObject(i);
-            setStructureFromJSON(structureJSON);
+    public static void setStructures(JSONObject jsonObject){
+        try {
+            JSONArray structuresJSON = jsonObject.getJSONArray("structures");
+            for(int i = 0; i < structuresJSON.length(); i++){
+                JSONObject structureJSON = structuresJSON.getJSONObject(i);
+                setStructureFromJSON(structureJSON);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -13,12 +13,14 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidget;
+import com.example.habittracker.structurePack.Structures;
 
 import java.util.ArrayList;
 
@@ -107,10 +109,10 @@ public class StructureEditor implements Inflatable{
     }
 
     private static CustomEditText setupStructureKeyEditor(String name, LinLayout layout, Context context) {
-        CustomEditText structureKeyEditor = new CustomEditText(context);
+
+        EditTextParam editTextParam = new EditTextParam("spreadsheet name");
+        CustomEditText structureKeyEditor = (CustomEditText)GLib.inflateWidget(context, editTextParam, ()->{});
         structureKeyEditor.setText(name);
-        structureKeyEditor.setOnDataChangedListener(()->{});
-        structureKeyEditor.setName("spreadsheet name");
         layout.add(structureKeyEditor.getView());
         return structureKeyEditor;
     }
@@ -121,7 +123,7 @@ public class StructureEditor implements Inflatable{
         GroupWidgetParam entryWidgetParams = checkForErrorBeforeSave();
         if(entryWidgetParams == null)
             return;
-        if(Structure.isSpreadsheet(structureType)){
+        if(Structures.isSpreadsheet(structureType)){
             if( ! checkForUniqueAttribute()){
                 //System.out.println("missing widget for unique attribute");
                 MainActivity.showToast(context, "missing widget for unique attribute");

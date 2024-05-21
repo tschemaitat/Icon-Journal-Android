@@ -105,8 +105,13 @@ public class GroupWidgetParam extends EntryWidgetParam {
             return false;
         if( ! Objects.equals(params, groupWidgetParam.params))
             return false;
-        if( ! Objects.equals(getWidgetId(), groupWidgetParam.getWidgetId()))
+
+        if( ! Objects.equals(hasWidgetId(), groupWidgetParam.hasWidgetId()))
             return false;
+        if(hasWidgetId()){
+            if( ! Objects.equals(getWidgetId(), groupWidgetParam.getWidgetId()))
+                return false;
+        }
         return true;
     }
 }

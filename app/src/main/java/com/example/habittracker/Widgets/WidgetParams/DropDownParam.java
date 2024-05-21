@@ -75,7 +75,7 @@ public class DropDownParam extends EntryWidgetParam {
         for(WidgetId groupId: groups)
             groupsJSON.put(groupId.getInteger().intValue());
         jsonObject.put("groups", groupsJSON);
-        return null;
+        return jsonObject;
     }
 
     public static DropDownParam getFromJSON(JSONObject jsonObject) throws JSONException{

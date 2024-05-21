@@ -44,12 +44,6 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 
     }
 
-    @Override
-    public ArrayList<RefEntryString> getReferenceForDelete(EntryInStructure entryInStructure) {
-        throw new RuntimeException();
-    }
-
-
     protected ArrayList<EntryWidget> getWidgetListWithoutGhost(){
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();

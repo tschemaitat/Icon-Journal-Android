@@ -16,7 +16,7 @@ public class CustomDialog extends Dialog {
     public CustomDialog(Context context, String message) {
         super(context);
         setContentView(createContentView(context, message));
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     private View createContentView(Context context, String message) {

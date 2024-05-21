@@ -32,11 +32,9 @@ public abstract class EntryWidgetParam {
         this.isUniqueAttribute = isUniqueAttribute;
     }
 
-    public WidgetId getWidgetId(){
-        if(widgetIdTracker == null)
-            throw new RuntimeException();
-        return widgetIdTracker;
-    }
+
+
+
 
     public String hierarchyString(){
         return hierarchyString(0);
@@ -87,8 +85,10 @@ public abstract class EntryWidgetParam {
 
     public final JSONObject getJSON() throws JSONException{
         JSONObject jsonObject = getJSONCustom();
-        jsonObject.put("name", name);
-        jsonObject.put("idTracker", widgetIdTracker.getInteger().intValue());
+        if(name != null)
+            jsonObject.put("name", name);
+        if(widgetIdTracker != null)
+            jsonObject.put("idTracker", widgetIdTracker.getInteger().intValue());
         jsonObject.put("isUniqueAttribute", isUniqueAttribute);
         //don't need to put className in builder because it is used by the switch, the variable is put in by the inheriting class
         jsonObject.put("className", className);
@@ -96,13 +96,23 @@ public abstract class EntryWidgetParam {
     }
 
     public static EntryWidgetParamBuilder getBuilderFromJSON(JSONObject jsonObject) throws JSONException{
-        String name = jsonObject.getString("name");
+        String name = null;
+        if(jsonObject.has("name"))
+            name = jsonObject.getString("name");
         boolean isUniqueAttribute = jsonObject.getBoolean("isUniqueAttribute");
-        WidgetId widgetIdTracker = new WidgetId(jsonObject.getInt("idTracker"));
+        WidgetId widgetIdTracker = null;
+        if(jsonObject.has("idTracker"))
+            widgetIdTracker = new WidgetId(jsonObject.getInt("idTracker"));
         return new EntryWidgetParamBuilder(name, isUniqueAttribute, widgetIdTracker);
     }
 
     protected abstract JSONObject getJSONCustom() throws JSONException;
+
+    public WidgetId getWidgetId(){
+        if(widgetIdTracker == null)
+            throw new RuntimeException();
+        return widgetIdTracker;
+    }
 
     public boolean hasWidgetId() {
         return widgetIdTracker != null;
