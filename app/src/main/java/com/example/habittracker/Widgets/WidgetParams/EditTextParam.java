@@ -1,7 +1,6 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.structurePack.HeaderNode;
 
@@ -48,6 +47,17 @@ public class EditTextParam extends EntryWidgetParam {
         if( ! Objects.equals(getWidgetId(), editTextParam.getWidgetId()))
             return false;
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof EditTextParam editTextParam))
+            throw new RuntimeException(object.toString());
+        if( ! Objects.equals(name, editTextParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + editTextParam.name);
+        getWidgetId().equalsThrows(editTextParam.getWidgetId());
+        if( ! this.equals(object))
+            throw new RuntimeException();
     }
 
 

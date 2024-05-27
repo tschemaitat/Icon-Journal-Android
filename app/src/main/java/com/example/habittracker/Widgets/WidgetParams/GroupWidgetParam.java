@@ -1,9 +1,8 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
-import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.structurePack.HeaderNode;
 
@@ -108,10 +107,23 @@ public class GroupWidgetParam extends EntryWidgetParam {
 
         if( ! Objects.equals(hasWidgetId(), groupWidgetParam.hasWidgetId()))
             return false;
-        if(hasWidgetId()){
+        if(hasWidgetId() || groupWidgetParam.hasWidgetId()){
             if( ! Objects.equals(getWidgetId(), groupWidgetParam.getWidgetId()))
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof GroupWidgetParam groupWidgetParam))
+            throw new RuntimeException(object.toString());
+        if( ! Objects.equals(name, groupWidgetParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + groupWidgetParam.name);
+        if(hasWidgetId() || groupWidgetParam.hasWidgetId())
+            getWidgetIdNullable().equalsThrows(groupWidgetParam.getWidgetIdNullable());
+        Lists.equalsThrowsRecursive(params, groupWidgetParam.params);
+        if( ! this.equals(object))
+            throw new RuntimeException();
     }
 }

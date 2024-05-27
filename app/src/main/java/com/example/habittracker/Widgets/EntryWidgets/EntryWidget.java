@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
@@ -13,9 +12,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
-import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
@@ -244,6 +242,8 @@ public abstract class EntryWidget implements Widget {
             className = entryWidgetParam.getClassName();
         return "<" + className + ": " + widgetDebugId + ">";
     }
+
+    public abstract String getNameAndLocation();
 
 
 }

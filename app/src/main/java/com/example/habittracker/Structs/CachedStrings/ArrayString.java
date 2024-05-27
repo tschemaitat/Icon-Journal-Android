@@ -1,7 +1,7 @@
 package com.example.habittracker.Structs.CachedStrings;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.StaticClasses.Margin;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,18 +19,29 @@ public class ArrayString implements CachedString{
         if(result != null)
             return result;
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < stringList.size() - 1; i++){
-            builder.append(stringList.get(i).getString()).append(", ");
+        builder.append("[");
+        for(int i = 0; i < stringList.size(); i++){
+            builder.append(stringList.get(i).getString());
+            if(i != stringList.size() - 1)
+                builder.append(", ");
         }
-        builder.append(stringList.get(stringList.size()-1));
+        builder.append("]");
         result = builder.toString();
-        MainActivity.log("getting string from: " + stringList + " \nresult: " + result);
+        MainActivity.log("getting string from: " + stringList + " \nresult: " + result + "\nlist with newlines: \n"  +Lists.stringNewLine(stringList));
+
         return result;
     }
 
     @Override
     public JSONObject getJSON() throws JSONException {
         throw new RuntimeException();
+    }
+
+    @Override
+    public void equalsThrows(Object object) {
+        if( ! (object instanceof ArrayString arrayString))
+            throw new RuntimeException(object.getClass().toString());
+        Lists.equalsThrowsRecursive(arrayString.stringList, stringList);
     }
 
     @Override
@@ -43,6 +54,10 @@ public class ArrayString implements CachedString{
 
     @Override
     public String toString(){
-        return getString();
+        return "<ArrayString, list: " + stringList.toString() + ">";
+    }
+
+    public int size() {
+        return stringList.size();
     }
 }

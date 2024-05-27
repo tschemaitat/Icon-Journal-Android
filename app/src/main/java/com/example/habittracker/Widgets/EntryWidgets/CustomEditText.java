@@ -20,14 +20,10 @@ import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
-import com.example.habittracker.structurePack.EntryInStructure;
-
-import java.util.ArrayList;
 
 public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public static final String className = "edit text";
@@ -143,6 +139,8 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
             public void onFocusChange(View v, boolean hasFocus) {
                 MainActivity.log("edit text on focus change: " + hasFocus + ", " + thisEntryWidget);
                 if(hasFocus){
+                    if(InvisibleEditTextManager.getManager().hasFocusedWidget())
+                        InvisibleEditTextManager.getManager().removeFocusedWidget();
                     InvisibleEditTextManager.getManager().setEditableWidgetThatGotFocus(thisEntryWidget);
                 }else{
                     InvisibleEditTextManager.getManager().removeFocusedWidget();

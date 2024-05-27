@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.GroupWidget;

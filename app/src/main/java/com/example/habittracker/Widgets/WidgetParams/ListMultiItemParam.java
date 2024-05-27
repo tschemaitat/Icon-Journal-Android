@@ -2,7 +2,6 @@ package com.example.habittracker.Widgets.WidgetParams;
 
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.structurePack.HeaderNode;
 
@@ -73,5 +72,17 @@ public class ListMultiItemParam extends EntryWidgetParam {
         if( ! Objects.equals(getWidgetId(), listMultiItemParam.getWidgetId()))
             return false;
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof ListMultiItemParam listMultiItemParam))
+            throw new RuntimeException(object.toString());
+        if( ! Objects.equals(name, listMultiItemParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + listMultiItemParam.name);
+        getWidgetId().equalsThrows(listMultiItemParam.getWidgetId());
+        cloneableWidget.equalsThrows(listMultiItemParam.cloneableWidget);
+        if( ! this.equals(object))
+            throw new RuntimeException();
     }
 }

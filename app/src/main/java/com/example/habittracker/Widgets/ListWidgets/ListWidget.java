@@ -9,8 +9,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewWidgets.ListWidgetGhostManager;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -20,7 +19,6 @@ import com.example.habittracker.Widgets.FocusTreeParent;
 import com.example.habittracker.Widgets.FocusTreeParentHelper;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
-import com.example.habittracker.structurePack.EntryInStructure;
 
 import java.util.ArrayList;
 

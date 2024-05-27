@@ -18,6 +18,10 @@ public class WidgetValueStringPath extends BaseWidgetValue{
     private RefItemPath refItemPath;
     public WidgetValueStringPath(WidgetId widgetId, RefItemPath refItemPath){
         super(widgetId);
+        if(refItemPath == null)
+            throw new RuntimeException();
+        if(refItemPath.size() == 0)
+            throw new RuntimeException();
         this.refItemPath = refItemPath;
     }
 
@@ -45,7 +49,8 @@ public class WidgetValueStringPath extends BaseWidgetValue{
     @Override
     protected JSONObject getJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("value type", "widget value string");
+        jsonObject.put("widgetId", getWidgetId().getIntegerId().intValue());
+        jsonObject.put("value type", className);
         jsonObject.put("array size", refItemPath.size());
         JSONArray jsonArray = new JSONArray();
         for(CachedString cachedString: refItemPath){
@@ -56,8 +61,10 @@ public class WidgetValueStringPath extends BaseWidgetValue{
         return jsonObject;
     }
 
+
+
     public static WidgetValue getFromJSON(JSONObject jsonObject) throws JSONException{
-        int widgetId = jsonObject.getInt("widget id");
+        int widgetId = jsonObject.getInt("widgetId");
         int arraySize = jsonObject.getInt("array size");
         ArrayList<CachedString> cachedStrings = new ArrayList<>();
         JSONArray jsonArray = jsonObject.getJSONArray("refItemPath");
@@ -79,5 +86,20 @@ public class WidgetValueStringPath extends BaseWidgetValue{
         if( ! Objects.equals(refItemPath, widgetValueStringPath.refItemPath))
             return false;
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object) {
+        if( ! (object instanceof WidgetValueStringPath widgetValueStringPath))
+            throw new RuntimeException(object.toString());
+        getWidgetId().equalsThrows(widgetValueStringPath.getWidgetId());
+        refItemPath.throwEquals(widgetValueStringPath.refItemPath);
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
+    @Override
+    public String toString(){
+        return "WidgetValueString, id: " + getIntegerId() + ", value: " + refItemPath + ">";
     }
 }

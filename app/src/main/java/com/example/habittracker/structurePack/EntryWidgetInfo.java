@@ -1,6 +1,6 @@
 package com.example.habittracker.structurePack;
 
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 
 public class EntryWidgetInfo {
     private EntryWidgetParam param;

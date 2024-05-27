@@ -24,7 +24,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;

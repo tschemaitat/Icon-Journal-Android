@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.habittracker.structurePack.Structure;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 
 public class JournalPage implements Inflatable{

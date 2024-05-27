@@ -13,6 +13,18 @@ public class EntryId {
         return id;
     }
 
+
+
+    @Override
+    public int hashCode(){
+        return Integer.hashCode(id);
+    }
+
+    @Override
+    public String toString(){
+        return id.toString();
+    }
+
     @Override
     public boolean equals(Object object){
         if( ! (object instanceof EntryId entryId))
@@ -21,9 +33,10 @@ public class EntryId {
             return false;
         return true;
     }
-
-    @Override
-    public int hashCode(){
-        return Integer.hashCode(id);
+    public void equalsThrows(Object object){
+        if( ! (object instanceof EntryId entryId))
+            throw new RuntimeException(object.toString());
+        if(!Objects.equals(entryId.id, id))
+            throw new RuntimeException("idFirst: " + entryId.id + ", id second: " + id);
     }
 }

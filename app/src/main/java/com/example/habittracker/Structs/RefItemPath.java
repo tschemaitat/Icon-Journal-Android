@@ -2,11 +2,13 @@ package com.example.habittracker.Structs;
 
 import androidx.annotation.NonNull;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -27,16 +29,6 @@ public class RefItemPath implements Iterable<CachedString>{
 
     public CachedString getLast(){
         return path.get(path.size() - 1);
-    }
-
-    @Override
-    public boolean equals(Object object){
-        if(object instanceof RefItemPath){
-            RefItemPath item = (RefItemPath) object;
-            if(item.path.equals(path))
-                return true;
-        }
-        return false;
     }
 
     public String toString(){
@@ -73,5 +65,23 @@ public class RefItemPath implements Iterable<CachedString>{
 
     public CachedString get(int i) {
         return path.get(i);
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof RefItemPath refItemPath))
+            return false;
+
+        if( !Objects.equals(refItemPath.path, path))
+            return false;
+        return true;
+    }
+
+    public void throwEquals(Object object) {
+        if( ! (object instanceof RefItemPath refItemPath))
+            throw new RuntimeException();
+        Lists.equalsThrowsRecursive(path, refItemPath.path);
+        if( ! this.equals(object))
+            throw new RuntimeException();
     }
 }

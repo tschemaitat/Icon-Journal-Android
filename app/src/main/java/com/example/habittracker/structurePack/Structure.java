@@ -51,6 +51,8 @@ public class Structure {
         if(id != null)
             this.id = id;
         this.name = name;
+        if(widgetParam == null)
+            throw new RuntimeException();
         this.widgetParam = widgetParam;
         this.type = type;
         this.entries = new HashMap();
@@ -146,6 +148,8 @@ public class Structure {
 
 
     public GroupWidgetParam getWidgetParam(){
+        if(widgetParam == null)
+            throw new RuntimeException();
         return widgetParam;
     }
 
@@ -156,18 +160,7 @@ public class Structure {
     }
 
 
-    @Override
-    public boolean equals(Object object){
-        if( ! (object instanceof Structure structure))
-            return false;
-        if( ! Objects.equals(id, structure.id))
-            return false;
-        if( ! Objects.equals(type, structure.type))
-            return false;
-        if( ! Objects.equals(name, structure.name))
-            return false;
-        return true;
-    }
+
 
     public EntryInStructure getEntryInStructure(EntryId entryId) {
         return entries.get(entryId);
@@ -184,6 +177,10 @@ public class Structure {
 
     public String toString(){
         return "<structure> " + getCachedName().getString() + ", id: " + getId();
+    }
+
+    public String getNameAndId(){
+        return "<" + getCachedName().getString() + ", " + getId() + ">";
     }
 
     protected CachedString getEntryName(EntryInStructure entryInStructure) {
@@ -240,11 +237,22 @@ public class Structure {
 
     public ArrayList<WidgetInStructure> getWidgetsThatRefSource(WidgetInStructure sourceWidget){
         ArrayList<WidgetInStructure> references = new ArrayList<>();
+        ArrayList<String> foundLogs = new ArrayList<>();
         for(WidgetInStructure widgetInStructure: widgetMap){
             ArrayList<WidgetInStructure> referencesOfWidget = widgetInStructure.getWidgetInfo().getReferences();
-            if(referencesOfWidget.contains(sourceWidget))
+            if(referencesOfWidget.contains(sourceWidget)){
+                foundLogs.add(widgetInStructure.nameAndStructure() + " references structure: " + widgetInStructure.getStructure().name +
+                        ", widgets: " + EnumLoop.makeList(referencesOfWidget, (widget)->widget.getName().getString()));
                 references.add(widgetInStructure);
+            }
+
         }
+        if(foundLogs.size() != 0){
+            MainActivity.log("found reference to source: " + sourceWidget.nameAndStructure());
+            for(String string: foundLogs)
+                MainActivity.log("\t" + string);
+        }
+
         return references;
     }
 
@@ -284,6 +292,26 @@ public class Structure {
         return referenceLocationResult;
     }
 
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof Structure structure))
+            return false;
+        if( ! Objects.equals(id, structure.id))
+            return false;
+        if( ! Objects.equals(type, structure.type))
+            return false;
+        if( ! Objects.equals(name, structure.name))
+            return false;
+        return true;
+    }
 
-
+    public void equalsThrows(Object object) {
+        if( ! (object instanceof Structure structure))
+            throw new RuntimeException();
+        id.equalsThrows(structure.id);
+        if( ! type.equals(structure.type))
+            throw new RuntimeException();
+        if( ! Objects.equals(name, structure.name))
+            throw new RuntimeException();
+    }
 }

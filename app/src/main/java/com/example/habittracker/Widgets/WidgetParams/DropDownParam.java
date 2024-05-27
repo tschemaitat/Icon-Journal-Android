@@ -1,9 +1,9 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Structs.EntryWidgetParam;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structurePack.Structure;
@@ -69,11 +69,11 @@ public class DropDownParam extends EntryWidgetParam {
     protected JSONObject getJSONCustom() throws JSONException{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("structureId", referenceStructureId.getInteger().intValue());
-        jsonObject.put("valueId", valueId.getInteger().intValue());
+        jsonObject.put("valueId", valueId.getIntegerId().intValue());
         jsonObject.put("groupSize", groups.size());
         JSONArray groupsJSON = new JSONArray();
         for(WidgetId groupId: groups)
-            groupsJSON.put(groupId.getInteger().intValue());
+            groupsJSON.put(groupId.getIntegerId().intValue());
         jsonObject.put("groups", groupsJSON);
         return jsonObject;
     }
@@ -125,4 +125,29 @@ public class DropDownParam extends EntryWidgetParam {
             return false;
         return true;
     }
+
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof DropDownParam dropDownParam))
+            throw new RuntimeException(object.toString());
+        Lists.equalsThrowsRecursive(groups, dropDownParam.groups);
+        valueId.equalsThrows(dropDownParam.valueId);
+        if( ! Objects.equals(name, dropDownParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + dropDownParam.name);
+        referenceStructureId.equalsThrows(dropDownParam.referenceStructureId);
+        getWidgetId().equalsThrows(dropDownParam.getWidgetId());
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
+
+
+    public ArrayList<WidgetInStructure> getWidgetReferences() {
+        ArrayList<WidgetInStructure> result = new ArrayList<>();
+        result.add(getValueWidget());
+        result.addAll(getGroupWidgets());
+        return result;
+    }
+
+
 }

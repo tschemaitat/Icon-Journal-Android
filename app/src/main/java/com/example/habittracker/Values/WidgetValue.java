@@ -1,5 +1,6 @@
 package com.example.habittracker.Values;
 
+import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.structurePack.EntryInStructure;
@@ -11,7 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public abstract class WidgetValue {
+public abstract class WidgetValue implements ThrowableEqualsWithId {
     public static final String classNameKey = "value type";
     private WidgetId widgetId;
     private GroupValue parent;
@@ -22,6 +23,10 @@ public abstract class WidgetValue {
 
     public WidgetId getWidgetId() {
         return widgetId;
+    }
+
+    public Integer getIntegerId(){
+        return widgetId.getIntegerId();
     }
 
     public void setParentGroupValue(GroupValue parent){
@@ -54,4 +59,6 @@ public abstract class WidgetValue {
 
 
     protected abstract JSONObject getJSON() throws JSONException;
+
+    public abstract void equalsThrows(Object object);
 }

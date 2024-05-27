@@ -1,10 +1,10 @@
 package com.example.habittracker.Values;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.structurePack.Entry;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.structurePack.WidgetPath;
 import com.example.habittracker.structurePack.ListItemId;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GroupValue extends WidgetValue{
-    public static final String className = "group value";
+    public static final String className = "groupValue";
     private ListItemId listItemId = null;
     private ArrayList<WidgetValue> values = new ArrayList<>();
     private ListValue parent;
@@ -61,7 +61,7 @@ public class GroupValue extends WidgetValue{
             if(widgetValue.getWidgetId().equals(widgetInStructure.getWidgetId()))
                 return widgetValue;
         logErrorFindingWidgetValue(widgetInStructure);
-        throw new RuntimeException();
+        return null;
     }
     public BaseWidgetValue getBaseWidgetValueByWidget(WidgetInStructure widgetInStructure) {
         WidgetValue widgetValue = getWidgetValueByWidget(widgetInStructure);
@@ -193,7 +193,7 @@ public class GroupValue extends WidgetValue{
 
     public void setListItemId(ListItemId listItemId) {
         if(this.listItemId != null){
-            MainActivity.log("tried to set listItemId, current id: " + listItemId.getId() +
+            MainActivity.log("tried to set listItemId, current id: " + listItemId.getIntegerId() +
                     "\ncurrent tree: " + hierarchy());
             throw new RuntimeException();
         }
@@ -206,20 +206,23 @@ public class GroupValue extends WidgetValue{
 
     public JSONObject getJSON() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("list id", listItemId.getId().intValue());
+        if(listItemId != null)
+            json.put("list id", listItemId.getIntegerId().intValue());
         JSONArray jsonArray = new JSONArray();
         for(WidgetValue widgetValue: getValues()){
             jsonArray.put(widgetValue.getJSON());
         }
         json.put("array", jsonArray);
         json.put("array size", getValues().size());
-        json.put(WidgetValue.classNameKey, "group");
+        json.put(WidgetValue.classNameKey, GroupValue.className);
 
         return json;
     }
 
     public static GroupValue getFromJSON(JSONObject jsonObject) throws JSONException{
-        int listId = jsonObject.getInt("list id");
+        Integer listId = null;
+        if(jsonObject.has("list id"))
+            listId = jsonObject.getInt("list id");
         int arraySize = jsonObject.getInt("array size");
         JSONArray jsonArray = jsonObject.getJSONArray("array");
         ArrayList<WidgetValue> widgetValues = new ArrayList<>();
@@ -229,7 +232,8 @@ public class GroupValue extends WidgetValue{
             widgetValues.add(widgetValue);
         }
         GroupValue groupValue = new GroupValue(widgetValues);
-        groupValue.setListItemId(new ListItemId(listId));
+        if(listId != null)
+            groupValue.setListItemId(new ListItemId(listId));
         return groupValue;
     }
 
@@ -243,6 +247,25 @@ public class GroupValue extends WidgetValue{
             return false;
         if( ! Objects.equals(getWidgetId(), groupValue.getWidgetId()))
             return false;
+
+
         return true;
+    }
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof GroupValue groupValue))
+            throw new RuntimeException();
+        if(listItemId != null || groupValue.listItemId != null)
+            listItemId.equalsThrows(groupValue.listItemId);
+        Lists.equalsThrowsRecursive(values, groupValue.values);
+        if(getWidgetId() != null || groupValue.getWidgetId() != null)
+            getWidgetId().equalsThrows(groupValue.getWidgetId());
+
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
+    public String debugString() {
+        return "<GroupValue, listId: " + listItemId + ", widgetId: " + getWidgetId() + ">";
     }
 }

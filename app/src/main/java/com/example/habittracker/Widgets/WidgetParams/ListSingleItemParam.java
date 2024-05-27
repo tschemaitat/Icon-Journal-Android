@@ -3,16 +3,12 @@ package com.example.habittracker.Widgets.WidgetParams;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
-import com.example.habittracker.Structs.EntryWidgetParam;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.structurePack.HeaderNode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ListSingleItemParam extends EntryWidgetParam {
@@ -86,5 +82,17 @@ public class ListSingleItemParam extends EntryWidgetParam {
         if( ! Objects.equals(getWidgetId(), listSingleItemParam.getWidgetId()))
             return false;
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object){
+        if( ! (object instanceof ListSingleItemParam listSingleItemParam))
+            throw new RuntimeException(object.toString());
+        if( ! Objects.equals(name, listSingleItemParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + listSingleItemParam.name);
+        getWidgetId().equalsThrows(listSingleItemParam.getWidgetId());
+        widgetParam.equalsThrows(listSingleItemParam.widgetParam);
+        if( ! this.equals(object))
+            throw new RuntimeException();
     }
 }

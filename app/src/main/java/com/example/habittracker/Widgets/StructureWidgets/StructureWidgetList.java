@@ -6,7 +6,7 @@ import android.view.View;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;

@@ -9,7 +9,7 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.StaticClasses.Dictionary;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;

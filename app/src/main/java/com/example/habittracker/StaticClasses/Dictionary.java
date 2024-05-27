@@ -36,12 +36,30 @@ public class Dictionary {
 
     }
 
+    public static ArrayList<String> getStructuresIdAndName(){
+        ArrayList<String> strings = new ArrayList<>();
+        for(Structure structure: structures.values()){
+            strings.add(structure.getCachedName().getString() + structure.getId());
+        }
+
+        return strings;
+    }
+
     public static Structure addStructureFromSave(String name, GroupWidgetParam param, String type,
                                                  ArrayList<Entry> entries, StructureId structureId){
         checkNull(name, param, type);
         Structure newStructure = new Structure(name, param, type, entries, structureId);
+        checkExistingId(newStructure.getId());
+
         structures.put(newStructure.getId(), newStructure);
         return newStructure;
+    }
+
+    public static void checkExistingId(StructureId newId){
+        if(structures.get(newId) != null){
+            MainActivity.log(getStructuresIdAndName().toString());
+            throw new RuntimeException("already have id");
+        }
     }
 
     public static Structure addStructure(String name, GroupWidgetParam param, String type){

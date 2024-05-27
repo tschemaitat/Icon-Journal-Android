@@ -5,9 +5,7 @@ import android.content.Context;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
-import com.example.habittracker.StaticStateManagers.DeleteValueManager;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
@@ -16,7 +14,6 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.ListItemId;
 
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
 
 
     public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration() {
-        return DeleteValueManager.gatherRefForDeleteWidgetsAndList(getBaseEntryWidgets());
+        return GroupWidget.gatherRefForDeleteWidgetsAndList(getBaseEntryWidgets());
     }
 
     public ArrayList<EntryWidget> gatherWidgetsChecked(){
@@ -72,7 +69,9 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         ArrayList<WidgetValue> result = new ArrayList<>();
 
         for(BaseEntryWidget widget: getBaseEntryWidgets()){
-            result.add(widget.getValue());
+            WidgetValue widgetValue = widget.getValue();
+            if(widgetValue != null)
+                result.add(widgetValue);
         }
 
         return new GroupValue(result);
@@ -190,5 +189,22 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
 
     public void setListItemId(ListItemId listItemId) {
         this.listItemId = listItemId;
+    }
+
+    public static ArrayList<BaseEntryWidget> gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets){
+        ArrayList<BaseEntryWidget> resultList = new ArrayList<>();
+        for(BaseEntryWidget baseEntryWidget: baseEntryWidgets){
+            if(baseEntryWidget instanceof ListWidget listWidget){
+                resultList.addAll(listWidget.getWidgetsForDeleteIteration());
+                continue;
+            }
+            resultList.add(baseEntryWidget);
+        }
+        return resultList;
+    }
+
+    public String getNameAndLocation(){
+        ArrayList<ListItemId> itemIds = getListItemIdList();
+        return getName() + itemIds;
     }
 }

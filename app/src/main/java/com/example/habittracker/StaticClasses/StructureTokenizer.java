@@ -5,7 +5,7 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryId;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -52,9 +52,8 @@ public class StructureTokenizer {
         for(Structure structure: structures){
             JSONObject structureJSON = jsonFromStructure(structure);
             Structure extractedStructure = makeStructure(structureJSON);
-            if( ! Structures.isStructuresSame(structure, extractedStructure)){
-                throw new RuntimeException();
-            }
+            Structures.isStructuresSame(structure, extractedStructure);
+
             jsonArray.put(structureJSON);
         }
         jsonObject.put("structures", jsonArray);

@@ -45,15 +45,15 @@ public class InvisibleEditTextManager {
     public void setEditableWidgetThatGotFocus(EntryWidget editableWidget){
         logList.append("set focused that got focus: " + editableWidget.widgetDebugId + " , name: " + editableWidget.getName() + "\n");
         MainActivity.log("set focused widget from edit text press");
-        if(focusedWidget != null){
-            if(focusedWidget != editableWidget){
-                MainActivity.log("editable widget got focus, but focused widget isn't null\n" +
-                        "editable widget: " + editableWidget + "\nfocusedWidget: " + focusedWidget);
-                MainActivity.log(logList.toString());
-                throw new RuntimeException();
-            }
-
-        }
+//        if(focusedWidget != null){
+//            if(focusedWidget != editableWidget){
+//                MainActivity.log("editable widget got focus, but focused widget isn't null\n" +
+//                        "editable widget: " + editableWidget + "\nfocusedWidget: " + focusedWidget);
+//                MainActivity.log(logList.toString());
+//                throw new RuntimeException();
+//            }
+//
+//        }
         focusedWidget = editableWidget;
     }
 
@@ -110,4 +110,7 @@ public class InvisibleEditTextManager {
     }
 
 
+    public boolean hasFocusedWidget() {
+        return focusedWidget != null;
+    }
 }

@@ -3,7 +3,7 @@ package com.example.habittracker.structurePack;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
@@ -32,22 +32,15 @@ public class WidgetInStructure {
         return "<widgetInStructure, widgetId: " + getWidgetId() + ", structureId: " + structure + ">";
     }
 
+    public String nameAndStructure(){
+        return "<"+getName().getString() + ", " + structure+">";
+    }
+
     @Override
     public int hashCode(){
-        return Integer.hashCode(getWidgetId().getInteger());
+        return Integer.hashCode(getWidgetId().getIntegerId());
     }
-    @Override
-    public boolean equals(Object object){
-        if( ! (object instanceof WidgetInStructure widgetInStructure))
-            return false;
 
-        if(!Objects.equals(widgetInStructure.getWidgetId(), getWidgetId()))
-            return false;
-        if(!Objects.equals(widgetInStructure.structure, structure))
-            return false;
-
-        return true;
-    }
 
     public RefItemPath getNameWithPath(){
         WidgetPath widgetPath = widgetInfo.getWidgetPath();
@@ -80,5 +73,21 @@ public class WidgetInStructure {
         return structure.getId();
     }
 
+    @Override
+    public boolean equals(Object object){
+        if( ! (object instanceof WidgetInStructure widgetInStructure))
+            return false;
 
+        if(!Objects.equals(widgetInStructure.getWidgetId(), getWidgetId()))
+            return false;
+        if(!Objects.equals(widgetInStructure.structure, structure))
+            return false;
+
+        return true;
+    }
+
+    public void equalsThrows(WidgetInStructure widgetInStructure) {
+        getWidgetId().equalsThrows(widgetInStructure.getWidgetId());
+        structure.equalsThrows(widgetInStructure.structure);
+    }
 }

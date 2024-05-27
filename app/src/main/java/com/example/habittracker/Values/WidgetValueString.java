@@ -37,12 +37,14 @@ public class WidgetValueString extends BaseWidgetValue {
     @Override
     protected JSONObject getJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("value type", "widget value string");
-        jsonObject.put("widget id", getWidgetId().getInteger().intValue());
+        jsonObject.put("value type", className);
+        jsonObject.put("widget id", getWidgetId().getIntegerId().intValue());
         jsonObject.put("cached string", cachedString.getJSON());
 
         return jsonObject;
     }
+
+
 
     public static WidgetValue getFromJSON(JSONObject jsonObject) throws JSONException{
         JSONObject cachedStringJSON = jsonObject.getJSONObject(CachedString.className);
@@ -60,5 +62,20 @@ public class WidgetValueString extends BaseWidgetValue {
         if( ! Objects.equals(cachedString, widgetValueString.cachedString))
             return false;
         return true;
+    }
+
+    @Override
+    public void equalsThrows(Object object) {
+        if( ! (object instanceof WidgetValueString widgetValueString))
+            throw new RuntimeException(object.toString());
+        getWidgetId().equalsThrows(widgetValueString.getWidgetId());
+        cachedString.equalsThrows(widgetValueString.cachedString);
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
+    @Override
+    public String toString(){
+        return "WidgetValueString, id: " + getIntegerId() + ", value: " + cachedString + ">";
     }
 }

@@ -3,14 +3,11 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 
 import com.example.habittracker.Structs.CachedStrings.CachedString;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.DropDownPage;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
-import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
 
@@ -19,7 +16,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class StaticDropDown extends EntryWidget {
+public class StaticDropDown extends BaseEntryWidget {
     boolean dataSet = false;
     private Context context;
     private DropDown dropDown;
@@ -158,6 +155,11 @@ public class StaticDropDown extends EntryWidget {
         @Override
         protected JSONObject getJSONCustom() throws JSONException {
             return null;
+        }
+
+        @Override
+        public void equalsThrows(Object object) {
+            throw new RuntimeException("not supposed to call this");
         }
 
 

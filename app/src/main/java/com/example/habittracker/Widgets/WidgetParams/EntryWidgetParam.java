@@ -1,6 +1,10 @@
-package com.example.habittracker.Structs;
+package com.example.habittracker.Widgets.WidgetParams;
 
+import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.StructureId;
+import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetInStructure;
@@ -8,7 +12,7 @@ import com.example.habittracker.structurePack.WidgetInStructure;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class EntryWidgetParam {
+public abstract class EntryWidgetParam implements ThrowableEqualsWithId{
 
     public String name;
     private String className;
@@ -88,11 +92,15 @@ public abstract class EntryWidgetParam {
         if(name != null)
             jsonObject.put("name", name);
         if(widgetIdTracker != null)
-            jsonObject.put("idTracker", widgetIdTracker.getInteger().intValue());
+            jsonObject.put("idTracker", widgetIdTracker.getIntegerId().intValue());
         jsonObject.put("isUniqueAttribute", isUniqueAttribute);
         //don't need to put className in builder because it is used by the switch, the variable is put in by the inheriting class
         jsonObject.put("className", className);
         return jsonObject;
+    }
+
+    public Integer getIntegerId(){
+        return widgetIdTracker.getIntegerId();
     }
 
     public static EntryWidgetParamBuilder getBuilderFromJSON(JSONObject jsonObject) throws JSONException{
@@ -114,6 +122,8 @@ public abstract class EntryWidgetParam {
         return widgetIdTracker;
     }
 
+
+
     public boolean hasWidgetId() {
         return widgetIdTracker != null;
     }
@@ -131,6 +141,8 @@ public abstract class EntryWidgetParam {
     public boolean hasStructure(){
         return widgetInStructure.getStructureId() != null;
     }
+
+    public abstract void equalsThrows(Object object);
 
 
     public static class EntryWidgetParamBuilder{

@@ -2,6 +2,7 @@ package com.example.habittracker.Structs.CachedStrings;
 
 
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.EnumLoop;
@@ -67,16 +68,18 @@ public class RefEntryString implements CachedString{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CachedString.typeOfClassKey, className);
         jsonObject.put("structureId", widgetInStructure.getStructureId().getInteger().intValue());
-        jsonObject.put("widgetId", widgetInStructure.getWidgetId().getInteger().intValue());
+        jsonObject.put("widgetId", widgetInStructure.getWidgetId().getIntegerId().intValue());
         jsonObject.put("entryId", entryInStructure.getId().getInteger().intValue());
         jsonObject.put("listIdArraySize", listIdList.size());
         JSONArray listIdArray = new JSONArray();
         for(ListItemId listItemId: listIdList){
-            listIdArray.put(listItemId.getId().intValue());
+            listIdArray.put(listItemId.getIntegerId().intValue());
         }
         jsonObject.put("listIdArray", listIdArray);
         return jsonObject;
     }
+
+
 
     public static RefEntryString getFromJSON(JSONObject jsonObject) throws JSONException{
         StructureId structureId = new StructureId(jsonObject.getInt("structureId"));
@@ -136,13 +139,24 @@ public class RefEntryString implements CachedString{
         return true;
     }
 
+    @Override
+    public void equalsThrows(Object object) {
+        if( ! (object instanceof RefEntryString refEntryString))
+            throw new RuntimeException(object.getClass().toString());
+        widgetInStructure.equalsThrows(refEntryString.widgetInStructure);
+        entryInStructure.equalsThrows(refEntryString.entryInStructure);
+        Lists.equalsThrowsRecursive(listIdList, refEntryString.listIdList);
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
     public String getLocationString(){
-        return "ref: " + widgetInStructure.getStructure() + ", <" + widgetInStructure.getWidgetId() + ">, " + entryInStructure.getId() + ", " + listIdList;
+        return "s: " + widgetInStructure.getStructure() + ", w: <" + widgetInStructure.getName() + ">, e: " + entryInStructure.getId() + ", " + listIdList;
     }
 
     @Override
     public String toString(){
-        return getString();
+        return "<RefEntryString, value: " + getString() + ", loc: "+getLocationString()+">";
     }
 
 }

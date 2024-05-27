@@ -26,4 +26,16 @@ public class StructureId{
     public int hashCode(){
         return Integer.hashCode(id);
     }
+
+    @Override
+    public String toString(){
+        return id.toString();
+    }
+
+    public void equalsThrows(Object object){
+        if( ! (object instanceof StructureId structureId))
+            throw new RuntimeException(object.toString());
+        if(!Objects.equals(structureId.id, id))
+            throw new RuntimeException("idFirst: " + structureId.id + ", id second: " + id);
+    }
 }

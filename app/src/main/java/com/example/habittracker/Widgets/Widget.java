@@ -2,7 +2,7 @@ package com.example.habittracker.Widgets;
 
 import android.view.View;
 
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 
 public interface Widget {
     public void setParam(EntryWidgetParam param);

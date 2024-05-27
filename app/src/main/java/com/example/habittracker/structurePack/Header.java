@@ -1,9 +1,8 @@
 package com.example.habittracker.structurePack;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
@@ -49,7 +48,7 @@ public class Header {
 
         int idCounter = -1;
         for(WidgetId widgetId : currentWidgets)
-            idCounter = Math.max(idCounter, widgetId.getInteger());
+            idCounter = Math.max(idCounter, widgetId.getIntegerId());
         idCounter++;
         for(HeaderNode headerNode: headerNodeList){
             if( ! headerNode.getWidgetParam().hasWidgetId()){
@@ -160,10 +159,8 @@ public class Header {
         public ArrayList<WidgetInStructure> getReferences(){
             if( ! (entryWidgetParam instanceof DropDownParam dropDownParam))
                 return new ArrayList<>();
-            ArrayList<WidgetInStructure> result = new ArrayList<>();
-            result.add(dropDownParam.getValueWidget());
-            result.addAll(dropDownParam.getGroupWidgets());
-            return result;
+            return dropDownParam.getWidgetReferences();
+
         }
     }
 }

@@ -50,4 +50,9 @@ public class EntryInStructure {
             return false;
         return true;
     }
+
+    public void equalsThrows(EntryInStructure entryInStructure) {
+        groupValue.equalsThrows(entryInStructure.groupValue);
+        structure.equalsThrows(entryInStructure.structure);
+    }
 }

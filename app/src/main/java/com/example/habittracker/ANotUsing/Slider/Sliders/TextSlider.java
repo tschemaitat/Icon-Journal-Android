@@ -3,12 +3,10 @@ package com.example.habittracker.ANotUsing.Slider.Sliders;
 import android.content.Context;
 
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
-import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.HeaderNode;
-import com.example.habittracker.Structs.EntryWidgetParam;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 
 
 import org.json.JSONException;
@@ -89,6 +87,11 @@ public class TextSlider extends BaseEntryWidget {
         @Override
         protected JSONObject getJSONCustom() throws JSONException {
             return null;
+        }
+
+        @Override
+        public void equalsThrows(Object object) {
+
         }
     }
 }

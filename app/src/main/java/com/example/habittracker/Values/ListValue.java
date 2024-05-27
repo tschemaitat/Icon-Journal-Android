@@ -1,5 +1,6 @@
 package com.example.habittracker.Values;
 
+import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
@@ -85,7 +86,7 @@ public class ListValue extends WidgetValue {
         int max = -1000;
         for(GroupValue groupValue: groupValueList){
             if(groupValue.getListItemId() != null){
-                max = Math.max(max, groupValue.getListItemId().getId());
+                max = Math.max(max, groupValue.getListItemId().getIntegerId());
             }
         }
         max++;
@@ -108,8 +109,8 @@ public class ListValue extends WidgetValue {
         JSONObject result = new JSONObject();
         result.put("array", jsonArray);
         result.put("array size", getGroupValueList().size());
-        result.put("widget id", getWidgetId().getInteger().intValue());
-        result.put(WidgetValue.classNameKey, "list");
+        result.put("widget id", getWidgetId().getIntegerId().intValue());
+        result.put(WidgetValue.classNameKey, className);
         return result;
     }
 
@@ -131,10 +132,31 @@ public class ListValue extends WidgetValue {
     public boolean equals(Object object){
         if( ! (object instanceof ListValue listValue))
             return false;
-        if( ! Objects.equals(getWidgetId(), listValue.getWidgetId()))
+        if( ! Objects.equals(getWidgetId(), listValue.getWidgetId())){
             return false;
-        if( ! Objects.equals(groupValueList, listValue.groupValueList))
+        }
+
+        if( ! Objects.equals(groupValueList, listValue.groupValueList)){
             return false;
+        }
+
         return true;
+    }
+
+
+    public void equalsThrows(Object object){
+        if( ! (object instanceof ListValue listValue))
+            throw new RuntimeException();
+        getWidgetId().equalsThrows(listValue.getWidgetId());
+        Lists.equalsThrowsRecursive(groupValueList, listValue.groupValueList);
+        if( ! this.equals(object))
+            throw new RuntimeException();
+    }
+
+
+    @Override
+    public String toString(){
+        String values = Lists.string(groupValueList, (groupValue)->groupValue.debugString());
+        return "ListValue, id: " + getIntegerId() + ", values: " + values + ">";
     }
 }

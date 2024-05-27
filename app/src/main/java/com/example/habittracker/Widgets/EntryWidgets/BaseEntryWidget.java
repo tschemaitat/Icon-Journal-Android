@@ -61,5 +61,10 @@ public abstract class BaseEntryWidget extends EntryWidget{
 //        }
 //    }
 
+    public String getNameAndLocation(){
+        ArrayList<ListItemId> itemIds = getListItemIdProvider().getListItemIdList();
+        return getName() + itemIds;
+    }
+
 
 }

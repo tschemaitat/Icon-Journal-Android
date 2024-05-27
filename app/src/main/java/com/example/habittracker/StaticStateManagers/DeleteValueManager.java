@@ -5,6 +5,7 @@ import android.widget.Button;
 
 import com.example.habittracker.Algorithms.HandleDeletedValues;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.ViewWidgets.CustomDialog;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -18,18 +19,7 @@ import com.example.habittracker.structurePack.Structure;
 import java.util.ArrayList;
 
 public class DeleteValueManager {
-//    private static DeleteValueManager manager;
-//
-//    public static void createManager(Context context, GroupWidget groupWidget, Button button){
-//        manager = new DeleteValueManager(context, groupWidget, button, entryId);
-//    }
-//    public static DeleteValueManager getManager(){
-//        return manager;
-//    }
-//
-//    public static boolean hasManager(){
-//        return manager != null;
-//    }
+
 
     private Context context;
     private GroupWidget groupWidget;
@@ -72,6 +62,7 @@ public class DeleteValueManager {
     }
 
     public void onConfirm(){
+        MainActivity.log("on confirm");
         if(entryInStructure != null){
             onCheckReferences();
             return;
@@ -88,6 +79,7 @@ public class DeleteValueManager {
 
     public ArrayList<BaseEntryWidget> getWidgetsToDelete(){
         ArrayList<EntryWidget> entryWidgetsChecked = groupWidget.gatherWidgetsChecked();
+        MainActivity.log("checks widgets: \n" + EnumLoop.makeList(entryWidgetsChecked, (widget)->widget.getNameAndLocation() + "\n"));
         ArrayList<ArrayList<BaseEntryWidget>> widgetGroupedByCheckedWidget = new ArrayList<>();
         for(EntryWidget entryWidget: entryWidgetsChecked){
             widgetGroupedByCheckedWidget.add(entryWidget.getWidgetsForDelete());
@@ -97,11 +89,13 @@ public class DeleteValueManager {
         for(ArrayList<BaseEntryWidget> widgetsInGroup: widgetGroupedByCheckedWidget){
             widgetList.addAll(widgetsInGroup);
         }
+        MainActivity.log("widgets set to delete: \n" + EnumLoop.makeList(widgetList, (widget)->widget.getNameAndLocation() + "\n"));
+
         return widgetList;
     }
 
     public void onCheckReferences(){
-        MainActivity.log("on confirm");
+
 
         ArrayList<BaseEntryWidget> widgetList = getWidgetsToDelete();
         ArrayList<ArrayList<RefEntryString>> refListList = new ArrayList<>();
@@ -126,16 +120,17 @@ public class DeleteValueManager {
             BaseEntryWidget sourceWidget = widgetList.get(widgetIndex);
             ArrayList<RefEntryString> referencesOfWidget = referencesList.get(widgetIndex);
             ArrayList<RefEntryString> sourceLocationList = refListList.get(widgetIndex);
-            stringBuilder.append("source widget: ").append(sourceWidget).append(", ").append(sourceWidget.getName()).append("\n");
-            stringBuilder.append("\tsource values: ");
+            stringBuilder.append("source widget: " + sourceWidget + ", " + sourceWidget.getName() + "\n");
+            stringBuilder.append("\tsource values: \n");
             for(RefEntryString sourceValue: sourceLocationList){
-                stringBuilder.append(" [" + sourceValue + ": " + sourceValue.getString() + "]");
+                stringBuilder.append(" [" + sourceValue.getLocationString() + ": " + sourceValue.getString() + "]\n");
             }
             stringBuilder.append("\n");
-            stringBuilder.append("\treference values: ");
+            stringBuilder.append("\treference values: \n");
             for(RefEntryString reference: referencesOfWidget){
-                stringBuilder.append(" [" + reference + ": " + reference.getString() + "]");
+                stringBuilder.append(" [" + reference + ": " + reference.getString() + "]\n");
             }
+            stringBuilder.append("\n");
         }
         String dialogString = stringBuilder.toString();
         CustomDialog customDialog = new CustomDialog(context, dialogString);
@@ -146,15 +141,5 @@ public class DeleteValueManager {
 
 
 
-    public static ArrayList<BaseEntryWidget> gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets){
-        ArrayList<BaseEntryWidget> resultList = new ArrayList<>();
-        for(BaseEntryWidget baseEntryWidget: baseEntryWidgets){
-            if(baseEntryWidget instanceof ListWidget listWidget){
-                resultList.addAll(listWidget.getWidgetsForDeleteIteration());
-                continue;
-            }
-            resultList.add(baseEntryWidget);
-        }
-        return resultList;
-    }
+
 }
