@@ -1,6 +1,6 @@
 package com.example.habittracker.StaticClasses;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class EnumLoop {
     public static <T> void loop(ArrayList<T> list, loopFunction<T> loopFunction){

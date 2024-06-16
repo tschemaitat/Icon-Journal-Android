@@ -13,7 +13,7 @@ import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetInStructure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class EntryDropDown extends BaseEntryWidget {
     private Structure referenceStructure = null;

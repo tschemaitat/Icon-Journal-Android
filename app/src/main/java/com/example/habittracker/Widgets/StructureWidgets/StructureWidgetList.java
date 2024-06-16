@@ -13,7 +13,7 @@ import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StructureWidgetList implements Widget{
     private Context context;

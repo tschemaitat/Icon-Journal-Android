@@ -22,7 +22,7 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 
 public class CustomPopup {

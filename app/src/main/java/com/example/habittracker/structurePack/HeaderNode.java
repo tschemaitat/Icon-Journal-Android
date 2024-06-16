@@ -6,7 +6,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.WidgetId;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class HeaderNode{
     private ArrayList<HeaderNode> children;

@@ -3,7 +3,7 @@ package com.example.habittracker.ANotUsing.Slider.Sliders;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class LinearSlider extends SliderWithLabels {
     int start;

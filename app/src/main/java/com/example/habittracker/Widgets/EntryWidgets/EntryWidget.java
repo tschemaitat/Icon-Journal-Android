@@ -19,7 +19,7 @@ import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.structurePack.Structure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public abstract class EntryWidget implements Widget {
     public static int widgetDebugIdCounter = 0;

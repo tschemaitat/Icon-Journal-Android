@@ -16,7 +16,7 @@ import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.ListItemId;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class GroupWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
     private WidgetLayout layout;

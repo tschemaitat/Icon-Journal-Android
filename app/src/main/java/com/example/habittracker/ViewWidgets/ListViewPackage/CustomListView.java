@@ -1,4 +1,4 @@
-package com.example.habittracker.ViewWidgets;
+package com.example.habittracker.ViewWidgets.ListViewPackage;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class CustomListView {
     private Context context;

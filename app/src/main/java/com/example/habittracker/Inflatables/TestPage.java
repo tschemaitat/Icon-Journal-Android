@@ -10,11 +10,14 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.SaveStructures;
-import com.example.habittracker.ViewWidgets.CustomListView;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
+import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.ViewWidgets.ListViewPackage.CustomListView;
+import com.example.habittracker.ViewWidgets.ListViewPackage.DynamicListView;
 import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.List;
 
 public class TestPage implements Inflatable {
@@ -28,7 +31,8 @@ public class TestPage implements Inflatable {
         //testCustomListView();
         //testAnimatedToggle();
         //testRoundRectBorder();
-        addSaveAndDeleteButtons();
+        //addSaveAndDeleteButtons();
+        testDynamicListView();
     }
 
 
@@ -52,6 +56,18 @@ public class TestPage implements Inflatable {
     @Override
     public boolean tryToRemove(Inflatable page) {
         return true;
+    }
+
+    private void testDynamicListView() {
+        ArrayList<String> options = new ArrayList<>("item 1", "item 2", "item 3");
+        ArrayList<PayloadOption> payloadOptions = options.convert((index, element) -> {
+            return new PayloadOption(new LiteralString(element), null);
+        });
+        DynamicListView dynamicListView = new DynamicListView(context, payloadOptions, (cachedString, index, payload)->{
+            MainActivity.log("clicked: " + payload);
+        }, null);
+        linearLayout.addView(dynamicListView.getView());
+        dynamicListView.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
     }
 
     private void addSaveAndDeleteButtons() {
@@ -86,7 +102,7 @@ public class TestPage implements Inflatable {
 
     private void testAnimatedToggle(){
         ToggleView toggleView = new ToggleView(context, "keyboard mode", "enter", "next",
-                450, 150, linearLayout, (isLeft -> {MainActivity.log("highlight is left: " + isLeft);}));
+                450, 150, (isLeft -> {MainActivity.log("highlight is left: " + isLeft);}));
     }
 
 

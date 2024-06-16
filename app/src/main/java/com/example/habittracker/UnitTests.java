@@ -16,7 +16,7 @@ import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetPath;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collections;
 
 public class UnitTests {

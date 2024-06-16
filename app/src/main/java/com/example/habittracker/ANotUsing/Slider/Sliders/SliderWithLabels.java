@@ -11,7 +11,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.example.habittracker.ANotUsing.Slider.Sliders.CustomSlider;
 import com.example.habittracker.StaticClasses.GLib;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class SliderWithLabels extends ConstraintLayout {
 

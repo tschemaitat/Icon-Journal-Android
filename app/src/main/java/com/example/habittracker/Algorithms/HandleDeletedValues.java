@@ -5,7 +5,7 @@ import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetInStructure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class HandleDeletedValues {
 

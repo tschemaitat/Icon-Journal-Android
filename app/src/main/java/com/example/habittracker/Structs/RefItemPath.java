@@ -6,7 +6,7 @@ import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;

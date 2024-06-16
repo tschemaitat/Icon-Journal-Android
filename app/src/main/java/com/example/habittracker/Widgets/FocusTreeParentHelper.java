@@ -4,7 +4,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class FocusTreeParentHelper {
 

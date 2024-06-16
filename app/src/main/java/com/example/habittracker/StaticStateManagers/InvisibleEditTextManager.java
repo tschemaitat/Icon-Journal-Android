@@ -14,7 +14,7 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class InvisibleEditTextManager {
     private static InvisibleEditTextManager manager;

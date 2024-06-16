@@ -16,7 +16,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class ListWidgetSingleItem extends ListWidget {
     public static final String className = "list single item";

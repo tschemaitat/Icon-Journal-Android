@@ -15,7 +15,7 @@ import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;

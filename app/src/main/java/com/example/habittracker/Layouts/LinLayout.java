@@ -9,7 +9,7 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class LinLayout {
     private Context context;

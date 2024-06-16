@@ -24,9 +24,11 @@ public class AnimatedHighlightView extends View {
     private float highlightPosition; // 0.0 for left, 1.0 for right
     private boolean isHighlightOnLeft = false;
     private Paint bluePaint;
+    private int cornerRadiusDp = 15;
 
-    public AnimatedHighlightView(Context context) {
+    public AnimatedHighlightView(Context context, int cornerRadiusDp) {
         super(context);
+        this.cornerRadiusDp = cornerRadiusDp;
         init();
     }
 
@@ -114,7 +116,7 @@ public class AnimatedHighlightView extends View {
 
 
     protected void onDrawCustom(Canvas canvas) {
-        float cornerRadius = 15 * getResources().getDisplayMetrics().density;
+        float cornerRadius = cornerRadiusDp * getResources().getDisplayMetrics().density;
 
         //canvas.drawRoundRect(fullRect, cornerRadius, cornerRadius, backgroundPaint);
         //canvas.drawRect(fullRect, backgroundPaint);

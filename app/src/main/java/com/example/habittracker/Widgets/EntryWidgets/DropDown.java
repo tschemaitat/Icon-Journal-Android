@@ -15,7 +15,7 @@ import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.ViewWidgets.CustomPopup;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collections;
 
 public class DropDown{

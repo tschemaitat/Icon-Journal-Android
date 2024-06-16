@@ -14,7 +14,7 @@ import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collections;
 
 public class CategoryEntryEditorPage implements Inflatable{

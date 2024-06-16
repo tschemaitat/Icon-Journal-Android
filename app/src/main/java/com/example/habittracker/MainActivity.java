@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.habittracker.Inflatables.CategorySelectionPage;
 import com.example.habittracker.Inflatables.Inflatable;
 import com.example.habittracker.Inflatables.EditorSelectionPage;
+import com.example.habittracker.Inflatables.PageResources;
 import com.example.habittracker.Inflatables.TestPage;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
@@ -32,7 +33,7 @@ import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Arrays;
 
 
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout menuBarLayout;
     public static LinearLayout invisibleMenuBarLayout;
     public static ImageButton menuHideButton;
+
+    private static PageResources pageResources;
 
     private LinearLayout currentMenuBar = null;
 
@@ -83,8 +86,10 @@ public class MainActivity extends AppCompatActivity {
         invisibleMenuBarLayout = findViewById(R.id.invisibleMenuBarLayout);
         menuHideButton = findViewById(R.id.menuHideButton);
 
-        InvisibleMenuBarManager.createManager(context, invisibleMenuBarLayout);
-        EntryEditorMenuBar.make(menuBarLayout, menuHideButton, context);
+        //InvisibleMenuBarManager.createManager(context, invisibleMenuBarLayout);
+        //EntryEditorMenuBar.make(menuBarLayout, menuHideButton, context);
+
+        pageResources = new PageResources(context, menuBarLayout, invisibleMenuBarLayout, menuHideButton);
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);

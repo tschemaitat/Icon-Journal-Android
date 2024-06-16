@@ -4,7 +4,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class DropDownPage{
     public static int nameKeyForParent = -10;

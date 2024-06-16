@@ -8,7 +8,7 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class WidgetLayout {
     private ArrayList<Widget> widgets = new ArrayList<>();

@@ -10,7 +10,7 @@ import com.example.habittracker.structurePack.Structure;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public abstract class WidgetValue implements ThrowableEqualsWithId {
     public static final String classNameKey = "value type";

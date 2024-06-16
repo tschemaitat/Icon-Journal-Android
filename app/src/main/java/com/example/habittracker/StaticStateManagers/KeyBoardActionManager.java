@@ -7,40 +7,17 @@ import android.widget.LinearLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewWidgets.ToggleView;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class KeyBoardActionManager {
-    private static KeyBoardActionManager manager = null;
-    public static KeyBoardActionManager getManager(){
-        if(manager == null)
-            throw new RuntimeException();
-        return manager;
-    }
-
-    public static boolean hasManager(){
-        return manager != null;
-    }
-
-    public static void makeNewManager(Context context, LinearLayout parent){
-        MainActivity.log("making new manager");
-        manager = new KeyBoardActionManager(context, parent);
-    }
-
-    public static void removeManager(){
-        manager.parent.removeView(manager.getView());
-        manager = null;
-    }
-
     private ToggleView toggleView;
     private Context context;
-    private LinearLayout parent;
     private ArrayList<OnToggleListener> onToggleListenerList = new ArrayList<>();
 
-    private KeyBoardActionManager(Context context, LinearLayout parent){
+    public KeyBoardActionManager(Context context){
         this.context = context;
         toggleView = new ToggleView(context, "keyboard mode", "enter", "next",
-                450, 150, parent, this::onToggle);
-        this.parent = parent;
+                450, 150, this::onToggle);
     }
 
     public View getView(){

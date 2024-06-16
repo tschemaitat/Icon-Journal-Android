@@ -20,7 +20,7 @@ import com.example.habittracker.Widgets.FocusTreeParentHelper;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 

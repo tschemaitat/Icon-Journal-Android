@@ -14,7 +14,6 @@ public class ToggleView {
     private Context context;
     private int width;
     private int height;
-    private LinearLayout parent;
     private OnToggleListener onToggleListener;
 
 
@@ -26,9 +25,8 @@ public class ToggleView {
     private TextView rightText;
 
     public ToggleView(Context context, String title, String left, String right, int width, int height,
-                      LinearLayout parent, OnToggleListener onToggleListener){
+                      OnToggleListener onToggleListener){
         this.context = context;
-        this.parent = parent;
         this.width = width;
         this.height = height;
         this.onToggleListener = onToggleListener;
@@ -41,7 +39,7 @@ public class ToggleView {
 
     private void init(String title, String left, String right){
 
-        toggleRelativeLayout = makeToggleRelativeLayout(parent, context, width, height);
+        toggleRelativeLayout = makeToggleRelativeLayout(context, width, height);
         toggleTitle = makeToggleTitle(toggleRelativeLayout, context);
         toggleTextRelLayout = makeToggleTextRelLayout(toggleRelativeLayout, toggleTitle, context);
         animatedHighlightView = makeAnimatedHighlightView(toggleTextRelLayout, onToggleListener, context);
@@ -50,13 +48,12 @@ public class ToggleView {
     }
 
 
-    private static RelativeLayout makeToggleRelativeLayout(LinearLayout menuLinearLayout, Context context, int width, int height){
+    private static RelativeLayout makeToggleRelativeLayout(Context context, int width, int height){
         RelativeLayout toggleRelativeLayout = new RelativeLayout(context);
 
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(width, height);
         layoutParam.gravity = Gravity.CENTER_VERTICAL;
         toggleRelativeLayout.setLayoutParams(layoutParam);
-        menuLinearLayout.addView(toggleRelativeLayout);
         return toggleRelativeLayout;
     }
     private static TextView makeToggleTitle(RelativeLayout toggleRelativeLayout, Context context){
@@ -86,7 +83,7 @@ public class ToggleView {
         return toggleTextRelativeLayout;
     }
     private static AnimatedHighlightView makeAnimatedHighlightView(RelativeLayout toggleTextRelativeLayout, OnToggleListener onToggleListener, Context context){
-        AnimatedHighlightView animatedHighlightView = new AnimatedHighlightView(context);
+        AnimatedHighlightView animatedHighlightView = new AnimatedHighlightView(context, 15);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
         animatedHighlightView.setLayoutParams(layoutParams);
         //animatedHighlightView.setPadding(10,10,10,10);

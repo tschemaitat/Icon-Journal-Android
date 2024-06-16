@@ -15,7 +15,8 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.PayloadOption;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -97,13 +98,7 @@ public class SelectionView {
     }
 
 
-    public interface OnSelected {
-        public void onSelected(CachedString cachedString, int position, Object key);
-    }
 
-    public interface OnAdd{
-        public void onAdd();
-    }
 
     public void setText(ArrayList<PayloadOption> payloadOptionList){
         options = payloadOptionList;

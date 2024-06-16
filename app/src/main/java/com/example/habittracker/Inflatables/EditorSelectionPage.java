@@ -12,7 +12,7 @@ import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.structurePack.Structure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class EditorSelectionPage implements Inflatable {
     private LinearLayout parentLayout;

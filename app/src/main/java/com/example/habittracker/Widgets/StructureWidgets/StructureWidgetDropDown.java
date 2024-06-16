@@ -19,7 +19,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StaticDropDown;
 import com.example.habittracker.Widgets.Widget;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StructureWidgetDropDown implements Widget {
     private Context context;

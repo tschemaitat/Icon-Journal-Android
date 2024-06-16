@@ -16,7 +16,7 @@ import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.ListItemId;
 import com.example.habittracker.structurePack.Structure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class DeleteValueManager {
 

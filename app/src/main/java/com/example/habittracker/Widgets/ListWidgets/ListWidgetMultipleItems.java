@@ -17,7 +17,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class ListWidgetMultipleItems extends ListWidget {
     private ListMultiItemParam listMultiItemParam = null;

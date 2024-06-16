@@ -1,6 +1,6 @@
 package com.example.habittracker.structurePack;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class WidgetPath {
     private ArrayList<WidgetInStructure> widgetInStructureList;

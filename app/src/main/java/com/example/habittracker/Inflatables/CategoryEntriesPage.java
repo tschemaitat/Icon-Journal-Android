@@ -12,7 +12,7 @@ import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.Structure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class CategoryEntriesPage implements Inflatable{
     private Context context;

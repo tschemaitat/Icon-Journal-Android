@@ -22,7 +22,7 @@ import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidget;
 import com.example.habittracker.structurePack.Structures;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StructureEditor implements Inflatable{
 

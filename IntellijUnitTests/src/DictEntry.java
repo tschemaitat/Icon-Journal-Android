@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class DictEntry {
     public static final String dictionary = "dictionary";

@@ -8,7 +8,7 @@ import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.ListItemId;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public abstract class BaseEntryWidget extends EntryWidget{
     private ListItemIdProvider listItemIdProvider;

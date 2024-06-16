@@ -14,7 +14,7 @@ import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.structurePack.WidgetPath;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Arrays;
 
 public class DropDownPageFactory {
@@ -99,7 +99,7 @@ public class DropDownPageFactory {
                 DropDown.className,
                 "sliderfds"
         };
-        ArrayList<String> typeStringList = new ArrayList<>(Arrays.asList(numbers));
+        ArrayList<String> typeStringList = new ArrayList<>(numbers);
         ArrayList<PayloadOption> payloadOptionList = EnumLoop.makeList(typeStringList, s -> new PayloadOption(new LiteralString(s), s));
 
         DropDownPage page = new DropDownPage().put(payloadOptionList);

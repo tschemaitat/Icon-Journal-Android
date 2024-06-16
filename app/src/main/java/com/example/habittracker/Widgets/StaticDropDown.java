@@ -14,7 +14,7 @@ import com.example.habittracker.Structs.RefItemPath;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StaticDropDown extends BaseEntryWidget {
     boolean dataSet = false;

@@ -14,7 +14,7 @@ import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.Entry;
 import com.example.habittracker.structurePack.Structure;
 
-import java.util.ArrayList;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.HashMap;
 
 public class Dictionary {
