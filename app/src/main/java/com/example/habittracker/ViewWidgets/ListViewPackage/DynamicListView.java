@@ -1,6 +1,7 @@
 package com.example.habittracker.ViewWidgets.ListViewPackage;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 
 import com.example.habittracker.Structs.PayloadOption;
@@ -106,6 +107,7 @@ public class DynamicListView {
     public HorLayout makeHorLayoutElement(String text, Runnable clickListener, BooleanListener checkListener){
         HorLayout horLayout = new HorLayout(context);
         TextElement textElement = new TextElement(context, text, clickListener);
+        textElement.setPadding(new Dimensions(50, 20, 20, 20));
         horLayout.addWithParam(textElement, -2, -2);
 
         if(checkListener != null){
@@ -122,7 +124,7 @@ public class DynamicListView {
                     (check)-> onCheckClicked(check, index, payloadOption));
             scrollElement.addWithParam(horLayout, -2, -2);
             if(index != payloadOptions.size()-1)
-                scrollElement.addWithParam(createDivisionBar(), -2, -2);
+                scrollElement.addWithParam(createDivisionBar(), 100, 100);
         });
         if(onAdd != null){
             HorLayout horLayout = makeHorLayoutElement(addString, ()->onAddClicked(),
@@ -140,7 +142,17 @@ public class DynamicListView {
     }
 
     private Element createDivisionBar() {
-        return null;
+        Element dummyDivisionBar = new Element() {
+            @Override
+            public View getView() {
+                View view = new View(context);
+                view.setBackgroundColor(Color.DKGRAY);
+                view.setMinimumHeight(2);
+                return view;
+            }
+        };
+
+        return dummyDivisionBar;
     }
 
     public View getView() {

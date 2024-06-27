@@ -26,7 +26,8 @@ public class GroupValue extends WidgetValue{
         super(null);
         if(values == null)
             throw new RuntimeException();
-        this.values = values;
+        this.values = new ArrayList<>(values);
+
         for(WidgetValue widgetValue: values){
             widgetValue.setParentGroupValue(this);
         }

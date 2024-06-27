@@ -8,6 +8,16 @@ import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.StaticStateManagers.WidgetResources;
 
 public class PageResources {
+    private static PageResources staticPageResources;
+
+    public static PageResources getPageResources(){
+        return staticPageResources;
+    }
+
+    public static void setPageResources(PageResources pageResources){
+        staticPageResources = pageResources;
+    }
+
     private Context context;
     private MenuBarManager menuBarManager;
     private WidgetResources widgetResources;

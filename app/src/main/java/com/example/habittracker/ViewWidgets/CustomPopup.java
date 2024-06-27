@@ -23,6 +23,7 @@ import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewWidgets.SelectionView;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
 
 
 public class CustomPopup {
@@ -30,7 +31,7 @@ public class CustomPopup {
     private PopupWindow popupWindow;
     private SelectionView optionsSelectionView;
     private ArrayAdapter<String> adapter;
-    SelectionView.OnSelected onItemSelected;
+    OnSelected onItemSelected;
     RelativeLayout nameLayout;
     SelectionView name;
     ImageView backIcon;
@@ -39,7 +40,7 @@ public class CustomPopup {
     Runnable onBack;
 
 
-    public CustomPopup(Context context, String title, ArrayList<String> options, SelectionView.OnSelected onItemSelected, Runnable onBack, Runnable onNothingSelected) {
+    public CustomPopup(Context context, String title, ArrayList<String> options, OnSelected onItemSelected, Runnable onBack, Runnable onNothingSelected) {
         this.context = context;
         // Inflate the popup Layout
 

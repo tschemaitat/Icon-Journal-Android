@@ -30,9 +30,22 @@ public class ArrayList<E> extends java.util.ArrayList<E>{
         }
     }
 
+    public boolean containsAny(ArrayList<E> elements) {
+        for(E e: elements){
+            if(this.contains(e))
+                return true;
+        }
+        return false;
+
+    }
+
 
     public interface EnumerateFunction<E>{
         void enumerateIteration(int index, E element);
+    }
+
+    public interface IterateFunction<E>{
+        void iterate(E element);
     }
 
     public interface ConvertFunction<Input, Output>{
@@ -46,5 +59,11 @@ public class ArrayList<E> extends java.util.ArrayList<E>{
             result.add(converted);
         }
         return result;
+    }
+
+    public void iter(IterateFunction<E> function){
+        for(E element: this){
+            function.iterate(element);
+        }
     }
 }

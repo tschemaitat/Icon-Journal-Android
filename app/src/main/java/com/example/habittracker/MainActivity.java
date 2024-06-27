@@ -30,6 +30,8 @@ import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.InvisibleMenuBarManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.HorLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         //EntryEditorMenuBar.make(menuBarLayout, menuHideButton, context);
 
         pageResources = new PageResources(context, menuBarLayout, invisibleMenuBarLayout, menuHideButton);
+        PageResources.setPageResources(pageResources);
+
 
         inflateLayout = findViewById(R.id.inflateLayout);
         inflateLayout.setMinimumHeight(1000);

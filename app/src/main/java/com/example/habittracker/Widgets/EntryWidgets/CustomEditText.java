@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.Inflatables.PageResources;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
@@ -117,9 +118,9 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
         editText.setBackground(null);
         editText.setHintTextColor(ColorPalette.hintText);
 
-
-        setModeFromToggle(KeyBoardActionManager.getManager().getIsEnter());
-        KeyBoardActionManager.getManager().addToggleListener((isEnter)->{
+        KeyBoardActionManager keyBoardActionManager = PageResources.getPageResources().getWidgetResources().getKeyBoardActionManager();
+        setModeFromToggle(keyBoardActionManager.getIsEnter());
+        keyBoardActionManager.addToggleListener((isEnter)->{
             setModeFromToggle(isEnter);
         });
 
