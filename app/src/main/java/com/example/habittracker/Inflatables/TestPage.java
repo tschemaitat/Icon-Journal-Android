@@ -1,10 +1,12 @@
 package com.example.habittracker.Inflatables;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.MainActivity;
@@ -12,8 +14,11 @@ import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.SaveStructures;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP;
+import com.example.habittracker.ViewLibrary.TextElement;
 import com.example.habittracker.ViewWidgets.ListViewPackage.CustomListView;
 import com.example.habittracker.ViewWidgets.ListViewPackage.DynamicListView;
+import com.example.habittracker.ViewWidgets.RelativeLayoutNewMeasure;
 import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
 
@@ -32,7 +37,8 @@ public class TestPage implements Inflatable {
         //testAnimatedToggle();
         //testRoundRectBorder();
         //addSaveAndDeleteButtons();
-        testDynamicListView();
+        //testDynamicListView();
+        testCustomMeasureLayouts();
     }
 
 
@@ -113,6 +119,20 @@ public class TestPage implements Inflatable {
     }
 
 
+    private void testCustomMeasureLayouts() {
+        RelativeLayoutNewMeasure relative = new RelativeLayoutNewMeasure(context);
+        relative.setBackgroundColor(Color.BLUE);
+        linearLayout.addView(relative);
+        TextElement textElement = new TextElement(context, "hello");
+        textElement.getView().setBackgroundColor(Color.YELLOW);
+
+        TextElement textElement2 = new TextElement(context, "hello");
+        textElement2.getView().setBackgroundColor(Color.CYAN);
+
+
+        relative.addWithParam(textElement.getView(), -2,-2).put(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        relative.addWithParam(textElement2.getView(), -2,-2).put(RelativeLayout.RIGHT_OF, textElement.getView());
+    }
 
 
 

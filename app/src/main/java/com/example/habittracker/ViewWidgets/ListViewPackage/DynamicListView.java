@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.ViewLibrary.AbstractBasicElement;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.HorLayout;
 import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
@@ -142,7 +143,7 @@ public class DynamicListView {
     }
 
     private Element createDivisionBar() {
-        Element dummyDivisionBar = new Element() {
+        Element dummyDivisionBar = new AbstractBasicElement() {
             @Override
             public View getView() {
                 View view = new View(context);

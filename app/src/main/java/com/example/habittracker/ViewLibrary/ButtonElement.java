@@ -2,9 +2,10 @@ package com.example.habittracker.ViewLibrary;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ButtonElement implements Element{
+public class ButtonElement extends AbstractBasicElement{
     private Button button;
     private Context context;
     private String text;
@@ -26,4 +27,6 @@ public class ButtonElement implements Element{
     public View getView() {
         return button;
     }
+
+
 }

@@ -5,17 +5,17 @@ import static com.example.habittracker.ViewLibrary.MeasureFunctions.*;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
 
 
-
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeLayoutParam;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeLayoutParam.*;
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP.*;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import java.util.HashMap;
 
-public class RelativeLayoutNewMeasure extends RelativeLayout {
+public class RelativeLayoutNewMeasure extends ViewGroup {
     private HashMap<View, MutablePosition> mutablePositions = new HashMap<>();
     private ArrayList<View> notMeasured = new ArrayList<>();
     private ArrayList<View> anchoredViews = new ArrayList<>();
@@ -37,9 +37,19 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    public RelLP addWithParam(View child, int width, int height){
+        super.addView(child);
+        RelLP lp = new RelLP(width, height);
+        child.setLayoutParams(lp);
+        return lp;
+    }
+
     @Override
     public void onViewAdded(View child) {
+        MainActivity.log("before super, child added, their param:  " + child.getLayoutParams().getClass());
         super.onViewAdded(child);
+
+        MainActivity.log("child added, their param:  " + child.getLayoutParams().getClass());
         mutablePositions.put(child, new MutablePosition());
         children.add(child);
         if(mutablePositions.size() != getChildCount() || children.size() != getChildCount()){
@@ -68,27 +78,53 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
         int layoutSpecWidthSize = MeasureSpec.getSize(widthMeasureSpec);
         int layoutSpecHeightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int layoutSpecWidthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int layoutSpecHeightMode = MeasureSpec.getMode(heightMeasureSpec);
+        MainActivity.log("on measure children count: " + children.size());
+        for(View view: children){
+            MainActivity.log("child class: " + view.getClass());
+        }
 
 
+        int maxChildWidth = 0;
+        int maxChildHeight = 0;
+
+        int layoutWidth = layoutSpecWidthSize;
+        int layoutHeight = layoutSpecHeightSize;
 
 
-        int maxChildWidth = -3;
-        int maxChildHeight = -3;
 
         for(int measureIteration = 0; measureIteration < 2; measureIteration++){
+            if(measureIteration == 1){
+                if(layoutSpecWidthMode == MeasureSpec.AT_MOST){
+                    layoutWidth = Math.min(maxChildWidth, layoutSpecWidthSize);
+                }
+                if(layoutSpecHeightMode == MeasureSpec.AT_MOST){
+                    layoutHeight = Math.min(maxChildHeight, layoutSpecHeightSize);
+                }
+            }
+
+
             boolean measuredAtLeastOneView = true;
             resetOnMeasureDataStructures();
-            while(measuredAtLeastOneView && notMeasured.size() != 0){
+            while(measuredAtLeastOneView){
+                MainActivity.log("measuring while loop num child not measured: " + notMeasured.size());
                 measuredAtLeastOneView = false;
-                for(View view: children){
-                    RelativeLayoutParam lp = (RelativeLayoutParam) view.getLayoutParams();
+                for(int notMeasuredIndex = notMeasured.size() - 1; notMeasuredIndex >= 0; notMeasuredIndex--){
+                    View view = notMeasured.get(notMeasuredIndex);
+                    RelLP lp = (RelLP) view.getLayoutParams();
                     ArrayList<View> anchorViews = lp.getAnchorViews();
-                    if(children.containsAny(anchorViews))
+                    if(notMeasured.containsAny(anchorViews)){
+                        MainActivity.log("child index: " + children.indexOf(view) + ", cannot be measured");
+                        MainActivity.log("children not measured: " + notMeasured.convert((index, element) -> children.indexOf(element)));
+                        MainActivity.log("anchored views: " + anchorViews.convert((index, element) -> children.indexOf(element)));
                         continue;
+                    }
+
                     measuredAtLeastOneView = true;
                     notMeasured.remove(view);
 
-                    boolean[] constrained = new boolean[4];
+                    boolean leftConstrained = false, topConstrained = false, rightConstrained = false, bottomConstrained = false;
 
                     for(int i: bordersFromConstraints)
                         i = 0;
@@ -106,9 +142,13 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
                     //left
 //                int leftBorder = getPositionBorderFromDimensionIndex(rules[0].getView(), rules[0].getCode());
                     int leftBorder = 0;
-
+                    ruleNotNull:
                     if(rules[0] != null) {
+                        leftConstrained = true;
                         currentAnchorView = rules[0].getView();
+                        if(currentAnchorView == null){
+                            break ruleNotNull;
+                        }
                         currentAnchorLp = (MarginLayoutParams) currentAnchorView.getLayoutParams();
                         if(rules[0].isRightOf())
                             leftBorder = mutablePositions.get(currentAnchorView).x + view.getMeasuredWidth() + currentAnchorLp.rightMargin;// + lp.leftMargin;
@@ -117,9 +157,13 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
                     }
                     //top
                     int topBorder = 0;
-
+                    ruleNotNull:
                     if(rules[1] != null){
+                        topConstrained = true;
                         currentAnchorView = rules[1].getView();
+                        if(currentAnchorView == null){
+                            break ruleNotNull;
+                        }
                         currentAnchorLp = (MarginLayoutParams) currentAnchorView.getLayoutParams();
                         if(rules[1].isBelow())
                             topBorder = mutablePositions.get(currentAnchorView).y + view.getMeasuredHeight() + currentAnchorLp.bottomMargin;// + lp.topMargin;
@@ -127,10 +171,14 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
                             topBorder = mutablePositions.get(currentAnchorView).y;
                     }
                     //right
-                    int rightBorder = layoutSpecWidthSize;
-
+                    int rightBorder = layoutWidth;
+                    ruleNotNull:
                     if(rules[2] != null){
+                        rightConstrained = true;
                         currentAnchorView = rules[2].getView();
+                        if(currentAnchorView == null){
+                            break ruleNotNull;
+                        }
                         currentAnchorLp = (MarginLayoutParams) currentAnchorView.getLayoutParams();
                         if(rules[2].isLeftOf())
                             rightBorder = mutablePositions.get(currentAnchorView).x - currentAnchorLp.leftMargin;// - lp.rightMargin;
@@ -138,10 +186,15 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
                             rightBorder = mutablePositions.get(currentAnchorView).x + view.getMeasuredWidth();
                     }
                     //bottom
-                    int bottomBorder = layoutSpecHeightSize;
-
+                    int bottomBorder = layoutHeight;
+                    ruleNotNull:
                     if(rules[3] != null) {
+                        bottomConstrained = true;
                         currentAnchorView = rules[3].getView();
+                        if(currentAnchorView == null){
+                            break ruleNotNull;
+                        }
+
                         currentAnchorLp = (MarginLayoutParams) currentAnchorView.getLayoutParams();
                         if(rules[3].isAbove())
                             bottomBorder = mutablePositions.get(currentAnchorView).y - currentAnchorLp.topMargin;// - lp.bottomMargin;
@@ -166,48 +219,35 @@ public class RelativeLayoutNewMeasure extends RelativeLayout {
 
                 }
             }
+
+            if(notMeasured.size() != 0){
+                MainActivity.log("children: " + children);
+                MainActivity.log("not measured: " + notMeasured);
+                MainActivity.log("not measured index's: " + notMeasured.convert((index, element)->children.indexOf(element)));
+                MainActivity.log("\n");
+
+                children.enumerate((index, view) -> {
+                    RelLP lp = (RelLP) view.getLayoutParams();
+                    ArrayList<View> anchorViews = lp.getAnchorViews();
+                    ArrayList<Integer> anchorViewIndexList = anchorViews.convert((indexAnchor, viewAnchor)->children.indexOf(viewAnchor));
+                    MainActivity.log("index: " + index +", anchors: " + anchorViewIndexList);
+                });
+
+                throw new RuntimeException();
+            }
         }
 
 
-
-
-
-
-
-
-    }
-
-    public int getSizeWithMarginFromDimensionIndex(View view, int dimensionIndex){
-        if(dimensionIndex == 0 || dimensionIndex == 2){
-            return getMeasuredWidthAndMargin(view);
-        }
-        if(dimensionIndex == 1 || dimensionIndex == 3){
-            return getMeasuredHeightAndMargin(view);
-        }
-        throw new RuntimeException();
-    }
-
-    public int getPositionBorderFromDimensionIndex(View view, int dimensionIndex){
-        MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
-        MutablePosition mutablePosition = mutablePositions.get(view);
-        if(dimensionIndex == 0){
-            return mutablePosition.x - lp.leftMargin;
-        }
-        if(dimensionIndex == 1){
-            return mutablePosition.y - lp.topMargin;
-        }
-        if(dimensionIndex == 3){
-            return mutablePosition.x + view.getMeasuredWidth() + lp.rightMargin;
-        }
-        if(dimensionIndex == 4){
-            return mutablePosition.y + view.getMeasuredHeight() + lp.bottomMargin;
-        }
-        throw new RuntimeException();
+        setMeasuredDimension(maxChildWidth, maxChildHeight);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
+        for(View view: children){
+            MutablePosition mutablePosition = mutablePositions.get(view);
+            view.layout(mutablePosition.x, mutablePosition.y,
+                    mutablePosition.x + view.getMeasuredWidth(), mutablePosition.y + view.getMeasuredHeight());
+        }
     }
 
 

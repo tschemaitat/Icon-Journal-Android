@@ -8,7 +8,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
 
-public class TextElement implements Element{
+public class TextElement extends AbstractBasicElement{
     private Context context;
     private TextView textView;
 

@@ -1,7 +1,5 @@
 package com.example.habittracker.ViewLibrary.RelativeLayoutElements;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,22 +8,22 @@ import android.widget.RelativeLayout;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class RelativeLayoutParam extends ViewGroup.MarginLayoutParams {
+public class RelLP extends ViewGroup.MarginLayoutParams {
     private Rule[] rules = new Rule[4];
     private ArrayList<View> anchorViews = new ArrayList<>();
-    public RelativeLayoutParam(Context c, AttributeSet attrs) {
+    public RelLP(Context c, AttributeSet attrs) {
         super(c, attrs);
     }
 
-    public RelativeLayoutParam(int width, int height) {
+    public RelLP(int width, int height) {
         super(width, height);
     }
 
-    public RelativeLayoutParam(ViewGroup.MarginLayoutParams source) {
+    public RelLP(ViewGroup.MarginLayoutParams source) {
         super(source);
     }
 
-    public RelativeLayoutParam(ViewGroup.LayoutParams source) {
+    public RelLP(ViewGroup.LayoutParams source) {
         super(source);
     }
 
@@ -37,12 +35,12 @@ public class RelativeLayoutParam extends ViewGroup.MarginLayoutParams {
         return rules;
     }
 
-    public RelativeLayoutParam addRule(int code, View view){
+    public RelLP put(int code, View view){
         addRulePrivate(code, view);
         return this;
     }
 
-    public RelativeLayoutParam addRule(int code){
+    public RelLP put(int code){
         addRulePrivate(code, null);
         return this;
     }
@@ -59,6 +57,8 @@ public class RelativeLayoutParam extends ViewGroup.MarginLayoutParams {
     private void createAnchorViews(){
         anchorViews = new ArrayList<>();
         for(Rule rule: rules){
+            if(rule == null)
+                continue;
             if(rule.view == null)
                 continue;
             anchorViews.add(rule.view);

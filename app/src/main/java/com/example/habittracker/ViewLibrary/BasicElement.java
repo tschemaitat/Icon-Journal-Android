@@ -4,8 +4,9 @@ import android.view.View;
 
 public class BasicElement extends AbstractBasicElement{
 
-    @Override
-    public void setCoreView(View view) {
 
+    @Override
+    public View getView() {
+        return null;
     }
 }

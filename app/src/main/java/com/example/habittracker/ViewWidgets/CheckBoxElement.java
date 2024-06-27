@@ -6,10 +6,11 @@ import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.example.habittracker.ViewLibrary.AbstractBasicElement;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class CheckBoxElement implements Element {
+public class CheckBoxElement extends AbstractBasicElement {
     private Context context;
     private BooleanListener booleanListener;
     private CheckBox checkBox;

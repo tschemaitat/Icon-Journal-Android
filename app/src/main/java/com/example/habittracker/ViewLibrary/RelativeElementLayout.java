@@ -20,8 +20,14 @@ public class RelativeElementLayout extends ElementLayout{
         relativeLayout = new RelativeLayout(context);
     }
 
-    public void add(Element element){
-        super.add(element);
+    @Override
+    protected void onAdd(Element element) {
+
+    }
+
+    @Override
+    protected void onRemove(Element element) {
+
     }
 
     public static void test(Context context){
