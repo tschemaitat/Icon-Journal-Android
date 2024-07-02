@@ -33,6 +33,7 @@ public class ViewWrapper {
         checkBoxLayout = createCheckBoxLayout(context, nameLayout);
         borderLayout = createBorderLayout(context, checkBoxLayout);
         checkBox = createCheckBox(context);
+        
         widgetLayout = createWidgetLayout(context, borderLayout);
         borderView = createBorder(context, borderLayout);
         createInvisibleEditText();

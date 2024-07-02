@@ -8,16 +8,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLayoutSuperMeasure;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class RelativeElementLayout extends ElementLayout{
-    private RelativeLayout relativeLayout;
+    private RelLayoutSuperMeasure relativeLayout;
     private Context context;
 
     public RelativeElementLayout(Context context) {
         super(context);
         this.context = context;
-        relativeLayout = new RelativeLayout(context);
+        relativeLayout = new RelLayoutSuperMeasure(context);
     }
 
     @Override
