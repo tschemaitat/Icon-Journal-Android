@@ -120,15 +120,15 @@ public class DeleteValueManager {
             BaseEntryWidget sourceWidget = widgetList.get(widgetIndex);
             ArrayList<RefEntryString> referencesOfWidget = referencesList.get(widgetIndex);
             ArrayList<RefEntryString> sourceLocationList = refListList.get(widgetIndex);
-            stringBuilder.append("source widget: " + sourceWidget + ", " + sourceWidget.getName() + "\n");
+            stringBuilder.append("source widget: " + sourceWidget.getWidgetInStructure().getNameWithPathArrows() + "\n");
             stringBuilder.append("\tsource values: \n");
             for(RefEntryString sourceValue: sourceLocationList){
-                stringBuilder.append(" [" + sourceValue.getLocationString() + ": " + sourceValue.getString() + "]\n");
+                stringBuilder.append("\t\t"+sourceValue.getString() + "\n");
             }
             stringBuilder.append("\n");
             stringBuilder.append("\treference values: \n");
             for(RefEntryString reference: referencesOfWidget){
-                stringBuilder.append(" [" + reference + ": " + reference.getString() + "]\n");
+                stringBuilder.append("\t\t"+reference.getLocationString() + ": " + reference.getString() + "\n");
             }
             stringBuilder.append("\n");
         }

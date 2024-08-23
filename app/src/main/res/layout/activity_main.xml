@@ -92,7 +92,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menuBarLayout">
+        app:layout_constraintTop_toBottomOf="@id/invisibleMenuBarLayout">
 
         <LinearLayout
             android:id="@+id/scrollLinearLayout"

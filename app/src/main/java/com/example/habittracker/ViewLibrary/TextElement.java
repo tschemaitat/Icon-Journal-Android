@@ -20,6 +20,7 @@ public class TextElement extends AbstractBasicElement{
 //
 //        textView.font
         textView = (TextView)GLib.inflate(android.R.layout.simple_list_item_1);
+        textView.setId(View.generateViewId());
         textView.setText(text);
         if(clickListeners.length == 1){
             Runnable listener = clickListeners[0];

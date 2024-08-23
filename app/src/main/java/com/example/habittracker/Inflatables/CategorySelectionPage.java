@@ -6,7 +6,10 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.ViewWidgets.ListViewPackage.DynamicListView;
 import com.example.habittracker.ViewWidgets.SelectionView;
+import com.example.habittracker.defaultImportPackage.DefaultImportClass;
 import com.example.habittracker.structurePack.Structure;
 
 public class CategorySelectionPage implements Inflatable{
@@ -29,9 +32,41 @@ public class CategorySelectionPage implements Inflatable{
     @Override
     public void onOpened() {
         MainActivity.log("structures: \n" + Dictionary.getStructureDebug());
-        SelectionView selectionView = new SelectionView(context, Dictionary.getCategoryOptions(),
-                (stringValue, position, key) -> onCategorySelected((Structure) key));
-        linearLayout.addView(selectionView.getView());
+//        SelectionView selectionView = new SelectionView(context, Dictionary.getCategoryOptions(),
+//                (stringValue, position, key) -> onCategorySelected((Structure) key));
+//        linearLayout.addView(selectionView.getView());
+
+        DynamicListView dynamicListView = new DynamicListView(context, Dictionary.getCategoryOptions());
+        dynamicListView.setOnClickListener((cachedString, position, key) -> {
+            MainActivity.log("sending click to onCategorySelected");
+            onCategorySelected((Structure) key);
+        });
+        dynamicListView.setOnLongClickListener((cachedString, position, key) -> {
+            onLongClick(position, dynamicListView);
+        });
+        linearLayout.addView(dynamicListView.getView());
+
+    }
+
+    private void onLongClick(int position, DynamicListView dynamicListView){
+        MainActivity.log("outside on long click");
+        dynamicListView.showCheckBoxes((checked, cachedString1, position1, key1) -> {
+            onCheckBox(dynamicListView);
+        });
+        dynamicListView.setCheckBox(position, true);
+        dynamicListView.showConfirmButton(() -> {
+            onConfirm(dynamicListView);
+        });
+    }
+
+    private void onCheckBox(DynamicListView dynamicListView){
+
+    }
+
+    private void onConfirm(DynamicListView dynamicListView){
+        MainActivity.log("confirming");
+        dynamicListView.hideConfirmButton();
+        dynamicListView.hideCheckBoxes();
     }
 
     public void onCategorySelected(Structure structure){

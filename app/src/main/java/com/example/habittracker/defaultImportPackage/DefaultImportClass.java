@@ -28,6 +28,11 @@ public class DefaultImportClass {
         }
     }
 
+    public enum MatchCode {
+        MatchWidth,
+        MatchHeight;
+    }
+
     public static class Dimensions{
         private int left;
         private int top;

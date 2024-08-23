@@ -16,6 +16,8 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
+
+
 public class InvisibleEditTextManager {
     private static InvisibleEditTextManager manager;
     public static InvisibleEditTextManager getManager(){
@@ -79,25 +81,25 @@ public class InvisibleEditTextManager {
         else
             debug += "focused widget was " + focusedWidget.widgetDebugId + " , name: " + focusedWidget.getName() + "\n";
         logList.append(debug);
-        focusedWidget.getView().clearFocus();
-        invisibleEditText.clearFocus();
-        if(focusedWidget != null){
-            if( ! (focusedWidget instanceof EditableWidget)){
-                focusedWidget.onFocusChange(false);
-            }
-            focusedWidget = null;
-        }
+        //focusedWidget.getView().clearFocus();
+        //invisibleEditText.clearFocus();
+//        if(focusedWidget != null){
+//            if( ! (focusedWidget instanceof EditableWidget)){
+//                focusedWidget.onFocusChange(false);
+//            }
+//            focusedWidget = null;
+//        }
 
     }
 
     public void setFocusedWidget(EntryWidget entryWidget){
         logList.append("set focused widget widgetDebugId: " + entryWidget.widgetDebugId + " , name: " + entryWidget.getName() + "\n");
         MainActivity.log("new focused widget");
-        if(focusedWidget != null){
-            MainActivity.log("tried to set new widget.\nold widget: " + focusedWidget + "\nnew widget: " + entryWidget);
-            MainActivity.log(logList.toString());
-            throw new RuntimeException();
-        }
+//        if(focusedWidget != null){
+//            MainActivity.log("tried to set new widget.\nold widget: " + focusedWidget + "\nnew widget: " + entryWidget);
+//            MainActivity.log(logList.toString());
+//            throw new RuntimeException();
+//        }
         LockableScrollView scrollView = MainActivity.scrollView;
         scrollView.scrollToChildPublic(entryWidget.getView());
         focusedWidget = entryWidget;

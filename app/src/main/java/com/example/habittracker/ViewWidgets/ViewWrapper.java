@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.habittracker.Algorithms.HandleDeletedValues;
@@ -14,6 +15,8 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticStateManagers.DeleteValueManager;
+import com.example.habittracker.ViewLibrary.AbstractBasicElement;
+import com.example.habittracker.ViewLibrary.RelativeElementLayout;
 
 public class ViewWrapper {
     private Context context;
@@ -22,6 +25,7 @@ public class ViewWrapper {
     private View view;
     private EditText invisibleEditText;
     private FillLayout borderLayout;
+    private RelativeElementLayout borderLayoutRelative;
     private LinLayout widgetLayout;
     private RoundRectBorder borderView;
     private LinearLayout checkBoxLayout;
@@ -31,11 +35,20 @@ public class ViewWrapper {
         this.context = context;
         nameLayout = createNameLayout(context);
         checkBoxLayout = createCheckBoxLayout(context, nameLayout);
-        borderLayout = createBorderLayout(context, checkBoxLayout);
+
+//        borderLayout = new FillLayout(context);
+//        borderLayout.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+//        nameLayout.addView(borderLayout);
+
+        borderLayoutRelative = new RelativeElementLayout(context);
+        borderLayoutRelative.getView().setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+        nameLayout.add(borderLayoutRelative.getView());
+
+
         checkBox = createCheckBox(context);
         
-        widgetLayout = createWidgetLayout(context, borderLayout);
-        borderView = createBorder(context, borderLayout);
+        widgetLayout = createWidgetLayout(context, borderLayoutRelative);
+        borderView = createBorder(context, borderLayoutRelative);
         createInvisibleEditText();
     }
 
@@ -84,7 +97,7 @@ public class ViewWrapper {
         borderLayout.removeFillerView();
     }
 
-    private static RoundRectBorder createBorder(Context context, FillLayout borderLayout){
+    private static RoundRectBorder createBorder(Context context, RelativeElementLayout relativeElementLayout){
         RoundRectBorder roundRectBorder = new RoundRectBorder(context);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(-1, -1);
         roundRectBorder.setLayoutParams(layoutParam);
@@ -99,20 +112,21 @@ public class ViewWrapper {
         return nameLayout;
     }
 
-    private static LinLayout createWidgetLayout(Context context, FillLayout borderLayout){
+    private static LinLayout createWidgetLayout(Context context, RelativeElementLayout relativeElementLayout){
         LinLayout widgetLayout = new LinLayout(context);
         //LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(-2, -2);
         //widgetLayout.getView().setLayoutParams(layoutParam);
         //widgetLayout.setOrientation(LinearLayout.VERTICAL);
-        borderLayout.setChildView(widgetLayout.getView());
-        return widgetLayout;
-    }
 
-    private static FillLayout createBorderLayout(Context context, LinearLayout nameLayout){
-        FillLayout borderLayout = new FillLayout(context);
-        borderLayout.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
-        nameLayout.addView(borderLayout);
-        return borderLayout;
+        //borderLayout.setChildView(widgetLayout.getView());
+        relativeElementLayout.addWithParam(new AbstractBasicElement() {
+            @Override
+            public View getView() {
+                return widgetLayout.getView();
+            }
+        }, -2, -2).alignAllParentSides();
+
+        return widgetLayout;
     }
 
     public void disable(){

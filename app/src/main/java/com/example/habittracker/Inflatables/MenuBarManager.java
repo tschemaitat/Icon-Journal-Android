@@ -38,10 +38,6 @@ public class MenuBarManager {
         entryEditorMenuBar.removeConfirmView();
     }
 
-    public KeyBoardActionManager getKeyBoardActionManager(){
-        return entryEditorMenuBar.getKeyBoardActionManager();
-    }
-
 
     private void init(){
         hideButton.setOnClickListener((view -> {

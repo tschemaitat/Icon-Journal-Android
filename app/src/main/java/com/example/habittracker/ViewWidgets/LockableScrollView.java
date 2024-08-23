@@ -10,6 +10,9 @@ import android.widget.ScrollView;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
+import com.example.habittracker.ViewLibrary.MatchParams;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.LayoutMeasure;
+import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
 
 public class LockableScrollView extends ScrollView {
 
@@ -158,11 +161,57 @@ public class LockableScrollView extends ScrollView {
             // make sure we aren't scrolling any further than the top our content
             scrollYDelta = Math.max(scrollYDelta, -getScrollY());
         }else{
-            MainActivity.log("scroll amount result: deemed to already been shown scroll top/bot: " +
-                    screenTop + ", " + screenBottom + ", view top/bot: " +
-                    rect.top + ", " + rect.bottom);
+//            MainActivity.log("scroll amount result: deemed to already been shown scroll top/bot: " +
+//                    screenTop + ", " + screenBottom + ", view top/bot: " +
+//                    rect.top + ", " + rect.bottom);
         }
         return scrollYDelta;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        remeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private void remeasure(int widthMeasureSpec, int heightMeasureSpec){
+
+//        MainActivity.log("super rel onMeasure width mode: " +
+//                MeasureSpec.getMode(widthMeasureSpec) + ", size: " + MeasureSpec.getSize(widthMeasureSpec) + "\n" +
+//                MeasureSpec.getMode(heightMeasureSpec) + ", size: " + MeasureSpec.getSize(heightMeasureSpec));
+
+        int measuredWidth = super.getMeasuredWidth();
+        int measuredHeight = super.getMeasuredHeight();
+
+        //MainActivity.log("on measure scroll num children: " + getChildCount());
+        //MainActivity.log("on measure scroll id: " + getId());
+
+
+//        MainActivity.log("measured size: " + measuredWidth + ", " + measuredHeight);
+
+        for(int i = 0; i < super.getChildCount(); i++) {
+            View view = getChildAt(i);
+            MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
+            //MainActivity.log("scroll view with lp: " + lp.getClass().getName());
+            if(!(lp instanceof ScrollElement.ScrollParam matchParams))
+                continue;
+            //MainActivity.log("found one view with matchParams in scroll");
+
+            int childMeasuredWidth = view.getMeasuredWidth();
+            int childMeasuredHeight = view.getMeasuredHeight();
+            boolean reMeasure = false;
+            if (matchParams.matchWidth) {
+                reMeasure = true;
+                childMeasuredWidth = LayoutMeasure.getMeasureSizeMatchParent(measuredWidth,
+                        lp.leftMargin, lp.rightMargin, getPaddingLeft(), getPaddingRight());
+            }
+            if (reMeasure) {
+                MainActivity.log("remeasured element");
+                view.measure(MeasureSpec.makeMeasureSpec(childMeasuredWidth, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(childMeasuredHeight, MeasureSpec.EXACTLY));
+            }
+
+        }
     }
 
     @Override

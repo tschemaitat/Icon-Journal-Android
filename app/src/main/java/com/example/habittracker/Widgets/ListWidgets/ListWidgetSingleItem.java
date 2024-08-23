@@ -14,14 +14,16 @@ import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class ListWidgetSingleItem extends ListWidget {
-    public static final String className = "list single item";
+    public static final String className = "list";
+    public static final String childClassName = "list single item";
     private Context context;
-    private ListSingleItemParam param;
+    private ListParam param;
 
     public ListWidgetSingleItem(Context context) {
         super(context);
@@ -57,7 +59,7 @@ public class ListWidgetSingleItem extends ListWidget {
     public void setValueListCustom(WidgetValue widgetValue) {
         MainActivity.log("set value single item");
         ListValue listValue = (ListValue) widgetValue;
-        EntryWidgetParam entryWidgetParam = param.widgetParam;
+        EntryWidgetParam entryWidgetParam = param.cloneableWidget.params.get(0);
         ArrayList<GroupValue> groupValueList = listValue.getGroupValueList();
         for(GroupValue groupValue: groupValueList){
             BaseEntryWidget item = (BaseEntryWidget)createItem();
@@ -93,8 +95,8 @@ public class ListWidgetSingleItem extends ListWidget {
 
     @Override
     public void setParamCustom(EntryWidgetParam param) {
-        this.param = (ListSingleItemParam) param;
-        setWidgetParam(this.param.widgetParam);
+        this.param = (ListParam) param;
+        setWidgetParam(this.param.cloneableWidget.params.get(0));
 
     }
 }

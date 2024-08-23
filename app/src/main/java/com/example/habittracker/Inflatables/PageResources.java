@@ -21,15 +21,17 @@ public class PageResources {
     private Context context;
     private MenuBarManager menuBarManager;
     private WidgetResources widgetResources;
+    private KeyBoardActionManager keyBoardActionManager;
     public PageResources(Context context, LinearLayout menuBarLayout, LinearLayout invisibleMenuBarLayout,
                          ImageButton menuHideButton){
         this.context = context;
+        keyBoardActionManager = new KeyBoardActionManager(context);
         menuBarManager = new MenuBarManager(context, menuBarLayout, invisibleMenuBarLayout, menuHideButton);
-
     }
 
-    public WidgetResources getWidgetResources(){
-        return widgetResources;
+
+    public KeyBoardActionManager getKeyBoardActionManager(){
+        return keyBoardActionManager;
     }
 
     public MenuBarManager getMenuBarManager(){

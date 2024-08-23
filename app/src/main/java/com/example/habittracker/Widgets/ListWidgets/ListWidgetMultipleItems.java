@@ -17,12 +17,14 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class ListWidgetMultipleItems extends ListWidget {
-    private ListMultiItemParam listMultiItemParam = null;
+    public static String childClassName = "list multiple items";
+    private ListParam listMultiItemParam = null;
     private Context context;
-    public static final String className = "list multiple items";
+    public static final String className = "list";
     public ListWidgetMultipleItems(Context context) {
         super(context);
         this.context = context;
@@ -91,7 +93,7 @@ public class ListWidgetMultipleItems extends ListWidget {
     }
 
     public void setParamCustom(EntryWidgetParam param){
-        this.listMultiItemParam = (ListMultiItemParam) param;
+        this.listMultiItemParam = (ListParam) param;
         setWidgetParam(listMultiItemParam.cloneableWidget);
     }
 }

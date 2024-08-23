@@ -19,6 +19,7 @@ import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
 public class StructureWidget implements Widget {
     private StructureWidgetHeaderView headerView = null;
@@ -170,7 +171,7 @@ public class StructureWidget implements Widget {
             }
 
             if(type.equals("list")){
-                ListMultiItemParam param = (ListMultiItemParam)structureWidgetList.getParam();
+                ListParam param = (ListParam) structureWidgetList.getParam();
                 result = param;
                 break typeSwitch;
             }

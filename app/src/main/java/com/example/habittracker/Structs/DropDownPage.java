@@ -191,7 +191,8 @@ public class DropDownPage{
             if(child.getCachedName().equals(name))
                 return child;
         }
-        throw new RuntimeException("tried to find: " + name);
+        throw new RuntimeException("tried to find: " + name + "\n" +
+                "page childnre: " + this.hierarchyString());
     }
 
 

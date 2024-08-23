@@ -7,6 +7,7 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import java.util.Objects;
 
@@ -89,5 +90,16 @@ public class WidgetInStructure {
     public void equalsThrows(WidgetInStructure widgetInStructure) {
         getWidgetId().equalsThrows(widgetInStructure.getWidgetId());
         structure.equalsThrows(widgetInStructure.structure);
+    }
+
+    public String getNameWithPathArrows() {
+        ArrayList<CachedString> namePath = getNameWithPath().getPath();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < namePath.size(); i++){
+            stringBuilder.append(namePath.get(i).getString());
+            if(i != namePath.size() - 1)
+                stringBuilder.append("->");
+        }
+        return stringBuilder.toString();
     }
 }

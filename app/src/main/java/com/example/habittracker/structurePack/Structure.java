@@ -17,6 +17,7 @@ import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class Structure {
     private String name;
     private GroupWidgetParam widgetParam;
     private String type;
-    private HashMap<EntryId, EntryInStructure> entries;
+    private HashMap<EntryId, GroupValue> entries;
     private Set<WidgetInStructure> widgetMap;
 
 
@@ -86,47 +87,47 @@ public class Structure {
     }
 
     private void insertOldEntry(Entry entry){
-        EntryInStructure entryInStructure = new EntryInStructure(entry.getGroupValue(), entry.getId(), this);
-        entries.put(entryInStructure.getId(), entryInStructure);
+        //EntryInStructure entryInStructure = new EntryInStructure(entry.getGroupValue(), entry.getId(), this);
+        entries.put(entry.getId(), entry.getGroupValue());
     }
 
     public void addEntry(GroupValue entryData){
         Set<EntryId> entryIdSet = entries.keySet();
         while(entryIdSet.contains(new EntryId(idCount)))
             idCount++;
-        EntryInStructure entryInStructure = new EntryInStructure(entryData, new EntryId(idCount), this);
+        EntryInStructure entryInStructure = new EntryInStructure(new EntryId(idCount), this);
         idCount++;
-        entries.put(entryInStructure.getId(), entryInStructure);
+        entries.put(entryInStructure.getId(), entryData);
     }
 
     public void editEntry(EntryInStructure entryInStructureToEdit, GroupValue data){
         EntryId entryId = entryInStructureToEdit.getId();
-        EntryInStructure found = null;
-        for(EntryInStructure entryInStructure : entries.values()){
-            if(entryInStructure.getId() == entryId){
-                found = entryInStructure;
-                break;
-            }
-        }
-        EntryInStructure newEntryInStructure = new EntryInStructure(data, entryId, this);
-        entries.put(entryId, newEntryInStructure);
+        if(entries.get(entryInStructureToEdit.getId()) == null)
+            throw new RuntimeException();
+        entries.put(entryId, data);
     }
 
 
 
     public ArrayList<EntryInStructure> getEntryList(){
-        return new ArrayList<>(entries.values());
+        Structure thisStructure = this;
+        return new ArrayList<>(entries.entrySet()).convert(new ArrayList.ConvertFunction<Map.Entry<EntryId, GroupValue>, EntryInStructure>() {
+            @Override
+            public EntryInStructure convert(int index, Map.Entry<EntryId, GroupValue> element) {
+                return new EntryInStructure(element.getKey(), thisStructure);
+            }
+        });
     }
 
     public ArrayList<GroupValue> getData(){
         ArrayList<GroupValue> entryValueTrees = new ArrayList<>();
-        for(EntryInStructure entryInStructure : entries.values())
+        for(EntryInStructure entryInStructure : getEntryList())
             entryValueTrees.add(entryInStructure.getGroupValue());
         return entryValueTrees;
     }
 
     public ArrayList<EntryInStructure> getEntriesInStructure(){
-        return new ArrayList<>(entries.values());
+        return getEntryList();
     }
 
     public ArrayList<Entry> getEntries(){
@@ -163,7 +164,9 @@ public class Structure {
 
 
     public EntryInStructure getEntryInStructure(EntryId entryId) {
-        return entries.get(entryId);
+        if(entries.get(entryId) == null )
+            throw new RuntimeException();
+        return new EntryInStructure(entryId, this);
     }
 
     public StructureId getId() {
@@ -313,5 +316,19 @@ public class Structure {
             throw new RuntimeException();
         if( ! Objects.equals(name, structure.name))
             throw new RuntimeException();
+    }
+
+    public String getWidgetsInfoString() {
+        StringBuilder stringBuilder = new StringBuilder("widget info dump from structure: " + getNameAndId());
+        for(WidgetInStructure widget: widgetMap){
+            stringBuilder.append(widget.getName() +", "+widget.getWidgetId() + "\n");
+        }
+        return stringBuilder.toString();
+    }
+
+    public GroupValue getDataFromEntryId(EntryId id) {
+        if(entries.get(id) == null)
+            throw new RuntimeException();
+        return entries.get(id);
     }
 }

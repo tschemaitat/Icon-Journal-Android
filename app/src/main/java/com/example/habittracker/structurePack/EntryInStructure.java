@@ -8,11 +8,9 @@ import java.util.Objects;
 
 public class EntryInStructure {
     private EntryId id;
-    private GroupValue groupValue;
     private Structure structure;
 
-    public EntryInStructure(GroupValue groupValue, EntryId id, Structure structure){
-        this.groupValue = groupValue;
+    public EntryInStructure(EntryId id, Structure structure){
         this.id = id;
         this.structure = structure;
     }
@@ -26,7 +24,7 @@ public class EntryInStructure {
     }
 
     public GroupValue getGroupValue() {
-        return groupValue;
+        return structure.getDataFromEntryId(id);
     }
 
     public Structure getStructure() {
@@ -35,7 +33,7 @@ public class EntryInStructure {
 
 
     public Entry getEntry() {
-        return new Entry(groupValue, id);
+        return new Entry(getGroupValue(), id);
     }
 
     @Override
@@ -44,15 +42,15 @@ public class EntryInStructure {
             return false;
         if( ! Objects.equals(id, entryInStructure.id))
             return false;
-        if( ! Objects.equals(groupValue, entryInStructure.groupValue))
-            return false;
+//        if( ! Objects.equals(groupValue, entryInStructure.groupValue))
+//            return false;
         if( ! Objects.equals(structure, entryInStructure.structure))
             return false;
         return true;
     }
 
     public void equalsThrows(EntryInStructure entryInStructure) {
-        groupValue.equalsThrows(entryInStructure.groupValue);
+//        groupValue.equalsThrows(entryInStructure.groupValue);
         structure.equalsThrows(entryInStructure.structure);
     }
 }

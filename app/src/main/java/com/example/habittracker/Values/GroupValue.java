@@ -68,8 +68,15 @@ public class GroupValue extends WidgetValue{
         WidgetValue widgetValue = getWidgetValueByWidget(widgetInStructure);
         if(widgetValue instanceof BaseWidgetValue baseWidgetValue)
             return baseWidgetValue;
-        logErrorFindingWidgetValue(widgetInStructure);
-        throw new RuntimeException();
+        //logErrorFindingWidgetValue(widgetInStructure);
+
+//        ArrayList<WidgetId> widgetsInGroup = values.convert((index, widgetValue1) -> {
+//            return widgetValue1.getWidgetId();
+//        });
+        return null;
+//        String widgetInfoString = widgetInStructure.getStructure().getWidgetsInfoString();
+//        throw new RuntimeException(widgetInfoString + "\ntried to find widget: " + widgetInStructure.getWidgetId() + ", " + widgetInStructure.getName() +
+//                ", widget in group: " + widgetsInGroup);
     }
 
     public ArrayList<WidgetId> getWidgetIdList(){
@@ -127,7 +134,9 @@ public class GroupValue extends WidgetValue{
         ArrayList<BaseWidgetValue> baseWidgetValueList = new ArrayList<>();
         WidgetInStructure lastWidgetInStructure = widgetPath.getLast();
         for(GroupValue groupValue: groupValueList){
-            baseWidgetValueList.add(groupValue.getBaseWidgetValueByWidget(lastWidgetInStructure));
+            BaseWidgetValue baseWidgetValue = groupValue.getBaseWidgetValueByWidget(lastWidgetInStructure);
+            if(baseWidgetValue != null)
+                baseWidgetValueList.add(baseWidgetValue);
         }
 
         return baseWidgetValueList;

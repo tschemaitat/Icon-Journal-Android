@@ -12,13 +12,19 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class CheckBoxElement extends AbstractBasicElement {
     private Context context;
-    private BooleanListener booleanListener;
     private CheckBox checkBox;
-    private CheckBoxListener listener;
+    private CheckBoxListener checkBoxListener;
 
-    public CheckBoxElement(Context context, BooleanListener booleanListener) {
+    public CheckBoxElement(Context context, CheckBoxListener... checkBoxListeners) {
         this.context = context;
-        this.booleanListener = booleanListener;
+        if(checkBoxListeners.length == 0){
+            checkBoxListeners = null;
+        }else if(checkBoxListeners.length == 1){
+            this.checkBoxListener = checkBoxListeners[0];
+        }else{
+            throw new RuntimeException();
+        }
+
         checkBox = new CheckBox(context);
     }
 
@@ -32,18 +38,18 @@ public class CheckBoxElement extends AbstractBasicElement {
     }
 
     public void setOnCheckListener(CheckBoxListener listener){
-        this.listener = listener;
+        this.checkBoxListener = listener;
         checkBox.setOnClickListener((view)->{
             onClicked();
         });
     }
 
     public void onClicked(){
-        listener.onChecked(checkBox.isChecked());
+        checkBoxListener.onChecked(checkBox.isChecked());
     }
 
     public void clearOnCheckListener() {
-        listener = null;
+        checkBoxListener = null;
         checkBox.setOnClickListener(null);
     }
 

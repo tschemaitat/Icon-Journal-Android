@@ -5,6 +5,7 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.EntryId;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Values.GroupValue;
@@ -21,6 +22,7 @@ import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 import com.example.habittracker.structurePack.Entry;
 import com.example.habittracker.structurePack.EntryInStructure;
@@ -52,7 +54,7 @@ public class StructureTokenizer {
         for(Structure structure: structures){
             JSONObject structureJSON = jsonFromStructure(structure);
             Structure extractedStructure = makeStructure(structureJSON);
-            Structures.isStructuresSame(structure, extractedStructure);
+            Structures.isStructuresSame(structure, extractedStructure);//crashes if not same
 
             jsonArray.put(structureJSON);
         }
@@ -154,8 +156,11 @@ public class StructureTokenizer {
         switch(className){
             case DropDown.className->{return DropDownParam.getFromJSON(jsonObject);}
             case CustomEditText.className->{return EditTextParam.getFromJSON(jsonObject);}
-            case ListWidgetSingleItem.className->{return ListSingleItemParam.getFromJSON(jsonObject);}
-            case ListWidgetMultipleItems.className->{return ListMultiItemParam.getFromJSON(jsonObject);}
+            case ListWidget.className -> {
+                return ListParam.getFromJSON(jsonObject);
+            }
+//            case ListWidgetSingleItem.className->{return ListSingleItemParam.getFromJSON(jsonObject);}
+//            case ListWidgetMultipleItems.className->{return ListMultiItemParam.getFromJSON(jsonObject);}
             case GroupWidget.className->{return GroupWidgetParam.getFromJSON(jsonObject);}
         }
         MainActivity.log("couldn't find cached string class: " + className);

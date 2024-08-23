@@ -33,6 +33,11 @@ public class LinearElementLayout extends ElementLayout {
     }
 
     @Override
+    protected ViewGroup getViewGroup() {
+        return linearLayout;
+    }
+
+    @Override
     protected void onAdd(Element element) {
         linearLayout.addView(element.getView());
         ViewGroup.LayoutParams lp = element.getLayoutParams();

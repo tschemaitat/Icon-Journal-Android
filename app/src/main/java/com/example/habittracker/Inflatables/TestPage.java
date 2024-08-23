@@ -1,5 +1,7 @@
 package com.example.habittracker.Inflatables;
 
+import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -12,9 +14,14 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.SaveStructures;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.PayloadOption;
+import com.example.habittracker.ViewLibrary.BasicElement;
+import com.example.habittracker.ViewLibrary.MatchParams;
+import com.example.habittracker.ViewLibrary.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLayoutSuperMeasure;
 import com.example.habittracker.ViewLibrary.TextElement;
 import com.example.habittracker.ViewWidgets.ListViewPackage.CustomListView;
 import com.example.habittracker.ViewWidgets.ListViewPackage.DynamicListView;
@@ -23,6 +30,8 @@ import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.defaultImportPackage.DefaultImportClass;
+
 import java.util.List;
 
 public class TestPage implements Inflatable {
@@ -36,9 +45,9 @@ public class TestPage implements Inflatable {
         //testCustomListView();
         //testAnimatedToggle();
         //testRoundRectBorder();
-        //addSaveAndDeleteButtons();
+        addSaveAndDeleteButtons();
         //testDynamicListView();
-        testCustomMeasureLayouts();
+        //testCustomMeasureLayouts();
     }
 
 
@@ -69,11 +78,38 @@ public class TestPage implements Inflatable {
         ArrayList<PayloadOption> payloadOptions = options.convert((index, element) -> {
             return new PayloadOption(new LiteralString(element), null);
         });
-        DynamicListView dynamicListView = new DynamicListView(context, payloadOptions, (cachedString, index, payload)->{
-            MainActivity.log("clicked: " + payload);
-        }, null);
+        DynamicListView dynamicListView = new DynamicListView(context, payloadOptions);
         linearLayout.addView(dynamicListView.getView());
         dynamicListView.getView().setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+
+
+
+        dynamicListView.setOnClickListener((cachedString, position, key) -> {
+
+        });
+        dynamicListView.setOnLongClickListener((cachedString, position, key) -> {
+            onLongClick(dynamicListView);
+        });
+    }
+
+    private void onLongClick(DynamicListView dynamicListView){
+        MainActivity.log("outside on long click");
+        dynamicListView.showCheckBoxes((checked, cachedString1, position1, key1) -> {
+            onCheckBox(dynamicListView);
+        });
+        dynamicListView.showConfirmButton(() -> {
+            onConfirm(dynamicListView);
+        });
+    }
+
+    private void onCheckBox(DynamicListView dynamicListView){
+
+    }
+
+    private void onConfirm(DynamicListView dynamicListView){
+        MainActivity.log("confirming");
+        dynamicListView.hideConfirmButton();
+        dynamicListView.hideCheckBoxes();
     }
 
     private void addSaveAndDeleteButtons() {
@@ -120,18 +156,95 @@ public class TestPage implements Inflatable {
 
 
     private void testCustomMeasureLayouts() {
-        RelativeLayoutNewMeasure relative = new RelativeLayoutNewMeasure(context);
-        relative.setBackgroundColor(Color.BLUE);
-        linearLayout.addView(relative);
+        RelativeElementLayout relative = new RelativeElementLayout(context);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
+        lp.leftMargin = 10;
+        lp.topMargin = 10;
+        lp.rightMargin = 10;
+        lp.bottomMargin = 10;
+        relative.getView().setLayoutParams(lp);
+        relative.getView().setPadding(10, 10, 10, 10);
+        relative.getView().setBackgroundColor(Color.BLUE);
+        linearLayout.addView(relative.getView());
         TextElement textElement = new TextElement(context, "hello");
         textElement.getView().setBackgroundColor(Color.YELLOW);
 
         TextElement textElement2 = new TextElement(context, "hello");
         textElement2.getView().setBackgroundColor(Color.CYAN);
 
+        BasicElement basicElement = new BasicElement(context);
+        basicElement.getView().setBackgroundColor(Color.RED);
 
-        relative.addWithParam(textElement.getView(), -2,-2).put(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        relative.addWithParam(textElement2.getView(), -2,-2).put(RelativeLayout.RIGHT_OF, textElement.getView());
+
+        relative.addWithParam(textElement, -2,250).alignParentLeft();
+        relative.addWithParam(textElement2, -2,-2).rightOf(textElement).alignParentBottom();
+        relative.addWithParam(basicElement, -2, 40).matchWidth().matchHeight();
+
+        MainActivity.log("textElement1, id: " + textElement.getView().getId() + ", " + describeLayoutRules(((RelativeLayout.LayoutParams) textElement.getLayoutParams())));
+        MainActivity.log("textElement2, id: " + textElement2.getView().getId() + ", " + describeLayoutRules(((RelativeLayout.LayoutParams) textElement2.getLayoutParams())));
+    }
+
+    public String describeLayoutRules(RelativeLayout.LayoutParams params) {
+        int[] rules = params.getRules();
+        StringBuilder description = new StringBuilder("Rules applied: ");
+
+        if (rules[RelativeLayout.LEFT_OF] != 0) {
+            description.append("left of element ID ").append(rules[RelativeLayout.LEFT_OF]).append(", ");
+        }
+        if (rules[RelativeLayout.RIGHT_OF] != 0) {
+            description.append("right of element ID ").append(rules[RelativeLayout.RIGHT_OF]).append(", ");
+        }
+        if (rules[RelativeLayout.ABOVE] != 0) {
+            description.append("above element ID ").append(rules[RelativeLayout.ABOVE]).append(", ");
+        }
+        if (rules[RelativeLayout.BELOW] != 0) {
+            description.append("below element ID ").append(rules[RelativeLayout.BELOW]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_BASELINE] != 0) {
+            description.append("align baseline with element ID ").append(rules[RelativeLayout.ALIGN_BASELINE]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_LEFT] != 0) {
+            description.append("align left with element ID ").append(rules[RelativeLayout.ALIGN_LEFT]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_TOP] != 0) {
+            description.append("align top with element ID ").append(rules[RelativeLayout.ALIGN_TOP]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_RIGHT] != 0) {
+            description.append("align right with element ID ").append(rules[RelativeLayout.ALIGN_RIGHT]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_BOTTOM] != 0) {
+            description.append("align bottom with element ID ").append(rules[RelativeLayout.ALIGN_BOTTOM]).append(", ");
+        }
+        if (rules[RelativeLayout.ALIGN_PARENT_LEFT] == RelativeLayout.TRUE) {
+            description.append("align parent left, ");
+        }
+        if (rules[RelativeLayout.ALIGN_PARENT_TOP] == RelativeLayout.TRUE) {
+            description.append("align parent top, ");
+        }
+        if (rules[RelativeLayout.ALIGN_PARENT_RIGHT] == RelativeLayout.TRUE) {
+            description.append("align parent right, ");
+        }
+        if (rules[RelativeLayout.ALIGN_PARENT_BOTTOM] == RelativeLayout.TRUE) {
+            description.append("align parent bottom, ");
+        }
+        if (rules[RelativeLayout.CENTER_IN_PARENT] == RelativeLayout.TRUE) {
+            description.append("center in parent, ");
+        }
+        if (rules[RelativeLayout.CENTER_HORIZONTAL] == RelativeLayout.TRUE) {
+            description.append("center horizontally, ");
+        }
+        if (rules[RelativeLayout.CENTER_VERTICAL] == RelativeLayout.TRUE) {
+            description.append("center vertically, ");
+        }
+
+        // Remove trailing comma and space if any rules were added
+        if (description.length() > 14) {
+            description.setLength(description.length() - 2);
+        } else {
+            description.append("none");
+        }
+
+        return description.toString();
     }
 
 

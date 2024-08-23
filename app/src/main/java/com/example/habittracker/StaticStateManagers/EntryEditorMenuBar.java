@@ -18,7 +18,6 @@ public class EntryEditorMenuBar {
 
     private DeleteValueManager deleteValueManager;
     private LinearLayout horizontalBar;
-    KeyBoardActionManager keyBoardActionManager;
 
     private MenuBarManager menuBarManager;
 
@@ -27,6 +26,8 @@ public class EntryEditorMenuBar {
     public EntryEditorMenuBar(Context context, GroupWidget groupWidget, EntryInStructure entry, MenuBarManager menuBarManager) {
         this.context = context;
         this.menuBarManager = menuBarManager;
+        if(groupWidget == null)
+            throw new RuntimeException();
         init(groupWidget, entry);
     }
 
@@ -35,7 +36,7 @@ public class EntryEditorMenuBar {
         horizontalBar = makeHorizontalBarLayout(context);
         deleteButton = makeDeleteButton(context, horizontalBar);
 
-        keyBoardActionManager = new KeyBoardActionManager(context);
+
 
 
         deleteButton.setOnClickListener((view)->{
@@ -76,10 +77,6 @@ public class EntryEditorMenuBar {
 
     public View getView() {
         return horizontalBar;
-    }
-
-    public KeyBoardActionManager getKeyBoardActionManager() {
-        return keyBoardActionManager;
     }
 
     public void removeConfirmView() {

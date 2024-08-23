@@ -99,8 +99,11 @@ public class CategoryEntryEditorPage implements Inflatable{
 
     @Override
     public void onOpened() {
-
+        MenuBarManager menuBarManager = PageResources.getPageResources().getMenuBarManager();
         groupWidget = new GroupWidget(context);
+        menuBarManager.addEntryEditorBar(groupWidget, entryInStructure);
+
+
         groupWidget.setOnDataChangedListener(()->onDataChanged());
         linearLayout.addView(groupWidget.getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
@@ -109,8 +112,7 @@ public class CategoryEntryEditorPage implements Inflatable{
             groupWidget.setValue(entryInStructure.getGroupValue());
             MainActivity.log("set from entry: " + entryInStructure.getGroupValue().hierarchy());
         }
-        MenuBarManager menuBarManager = PageResources.getPageResources().getMenuBarManager();
-        menuBarManager.addEntryEditorBar(groupWidget, entryInStructure);
+
 
     }
 
@@ -119,7 +121,7 @@ public class CategoryEntryEditorPage implements Inflatable{
         System.out.println("trying to remove category entry editor");
         if(discarding)
             return true;
-        boolean valid = checkValidForSave(page);
+        boolean valid = true;//checkValidForSave(page);
         if(!valid)
             return false;
         save();

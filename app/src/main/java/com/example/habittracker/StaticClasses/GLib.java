@@ -24,12 +24,14 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.Widgets.Widget;
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
 public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -137,16 +139,34 @@ public class GLib {
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
-            case ListWidgetMultipleItems.className -> {
-                widget = new ListWidgetMultipleItems(context);
-                widget.setOnDataChangedListener(onDataChange);
-                widget.setParam(params);
+            case ListWidget.className->{
+                ListParam listParam = (ListParam) params;
+                if(listParam.classNameOfChild.equals(ListWidgetSingleItem.childClassName)){
+                    widget = new ListWidgetSingleItem(context);
+                    widget.setOnDataChangedListener(onDataChange);
+                    widget.setParam(params);
+                }
+
+                if(listParam.classNameOfChild.equals(ListWidgetMultipleItems.childClassName)){
+                    widget = new ListWidgetMultipleItems(context);
+                    widget.setOnDataChangedListener(onDataChange);
+                    widget.setParam(params);
+                }
+                    widget = new ListWidgetMultipleItems(context);
+                    widget.setOnDataChangedListener(onDataChange);
+                    widget.setParam(params);
             }
-            case ListWidgetSingleItem.className -> {
-                widget = new ListWidgetSingleItem(context);
-                widget.setOnDataChangedListener(onDataChange);
-                widget.setParam(params);
-            }
+
+//            case ListWidgetMultipleItems.className -> {
+//                widget = new ListWidgetMultipleItems(context);
+//                widget.setOnDataChangedListener(onDataChange);
+//                widget.setParam(params);
+//            }
+//            case ListWidgetSingleItem.className -> {
+//                widget = new ListWidgetSingleItem(context);
+//                widget.setOnDataChangedListener(onDataChange);
+//                widget.setParam(params);
+//            }
             case GroupWidget.className -> {
                 widget = new GroupWidget(context);
                 widget.setOnDataChangedListener(onDataChange);

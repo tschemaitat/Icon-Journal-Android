@@ -28,9 +28,29 @@
                 "currentVersion": "1.6.3"
               }
             }
+          },
+          {
+            "id": "868fa8fa7c5985e0",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.6.5"
+              }
+            }
+          },
+          {
+            "id": "6d5a0281ba5ee1f8",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.6.7"
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -157,7 +177,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a2e1bc7b08cac4e3",
+  "active": "6d5a0281ba5ee1f8",
   "lastOpenFiles": [
     "Refactor todo.md",
     "2024-05-12.md",

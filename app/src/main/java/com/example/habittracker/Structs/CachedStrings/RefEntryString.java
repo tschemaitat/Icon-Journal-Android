@@ -151,7 +151,7 @@ public class RefEntryString implements CachedString{
     }
 
     public String getLocationString(){
-        return "s: " + widgetInStructure.getStructure() + ", w: <" + widgetInStructure.getName() + ">, e: " + entryInStructure.getId() + ", " + listIdList;
+        return "s: " + widgetInStructure.getStructure().getCachedName().getString() + ", w: <" + widgetInStructure.getName().getString() + ">, entry: " + entryInStructure.getId() + ", " + listIdList;
     }
 
     @Override

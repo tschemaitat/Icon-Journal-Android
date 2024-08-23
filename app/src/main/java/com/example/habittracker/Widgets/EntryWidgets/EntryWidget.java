@@ -90,9 +90,9 @@ public abstract class EntryWidget implements Widget {
     }
 
     public void disableWithGrayOut(){
-        if(listGhostEnabled)
+        if(!listGhostEnabled)
             throw new RuntimeException();
-        listGhostEnabled = true;
+        listGhostEnabled = false;
         viewWrapper.disable();
         setForegroundOfDisable();
     }
@@ -110,10 +110,10 @@ public abstract class EntryWidget implements Widget {
     }
 
     public void enable(){
-        if(!listGhostEnabled)
+        if(listGhostEnabled)
             throw new RuntimeException();
         viewWrapper.enable();
-        listGhostEnabled = false;
+        listGhostEnabled = true;
         getView().setForeground(null);
     }
 
@@ -156,6 +156,11 @@ public abstract class EntryWidget implements Widget {
     public void keyListener(int keyCode){
         MainActivity.log("entry widget key listener: " + keyCode);
         if (keyCode == EditorInfo.IME_ACTION_NEXT) {
+            if(focusParent == null){
+
+                MainActivity.log("focus parent null");
+                return;
+            }
 
             EntryWidget nextWidget = focusParent.findNextWidget(this);
             InvisibleEditTextManager.getManager().removeFocusedWidget();

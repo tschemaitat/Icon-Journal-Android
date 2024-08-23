@@ -25,7 +25,7 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 
 
-    public static String className = "list";
+    public static final String className = "list";
     private Context context;
     protected WidgetLayout layout;
     protected Widget ghostItem;

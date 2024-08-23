@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class RelLP extends ViewGroup.MarginLayoutParams {
+    
     private Rule[] rules = new Rule[4];
     private ArrayList<View> anchorViews = new ArrayList<>();
     public RelLP(Context c, AttributeSet attrs) {

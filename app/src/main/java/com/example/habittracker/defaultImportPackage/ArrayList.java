@@ -9,7 +9,7 @@ import com.example.habittracker.structurePack.EntryInStructure;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class ArrayList<E> extends java.util.ArrayList<E>{
+public class ArrayList<E> extends java.util.ArrayList<E> implements ImmutableList<E>{
     public ArrayList(E... numbers) {
         super();
         this.addAll(Arrays.asList(numbers));

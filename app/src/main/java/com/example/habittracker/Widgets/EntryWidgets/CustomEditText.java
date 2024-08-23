@@ -118,7 +118,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
         editText.setBackground(null);
         editText.setHintTextColor(ColorPalette.hintText);
 
-        KeyBoardActionManager keyBoardActionManager = PageResources.getPageResources().getWidgetResources().getKeyBoardActionManager();
+        KeyBoardActionManager keyBoardActionManager = PageResources.getPageResources().getKeyBoardActionManager();
         setModeFromToggle(keyBoardActionManager.getIsEnter());
         keyBoardActionManager.addToggleListener((isEnter)->{
             setModeFromToggle(isEnter);
@@ -139,14 +139,17 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 MainActivity.log("edit text on focus change: " + hasFocus + ", " + thisEntryWidget);
-                if(hasFocus){
-                    if(InvisibleEditTextManager.getManager().hasFocusedWidget())
+                if(hasFocus) {
+                    if (InvisibleEditTextManager.getManager().hasFocusedWidget())
                         InvisibleEditTextManager.getManager().removeFocusedWidget();
                     InvisibleEditTextManager.getManager().setEditableWidgetThatGotFocus(thisEntryWidget);
-                }else{
-                    InvisibleEditTextManager.getManager().removeFocusedWidget();
+                    //editText.clearFocus();
+                    //thisEntryWidget.onFocusChange(hasFocus);
                 }
-                thisEntryWidget.onFocusChange(hasFocus);
+//                }else{
+//                    InvisibleEditTextManager.getManager().removeFocusedWidget();
+//                }
+
             }
         });
 

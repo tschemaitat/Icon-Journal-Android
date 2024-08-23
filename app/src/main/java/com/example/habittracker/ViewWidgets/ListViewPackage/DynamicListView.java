@@ -2,18 +2,27 @@ package com.example.habittracker.ViewWidgets.ListViewPackage;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.StaticClasses.ColorPalette;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
-import com.example.habittracker.ViewLibrary.AbstractBasicElement;
-import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ButtonElement;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.HorLayout;
+import com.example.habittracker.ViewLibrary.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
 import com.example.habittracker.ViewLibrary.ScrollElements.VertScrollElement;
 import com.example.habittracker.ViewLibrary.TextElement;
 import com.example.habittracker.ViewWidgets.CheckBoxElement;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
+import com.example.habittracker.defaultImportPackage.ImmutableList;
 
 
 public class DynamicListView {
@@ -21,59 +30,180 @@ public class DynamicListView {
     private Context context;
     private ViewWithTextGenerator viewWithTextGenerator;
     private ArrayList<PayloadOption> payloadOptions;
+    private RelativeElementLayout relativeElementLayout;
     private ScrollElement scrollElement;
+    private ButtonElement confirmButton;
+
     private OnSelected onSelected;
     private OnChecked onCheckedListener;
+    private OnSelected onLongClickListener;
     private OnAdd onAdd;
-    public DynamicListView(Context context, ArrayList<PayloadOption> options, OnSelected onSelected, OnAdd onAdd){
+    private HorLayout addHorLayout;
+
+    public DynamicListView(Context context, ArrayList<PayloadOption> options){
         this.context = context;
         this.payloadOptions = (ArrayList<PayloadOption>) options.clone();
-        this.onSelected = onSelected;
-        this.onAdd = onAdd;
         init();
     }
 
     public void init(){
+        relativeElementLayout = new RelativeElementLayout(context);
         scrollElement = new VertScrollElement(context);
+        relativeElementLayout.addWithParam(scrollElement, -1, -2).alignAllParentSides().matchWidth();
+        Drawable drawable = new ColorDrawable(Color.DKGRAY);//context.getResources().getDrawable(android.R.drawable.line);
+        LinearLayout linearLayout = scrollElement.getLinearLayout().getLinearLayout();
+        linearLayout.setDividerDrawable(drawable);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        //linearLayout.setDividerPadding(30);
         createTextElements();
-//        scrollView = new LockableScrollView(context);
-//        scrollViewLinearLayout = new LinearLayout(context);
-//        scrollView.addView(scrollViewLinearLayout);
+        confirmButton = createButtonElement(context);
+        confirmButton.getButton().setVisibility(View.GONE);
+        relativeElementLayout.addWithParam(confirmButton, -2, -2).alignParentBottom().alignParentRight();
+    }
+
+    //region create views
+    public static ButtonElement createButtonElement(Context context){
+        return new ButtonElement(context, "confirm", null);
+    }
+    public HorLayout makeHorLayoutElement(String text, Runnable clickListener, Runnable longClickListener, boolean addCheckBox){
+        HorLayout horLayout = new HorLayout(context);
+        if(clickListener != null)
+            horLayout.getView().setOnClickListener(view->clickListener.run());
+        if(longClickListener != null){
+            horLayout.getView().setOnLongClickListener(view -> {
+                longClickListener.run();
+                return true;
+            });
+        }
+
+        TextElement textElement = new TextElement(context, text);
+        textElement.setPadding(new Dimensions(50, 20, 20, 20));
+        TextView textView = textElement.getTextView();
+        textView.setTextColor(ColorPalette.textPurple);
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+        horLayout.getView().setBackgroundResource(typedValue.resourceId);
+        //textView.setBackgroundResource(android.R.drawable.list_selector_background);
+        horLayout.addWithParam(textElement, -2, -2);
+
+        if(addCheckBox){
+            CheckBoxElement checkBoxElement = new CheckBoxElement(context);
+            checkBoxElement.getCheckBox().setVisibility(View.GONE);
+            horLayout.addWithParam(checkBoxElement, -2, -2);
+        }
+
+
+        return horLayout;
+    }
+    private void createTextElements(){
+        payloadOptions.enumerate((index, payloadOption)->{
+            HorLayout horLayout = makeHorLayoutElement(payloadOption.getString(), ()->onClick(index, payloadOption),
+                    null, true);
+            scrollElement.addWithParam(horLayout, -1, -2);
+        });
+
+        createAddElement();
 
     }
-    //region check box
-    public void openCheckBoxes(OnChecked onCheckedListener){
+    private void createAddElement(){
+        addHorLayout = makeHorLayoutElement(addString, ()->onAddClicked(), null, false);
+        scrollElement.addWithParam(addHorLayout, -1, -2);
+        addHorLayout.getView().setVisibility(View.GONE);
+
+    }
+    //endregion
+
+
+
+    //region open/close
+    public void showAddButton(Runnable runnable){
+        addHorLayout.getView().setVisibility(View.VISIBLE);
+        addHorLayout.getView().setOnClickListener(view -> {
+            runnable.run();
+        });
+    }
+    public void showConfirmButton(Runnable runnable){
+        confirmButton.getButton().setOnClickListener(view -> {
+            runnable.run();
+        });
+        confirmButton.getButton().setVisibility(View.VISIBLE);
+    }
+    public void showCheckBoxes(OnChecked onCheckedListener){
         if(this.onCheckedListener != null)
             throw new RuntimeException();
         this.onCheckedListener = onCheckedListener;
         iterateCheckBoxes(((index, checkBoxElement) -> {
             checkBoxElement.getCheckBox().setVisibility(View.VISIBLE);
             PayloadOption payloadOption = payloadOptions.get(index);
-            checkBoxElement.setOnCheckListener((isChecked)->onCheckedListener.onChecked(isChecked,
-                    payloadOption.getCachedString(), index, payloadOption.getPayload()));
+            checkBoxElement.setOnCheckListener((isChecked)-> {
+                MainActivity.log("internal onCheck");
+                onCheckedListener.onChecked(isChecked,
+                        payloadOption.getCachedString(), index, payloadOption.getPayload());
+
+            });
         }));
     }
+    public void hideConfirmButton() {
+        confirmButton.getButton().setVisibility(View.GONE);
+        confirmButton.getButton().setOnClickListener(null);
+    }
+    public void hideCheckBoxes() {
+        throwIfNotInCheckMode();
+        this.onCheckedListener = null;
+        iterateCheckBoxes(((index, checkBoxElement) -> {
+            checkBoxElement.getCheckBox().setVisibility(View.GONE);
+            checkBoxElement.setOnCheckListener(null);
+        }));
+    }
+    //endregion
 
-
-
-
+    //region abstract functions
     private interface CheckBoxFunction{
         void checkBox(int index, CheckBoxElement checkBoxElement);
     }
-    private void iterateCheckBoxes(CheckBoxFunction checkBoxFunction){
-        throwIfNotInCheckMode();
+    private ImmutableList<CheckBoxElement> getCheckBoxes(){
+        ArrayList<CheckBoxElement> checkBoxElements = new ArrayList<>();
         ArrayList<HorLayout> horLayouts = scrollElement.getChildrenCasted();
         horLayouts.enumerate((index, horLayout) -> {
+            if(index == horLayouts.size() - 1)
+                return;
+            CheckBoxElement checkBox = horLayout.getChildCasted(1);
+            checkBoxElements.add(checkBox);
+        });
+        return checkBoxElements;
+    }
+    private void iterateCheckBoxes(CheckBoxFunction checkBoxFunction){
+        ArrayList<HorLayout> horLayouts = scrollElement.getChildrenCasted();
+        horLayouts.enumerate((index, horLayout) -> {
+            if(index == horLayouts.size() - 1)
+                return;
             CheckBoxElement checkBox = horLayout.getChildCasted(1);
             checkBoxFunction.checkBox(index, checkBox);
         });
     }
-
-    public void throwIfNotInCheckMode(){
-        if(this.onCheckedListener == null)
-            throw new RuntimeException();
+    private interface OptionViewFunction{
+        void optionView(int index, HorLayout horLayout, TextElement textElement, PayloadOption payloadOption);
     }
+    private void iterateOptionViews(OptionViewFunction optionViewFunction){
+        ArrayList<HorLayout> horLayouts = scrollElement.getChildrenCasted();
+        MainActivity.log("total horLayouts: " + horLayouts.size());
+        int endIndex = horLayouts.size();
+        if(addHorLayout != null){
+            endIndex--;
+        }
+        MainActivity.log("num non-add layouts: " + endIndex);
+        if(payloadOptions.size() != endIndex)
+            throw new RuntimeException("num horLayouts: " + horLayouts.size() + ", num payloads: " + payloadOptions.size()+
+                    " addHorLayout is null: " + (addHorLayout == null) + ", end index calculated: " + endIndex);
+        for(int i = 0; i < endIndex; i++){
+            HorLayout horLayout = horLayouts.get(i);
+            TextElement textElement = horLayout.getChildCasted(0);
+            optionViewFunction.optionView(i, horLayout, textElement, payloadOptions.get(i));
+        }
+    }
+    //endregion
 
+    //region getter functions
     public ArrayList<PayloadBoolPair> getCheckBoxesClicked(){
         throwIfNotInCheckMode();
         ArrayList<PayloadBoolPair> result = new ArrayList<>();
@@ -83,80 +213,72 @@ public class DynamicListView {
         });
         return result;
     }
-
-    public void closeCheckBoxes(){
-        throwIfNotInCheckMode();
-        this.onCheckedListener = null;
-        iterateCheckBoxes(((index, checkBoxElement) -> {
-            checkBoxElement.clearOnCheckListener();
-            checkBoxElement.getCheckBox().setVisibility(View.INVISIBLE);
-        }));
-
-
-    }
-
-    public void onCheckClicked(boolean checked, int index, PayloadOption payloadOption){
-        onCheckedListener.onChecked(checked, payloadOption.getCachedString(), index, payloadOption.getPayload());
-    }
-
     //endregion
 
-    public void onTextClicked(int index, PayloadOption payloadOption){
-        onSelected.onSelected(payloadOption.getCachedString(), index, payloadOption.getPayload());
+    public void throwIfNotInCheckMode(){
+        if(this.onCheckedListener == null)
+            throw new RuntimeException();
     }
 
-    public HorLayout makeHorLayoutElement(String text, Runnable clickListener, BooleanListener checkListener){
-        HorLayout horLayout = new HorLayout(context);
-        TextElement textElement = new TextElement(context, text, clickListener);
-        textElement.setPadding(new Dimensions(50, 20, 20, 20));
-        horLayout.addWithParam(textElement, -2, -2);
-
-        if(checkListener != null){
-            CheckBoxElement checkBoxElement = new CheckBoxElement(context, checkListener);
-            checkBoxElement.getCheckBox().setVisibility(View.INVISIBLE);
-            horLayout.addWithParam(checkBoxElement, 50, 50);
-        }
-        return horLayout;
+    public void setCheckBox(int position, boolean b) {
+        ImmutableList<CheckBoxElement> checkBoxElements = getCheckBoxes();
+        CheckBoxElement checkBoxElement = checkBoxElements.get(position);
+        checkBoxElement.getCheckBox().setChecked(b);
     }
 
-    private void createTextElements(){
-        payloadOptions.enumerate((index, payloadOption)->{
-            HorLayout horLayout = makeHorLayoutElement(payloadOption.getString(), ()->onTextClicked(index, payloadOption),
-                    (check)-> onCheckClicked(check, index, payloadOption));
-            scrollElement.addWithParam(horLayout, -2, -2);
-            if(index != payloadOptions.size()-1)
-                scrollElement.addWithParam(createDivisionBar(), 100, 100);
+
+
+    public void setOnLongClickListener(OnSelected onSelected){
+        this.onLongClickListener = onSelected;
+        iterateOptionViews((index, horLayout, textElement, payloadOption) -> {
+            horLayout.getView().setOnLongClickListener(view -> {
+                MainActivity.log("internal onLongClick");
+                onSelected.onSelected(payloadOption.getCachedString(), index, payloadOption.getPayload());
+                return true;
+            });
         });
-        if(onAdd != null){
-            HorLayout horLayout = makeHorLayoutElement(addString, ()->onAddClicked(),
-                    null);
-            scrollElement.addWithParam(horLayout, -2, -2);
+    }
+
+    public void setOnClickListener(OnSelected onSelected){
+        this.onSelected = onSelected;
+
+//        iterateOptionViews((index, horLayout, textElement, payloadOption) -> {
+//            MainActivity.log("setting on click on view: " + index);
+//            horLayout.getView().setOnClickListener(view -> {
+//                //MainActivity.log("internal onClick");
+//                onClick(index, payloadOption);
+//            });
+//        });
+    }
+
+    private void onClick(int position, PayloadOption payloadOption) {
+        MainActivity.log("dynamic onClick method");
+        if(isCheckBoxesOpen()){
+            CheckBoxElement checkBoxElement = getCheckBoxes().get(position);
+            checkBoxElement.getCheckBox().toggle();
+        }else{
+            MainActivity.log("going to onSelected listener because not in check boxes");
+            if(onSelected != null){
+                onSelected.onSelected(payloadOption.getCachedString(), position, payloadOption.getPayload());
+            }else{
+                MainActivity.log("onSelected is null");
+            }
+
         }
+
+    }
+
+    private boolean isCheckBoxesOpen() {
+        return onCheckedListener != null;
     }
 
     public void onAddClicked(){
         onAdd.onAdd();
     }
 
-    public void createAddElement(){
 
-    }
-
-    private Element createDivisionBar() {
-        Element dummyDivisionBar = new AbstractBasicElement() {
-            @Override
-            public View getView() {
-                View view = new View(context);
-                view.setBackgroundColor(Color.DKGRAY);
-                view.setMinimumHeight(2);
-                return view;
-            }
-        };
-
-        return dummyDivisionBar;
-    }
 
     public View getView() {
-        return scrollElement.getView();
+        return relativeElementLayout.getView();
     }
 }

@@ -27,6 +27,8 @@ public class ColorPalette {
         listItemBeforeAddForeground = context.getColor(R.color.listItemBeforeAdd);
         toggleHighlight = context.getColor(R.color.toggleHighlight);
         widgetFocusHighlightBorder = context.getColor(R.color.highlightBorder);
+        greenButtonBackground = context.getColor(R.color.greenButtonBackground);
+
 
 
     }
@@ -44,4 +46,5 @@ public class ColorPalette {
     public static int listItemBeforeAddForeground;
     public static int toggleHighlight;
     public static int widgetFocusHighlightBorder;
+    public static int greenButtonBackground;
 }
