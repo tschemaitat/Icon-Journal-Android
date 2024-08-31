@@ -44,6 +44,11 @@ public class RefEntryString implements CachedString{
         this.listIdList = listIdList;
     }
 
+    public void disconnectFromSource(){
+        BaseWidgetValue source = this.getBaseWidgetValue();
+        source.removeReferenceLink(this);
+    }
+
 
     public BaseWidgetValue getBaseWidgetValue(){
         return entryInStructure.getGroupValue().getValue(widgetInStructure.getWidgetPath(), listIdList);

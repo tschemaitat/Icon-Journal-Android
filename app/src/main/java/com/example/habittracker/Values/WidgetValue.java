@@ -3,6 +3,7 @@ package com.example.habittracker.Values;
 import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.defaultImportPackage.ImmutableList;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.ListItemId;
 import com.example.habittracker.structurePack.Structure;
@@ -16,10 +17,26 @@ public abstract class WidgetValue implements ThrowableEqualsWithId {
     public static final String classNameKey = "value type";
     private WidgetId widgetId;
     private GroupValue parent;
+    private ArrayList<RefEntryString> references = new ArrayList<>();
     public WidgetValue(WidgetId widgetId){
         this.widgetId = widgetId;
     }
 
+    public void setReferenceLink(RefEntryString refEntryString){
+        if(references.contains(refEntryString))
+            throw new RuntimeException();
+        references.add(refEntryString);
+    }
+
+    public void removeReferenceLink(RefEntryString refEntryString){
+        if( ! references.contains(refEntryString))
+            throw new RuntimeException();
+        references.remove(refEntryString);
+    }
+
+    public ImmutableList<RefEntryString> getReferences(){
+        return references;
+    }
 
     public WidgetId getWidgetId() {
         return widgetId;
@@ -52,10 +69,10 @@ public abstract class WidgetValue implements ThrowableEqualsWithId {
         return result;
     }
 
-    public RefEntryString getReference(EntryInStructure entryInStructure){
-        Structure structure = entryInStructure.getStructure();
-        return new RefEntryString(structure.getWidgetInStructureFromId(widgetId), entryInStructure, getListItemIds());
-    }
+//    public RefEntryString getReference(EntryInStructure entryInStructure){
+//        Structure structure = entryInStructure.getStructure();
+//        return new RefEntryString(structure.getWidgetInStructureFromId(widgetId), entryInStructure, getListItemIds());
+//    }
 
 
     protected abstract JSONObject getJSON() throws JSONException;
