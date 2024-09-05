@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.Structs.CachedStrings.ArrayString;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -83,5 +84,9 @@ public class RefItemPath implements Iterable<CachedString>{
         Lists.equalsThrowsRecursive(path, refItemPath.path);
         if( ! this.equals(object))
             throw new RuntimeException();
+    }
+
+    public CachedString getArrayString() {
+        return new ArrayString(path);
     }
 }

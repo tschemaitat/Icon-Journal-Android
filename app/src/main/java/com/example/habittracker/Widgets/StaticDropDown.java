@@ -57,7 +57,7 @@ public class StaticDropDown extends BaseEntryWidget {
 
     }
 
-    private void listenerWrapper(RefItemPath refItemPath, Object payload, RefItemPath prevItemPath, Object prevPayload){
+    private void listenerWrapper(RefItemPath refItemPath, Object payload, CachedString prevItemPath, Object prevPayload){
         if(onSelected != null)
             onSelected.onSelected(refItemPath, payload, prevItemPath, prevPayload);
     }
@@ -131,7 +131,7 @@ public class StaticDropDown extends BaseEntryWidget {
     }
 
     public void setSelected(RefItemPath refItemPath) {
-        dropDown.setSelected(refItemPath);
+        dropDown.setSelectedPath(refItemPath);
     }
 
     public static class StaticDropDownParameters extends EntryWidgetParam {

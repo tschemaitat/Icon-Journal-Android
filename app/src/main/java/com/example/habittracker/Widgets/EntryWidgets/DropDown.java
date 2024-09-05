@@ -17,42 +17,52 @@ import com.example.habittracker.ViewWidgets.SelectionView;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class DropDown{
 
     public static final String className = "drop down";
     public static final String defaultHintText = "select option";
+    public static final String folder = "\uD83D\uDCC1";
+
     private Context context;
-
-
-
-    private String folder = "\uD83D\uDCC1";
 
     private DropDownPage parentPage = null;
     private DropDownPage currentPage = null;
 
-    public String hint = defaultHintText;
+    private String hint = defaultHintText;
 
     private CustomPopup customPopup;
-
     private SelectionView buttonSelectionView;
-
     private DropDownOnSelected onSelectedListener;
 
-    boolean setSelected = false;
-    private DropDownPage previousDropDownPage = null;
+    private boolean setSelectedBool = false;
 
 
-    public DropDownOption selectedDropDownOption = null;
+    //public DropDownOption selectedDropDownOption = null;
+    private SelectedOption selectedDropDownOption = null;
+
+
+
+    /*
+    this saves a selected value as an array of payloadOptions representing the pages
+    it can also have an initial value of a single string
+        it checks if the value can be found anywhere in the pages
+        it does not attached the value to a page because it could belong to many different pages
+    whether the value is path or non-path is tracked by "SelectedOption selectedDropDownOption"
+    if the user tries to access the payload of a value that is non-path, it will crash
+
+     */
+
+
+
     public DropDown(Context context, DropDownOnSelected onSelected) {
         this.context = context;
         this.onSelectedListener = onSelected;
         init();
     }
 
-
-
-
+    //region init
     private void init(){
         createButton();
     }
@@ -82,7 +92,7 @@ public class DropDown{
             //dataChanged(null);
             onOutsideSelected();
         });
-        setOptionsOfPage();
+        setOptionsOfPageBasedOnCurrentPage();
         customPopup.enableBack();
         customPopup.showPopupWindow(this.getView());
     }
@@ -93,116 +103,17 @@ public class DropDown{
     }
 
 
-    private void setPopUpOptions(String title, ArrayList<PayloadOption> spinnerOptions){
-        customPopup.setText(title, spinnerOptions);
-    }
-    private void setOptionsOfPage(){
+
+    //endregion
+
+    //region setting visuals
+    private void setOptionsOfPageBasedOnCurrentPage(){
         String headerName = defaultHintText;
         if(currentPage != parentPage)
             headerName = currentPage.getName();
         setPopUpOptions(headerName, formatOptions(currentPage, folder));
     }
 
-
-
-
-
-
-
-
-    private void onItemSelected(CachedString cachedString, int position, Object payload){
-        DropDownPage clickedPage = currentPage.getChildPage(position);
-        if(currentPage == parentPage){
-            if(customPopup.hasBackIcon()){
-                customPopup.addBackIcon();
-            }
-        }
-        //if the page clicked is not a folder
-        if(!clickedPage.hasChildren()){
-            onDataChanged(clickedPage, false);
-            return;
-        }
-        //if we are going into a new page
-        if(currentPage == parentPage){//if we are leaving parent page
-            customPopup.addBackIcon();
-        }
-        currentPage = clickedPage;
-        setOptionsOfPage();
-    }
-    private void onBackSelected() {
-        if(currentPage == parentPage){
-            onDataChanged(currentPage, true);
-            return;
-        }
-        //System.out.println("back button");
-        //this never happened????
-//        if(currentPage == parentPage){
-//            currentPage = currentPage.getParent();
-//            onDataChanged(null, true);
-//            return;
-//        }
-        if(currentPage.getParent() == parentPage){
-            customPopup.removeBackIcon();
-        }
-        currentPage = currentPage.getParent();
-        //on back button
-
-        setOptionsOfPage();
-    }
-    private void onDataChanged(DropDownPage clickedPage, boolean newValueIsNull){
-        DropDownOption previousSelectedOption = selectedDropDownOption;
-        //we didn't set the page clicked because its not a folder, so we have to add the name onto the end
-        handleStateOnDataChanged(clickedPage, newValueIsNull);
-
-        customPopup.close();
-        customPopup = null;
-
-        RefItemPath currentRefItemPath = null;
-        RefItemPath prevRefItemPath = null;
-        Object currentPayload = null;
-        Object prevPayload = null;
-
-        if(previousSelectedOption != null){
-            prevRefItemPath = previousSelectedOption.refItemPath;
-            prevPayload = previousSelectedOption.payload;
-        }
-        if(selectedDropDownOption != null){
-            currentRefItemPath = selectedDropDownOption.refItemPath;
-            currentPayload = selectedDropDownOption.payload;
-        }
-        if(currentRefItemPath == null){
-
-        }
-        if( ! isDataSame(prevRefItemPath, currentRefItemPath)){
-            MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
-            onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
-        }
-
-    }
-
-    private boolean isDataSame(RefItemPath prevPath, RefItemPath newPath){
-        if(prevPath == null){
-            if(newPath == null)
-                return true;
-            else
-                return false;
-        }else{
-            if(newPath == null)
-                return false;
-            return prevPath.equals(newPath);
-        }
-    }
-
-    private void handleStateOnDataChanged(DropDownPage clickedPage, boolean isValueNull){
-        if(isValueNull){
-            selectedDropDownOption = null;
-            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(new LiteralString(hint))));
-        }else{
-            selectedDropDownOption = new DropDownOption(clickedPage.getRefPathToPageWithName(),
-                    clickedPage.getPayloadOption().getPayload());
-            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(clickedPage.getCachedName())));
-        }
-    }
     private ArrayList<PayloadOption> formatOptions(DropDownPage page, String folderString){
         if(page != parentPage && ! page.hasChildren()){
             MainActivity.log("parent: \n" + parentPage.hierarchyString() + "\nthis page: \n" + page.hierarchyString());
@@ -227,18 +138,115 @@ public class DropDown{
         return result;
     }
 
+
+    private void setPopUpOptions(String title, ArrayList<PayloadOption> spinnerOptions){
+        customPopup.setText(title, spinnerOptions);
+    }
+
+    //endregion
+
+    //region state management
+
+    private void onItemSelected(CachedString cachedString, int position, Object payload){
+        DropDownPage clickedPage = currentPage.getChildPage(position);
+        if(currentPage == parentPage){
+            if(customPopup.hasBackIcon()){
+                customPopup.addBackIcon();
+            }
+        }
+        //if the page clicked is not a folder
+        if(!clickedPage.hasChildren()){
+            onDataChanged(clickedPage, false);
+            return;
+        }
+        //if we are going into a new page
+        if(currentPage == parentPage){//if we are leaving parent page
+            customPopup.addBackIcon();
+        }
+        currentPage = clickedPage;
+        setOptionsOfPageBasedOnCurrentPage();
+    }
+
+    private void onBackSelected() {
+        if(currentPage == parentPage){
+            onDataChanged(currentPage, true);
+            return;
+        }
+        if(currentPage.getParent() == parentPage){
+            customPopup.removeBackIcon();
+        }
+        currentPage = currentPage.getParent();
+        //on back button
+
+        setOptionsOfPageBasedOnCurrentPage();
+    }
+
+    private void onDataChanged(DropDownPage clickedPage, boolean newValueIsNull){
+        SelectedOption previousSelectedOption = selectedDropDownOption;
+        //we didn't set the page clicked because its not a folder, so we have to add the name onto the end
+        handleStateOnDataChanged(clickedPage, newValueIsNull);
+
+        customPopup.close();
+        customPopup = null;
+
+        RefItemPath currentRefItemPath = null;
+        CachedString prevRefItemPath = null;
+        Object currentPayload = null;
+        Object prevPayload = null;
+
+        if(previousSelectedOption != null){
+            prevRefItemPath = previousSelectedOption.getCachedStringFromEitherState();
+            prevPayload = previousSelectedOption.payload;
+        }
+        if(selectedDropDownOption != null){
+            currentRefItemPath = selectedDropDownOption.getPathSelected();
+            currentPayload = selectedDropDownOption.payload;
+        }
+        if(currentRefItemPath == null){
+
+        }
+//        if( ! isDataSame(prevRefItemPath, currentRefItemPath.getArrayString())){
+//            MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
+//            onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
+//        }
+        if( ! Objects.equals(prevRefItemPath, currentRefItemPath.getArrayString())){
+            MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
+            onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
+        }
+
+    }
+
+    private void handleStateOnDataChanged(DropDownPage clickedPage, boolean isNewValueNull){
+        if(isNewValueNull){
+            selectedDropDownOption = null;
+            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(new LiteralString(hint))));
+        }else{
+            selectedDropDownOption = new SelectedOption(clickedPage.getRefPathToPageWithName(),
+                    clickedPage.getPayloadOption().getPayload());
+            buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(clickedPage.getCachedName())));
+        }
+    }
+
+    //endregion
+
+    //region public
     public View getView(){
         return buttonSelectionView.getView();
     }
+
     public void setDropDownPage(DropDownPage dropDownPage){
+        if(parentPage != null)
+            throw new RuntimeException();
         this.parentPage = dropDownPage;
         currentPage = parentPage;
     }
 
-    public void setSelected(RefItemPath refItemPath){
-        if(setSelected)
+
+
+    public void setSelectedPath(RefItemPath refItemPath){
+        if(setSelectedBool)
             throw new RuntimeException("set selected shouldn't be called twice");
-        setSelected = true;
+        setSelectedBool = true;
         if(parentPage == null)
             throw new RuntimeException("tried to set selected path with no page set");
         if(currentPage != parentPage)
@@ -257,12 +265,41 @@ public class DropDown{
             MainActivity.log("throwing exception");
             throw exception;
         }
-
     }
+
+    public void setSelectedNonPath(CachedString item) {
+        if(setSelectedBool)
+            throw new RuntimeException("set selected shouldn't be called twice");
+        setSelectedBool = true;
+        if(parentPage == null)
+            throw new RuntimeException("tried to set selected path with no page set");
+        if(currentPage != parentPage)
+            throw new RuntimeException("weird state, tried to set selected when current page isn't parent page");
+        buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(item)));
+        selectedDropDownOption = new SelectedOption(item);
+
+        if( ! recursiveSearchPageForValue(parentPage, item)){
+            throw new RuntimeException("tried to set non-path item to drop down, not found in pages\n" +
+                    "item: " + item.getString() + "\n" +
+                    "pages: \n" + parentPage.hierarchyString());
+        }
+    }
+
+    private boolean recursiveSearchPageForValue(DropDownPage currentParentPage, CachedString searchValue){
+        if(currentParentPage.hasChildPage(searchValue)){
+            return true;
+        }
+        for(DropDownPage child: currentParentPage.getChildren()){
+            if(recursiveSearchPageForValue(child, searchValue))
+                return true;
+        }
+        return false;
+    }
+
     public RefItemPath getSelectedPath(){
         if(selectedDropDownOption == null)
             return null;
-        return selectedDropDownOption.refItemPath;
+        return selectedDropDownOption.getPathSelected();
     }
 
     public Object getPayload(){
@@ -301,7 +338,9 @@ public class DropDown{
         handleStateOnDataChanged(page, false);
 
     }
+    //endregion
 
+    //region algorithms
     private DropDownPage searchTree(DropDownPage page, Object payload){
         if( ! page.hasChildren()){
             if(page.getPayloadOption().getPayload().equals(payload)){
@@ -318,8 +357,25 @@ public class DropDown{
         return null;
     }
 
+    private boolean isDataSame(RefItemPath prevPath, RefItemPath newPath){
+        if(prevPath == null){
+            if(newPath == null)
+                return true;
+            else
+                return false;
+        }else{
+            if(newPath == null)
+                return false;
+            return prevPath.equals(newPath);
+        }
+    }
+    //endregion
+
+
+
+
     public interface DropDownOnSelected{
-        void onSelected(RefItemPath refItemPath, Object payload, RefItemPath prevRefItemPath, Object prevPayload);
+        void onSelected(RefItemPath refItemPath, Object payload, CachedString prevRefItemPath, Object prevPayload);
     }
 
     public static class DropDownOption{
@@ -329,6 +385,48 @@ public class DropDown{
         public DropDownOption(RefItemPath refItemPath, Object payload) {
             this.refItemPath = refItemPath;
             this.payload = payload;
+        }
+    }
+
+    public static class SelectedOption{
+        private CachedString nonPathSelected;
+        private RefItemPath pathSelected;
+        private Object payload;
+
+        private boolean pathSelectedBoolean;
+
+        public SelectedOption(CachedString nonPathSelected){
+            this.nonPathSelected = nonPathSelected;
+            pathSelectedBoolean = false;
+        }
+
+        public SelectedOption(RefItemPath pathSelected, Object payload){
+            this.pathSelected = pathSelected;
+            this.payload = payload;
+            pathSelectedBoolean = true;
+        }
+
+        public CachedString getCachedStringFromEitherState(){
+            if(pathSelectedBoolean)
+                return pathSelected.getArrayString();
+            else
+                return nonPathSelected;
+        }
+
+        public boolean isSelectedPath(){
+            return pathSelectedBoolean;
+        }
+
+        public CachedString getNonPathSelected() {
+            return nonPathSelected;
+        }
+
+        public RefItemPath getPathSelected() {
+            return pathSelected;
+        }
+
+        public Object getPayload() {
+            return payload;
         }
     }
 }

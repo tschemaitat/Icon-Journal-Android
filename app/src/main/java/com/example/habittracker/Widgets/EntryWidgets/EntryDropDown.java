@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
+import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.structurePack.Structure;
@@ -44,13 +45,19 @@ public class EntryDropDown extends BaseEntryWidget {
 
     @Override
     public void setValueCustom(WidgetValue widgetValue) {
-        WidgetValueStringPath widgetValueStringPath = (WidgetValueStringPath) widgetValue;
+
 //        if(widgetValueStringPath.getRefItemPath() == null){
 //            //MainActivity.log(widgetValueStringPath.getParent().hierarchy());
 //            throw new RuntimeException();
 //        }
-        if(widgetValueStringPath.getRefItemPath() != null)
-            setSelected(widgetValueStringPath.getRefItemPath());
+
+        //WidgetValueStringPath widgetValueSet = (WidgetValueStringPath) widgetValue;
+        WidgetValueString widgetValueSet = (WidgetValueString) widgetValue;
+
+//        if(widgetValueSet.getRefItemPath() != null)
+//            setSelected(widgetValueSet.getRefItemPath());
+
+        setSelected(widgetValueSet.getStandardFormOfCachedString());
     }
 
     @Override
@@ -58,8 +65,9 @@ public class EntryDropDown extends BaseEntryWidget {
 
     }
 
-    public void setSelected(RefItemPath itemPath){
-        dropDown.setSelected(itemPath);
+    public void setSelected(CachedString item){
+        dropDown.setSelectedNonPath(item);
+        //dropDown.setSelectedPath(itemPath);
     }
 
 
@@ -73,7 +81,8 @@ public class EntryDropDown extends BaseEntryWidget {
         MainActivity.log("saving value path: " + dropDown.getSelectedPath());
         if(dropDown.getSelectedPath() == null)
             return null;
-        return new WidgetValueStringPath(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath());
+        //return new WidgetValueStringPath(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath());
+        return new WidgetValueString(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath().getLast());
     }
 
     @Override

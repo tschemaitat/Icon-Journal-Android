@@ -13,14 +13,12 @@ import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValueString;
-import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
+import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -113,7 +111,7 @@ public class Structure {
     }
     //assume no sources were delete (handled as delete) unconnect if it is a reference
     //disconnect references from their source
-    public void disConnectValues(ImmutableList<BaseWidgetValue> baseWidgetValues){
+    public void disConnectValues(ListGetterInterface<BaseWidgetValue> baseWidgetValues){
         for(BaseWidgetValue baseWidgetValue: baseWidgetValues){
             WidgetValueString widgetValueString = (WidgetValueString) baseWidgetValue;
             CachedString cachedString = widgetValueString.getDebugCachedString();

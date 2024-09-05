@@ -195,6 +195,15 @@ public class DropDownPage{
                 "page childnre: " + this.hierarchyString());
     }
 
+    public boolean hasChildPage(CachedString name) {
+        for(DropDownPage child: getChildren()){
+            if(child.getCachedName().equals(name))
+                return true;
+        }
+        return false;
+//        throw new RuntimeException("tried to find: " + name + "\n" +
+//                "page childnre: " + this.hierarchyString());
+    }
 
     public DropDownPage getChildPage(int index) {
         return children.get(index);

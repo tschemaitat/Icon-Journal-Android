@@ -5,13 +5,11 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
-import com.example.habittracker.ViewLibrary.MatchParams;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.LayoutMeasure;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.LayoutMeasureFunction;
 import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
 
 public class LockableScrollView extends ScrollView {
@@ -202,7 +200,7 @@ public class LockableScrollView extends ScrollView {
             boolean reMeasure = false;
             if (matchParams.matchWidth) {
                 reMeasure = true;
-                childMeasuredWidth = LayoutMeasure.getMeasureSizeMatchParent(measuredWidth,
+                childMeasuredWidth = LayoutMeasureFunction.getMeasureSizeMatchParent(measuredWidth,
                         lp.leftMargin, lp.rightMargin, getPaddingLeft(), getPaddingRight());
             }
             if (reMeasure) {

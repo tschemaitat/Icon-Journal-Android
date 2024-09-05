@@ -5,7 +5,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
+import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.structurePack.WidgetPath;
 import com.example.habittracker.structurePack.ListItemId;
@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 public class GroupValue extends WidgetValue{
@@ -42,7 +41,7 @@ public class GroupValue extends WidgetValue{
         values = new ArrayList<>();
     }
 
-    public ImmutableList<BaseWidgetValue> getBaseWidgetValues(){
+    public ListGetterInterface<BaseWidgetValue> getBaseWidgetValues(){
         ArrayList<BaseWidgetValue> result = new ArrayList<>();
         for(WidgetValue widgetValue: values){
             if(widgetValue instanceof ListValue listValue){

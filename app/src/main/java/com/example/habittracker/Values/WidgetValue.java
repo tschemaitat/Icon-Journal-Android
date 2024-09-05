@@ -3,10 +3,8 @@ package com.example.habittracker.Values;
 import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
-import com.example.habittracker.structurePack.EntryInStructure;
+import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 import com.example.habittracker.structurePack.ListItemId;
-import com.example.habittracker.structurePack.Structure;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +32,7 @@ public abstract class WidgetValue implements ThrowableEqualsWithId {
         references.remove(refEntryString);
     }
 
-    public ImmutableList<RefEntryString> getReferences(){
+    public ListGetterInterface<RefEntryString> getReferences(){
         return references;
     }
 

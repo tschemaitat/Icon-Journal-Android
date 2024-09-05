@@ -1,7 +1,5 @@
 package com.example.habittracker.Inflatables;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -14,23 +12,17 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.SaveStructures;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewLibrary.BasicElement;
-import com.example.habittracker.ViewLibrary.MatchParams;
-import com.example.habittracker.ViewLibrary.RelativeElementLayout;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLayoutSuperMeasure;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.TextElement;
 import com.example.habittracker.ViewWidgets.ListViewPackage.CustomListView;
 import com.example.habittracker.ViewWidgets.ListViewPackage.DynamicListView;
-import com.example.habittracker.ViewWidgets.RelativeLayoutNewMeasure;
 import com.example.habittracker.ViewWidgets.RoundRectBorder;
 import com.example.habittracker.ViewWidgets.ToggleView;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
-import com.example.habittracker.defaultImportPackage.DefaultImportClass;
 
 import java.util.List;
 
@@ -178,7 +170,8 @@ public class TestPage implements Inflatable {
 
         relative.addWithParam(textElement, -2,250).alignParentLeft();
         relative.addWithParam(textElement2, -2,-2).rightOf(textElement).alignParentBottom();
-        relative.addWithParam(basicElement, -2, 40).matchWidth().matchHeight();
+        relative.addWithParam(basicElement, -1, 40);
+        //relative.addWithParam(basicElement, -2, 40).matchWidth().matchHeight();
 
         MainActivity.log("textElement1, id: " + textElement.getView().getId() + ", " + describeLayoutRules(((RelativeLayout.LayoutParams) textElement.getLayoutParams())));
         MainActivity.log("textElement2, id: " + textElement2.getView().getId() + ", " + describeLayoutRules(((RelativeLayout.LayoutParams) textElement2.getLayoutParams())));

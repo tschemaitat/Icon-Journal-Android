@@ -11,18 +11,17 @@ import android.widget.TextView;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.ViewLibrary.ButtonElement;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.HorLayout;
-import com.example.habittracker.ViewLibrary.RelativeElementLayout;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
 import com.example.habittracker.ViewLibrary.ScrollElements.VertScrollElement;
 import com.example.habittracker.ViewLibrary.TextElement;
 import com.example.habittracker.ViewWidgets.CheckBoxElement;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
+import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 
 
 public class DynamicListView {
@@ -49,7 +48,8 @@ public class DynamicListView {
     public void init(){
         relativeElementLayout = new RelativeElementLayout(context);
         scrollElement = new VertScrollElement(context);
-        relativeElementLayout.addWithParam(scrollElement, -1, -2).alignAllParentSides().matchWidth();
+        relativeElementLayout.addWithParam(scrollElement, -1, -2).alignAllParentSides();
+//        relativeElementLayout.addWithParam(scrollElement, -1, -2).alignAllParentSides().matchWidth();
         Drawable drawable = new ColorDrawable(Color.DKGRAY);//context.getResources().getDrawable(android.R.drawable.line);
         LinearLayout linearLayout = scrollElement.getLinearLayout().getLinearLayout();
         linearLayout.setDividerDrawable(drawable);
@@ -161,7 +161,7 @@ public class DynamicListView {
     private interface CheckBoxFunction{
         void checkBox(int index, CheckBoxElement checkBoxElement);
     }
-    private ImmutableList<CheckBoxElement> getCheckBoxes(){
+    private ListGetterInterface<CheckBoxElement> getCheckBoxes(){
         ArrayList<CheckBoxElement> checkBoxElements = new ArrayList<>();
         ArrayList<HorLayout> horLayouts = scrollElement.getChildrenCasted();
         horLayouts.enumerate((index, horLayout) -> {
@@ -221,7 +221,7 @@ public class DynamicListView {
     }
 
     public void setCheckBox(int position, boolean b) {
-        ImmutableList<CheckBoxElement> checkBoxElements = getCheckBoxes();
+        ListGetterInterface<CheckBoxElement> checkBoxElements = getCheckBoxes();
         CheckBoxElement checkBoxElement = checkBoxElements.get(position);
         checkBoxElement.getCheckBox().setChecked(b);
     }

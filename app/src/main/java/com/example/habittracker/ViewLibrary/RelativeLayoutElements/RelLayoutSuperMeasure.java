@@ -1,7 +1,5 @@
 package com.example.habittracker.ViewLibrary.RelativeLayoutElements;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,7 +7,6 @@ import android.widget.RelativeLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewLibrary.MatchParams;
-import com.example.habittracker.defaultImportPackage.ArrayList;
 
 //parent (wrap, wrap) //parent has minimum width and height
 //if no child, (0, 0)
@@ -70,12 +67,12 @@ public class RelLayoutSuperMeasure extends RelativeLayout {
             boolean reMeasure = false;
             if(matchParams.getMatchWidth()){
                 reMeasure = true;
-                childMeasuredWidth = LayoutMeasure.getMeasureSizeMatchParent(measuredWidth,
+                childMeasuredWidth = LayoutMeasureFunction.getMeasureSizeMatchParent(measuredWidth,
                         lp.leftMargin, lp.rightMargin, getPaddingLeft(), getPaddingRight());
             }
             if(matchParams.getMatchHeight()){
                 reMeasure = true;
-                childMeasuredWidth = LayoutMeasure.getMeasureSizeMatchParent(measuredHeight,
+                childMeasuredWidth = LayoutMeasureFunction.getMeasureSizeMatchParent(measuredHeight,
                         lp.topMargin, lp.bottomMargin, getPaddingTop(), getPaddingBottom());
             }
             if(reMeasure){

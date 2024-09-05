@@ -1,15 +1,9 @@
 package com.example.habittracker.defaultImportPackage;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
-import androidx.annotation.NonNull;
-
-import com.example.habittracker.structurePack.EntryInStructure;
-
 import java.util.Arrays;
 import java.util.Collection;
 
-public class ArrayList<E> extends java.util.ArrayList<E> implements ImmutableList<E>{
+public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterInterface<E> {
     public ArrayList(E... numbers) {
         super();
         this.addAll(Arrays.asList(numbers));

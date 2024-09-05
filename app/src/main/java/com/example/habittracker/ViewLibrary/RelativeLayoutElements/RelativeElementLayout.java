@@ -1,6 +1,4 @@
-package com.example.habittracker.ViewLibrary;
-
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
+package com.example.habittracker.ViewLibrary.RelativeLayoutElements;
 
 import android.content.Context;
 import android.view.View;
@@ -8,11 +6,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLP;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ElementLayout;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLayoutSuperMeasure;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelParamAllowsMatch;
 
-public class RelativeElementLayout extends ElementLayout{
+public class RelativeElementLayout extends ElementLayout {
     private RelLayoutSuperMeasure relativeLayout;
     private Context context;
 
@@ -40,7 +39,19 @@ public class RelativeElementLayout extends ElementLayout{
     }
 
     public ParamHelper addWithParam(Element element, int width, int height){
-        RelParamAllowsMatch layoutParams = new RelParamAllowsMatch(width, height);
+        int paramWidth = width;
+        int paramHeight = height;
+        boolean matchWidth = false;
+        boolean matchHeight = false;
+        if(width == -1){
+            matchWidth = true;
+            paramWidth = -2;
+        }
+        if(height == -1){
+            matchHeight = true;
+            paramHeight = -2;
+        }
+        RelParamAllowsMatch layoutParams = new RelParamAllowsMatch(width, height, matchWidth, matchHeight);
         element.getView().setLayoutParams(layoutParams);
         relativeLayout.addView(element.getView());
         super.add(element);
@@ -61,14 +72,14 @@ public class RelativeElementLayout extends ElementLayout{
             this.lp = lp;
         }
 
-        public ParamHelper matchWidth(){
-            lp.matchWidth = true;
-            return this;
-        }
-        public ParamHelper matchHeight(){
-            lp.matchHeight = true;
-            return this;
-        }
+//        public ParamHelper matchWidth(){
+//            lp.matchWidth = true;
+//            return this;
+//        }
+//        public ParamHelper matchHeight(){
+//            lp.matchHeight = true;
+//            return this;
+//        }
 
         public void addRuleWithSubject(int code, Element element){
             int id = element.getView().getId();

@@ -21,6 +21,11 @@ public class RelParamAllowsMatch extends RelativeLayout.LayoutParams implements 
     public RelParamAllowsMatch(int w, int h) {
         super(w, h);
     }
+    public RelParamAllowsMatch(int w, int h, boolean matchWidth, boolean matchHeight) {
+        super(w, h);
+        this.matchWidth = matchWidth;
+        this.matchHeight = matchHeight;
+    }
 
     public RelParamAllowsMatch(ViewGroup.LayoutParams source) {
         super(source);

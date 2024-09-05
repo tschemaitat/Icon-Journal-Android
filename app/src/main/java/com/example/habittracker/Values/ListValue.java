@@ -5,7 +5,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
+import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 import com.example.habittracker.structurePack.WidgetPath;
 import com.example.habittracker.structurePack.ListItemId;
 
@@ -28,7 +28,7 @@ public class ListValue extends WidgetValue {
             groupValue.setParentListValue(this);
     }
 
-    public ImmutableList<BaseWidgetValue> getBaseWidgetValues(){
+    public ListGetterInterface<BaseWidgetValue> getBaseWidgetValues(){
         ArrayList<BaseWidgetValue> result = new ArrayList<>();
         for(GroupValue groupValue: groupValueList){
             result.addAll((Collection<? extends BaseWidgetValue>) groupValue.getBaseWidgetValues());

@@ -7,16 +7,13 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.habittracker.Algorithms.HandleDeletedValues;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.StaticStateManagers.DeleteValueManager;
 import com.example.habittracker.ViewLibrary.AbstractBasicElement;
-import com.example.habittracker.ViewLibrary.RelativeElementLayout;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 
 public class ViewWrapper {
     private Context context;
