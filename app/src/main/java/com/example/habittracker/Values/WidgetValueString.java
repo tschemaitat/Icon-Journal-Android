@@ -2,7 +2,10 @@ package com.example.habittracker.Values;
 
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.defaultImportPackage.ImmutableList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +14,14 @@ import java.util.Objects;
 
 public class WidgetValueString extends BaseWidgetValue {
     public static final String className = "widget value string";
-    private CachedString cachedString;
+    private LiteralString cachedString;
 
-    public WidgetValueString(WidgetId widgetId, CachedString cachedString){
+
+    public WidgetValueString(WidgetId widgetId, LiteralString cachedString){
         super(widgetId);
         this.cachedString = cachedString;
     }
+
 
 
 
@@ -49,7 +54,7 @@ public class WidgetValueString extends BaseWidgetValue {
     public static WidgetValue getFromJSON(JSONObject jsonObject) throws JSONException{
         JSONObject cachedStringJSON = jsonObject.getJSONObject(CachedString.className);
         int widgetId = jsonObject.getInt("widget id");
-        CachedString cachedString = StructureTokenizer.getCachedString(cachedStringJSON);
+        LiteralString cachedString = (LiteralString)StructureTokenizer.getCachedString(cachedStringJSON);
         return new WidgetValueString(new WidgetId(widgetId), cachedString);
     }
 

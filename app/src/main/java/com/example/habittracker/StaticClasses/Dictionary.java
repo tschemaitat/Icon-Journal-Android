@@ -89,6 +89,8 @@ public class Dictionary {
         MainActivity.log("new structure: " + newStructure.getCachedName());
         structures.remove(structure.getId());
         structures.put(newStructure.getId(), newStructure);
+
+
     }
 
     public static String getStructureDebug(){

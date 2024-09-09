@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
-public interface ListGetterInterface<E> extends Iterable{
+public interface ListGetterInterface<E> extends Iterable<E>{
     E get(int index);
     int size();
     boolean isEmpty();

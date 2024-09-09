@@ -12,11 +12,14 @@ import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.Values.WidgetValueReference;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.defaultImportPackage.ImmutableList;
 import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 
 import java.util.HashMap;
@@ -98,32 +101,49 @@ public class Structure {
         Set<EntryId> entryIdSet = entries.keySet();
         while(entryIdSet.contains(new EntryId(idCount)))
             idCount++;
-        EntryInStructure entryInStructure = new EntryInStructure(new EntryId(idCount), this);
+
+        EntryId entryId = new EntryId(idCount);
+        EntryInStructure entryInStructure = new EntryInStructure(entryId, this);
         idCount++;
         entries.put(entryInStructure.getId(), entryData);
+        connectReferencesOfGroupValue(entryId, entryData);
+    }
+
+    private void connectReferencesOfGroupValue(EntryId entryId, GroupValue groupValue){
+        ArrayList<WidgetValue> newValues = groupValue.getValues();
+        for(WidgetValue widgetValue: newValues){
+            if( ! (widgetValue instanceof WidgetValueReference widgetValueReference)){
+                continue;
+            }
+            BaseWidgetValue baseWidgetValue = widgetValueReference.getSource();
+            baseWidgetValue.addReference(this, entryId, widgetValueReference);
+        }
+    }
+
+    private void disconnectReferencesOfGroupValue(EntryId entryId, GroupValue groupValue){
+        ArrayList<WidgetValue> oldValues = groupValue.getValues();
+        for(WidgetValue widgetValue: oldValues){
+            if( ! (widgetValue instanceof WidgetValueReference widgetValueReference)){
+                continue;
+            }
+            BaseWidgetValue baseWidgetValue = widgetValueReference.getSource();
+            baseWidgetValue.removeReference(this, entryId, widgetValueReference);
+        }
     }
 
     public void editEntry(EntryInStructure entryInStructureToEdit, GroupValue data){
         EntryId entryId = entryInStructureToEdit.getId();
-        if(entries.get(entryInStructureToEdit.getId()) == null)
+        GroupValue oldGroupValue = entries.get(entryInStructureToEdit.getId());
+        if(oldGroupValue == null)
             throw new RuntimeException();
+        disconnectReferencesOfGroupValue(entryId, oldGroupValue);
+        entries.remove(entryId);
+
         entries.put(entryId, data);
+        connectReferencesOfGroupValue(entryId, entryInStructureToEdit.getGroupValue());
     }
     //assume no sources were delete (handled as delete) unconnect if it is a reference
     //disconnect references from their source
-    public void disConnectValues(ListGetterInterface<BaseWidgetValue> baseWidgetValues){
-        for(BaseWidgetValue baseWidgetValue: baseWidgetValues){
-            WidgetValueString widgetValueString = (WidgetValueString) baseWidgetValue;
-            CachedString cachedString = widgetValueString.getDebugCachedString();
-            if(cachedString instanceof RefEntryString refEntryString){
-                refEntryString.disconnectFromSource();
-            }
-        }
-    }
-
-
-
-
 
     public ArrayList<EntryInStructure> getEntryList(){
         Structure thisStructure = this;
@@ -150,8 +170,6 @@ public class Structure {
         return EnumLoop.makeList(getEntriesInStructure(), (entryInStructure -> entryInStructure.getEntry()));
     }
 
-
-
     public CachedString getCachedName(){
         return new LiteralString(name);
     }
@@ -159,10 +177,6 @@ public class Structure {
     public String getType(){
         return type;
     }
-
-
-
-
 
     public GroupWidgetParam getWidgetParam(){
         if(widgetParam == null)
@@ -175,9 +189,6 @@ public class Structure {
             return true;
         return false;
     }
-
-
-
 
     public EntryInStructure getEntryInStructure(EntryId entryId) {
         if(entries.get(entryId) == null )
@@ -244,15 +255,15 @@ public class Structure {
         return widgetInStructures;
     }
 
-    public ArrayList<RefEntryString> getReferenceLocationsOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
-        ArrayList<RefEntryString> result = new ArrayList<>();
-        ArrayList<WidgetInStructure> widgetThatRefTheSourceList = getWidgetsThatRefSource(sourceWidget);
-        for(WidgetInStructure widgetThatRefTheSource: widgetThatRefTheSourceList){
-            ArrayList<RefEntryString> reference = getReferenceLocationsOfWidget(sourcesToCheck, widgetThatRefTheSource);
-            result.addAll(reference);
-        }
-        return result;
-    }
+//    public ArrayList<RefEntryString> getReferenceLocationsOfSource(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure sourceWidget){
+//        ArrayList<RefEntryString> result = new ArrayList<>();
+//        ArrayList<WidgetInStructure> widgetThatRefTheSourceList = getWidgetsThatRefSource(sourceWidget);
+//        for(WidgetInStructure widgetThatRefTheSource: widgetThatRefTheSourceList){
+//            ArrayList<RefEntryString> reference = getReferenceLocationsOfWidget(sourcesToCheck, widgetThatRefTheSource);
+//            result.addAll(reference);
+//        }
+//        return result;
+//    }
 
     public ArrayList<WidgetInStructure> getWidgetsThatRefSource(WidgetInStructure sourceWidget){
         ArrayList<WidgetInStructure> references = new ArrayList<>();
@@ -275,26 +286,26 @@ public class Structure {
         return references;
     }
 
-    public ArrayList<RefEntryString> getReferenceLocationsOfWidget(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure widgetThatRefTheSource){
-        ArrayList<RefEntryString> referenceValues = getReferenceValuesOfWidget(widgetThatRefTheSource, getEntriesInStructure());
-        ArrayList<RefEntryString> matchedReferenceValues = extractReferencesWhoseValuesMatch(sourcesToCheck, referenceValues);
-        return referenceValues;
-    }
+//    public ArrayList<RefEntryString> getReferenceLocationsOfWidget(ArrayList<RefEntryString> sourcesToCheck, WidgetInStructure widgetThatRefTheSource){
+//        ArrayList<RefEntryString> referenceValues = getReferenceValuesOfWidget(widgetThatRefTheSource, getEntriesInStructure());
+//        ArrayList<RefEntryString> matchedReferenceValues = extractReferencesWhoseValuesMatch(sourcesToCheck, referenceValues);
+//        return referenceValues;
+//    }
 
 
 
-    private static ArrayList<RefEntryString> getReferenceValuesOfWidget(WidgetInStructure widget, ArrayList<EntryInStructure> entries){
-        if( ! (widget.getWidgetParam() instanceof DropDownParam))
-            throw new RuntimeException();
-
-        ArrayList<RefEntryString> result = new ArrayList<>();
-        for(EntryInStructure entryInStructure : entries){
-            ArrayList<BaseWidgetValue> valuesFromWidget = entryInStructure.getGroupValue().getValuesFromWidgetPath(widget.getWidgetPath());
-            for(BaseWidgetValue baseWidgetValue: valuesFromWidget)
-                result.add(baseWidgetValue.getReference(entryInStructure));
-        }
-        return result;
-    }
+//    private static ArrayList<RefEntryString> getReferenceValuesOfWidget(WidgetInStructure widget, ArrayList<EntryInStructure> entries){
+//        if( ! (widget.getWidgetParam() instanceof DropDownParam))
+//            throw new RuntimeException();
+//
+//        ArrayList<RefEntryString> result = new ArrayList<>();
+//        for(EntryInStructure entryInStructure : entries){
+//            ArrayList<BaseWidgetValue> valuesFromWidget = entryInStructure.getGroupValue().getValuesFromWidgetPath(widget.getWidgetPath());
+//            for(BaseWidgetValue baseWidgetValue: valuesFromWidget)
+//                result.add(baseWidgetValue.getReference(entryInStructure));
+//        }
+//        return result;
+//    }
 
     private static ArrayList<RefEntryString> extractReferencesWhoseValuesMatch(ArrayList<RefEntryString> sourceValues,
                                                                                ArrayList<RefEntryString> references){

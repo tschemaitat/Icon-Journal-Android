@@ -1,5 +1,7 @@
 package com.example.habittracker.defaultImportPackage;
 
+import androidx.annotation.NonNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -44,6 +46,16 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterIn
 
     public interface ConvertFunction<Input, Output>{
         Output convert(int index, Input element);
+    }
+
+    @Override
+    public boolean containsAny(ListGetterInterface<E> elements) {
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(@NonNull ListGetterInterface<? extends E> list) {
+        return false;
     }
 
     public <T> ArrayList<T> convert(ConvertFunction<E, T> convertFunction){

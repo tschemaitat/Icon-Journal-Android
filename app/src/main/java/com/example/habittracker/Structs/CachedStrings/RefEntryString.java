@@ -9,6 +9,7 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.WidgetValueReference;
 import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Values.BaseWidgetValue;
@@ -23,7 +24,7 @@ import org.json.JSONObject;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Objects;
 
-public class RefEntryString implements CachedString{
+public class RefEntryString<E extends BaseWidgetValue> implements CachedString{
     public static final String className = "refEntryString";
     WidgetInStructure widgetInStructure;
     EntryInStructure entryInStructure;
@@ -42,16 +43,29 @@ public class RefEntryString implements CachedString{
         this.widgetInStructure = widgetInStructure;
         this.entryInStructure = entryInStructure;
         this.listIdList = listIdList;
+        //checking for error during construction
+        BaseWidgetValue baseWidgetValue = getBaseWidgetValue();
     }
 
-    public void disconnectFromSource(){
-        BaseWidgetValue source = this.getBaseWidgetValue();
-        source.removeReferenceLink(this);
+    public RefEntryString(Structure structure, EntryId entryId, BaseWidgetValue baseWidgetValue) {
+        //checking cast
+        E casted = (E) baseWidgetValue;
+        ArrayList<ListItemId> listIdList = baseWidgetValue.getListItemIds();
+        WidgetInStructure widgetInStructure = structure.getWidgetInStructureFromId(baseWidgetValue.getWidgetId());
+        EntryInStructure entryInStructure = structure.getEntryInStructure(entryId);
+        init(widgetInStructure, entryInStructure, listIdList);
+
+
+    }
+
+    private void init(WidgetInStructure widgetInStructure, EntryInStructure entryInStructure, ArrayList<ListItemId> listIdList){
+
     }
 
 
-    public BaseWidgetValue getBaseWidgetValue(){
-        return entryInStructure.getGroupValue().getValue(widgetInStructure.getWidgetPath(), listIdList);
+    public E getBaseWidgetValue(){
+        BaseWidgetValue baseWidgetValue = entryInStructure.getGroupValue().getValue(widgetInStructure.getWidgetPath(), listIdList);
+        return (E) baseWidgetValue;
     }
 
     public String getString(){
