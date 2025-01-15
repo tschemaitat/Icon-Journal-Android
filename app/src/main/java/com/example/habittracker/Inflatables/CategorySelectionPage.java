@@ -12,7 +12,7 @@ import com.example.habittracker.ViewWidgets.SelectionView;
 import com.example.habittracker.defaultImportPackage.DefaultImportClass;
 import com.example.habittracker.structurePack.Structure;
 
-public class CategorySelectionPage implements Inflatable{
+public class CategorySelectionPage extends Inflatable{
     private Context context;
     private LinearLayout linearLayout;
     public CategorySelectionPage(Context context){
@@ -76,7 +76,7 @@ public class CategorySelectionPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 }

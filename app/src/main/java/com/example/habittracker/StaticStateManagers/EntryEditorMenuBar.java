@@ -17,7 +17,7 @@ public class EntryEditorMenuBar {
     private Button deleteButton;
     private OnDeleteValueCancelAndConfirm deleteAndConfirm;
 
-    private DeleteValueManager deleteValueManager;
+
     private LinearLayout horizontalBar;
 
     private MenuBarManager menuBarManager;
@@ -35,25 +35,7 @@ public class EntryEditorMenuBar {
     private void init(ParentWidget parentWidget, EntryInStructure entry){
 
         horizontalBar = makeHorizontalBarLayout(context);
-        deleteButton = makeDeleteButton(context, horizontalBar);
-
-
-
-
-        deleteButton.setOnClickListener((view)->{
-            deleteValueManager = new DeleteValueManager(context, parentWidget, deleteButton, entry);
-            //add delete and confirm to invisible bar
-            deleteAndConfirm = new OnDeleteValueCancelAndConfirm(context, this::onCancel, this::onConfirm);
-            menuBarManager.addViewInvisibleLayout(deleteAndConfirm.getView());
-        });
-    }
-
-    private void onCancel(){
-        deleteValueManager.onCancel();
-    }
-
-    private void onConfirm(){
-        deleteValueManager.onConfirm();
+        //deleteButton = makeDeleteButton(context, horizontalBar);
     }
 
     private static Button makeDeleteButton(Context context, LinearLayout menuBarLayout){

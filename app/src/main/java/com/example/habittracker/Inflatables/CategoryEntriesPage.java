@@ -14,7 +14,7 @@ import com.example.habittracker.structurePack.Structure;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class CategoryEntriesPage implements Inflatable{
+public class CategoryEntriesPage extends Inflatable{
     private Context context;
     private Structure structure;
     private LinearLayout linearLayout;
@@ -51,7 +51,7 @@ public class CategoryEntriesPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 

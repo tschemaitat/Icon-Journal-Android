@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,12 +25,7 @@ import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticClasses.SaveStructures;
-import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
-import com.example.habittracker.StaticStateManagers.InvisibleMenuBarManager;
-import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
-import com.example.habittracker.ViewLibrary.LinearLayoutElements.HorLayout;
-import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewWidgets.Drag;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 
@@ -122,19 +116,19 @@ public class MainActivity extends AppCompatActivity {
         log("inflating: " + newLayout.getClass().getSimpleName());
         if(currentLayout != null){
 
-            boolean removeSuccess = currentLayout.tryToRemove(newLayout);
+            boolean removeSuccess = currentLayout.canRemove(newLayout);
             if(!removeSuccess){
                 log("remove: " + currentLayout.getClass().getName() + " failed");
                 return;
             }
             inflateLayout.removeView(currentLayout.getView());
             scrollView.setScrollY(0);
-            currentLayout.onRemoved();
+            currentLayout.remove();
         }
 
         inflateLayout.addView(newLayout.getView());
         currentLayout = newLayout;
-        currentLayout.onOpened();
+        currentLayout.open();
     }
 
     public static void showToast(Context context, String message) {

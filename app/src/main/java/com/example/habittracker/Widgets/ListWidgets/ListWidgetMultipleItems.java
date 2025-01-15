@@ -15,7 +15,7 @@ import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
-import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
+
 
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -24,7 +24,6 @@ public class ListWidgetMultipleItems extends ListWidget {
     public static String childClassName = "list multiple items";
     private ListParam listMultiItemParam = null;
     private Context context;
-    public static final String className = "list";
     public ListWidgetMultipleItems(Context context) {
         super(context);
         this.context = context;
@@ -68,30 +67,6 @@ public class ListWidgetMultipleItems extends ListWidget {
         }
         return new ListValue(getWidgetInStructure().getWidgetId(), groupValueList);
     }
-
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration(){
-        ArrayList<BaseEntryWidget> result = new ArrayList<>();
-        ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
-        for(GroupWidget groupWidget: groupWidgets){
-            result.addAll(groupWidget.getWidgetsForDeleteIteration());
-        }
-        return result;
-    }
-
-    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
-        if(isDeleteChecked)
-            throw new RuntimeException();
-        for(GroupWidget groupWidget: getGroupWidgets()){
-            if(groupWidget.isDeleteChecked){
-                resultList.add(groupWidget);
-                continue;
-            }
-            groupWidget.gatherWidgetsCheckedIteration(resultList);
-        }
-    }
-
     public void setParamCustom(EntryWidgetParam param){
         this.listMultiItemParam = (ListParam) param;
         setWidgetParam(listMultiItemParam.cloneableWidget);

@@ -141,20 +141,18 @@ public class GLib {
             }
             case ListWidget.className->{
                 ListParam listParam = (ListParam) params;
-                if(listParam.classNameOfChild.equals(ListWidgetSingleItem.childClassName)){
+                if(listParam.cloneableWidget.params.size() > 1){
+                    widget = new ListWidgetMultipleItems(context);
+                }else{
                     widget = new ListWidgetSingleItem(context);
-                    widget.setOnDataChangedListener(onDataChange);
-                    widget.setParam(params);
                 }
+                widget.setOnDataChangedListener(onDataChange);
+                widget.setParam(params);
 
-                if(listParam.classNameOfChild.equals(ListWidgetMultipleItems.childClassName)){
-                    widget = new ListWidgetMultipleItems(context);
-                    widget.setOnDataChangedListener(onDataChange);
-                    widget.setParam(params);
-                }
-                    widget = new ListWidgetMultipleItems(context);
-                    widget.setOnDataChangedListener(onDataChange);
-                    widget.setParam(params);
+
+//                widget = new ListWidget(context);
+//                widget.setOnDataChangedListener(onDataChange);
+//                widget.setParam(params);
             }
 
 //            case ListWidgetMultipleItems.className -> {

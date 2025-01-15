@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
@@ -82,7 +83,7 @@ public class EntryDropDown extends BaseEntryWidget {
         if(dropDown.getSelectedPath() == null)
             return null;
         //return new WidgetValueStringPath(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath());
-        return new WidgetValueString(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath().getLast());
+        return new WidgetValueString(getWidgetInStructure().getWidgetId(), new LiteralString(dropDown.getSelectedPath().getLast().getString()));
     }
 
     @Override

@@ -15,7 +15,6 @@ import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
-import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
@@ -69,27 +68,6 @@ public class ListWidgetSingleItem extends ListWidget {
             item.setListItemIdProvider(new SingleItemIdProvider(groupValue.getListItemId()));
         }
         addGhostItem(createItem());
-
-    }
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration(){
-        ArrayList<BaseEntryWidget> baseEntryWidgets = EnumLoop.makeList(getEntryWidgetList(),
-                (entryWidget -> (BaseEntryWidget) entryWidget));
-        return GroupWidget.gatherRefForDeleteWidgetsAndList(baseEntryWidgets);
-    }
-
-    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
-        if(isDeleteChecked)
-            throw new RuntimeException();
-        for(EntryWidget entryWidget: getEntryWidgetList()){
-            if(entryWidget.isDeleteChecked)
-                resultList.add(entryWidget);
-        }
-    }
-
-    @Override
-    protected void setHint(String hintString) {
 
     }
 

@@ -230,7 +230,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public WidgetValue getEntryValueTreeCustom() {
         //MainActivity.log("returning data tree");
         //MainActivity.log("getText() = " + getText());
-        return new WidgetValueString(getWidgetIdTracker(), new LiteralString(getText()));
+        return new WidgetValueString(getWidgetId(), new LiteralString(getText()));
     }
 
     @Override

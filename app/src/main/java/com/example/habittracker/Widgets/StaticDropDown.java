@@ -26,12 +26,6 @@ public class StaticDropDown extends BaseEntryWidget {
         this.context = context;
         init();
     }
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
-        throw new RuntimeException();
-    }
-
     public StaticDropDown(Context context, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
         super(context);
         this.context = context;

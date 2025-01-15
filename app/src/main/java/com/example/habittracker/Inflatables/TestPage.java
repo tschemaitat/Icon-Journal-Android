@@ -26,7 +26,7 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import java.util.List;
 
-public class TestPage implements Inflatable {
+public class TestPage extends Inflatable {
     private LinearLayout linearLayout;
     private Context context;
 
@@ -61,7 +61,7 @@ public class TestPage implements Inflatable {
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 

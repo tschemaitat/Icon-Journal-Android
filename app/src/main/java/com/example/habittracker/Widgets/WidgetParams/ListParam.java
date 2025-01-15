@@ -4,6 +4,7 @@ import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*
 
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -19,13 +20,13 @@ public class ListParam extends EntryWidgetParam{
     public String classNameOfChild = null;
 
     public ListParam(String name, GroupWidgetParam cloneableWidget){
-        super(name, ListWidgetMultipleItems.className);
+        super(name, ListWidget.className);
         this.cloneableWidget = cloneableWidget;
         init();
     }
 
     public ListParam(EntryWidgetParamBuilder builder, GroupWidgetParam cloneableWidget){
-        super(builder, ListWidgetMultipleItems.className);
+        super(builder, ListWidget.className);
         this.cloneableWidget = cloneableWidget;
         init();
     }
@@ -49,7 +50,7 @@ public class ListParam extends EntryWidgetParam{
         EntryWidgetParamBuilder builder = EntryWidgetParam.getBuilderFromJSON(jsonObject);
         JSONObject groupParamJSON = jsonObject.getJSONObject("groupParam");
         GroupWidgetParam groupParam = (GroupWidgetParam) StructureTokenizer.getWidgetParam(groupParamJSON);
-        return new ListMultiItemParam(builder, groupParam);
+        return new ListParam(builder, groupParam);
     }
 
     public String toString(){
@@ -74,25 +75,25 @@ public class ListParam extends EntryWidgetParam{
 
     @Override
     public boolean equals(Object object){
-        if( ! (object instanceof ListMultiItemParam listMultiItemParam))
+        if( ! (object instanceof ListParam listParam))
             return false;
-        if( ! Objects.equals(cloneableWidget, listMultiItemParam.cloneableWidget))
+        if( ! Objects.equals(cloneableWidget, listParam.cloneableWidget))
             return false;
-        if( ! Objects.equals(name, listMultiItemParam.name))
+        if( ! Objects.equals(name, listParam.name))
             return false;
-        if( ! Objects.equals(getWidgetId(), listMultiItemParam.getWidgetId()))
+        if( ! Objects.equals(getWidgetId(), listParam.getWidgetId()))
             return false;
         return true;
     }
 
     @Override
     public void equalsThrows(Object object){
-        if( ! (object instanceof ListMultiItemParam listMultiItemParam))
+        if( ! (object instanceof ListParam listParam))
             throw new RuntimeException(object.toString());
-        if( ! Objects.equals(name, listMultiItemParam.name))
-            throw new RuntimeException("first: " + name + ", second: " + listMultiItemParam.name);
-        getWidgetId().equalsThrows(listMultiItemParam.getWidgetId());
-        cloneableWidget.equalsThrows(listMultiItemParam.cloneableWidget);
+        if( ! Objects.equals(name, listParam.name))
+            throw new RuntimeException("first: " + name + ", second: " + listParam.name);
+        getWidgetId().equalsThrows(listParam.getWidgetId());
+        cloneableWidget.equalsThrows(listParam.cloneableWidget);
         if( ! this.equals(object))
             throw new RuntimeException();
     }

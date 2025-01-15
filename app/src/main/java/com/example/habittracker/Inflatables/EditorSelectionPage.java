@@ -14,7 +14,7 @@ import com.example.habittracker.structurePack.Structure;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class EditorSelectionPage implements Inflatable {
+public class EditorSelectionPage extends Inflatable {
     private LinearLayout parentLayout;
     private Context context;
     public EditorSelectionPage(Context context){
@@ -77,7 +77,7 @@ public class EditorSelectionPage implements Inflatable {
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 }

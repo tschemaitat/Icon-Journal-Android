@@ -7,7 +7,7 @@ import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 
-public class JournalPage implements Inflatable{
+public class JournalPage extends Inflatable{
     private Context context;
     private GroupWidget groupWidget;
     private Structure structure;
@@ -41,7 +41,7 @@ public class JournalPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 }

@@ -8,7 +8,8 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.GroupWidget;
-import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
+
+import com.example.habittracker.Widgets.WidgetParams.ListParam;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
@@ -49,7 +50,7 @@ public class UnitTests {
         DropDownParam exerciseDropDown = new DropDownParam("genre",
                 genreStructure.getId(), genreWidgetInStructure.getWidgetId(), new ArrayList<>());
         EditTextParam genreDesc = new EditTextParam("genreDesc");
-        ListMultiItemParam genreList = new ListMultiItemParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
+        ListParam genreList = new ListParam("genres", new GroupWidgetParam(null, new EntryWidgetParam[]{
                 exerciseDropDown,
                 genreDesc,
         }));

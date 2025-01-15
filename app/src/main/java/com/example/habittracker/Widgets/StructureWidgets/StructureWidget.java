@@ -18,7 +18,7 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
-import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
+
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
 public class StructureWidget implements Widget {

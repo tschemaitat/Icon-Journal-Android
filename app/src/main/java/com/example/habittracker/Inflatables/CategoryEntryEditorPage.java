@@ -16,7 +16,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collections;
 
-public class CategoryEntryEditorPage implements Inflatable{
+public class CategoryEntryEditorPage extends Inflatable{
     private Context context;
     private Structure structure;
     private EntryInStructure entryInStructure;
@@ -116,7 +116,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         System.out.println("trying to remove category entry editor");
         if(discarding)
             return true;

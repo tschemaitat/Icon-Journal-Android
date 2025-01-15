@@ -10,9 +10,7 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
-import com.example.habittracker.Widgets.WidgetParams.ListMultiItemParam;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
-import com.example.habittracker.Widgets.WidgetParams.ListSingleItemParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 

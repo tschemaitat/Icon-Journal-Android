@@ -41,28 +41,23 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         //makeButton(()->addItem());
 
     }
-
     protected ArrayList<EntryWidget> getWidgetListWithoutGhost(){
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();
         widgetList.remove(widgetList.size() - 1);
         return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
     }
-
-    protected ArrayList<EntryWidget> getEntryWidgetList(){
+    protected ArrayList<EntryWidget> getEntryWidgetListWithGhost(){
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();
         return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
     }
-
     protected void setValueListCustom(WidgetValue widgetValue){
         throw new RuntimeException();
     }
-
     protected void onItemCreated(Widget widget){
         throw new RuntimeException();
     }
-
     protected void addGhostItem(Widget widget){
         MainActivity.log("adding ghost");
         widget.getView().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
@@ -70,7 +65,6 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         widget.setOnDataChangedListener(()->onGhostData());
         layout.add(widget);
     }
-
     private void onGhostData() {
         MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
@@ -79,7 +73,6 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         ghostItem = null;
         addGhostItem(createItem());
     }
-
     protected final EntryWidget createItem(){
         MainActivity.log("list widget: creating item");
         EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, ()->onDataChangedListener().run());
@@ -87,7 +80,6 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         onItemCreated(entryWidget);
         return entryWidget;
     }
-
     public ArrayList<GroupWidget> getGroupWidgets(){
         ArrayList<GroupWidget> groupWidgets = new ArrayList<>();
         for(Widget widget: layout.widgets()){
@@ -96,7 +88,6 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         groupWidgets.remove(groupWidgets.size() - 1);
         return groupWidgets;
     }
-
     @Override
     public final void setValueCustom(WidgetValue widgetValue) {
         layout.remove(ghostItem);
@@ -105,21 +96,17 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         setValueListCustom(widgetValue);
         addGhostItem(createItem());
     }
-
     @Override
     protected void setHint(String hintString) {
 
     }
-
     protected void setViewDraggable(Widget widget){
         ((InterceptLinearLayout) widget.getView()).enableIntercept(()->startDrag(widget));
     }
-
     protected void startDrag(Widget widget) {
         ListWidgetGhostManager listWidgetGhostManager = new ListWidgetGhostManager(this,
                 widget, context, layout);
     }
-
     @Override
     public EntryWidget getFirstWidget() {
         EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
@@ -130,26 +117,22 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     }
     @Override
     public EntryWidget findNextWidget(EntryWidget entryWidget){
-        return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgetList(), getFocusParent(), this);
+        return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgetListWithGhost(), getFocusParent(), this);
     }
-
     protected void setWidgetParam(EntryWidgetParam entryWidgetParam){
         this.cloneParam = entryWidgetParam;
         if(ghostItem != null)
             throw new RuntimeException();
         addGhostItem(createItem());
     }
-
     @Override
     public WidgetValue getEntryValueTreeCustom() {
         throw new RuntimeException();
     }
-
     @Override
     public void setParamCustom(EntryWidgetParam param){
         throw new RuntimeException();
     }
-
     public void makeButton(Runnable runnable){
         layout.getLinLayout().addButton(new View.OnClickListener() {
             @Override
@@ -157,35 +140,5 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
                 runnable.run();
             }
         });
-    }
-
-
-    public void enableDeleteValueMode() {
-        for(EntryWidget entryWidget: getEntryWidgetList()){
-            if(entryWidget instanceof GroupWidget groupWidget){
-                groupWidget.enableDeleteValueMode();
-            }else{
-                entryWidget.enableDelete();
-            }
-        }
-    }
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
-        return getWidgetsForDeleteIteration();
-    }
-
-    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration(){
-        throw new RuntimeException();
-    }
-
-//    public ArrayList<EntryWidget> gatherWidgetsChecked() {
-//        ArrayList<EntryWidget> resultList = new ArrayList<>();
-//        gatherWidgetsCheckedIteration(resultList);
-//        return resultList;
-//    }
-
-    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList) {
-        throw new RuntimeException();
     }
 }

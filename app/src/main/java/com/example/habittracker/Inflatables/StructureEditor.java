@@ -24,7 +24,7 @@ import com.example.habittracker.structurePack.Structures;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class StructureEditor implements Inflatable{
+public class StructureEditor extends Inflatable{
 
 
     Context context;
@@ -211,7 +211,7 @@ public class StructureEditor implements Inflatable{
     }
 
     @Override
-    public boolean tryToRemove(Inflatable page) {
+    public boolean canRemoveImpl(Inflatable page) {
         return true;
     }
 

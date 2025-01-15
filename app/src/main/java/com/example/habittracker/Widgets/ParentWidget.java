@@ -29,34 +29,6 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
         setViewWrapperChild(layout.getView());
         getView().setId(R.id.parentWidget);
     }
-    public void enableDeleteValueMode() {
-        enableDeleteValueMode(getBaseEntryWidgets());
-    }
-    public static void enableDeleteValueMode(ArrayList<BaseEntryWidget> baseEntryWidgets){
-        for(EntryWidget entryWidget: baseEntryWidgets){
-            if(entryWidget instanceof ListWidget listWidget){
-                listWidget.enableDeleteValueMode();
-            }else{
-                entryWidget.enableDelete();
-            }
-        }
-    }
-    public ArrayList<EntryWidget> gatherWidgetsChecked(){
-        ArrayList<EntryWidget> resultList = new ArrayList<>();
-        if(isDeleteChecked)
-            throw new RuntimeException();
-        ArrayList<BaseEntryWidget> baseEntryWidgets = getBaseEntryWidgets();
-        for(BaseEntryWidget baseEntryWidget: baseEntryWidgets){
-            if(baseEntryWidget.isDeleteChecked){
-                resultList.add(baseEntryWidget);
-                continue;
-            }
-            if(baseEntryWidget instanceof ListWidget listWidget){
-                listWidget.gatherWidgetsCheckedIteration(resultList);
-            }
-        }
-        return resultList;
-    }
     public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){
         ArrayList<BaseEntryWidget> entryWidgets = new ArrayList<>();
         for(Widget widget: layout.widgets()){
@@ -73,10 +45,6 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     }
     public WidgetLayout getWidgetLayout(){
         return layout;
-    }
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
-        return null;
     }
     @Override
     protected WidgetValue getEntryValueTreeCustom() {

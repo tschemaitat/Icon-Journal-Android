@@ -42,26 +42,6 @@ public abstract class BaseEntryWidget extends EntryWidget{
         return resultList;
     }
 
-
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDelete(){
-        ArrayList<BaseEntryWidget> result = new ArrayList<>();
-        result.add(this);
-        return result;
-    }
-
-
-
-//    public void onDeleteCheck(boolean isChecked){
-//        DeleteValueManager deleteValueManager = DeleteValueManager.getManager();
-//        if(isChecked){
-//            WidgetValue widgetValue = this.getValue();
-//            deleteValueManager.addValue(new RefEntryString(getStructure(), getWidgetId(),
-//                    null, listItemIdProvider.getListItemIdList()));
-//        }
-//    }
-
     public String getNameAndLocation(){
         ArrayList<ListItemId> itemIds = getListItemIdProvider().getListItemIdList();
         return getName() + itemIds;
