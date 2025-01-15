@@ -9,7 +9,6 @@ import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.Values.WidgetValueReference;
 import com.example.habittracker.Values.WidgetValueStringPath;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Values.BaseWidgetValue;
@@ -44,7 +43,7 @@ public class RefEntryString<E extends BaseWidgetValue> implements CachedString{
         this.entryInStructure = entryInStructure;
         this.listIdList = listIdList;
         //checking for error during construction
-        BaseWidgetValue baseWidgetValue = getBaseWidgetValue();
+        BaseWidgetValue baseWidgetValue = getSource();
     }
 
     public RefEntryString(Structure structure, EntryId entryId, BaseWidgetValue baseWidgetValue) {
@@ -63,19 +62,19 @@ public class RefEntryString<E extends BaseWidgetValue> implements CachedString{
     }
 
 
-    public E getBaseWidgetValue(){
+    public E getSource(){
         BaseWidgetValue baseWidgetValue = entryInStructure.getGroupValue().getValue(widgetInStructure.getWidgetPath(), listIdList);
         return (E) baseWidgetValue;
     }
 
     public String getString(){
 
-        BaseWidgetValue value = getBaseWidgetValue();
+        BaseWidgetValue value = getSource();
         return value.getStandardFormOfCachedString().getString();
     }
 
     public ArrayList<RefEntryString> getRefEntryStringListOfValue(){
-        WidgetValueStringPath value = (WidgetValueStringPath)getBaseWidgetValue();
+        WidgetValueStringPath value = (WidgetValueStringPath) getSource();
         ArrayList<CachedString> cachedStrings = value.getRefItemPath().getPath();
         return EnumLoop.makeList(cachedStrings, (cachedString -> (RefEntryString) cachedString));
     }

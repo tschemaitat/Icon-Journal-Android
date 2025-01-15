@@ -1,0 +1,36 @@
+commented out line getReferences() in HandleDeletedValues.java
+
+
+
+
+when editing we change the data of a widget
+then we can take the whole widget hierarchy, gather the tree, and save the tree by replacing the the old tree with the new one
+
+
+we could try to allow a widget to directly save data, we call an edit function onto the structure
+structure.edit(WidgetInStructure widget, EntryInStructure entry, Value value)
+
+or entryInStructure.edit(WidgetInStructure widget, Value value)
+
+then you expect widgets to actively save and it is a low cost operation
+
+
+now we need to care about the widget being able to listener to when the user is no longer editing a value
+
+we also should setup crashes when widget forget to save
+
+
+
+refactor ideas in widget hierarchy because recursion and extending sucks
+
+separate group widget into group widget and parent widget
+
+create interface for iterating through widget hierarchy which implement an iteration in each type of widget
+    maybe even allow different types
+        one interface: group, list, base
+        other interface: implement for every specific widget or maybe every data type
+
+
+
+
+

@@ -47,6 +47,12 @@
         android:text="TextView" />
 
     <TextView
+        android:id="@+id/parentWidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
         android:id="@+id/widgetLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

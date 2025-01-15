@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
 
 public class MenuBarManager {
@@ -28,8 +29,8 @@ public class MenuBarManager {
         //scroll needs to add a view with height same as hidden menu bar,
     }
 
-    public void addEntryEditorBar(GroupWidget groupWidget, EntryInStructure entry){
-        entryEditorMenuBar = new EntryEditorMenuBar(context, groupWidget, entry, this);
+    public void addEntryEditorBar(ParentWidget parentWidget, EntryInStructure entry){
+        entryEditorMenuBar = new EntryEditorMenuBar(context, parentWidget, entry, this);
         menuBarVerticalLayout.addView(entryEditorMenuBar.getView());
     }
 

@@ -26,8 +26,8 @@ public class HandleDeletedValues {
         WidgetInStructure widgetInStructure = valuesOfWidget.get(0).getWidgetInStructure();
 
         for(Structure structure: structureList){
-            ArrayList<RefEntryString> deleteValuePairList = structure.getReferenceLocationsOfSource(valuesOfWidget, widgetInStructure);
-            result.addAll(deleteValuePairList);
+            //ArrayList<RefEntryString> deleteValuePairList = structure.getReferenceLocationsOfSource(valuesOfWidget, widgetInStructure);
+            //result.addAll(deleteValuePairList);
         }
 
         return result;

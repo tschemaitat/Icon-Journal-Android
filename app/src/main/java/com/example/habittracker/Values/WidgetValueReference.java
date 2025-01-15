@@ -1,12 +1,9 @@
 package com.example.habittracker.Values;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import com.example.habittracker.StaticClasses.StructureTokenizer;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
-import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +18,7 @@ public class WidgetValueReference extends BaseWidgetValue{
     }
 
     public BaseWidgetValue getSource(){
-        return refEntryString.getBaseWidgetValue();
+        return refEntryString.getSource();
     }
 
     @Override

@@ -5,9 +5,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.StaticStateManagers.EntryEditorMenuBar;
-import com.example.habittracker.Structs.EntryId;
 import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
@@ -21,7 +20,7 @@ public class CategoryEntryEditorPage implements Inflatable{
     private Context context;
     private Structure structure;
     private EntryInStructure entryInStructure;
-    private GroupWidget groupWidget;
+    private ParentWidget parentWidget;
     private LinearLayout linearLayout;
     boolean discarding = false;
     public CategoryEntryEditorPage(Context context, Structure spreadsheet, EntryInStructure entryInStructure){
@@ -37,11 +36,11 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     public void onDataChanged(){
-        System.out.println("new data: \n" + ((GroupValue)groupWidget.getValue()).hierarchy());
+        System.out.println("new data: \n" + ((GroupValue) parentWidget.getValue()).hierarchy());
     }
 
     private boolean checkValidForSave(Inflatable page){
-        EntryWidget firstWidget = groupWidget.getEntryWidgets().get(0);
+        EntryWidget firstWidget = parentWidget.getEntryWidgets().get(0);
         CustomEditText uniqueAttributeEditor = (CustomEditText) firstWidget;
         String uniqueAttribute = uniqueAttributeEditor.getText();
         if(uniqueAttribute == null){
@@ -55,9 +54,9 @@ public class CategoryEntryEditorPage implements Inflatable{
     }
 
     private void save(){
-        GroupValue data = (GroupValue)groupWidget.getValue();
+        GroupValue data = (GroupValue) parentWidget.getValue();
         data.setIdOfTree();
-        MainActivity.log("group widget children: " + groupWidget.getWidgetLayout().widgets());
+        MainActivity.log("group widget children: " + parentWidget.getWidgetLayout().widgets());
         if(entryInStructure == null){
             MainActivity.log("new entry, adding entry to structure");
             structure.addEntry(data);
@@ -100,16 +99,16 @@ public class CategoryEntryEditorPage implements Inflatable{
     @Override
     public void onOpened() {
         MenuBarManager menuBarManager = PageResources.getPageResources().getMenuBarManager();
-        groupWidget = new GroupWidget(context);
-        menuBarManager.addEntryEditorBar(groupWidget, entryInStructure);
+        parentWidget = new ParentWidget(context);
+        menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);
 
 
-        groupWidget.setOnDataChangedListener(()->onDataChanged());
-        linearLayout.addView(groupWidget.getView());
+        parentWidget.setOnDataChangedListener(()->onDataChanged());
+        linearLayout.addView(parentWidget.getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
-        groupWidget.setParam(structure.getWidgetParam());
+        parentWidget.setParam(structure.getWidgetParam());
         if(entryInStructure != null){
-            groupWidget.setValue(entryInStructure.getGroupValue());
+            parentWidget.setValue(entryInStructure.getGroupValue());
             MainActivity.log("set from entry: " + entryInStructure.getGroupValue().hierarchy());
         }
 

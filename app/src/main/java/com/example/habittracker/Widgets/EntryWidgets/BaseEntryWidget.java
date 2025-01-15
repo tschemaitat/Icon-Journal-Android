@@ -28,8 +28,9 @@ public abstract class BaseEntryWidget extends EntryWidget{
         return listItemIdProvider.getListItemId();
     }
 
+    protected abstract void setHint(String hintString);
 
-    public ArrayList<RefEntryString> getReference(EntryInStructure entryInStructure) {
+    public ArrayList<RefEntryString> getLocation(EntryInStructure entryInStructure) {
         if(listItemIdProvider == null){
             MainActivity.log("provider null: " + this);
             throw new RuntimeException();

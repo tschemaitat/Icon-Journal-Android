@@ -1,63 +1,48 @@
 package com.example.habittracker.Widgets;
 
+import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
+
 import android.content.Context;
 
-import com.example.habittracker.MainActivity;
-import com.example.habittracker.Layouts.LinLayout;
-import com.example.habittracker.R;
-import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.MainActivity;
+import com.example.habittracker.R;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 import com.example.habittracker.structurePack.ListItemId;
 
-import com.example.habittracker.defaultImportPackage.ArrayList;
-
-public class GroupWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
+public class ParentWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
     private WidgetLayout layout;
+    public static final String className = "parent widget";
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
-
-    public static final String className = "group widget";
-    public GroupWidget(Context context){
+    public ParentWidget(Context context) {
         super(context);
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getView());
-        getView().setId(R.id.groupWidget);
+        getView().setId(R.id.parentWidget);
     }
-
-    @Override
-    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
-        if(!isDeleteChecked)
-            throw new RuntimeException();
-        return getWidgetsForDeleteIteration();
+    public void enableDeleteValueMode() {
+        enableDeleteValueMode(getBaseEntryWidgets());
     }
-
-
-    public ArrayList<BaseEntryWidget> getWidgetsForDeleteIteration() {
-        return GroupWidget.gatherRefForDeleteWidgetsAndList(getBaseEntryWidgets());
-    }
-
-    public static ArrayList<BaseEntryWidget> gatherRefForDeleteWidgetsAndList(ArrayList<BaseEntryWidget> baseEntryWidgets){
-        ArrayList<BaseEntryWidget> resultList = new ArrayList<>();
-        for(BaseEntryWidget baseEntryWidget: baseEntryWidgets){
-            if(baseEntryWidget instanceof ListWidget listWidget){
-                resultList.addAll(listWidget.getWidgetsForDeleteIteration());
-                continue;
+    public static void enableDeleteValueMode(ArrayList<BaseEntryWidget> baseEntryWidgets){
+        for(EntryWidget entryWidget: baseEntryWidgets){
+            if(entryWidget instanceof ListWidget listWidget){
+                listWidget.enableDeleteValueMode();
+            }else{
+                entryWidget.enableDelete();
             }
-            resultList.add(baseEntryWidget);
         }
-        return resultList;
     }
-
-
-
-    public void gatherWidgetsCheckedIteration(ArrayList<EntryWidget> resultList){
+    public ArrayList<EntryWidget> gatherWidgetsChecked(){
+        ArrayList<EntryWidget> resultList = new ArrayList<>();
         if(isDeleteChecked)
             throw new RuntimeException();
         ArrayList<BaseEntryWidget> baseEntryWidgets = getBaseEntryWidgets();
@@ -70,13 +55,8 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
                 listWidget.gatherWidgetsCheckedIteration(resultList);
             }
         }
+        return resultList;
     }
-
-    @Override
-    public WidgetValue getEntryValueTreeCustom() {
-        return ParentWidget.getEntryValueTreeCustom(getBaseEntryWidgets());
-    }
-
     public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){
         ArrayList<BaseEntryWidget> entryWidgets = new ArrayList<>();
         for(Widget widget: layout.widgets()){
@@ -84,7 +64,6 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         }
         return entryWidgets;
     }
-
     public ArrayList<EntryWidget> getEntryWidgets(){
         ArrayList<EntryWidget> entryWidgets = new ArrayList<>();
         for(Widget widget: layout.widgets()){
@@ -92,13 +71,48 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         }
         return entryWidgets;
     }
-
-    @Override
-    public void setValueCustom(WidgetValue widgetValue) {
-        ParentWidget.setValueCustom(getBaseEntryWidgets(), (GroupValue) widgetValue);
+    public WidgetLayout getWidgetLayout(){
+        return layout;
     }
     @Override
-    public void setParamCustom(EntryWidgetParam param) {
+    public ArrayList<BaseEntryWidget> getWidgetsForDelete() {
+        return null;
+    }
+    @Override
+    protected WidgetValue getEntryValueTreeCustom() {
+        return getEntryValueTreeCustom(getBaseEntryWidgets());
+    }
+    public static WidgetValue getEntryValueTreeCustom(ArrayList<BaseEntryWidget> baseEntryWidgets){
+        ArrayList<WidgetValue> result = new ArrayList<>();
+
+        for(BaseEntryWidget widget: baseEntryWidgets){
+            WidgetValue widgetValue = widget.getValue();
+            if(widgetValue != null)
+                result.add(widgetValue);
+        }
+
+        return new GroupValue(result);
+    }
+    @Override
+    protected void setValueCustom(WidgetValue widgetValue) {
+        setValueCustom(getBaseEntryWidgets(), (GroupValue) widgetValue);
+    }
+    public static void setValueCustom(ArrayList<BaseEntryWidget> entryWidgets, GroupValue groupValue){
+        MainActivity.log("group setting values: \n" + groupValue.hierarchy());
+        for(int i = 0; i < entryWidgets.size(); i++){
+
+
+            BaseEntryWidget entryWidget = entryWidgets.get(i);
+            MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetInStructure());
+            WidgetValue childWidgetValue = groupValue.getWidgetValueByWidget(entryWidget.getWidgetInStructure());
+            if(childWidgetValue != null)
+                entryWidget.setValue(childWidgetValue);
+
+            MainActivity.log("group set list id provider: " + entryWidget);
+        }
+    }
+    @Override
+    protected void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
         layout.inflateAll(groupParams.params, ()->onDataChangedListener().run());
         for(BaseEntryWidget widget: getBaseEntryWidgets()){
@@ -106,17 +120,12 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
             widget.setListItemIdProvider(this);
         }
     }
-
-    public WidgetLayout getWidgetLayout(){
-        return layout;
-    }
-
-    public LinLayout getLinLayout() {
-        return getWidgetLayout().getLinLayout();
-    }
-
-
     @Override
+    public String getNameAndLocation() {
+        return "parent widget";
+    }
+    @Override
+
     public EntryWidget getFirstWidget() {
         EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
         if(firstWidget instanceof FocusTreeParent focusTreeParent){
@@ -124,21 +133,15 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         }
         return firstWidget;
     }
-
     @Override
     public EntryWidget findNextWidget(EntryWidget entryWidget){
         return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgets(), getFocusParent(), this);
     }
-
-    public void enableDeleteValueMode() {
-        ParentWidget.enableDeleteValueMode(getBaseEntryWidgets());
-    }
-
     @Override
+
     public ListItemId getListItemId() {
         return listItemId;
     }
-
     @Override
     public ArrayList<ListItemId> getListItemIdList() {
         ArrayList<ListItemId> result;
@@ -155,20 +158,8 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
 
         return result;
     }
-
     @Override
     public void setParentListItemIdProvider(ListItemIdProvider listItemIdProvider) {
         this.listItemIdParent = listItemIdProvider;
-    }
-
-    public void setListItemId(ListItemId listItemId) {
-        this.listItemId = listItemId;
-    }
-
-
-
-    public String getNameAndLocation(){
-        ArrayList<ListItemId> itemIds = getListItemIdList();
-        return getName() + itemIds;
     }
 }

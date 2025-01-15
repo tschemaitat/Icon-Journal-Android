@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo;
 
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -186,7 +187,7 @@ public abstract class EntryWidget implements Widget {
         setValueCustom(widgetValue);
     }
 
-    protected abstract void setHint(String hintString);
+
 
     public void onFocusChange(boolean hasFocus){
         MainActivity.log("entry widget on focus change: " + this);
@@ -214,8 +215,11 @@ public abstract class EntryWidget implements Widget {
         if(dataSet)
             throw new RuntimeException();
         dataSet = true;
-        if(param.name != null)
-            setHint(param.name);
+        if(this instanceof BaseEntryWidget baseEntryWidget){
+            if(param.name != null)
+                baseEntryWidget.setHint(param.name);
+        }
+
         this.entryWidgetParam = param;
         setParamCustom(param);
     }

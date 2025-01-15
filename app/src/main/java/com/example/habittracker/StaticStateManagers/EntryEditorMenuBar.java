@@ -9,6 +9,7 @@ import com.example.habittracker.Inflatables.MenuBarManager;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewWidgets.OnDeleteValueCancelAndConfirm;
 import com.example.habittracker.Widgets.GroupWidget;
+import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
 
 public class EntryEditorMenuBar {
@@ -23,15 +24,15 @@ public class EntryEditorMenuBar {
 
 
 
-    public EntryEditorMenuBar(Context context, GroupWidget groupWidget, EntryInStructure entry, MenuBarManager menuBarManager) {
+    public EntryEditorMenuBar(Context context, ParentWidget parentWidget, EntryInStructure entry, MenuBarManager menuBarManager) {
         this.context = context;
         this.menuBarManager = menuBarManager;
-        if(groupWidget == null)
+        if(parentWidget == null)
             throw new RuntimeException();
-        init(groupWidget, entry);
+        init(parentWidget, entry);
     }
 
-    private void init(GroupWidget groupWidget, EntryInStructure entry){
+    private void init(ParentWidget parentWidget, EntryInStructure entry){
 
         horizontalBar = makeHorizontalBarLayout(context);
         deleteButton = makeDeleteButton(context, horizontalBar);
@@ -40,7 +41,7 @@ public class EntryEditorMenuBar {
 
 
         deleteButton.setOnClickListener((view)->{
-            deleteValueManager = new DeleteValueManager(context, groupWidget, deleteButton, entry);
+            deleteValueManager = new DeleteValueManager(context, parentWidget, deleteButton, entry);
             //add delete and confirm to invisible bar
             deleteAndConfirm = new OnDeleteValueCancelAndConfirm(context, this::onCancel, this::onConfirm);
             menuBarManager.addViewInvisibleLayout(deleteAndConfirm.getView());
