@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
-import com.example.habittracker.ViewLibrary.AbstractBasicElement;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 
 public class ViewWrapper {
@@ -116,7 +116,7 @@ public class ViewWrapper {
         //widgetLayout.setOrientation(LinearLayout.VERTICAL);
 
         //borderLayout.setChildView(widgetLayout.getView());
-        relativeElementLayout.addWithParam(new AbstractBasicElement() {
+        relativeElementLayout.addWithParam(new Element() {
             @Override
             public View getView() {
                 return widgetLayout.getView();
@@ -127,11 +127,11 @@ public class ViewWrapper {
     }
 
     public void disable(){
-        widgetLayout.disableViewsInside();
+        //widgetLayout.disableViewsInside();
     }
 
     public void enable(){
-        widgetLayout.enableViewsInside();
+        //widgetLayout.enableViewsInside();
     }
 
     public void setName(String name){

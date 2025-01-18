@@ -24,6 +24,11 @@ public class RelativeElementLayout extends ElementLayout {
     }
 
     @Override
+    protected ViewGroup.LayoutParams createLayoutParams() {
+        return new RelParamAllowsMatch(-10, -10);
+    }
+
+    @Override
     protected ViewGroup getViewGroup() {
         return relativeLayout;
     }
@@ -34,11 +39,22 @@ public class RelativeElementLayout extends ElementLayout {
     }
 
     @Override
+    protected void onAdd(int index, Element element) {
+
+    }
+
+    @Override
     protected void onRemove(Element element) {
 
     }
 
+    @Override
+    protected void onRemove(int index, Element removedElement) {
+
+    }
+
     public ParamHelper addWithParam(Element element, int width, int height){
+        parentOnAdd(element);
         int paramWidth = width;
         int paramHeight = height;
         boolean matchWidth = false;
@@ -51,11 +67,11 @@ public class RelativeElementLayout extends ElementLayout {
             matchHeight = true;
             paramHeight = -2;
         }
-        RelParamAllowsMatch layoutParams = new RelParamAllowsMatch(width, height, matchWidth, matchHeight);
-        element.getView().setLayoutParams(layoutParams);
+        ((RelParamAllowsMatch)(element.getLayoutParams())).edit(width, height, matchWidth, matchHeight);
+        //element.getView().setLayoutParams(layoutParams);
         relativeLayout.addView(element.getView());
-        super.add(element);
-        return new ParamHelper(layoutParams);
+        super.parentOnAdd(element);
+        return new ParamHelper((RelParamAllowsMatch)element.getLayoutParams());
     }
 
 
@@ -63,6 +79,10 @@ public class RelativeElementLayout extends ElementLayout {
     @Override
     public View getView() {
         return relativeLayout;
+    }
+
+    public ParamHelper addRule(Element element){
+        return new ParamHelper(((RelParamAllowsMatch) element.getLayoutParams()));
     }
 
 

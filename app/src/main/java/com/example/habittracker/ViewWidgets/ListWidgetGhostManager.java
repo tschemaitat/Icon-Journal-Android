@@ -116,12 +116,12 @@ public class ListWidgetGhostManager {
     public void addVacant(int index){
         View view = new View(context);
         view.setLayoutParams(new LinearLayout.LayoutParams(-1, vacantHeight));
-        widgetLayout.getLinLayout().addWithoutSettingParams(view, index);
+        widgetLayout.getLinearElementLayout().addWithoutSettingParams(view, index);
         currentVacantIndex = index;
     }
 
     public void removeVacant(){
-        widgetLayout.getLinLayout().removeAt(currentVacantIndex);
+        widgetLayout.getLinearElementLayout().removeAt(currentVacantIndex);
         currentVacantIndex = -1;
     }
 

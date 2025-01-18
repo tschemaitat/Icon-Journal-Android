@@ -32,7 +32,6 @@ public class CategoryEntryEditorPage extends Inflatable{
         this.structure = spreadsheet;
         this.entryInStructure = entryInStructure;
         linearLayout = new LinearLayout(context);
-
     }
 
     public void onDataChanged(){

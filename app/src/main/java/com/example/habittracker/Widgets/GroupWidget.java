@@ -2,7 +2,6 @@ package com.example.habittracker.Widgets;
 
 import android.content.Context;
 
-import com.example.habittracker.MainActivity;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.R;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
@@ -12,7 +11,6 @@ import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
-import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.ListItemId;
 
@@ -27,7 +25,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     public GroupWidget(Context context){
         super(context);
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getView());
+        setViewWrapperChild(layout.getElement());
         getView().setId(R.id.groupWidget);
     }
 
@@ -68,7 +66,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         return layout;
     }
     public LinLayout getLinLayout() {
-        return getWidgetLayout().getLinLayout();
+        return getWidgetLayout().getLinearElementLayout();
     }
 
     @Override

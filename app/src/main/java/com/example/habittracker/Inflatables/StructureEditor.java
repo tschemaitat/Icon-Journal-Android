@@ -13,6 +13,9 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
+import com.example.habittracker.ViewLibrary.ButtonElement;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.Structure;
@@ -30,7 +33,7 @@ public class StructureEditor extends Inflatable{
     Context context;
     WidgetLayout widgetLayout;
     Structure structure = null;
-    LinLayout layout;
+    LinearElementLayout layout;
 
     String structureType = null;
 
@@ -62,22 +65,27 @@ public class StructureEditor extends Inflatable{
     }
 
     private void init(String name, GroupWidgetParam groupWidgetParam){
-        layout = new LinLayout(context);
+        layout = new LinearElementLayout(context, LinearLayout.VERTICAL);
         Margin.setInitialLayout(layout.getView());
         layout.getView().setId(R.id.pageLayout);
 
-        Button saveButton = setupSaveButton(layout, ()->onSave());
+        ButtonElement saveButton = setupSaveButton(layout, ()->onSave(), context);
         structureKeyEditor = setupStructureKeyEditor(name, layout, context);
         widgetLayout = setupWidgetLayout(layout, groupWidgetParam, context, ()->addStructureWidget());
     }
 
-    private WidgetLayout setupWidgetLayout(LinLayout layout, GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
+    private static WidgetLayout setupWidgetLayout(LinearElementLayout layout, GroupWidgetParam groupWidgetParam, Context context, Runnable addStructureWidget) {
         WidgetLayout widgetLayout = new WidgetLayout(context);
-        layout.add(widgetLayout.getView());
+
+        VertLayout buttonAndWidgetLayout = new VertLayout(context);
+        buttonAndWidgetLayout.add(widgetLayout.getElement());
+
+        ButtonElement buttonElement = new ButtonElement(context, "add", addStructureWidget);
+        buttonAndWidgetLayout.add(buttonElement);
+        layout.add(widgetLayout.getElement());
         if(groupWidgetParam != null)
             inflateStructureUsingParam(groupWidgetParam, widgetLayout, context);
-        widgetLayout.getLinLayout().addButton(view -> addStructureWidget.run());
-        widgetLayout.getLinLayout().setChildMargin(Margin.listChildMargin());
+        widgetLayout.getLinearElementLayout().setChildMargin(Margin.listChildMargin());
         return widgetLayout;
     }
 
@@ -87,7 +95,7 @@ public class StructureEditor extends Inflatable{
         widgetLayout.add(structureWidget);
     }
 
-    private void inflateStructureUsingParam(GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
+    private static void inflateStructureUsingParam(GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
         ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
         for(EntryWidgetParam param: entryWidgetParams){
             StructureWidget structureWidget = new StructureWidget(context, widgetLayout);
@@ -96,24 +104,26 @@ public class StructureEditor extends Inflatable{
         }
     }
 
-    private static Button setupSaveButton(LinLayout layout, Runnable onSave) {
-        Button saveButton = (Button) GLib.inflate(R.layout.button_layout);
-        saveButton.setOnClickListener(view -> onSave.run());
-        saveButton.setText("save template");
-        layout.add(saveButton);
-        LinearLayout.LayoutParams buttonLayoutParam = new LinearLayout.LayoutParams(-2, -2);
-        buttonLayoutParam.gravity = Gravity.RIGHT;
-        buttonLayoutParam.setMargins(0, 0, 40, 0);
-        saveButton.setLayoutParams(buttonLayoutParam);
+    private static ButtonElement setupSaveButton(LinearElementLayout layout, Runnable onSave, Context context) {
+//        Button saveButton = (Button) GLib.inflate(R.layout.button_layout);
+//        saveButton.setOnClickListener(view -> onSave.run());
+//        saveButton.setText("save template");
+        ButtonElement saveButton = new ButtonElement(context, "save template", onSave);
+//        layout.add(saveButton);
+//        LinearLayout.LayoutParams buttonLayoutParam = new LinearLayout.LayoutParams(-2, -2);
+//        buttonLayoutParam.gravity = Gravity.RIGHT;
+//        buttonLayoutParam.setMargins(0, 0, 40, 0);
+//        saveButton.setLayoutParams(buttonLayoutParam);
+        layout.add(saveButton).setDimensions(-2, -2);
         return saveButton;
     }
 
-    private static CustomEditText setupStructureKeyEditor(String name, LinLayout layout, Context context) {
+    private static CustomEditText setupStructureKeyEditor(String name, LinearElementLayout layout, Context context) {
 
         EditTextParam editTextParam = new EditTextParam("spreadsheet name");
         CustomEditText structureKeyEditor = (CustomEditText)GLib.inflateWidget(context, editTextParam, ()->{});
         structureKeyEditor.setText(name);
-        layout.add(structureKeyEditor.getView());
+        layout.add(structureKeyEditor.getElement());
         return structureKeyEditor;
     }
 

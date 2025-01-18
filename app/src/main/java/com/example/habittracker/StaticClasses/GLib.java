@@ -227,6 +227,7 @@ public class GLib {
     public static Drawable starOn;
     public static Drawable starOff;
     public static Drawable starDisabled;
+    public static Drawable delete;
 
     public static void generateDrawables(Context context){
         Drawable rightArrow = context.getResources().getDrawable(R.drawable.arrow_right);
@@ -235,6 +236,7 @@ public class GLib {
         downArrow = rotateDrawable(rightArrow);
         starOn = context.getResources().getDrawable(R.drawable.star_on);
         starOff = context.getResources().getDrawable(R.drawable.star_off);
+        delete = context.getResources().getDrawable(R.drawable.delete);
         starDisabled = starOff.getConstantState().newDrawable().mutate();
         starDisabled.setColorFilter(new PorterDuffColorFilter(Color.argb(128, 0, 0, 0), PorterDuff.Mode.SRC_ATOP));
 

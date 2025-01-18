@@ -3,7 +3,6 @@ package com.example.habittracker.ViewLibrary;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,9 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.ColorPalette;
-import com.example.habittracker.StaticClasses.GLib;
 
-public class ButtonElement extends AbstractBasicElement{
+public class ButtonElement extends Element{
     private Button button;
     private Context context;
     private String text;
@@ -30,8 +28,27 @@ public class ButtonElement extends AbstractBasicElement{
         button.setBackgroundColor(ColorPalette.greenButtonBackground);
 
         button.setText(text);
-        if(listener != null)
-            button.setOnClickListener((view)->listener.run());
+        if(listener == null)
+            throw new RuntimeException();
+        button.setOnClickListener((view)->listener.run());
+    }
+
+    public void setListener(Runnable runnable){
+        this.listener = runnable;
+        button.setOnClickListener((view)->listener.run());
+    }
+
+    public ButtonElement(Context context, String text) {
+        this.context = context;
+        this.listener = listener;
+        //button = new Button(context);
+        button = makeButton();
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+        button.setBackgroundResource(typedValue.resourceId);
+        button.setBackgroundColor(ColorPalette.greenButtonBackground);
+
+        button.setText(text);
     }
 
     private Button makeButton(){

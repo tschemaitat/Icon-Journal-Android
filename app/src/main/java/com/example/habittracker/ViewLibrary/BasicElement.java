@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.example.habittracker.MainActivity;
 
-public class BasicElement extends AbstractBasicElement{
+public class BasicElement extends Element{
     private Context context;
     private View view;
 

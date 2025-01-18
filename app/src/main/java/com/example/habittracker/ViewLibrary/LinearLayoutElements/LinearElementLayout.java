@@ -8,10 +8,11 @@ import android.widget.LinearLayout;
 import com.example.habittracker.ViewLibrary.Element;
 
 import com.example.habittracker.ViewLibrary.ElementLayout;
+import com.example.habittracker.ViewLibrary.ElementLayoutWithInterface;
 import com.example.habittracker.ViewWidgets.CheckBoxElement;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class LinearElementLayout extends ElementLayout {
+public class LinearElementLayout extends ElementLayoutWithInterface {
     private Context context;
     private LinearLayout linearLayout;
     private int orientationCode;
@@ -23,13 +24,10 @@ public class LinearElementLayout extends ElementLayout {
         linearLayout.setOrientation(orientationCode);
     }
 
-    public void addWithParam(Element element, int width, int height){
-        View elementView = element.getView();
-//        if(elementView.getLayoutParams() != null)
-//            throw new RuntimeException();
-        elementView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
 
-        add(element);
+    @Override
+    protected ViewGroup.LayoutParams createLayoutParams() {
+        return new LinearLayout.LayoutParams(-10, -10);
     }
 
     @Override
@@ -51,8 +49,18 @@ public class LinearElementLayout extends ElementLayout {
     }
 
     @Override
+    protected void onAdd(int index, Element element) {
+        linearLayout.addView(element.getView(), index);
+    }
+
+    @Override
     protected void onRemove(Element element) {
         linearLayout.removeView(element.getView());
+    }
+
+    @Override
+    protected void onRemove(int index, Element removedElement) {
+        linearLayout.removeViewAt(index);
     }
 
     public ArrayList<View> getViewChildren(){

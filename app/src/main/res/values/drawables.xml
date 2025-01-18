@@ -4,4 +4,5 @@
     <drawable name="arrow_right">@drawable/ic_arrow_right</drawable>
     <drawable name="star_on">@android:drawable/btn_star_big_on</drawable>
     <drawable name="star_off">@android:drawable/btn_star_big_off</drawable>
+    <drawable name="delete">@android:drawable/ic_menu_close_clear_cancel</drawable>
 </resources>

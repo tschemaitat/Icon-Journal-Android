@@ -27,7 +27,7 @@ public class StructureWidgetList implements Widget{
     }
 
     private void init(){
-        groupWidget.getWidgetLayout().getLinLayout().addButton(view -> {
+        groupWidget.getWidgetLayout().getLinearElementLayout().addButton(view -> {
             addStructureWidget();
         });
         Margin.setStructureWidgetListLayout(groupWidget.getLinLayout());

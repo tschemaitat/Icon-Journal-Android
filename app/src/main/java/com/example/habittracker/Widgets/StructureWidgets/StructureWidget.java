@@ -2,6 +2,7 @@ package com.example.habittracker.Widgets.StructureWidgets;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
@@ -10,6 +11,9 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
@@ -38,14 +42,14 @@ public class StructureWidget implements Widget {
 
     private Context context;
 
-    private LinLayout layout;
+    private LinearElementLayout layout;
     private Runnable moveUp;
     private Runnable moveDown;
 
     public StructureWidget(Context context, WidgetLayout parent) {
         MainActivity.log("new structure widget");
         this.context = context;
-        layout = new LinLayout(context);
+        layout = new VertLayout(context);
         layout.getView().setId(R.id.structureWidget);
 
         headerView = new StructureWidgetHeaderView(context, ()->{
@@ -62,7 +66,7 @@ public class StructureWidget implements Widget {
         }, ()->{
             //star button
         });
-        layout.add(headerView.getView());
+        layout.add(headerView.getElement());
 
         typeDropDown = new StaticDropDown(context);
         layout.add(typeDropDown.getView());
@@ -247,6 +251,16 @@ public class StructureWidget implements Widget {
     @Override
     public void setOnDataChangedListener(Runnable runnable) {
         onDataChangeListener = runnable;
+    }
+
+    @Override
+    public Element getElement() {
+        return new Element() {
+            @Override
+            public View getView() {
+                return getView();
+            }
+        };
     }
 
     public boolean hasUniqueAttribute() {

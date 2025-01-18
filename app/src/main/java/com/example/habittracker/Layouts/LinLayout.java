@@ -14,7 +14,7 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 public class LinLayout {
     private Context context;
 
-    private InterceptLinearLayout layout;
+    private LinearLayout layout;
     private View addButton = null;
     ArrayList<View> views = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class LinLayout {
     public LinLayout(Context context){
         this.context = context;
 
-        layout = new InterceptLinearLayout(context);
+        layout = new LinearLayout(context);
         layout.setId(R.id.linLayout);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
@@ -118,11 +118,5 @@ public class LinLayout {
     }
 
 
-    public void disableViewsInside() {
-        layout.disableViewsInside();
-    }
 
-    public void enableViewsInside() {
-        layout.enableViewsInside();
-    }
 }

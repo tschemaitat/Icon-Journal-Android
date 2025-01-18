@@ -1,16 +1,10 @@
 package com.example.habittracker.ViewWidgets;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.example.habittracker.ViewLibrary.AbstractBasicElement;
-import com.example.habittracker.ViewLibrary.Element;
-import com.example.habittracker.defaultImportPackage.ArrayList;
-
-public class CheckBoxElement extends AbstractBasicElement {
+public class CheckBoxElement {
     private Context context;
     private CheckBox checkBox;
     private CheckBoxListener checkBoxListener;

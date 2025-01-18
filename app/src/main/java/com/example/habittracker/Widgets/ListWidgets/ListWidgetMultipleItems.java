@@ -11,8 +11,6 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
-import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 
@@ -27,7 +25,7 @@ public class ListWidgetMultipleItems extends ListWidget {
     public ListWidgetMultipleItems(Context context) {
         super(context);
         this.context = context;
-        Margin.setListWidgetLayout(layout.getLinLayout());
+        Margin.setListWidgetLayout(layout.getLinearElementLayout());
     }
 
     @Override

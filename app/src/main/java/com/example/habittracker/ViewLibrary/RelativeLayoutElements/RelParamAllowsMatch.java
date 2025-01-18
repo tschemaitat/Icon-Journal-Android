@@ -27,6 +27,13 @@ public class RelParamAllowsMatch extends RelativeLayout.LayoutParams implements 
         this.matchHeight = matchHeight;
     }
 
+    public void edit(int w, int h, boolean matchWidth, boolean matchHeight){
+        this.width = w;
+        this.height = h;
+        this.matchWidth = matchWidth;
+        this.matchHeight = matchHeight;
+    }
+
     public RelParamAllowsMatch(ViewGroup.LayoutParams source) {
         super(source);
     }
@@ -48,4 +55,6 @@ public class RelParamAllowsMatch extends RelativeLayout.LayoutParams implements 
     public boolean getMatchHeight() {
         return matchHeight;
     }
+
+
 }

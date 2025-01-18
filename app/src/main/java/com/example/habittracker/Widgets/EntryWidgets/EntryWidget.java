@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo;
 
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -159,6 +160,16 @@ public abstract class EntryWidget implements Widget {
 
     public final View getView(){
         return viewWrapper.getView();
+    }
+
+    public final Element getElement(){
+        Element element = new Element() {
+            @Override
+            public View getView() {
+                return getView();
+            }
+        };
+        return element;
     }
     public final ViewWrapper getViewWrapper(){
         return viewWrapper;

@@ -4,14 +4,12 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.example.habittracker.Layouts.InterceptLinearLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.ViewWidgets.ListWidgetGhostManager;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Layouts.WidgetLayout;
@@ -35,7 +33,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         super(context);
         this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getView());
+        setViewWrapperChild(layout.getElement());
 
 
         //makeButton(()->addItem());
@@ -69,7 +67,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
         ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
-        setViewDraggable(ghostItem);
+        //setViewDraggable(ghostItem);
         ghostItem = null;
         addGhostItem(createItem());
     }
@@ -100,13 +98,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     protected void setHint(String hintString) {
 
     }
-    protected void setViewDraggable(Widget widget){
-        ((InterceptLinearLayout) widget.getView()).enableIntercept(()->startDrag(widget));
-    }
-    protected void startDrag(Widget widget) {
-        ListWidgetGhostManager listWidgetGhostManager = new ListWidgetGhostManager(this,
-                widget, context, layout);
-    }
+
     @Override
     public EntryWidget getFirstWidget() {
         EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
@@ -134,7 +126,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         throw new RuntimeException();
     }
     public void makeButton(Runnable runnable){
-        layout.getLinLayout().addButton(new View.OnClickListener() {
+        layout.getLinearElementLayout().addButton(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 runnable.run();

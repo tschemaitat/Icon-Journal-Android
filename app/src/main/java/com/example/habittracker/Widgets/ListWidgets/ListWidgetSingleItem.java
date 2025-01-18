@@ -11,8 +11,6 @@ import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
-import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
@@ -28,9 +26,9 @@ public class ListWidgetSingleItem extends ListWidget {
         super(context);
         this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getView());
+        setViewWrapperChild(layout.getElement());
 
-        Margin.setListWidgetLayout(layout.getLinLayout());
+        Margin.setListWidgetLayout(layout.getLinearElementLayout());
 
     }
 

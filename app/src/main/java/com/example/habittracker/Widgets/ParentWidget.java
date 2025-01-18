@@ -1,7 +1,5 @@
 package com.example.habittracker.Widgets;
 
-import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
-
 import android.content.Context;
 
 import com.example.habittracker.Layouts.WidgetLayout;
@@ -12,7 +10,6 @@ import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
-import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -26,7 +23,7 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     public ParentWidget(Context context) {
         super(context);
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getView());
+        setViewWrapperChild(layout.getElement());
         getView().setId(R.id.parentWidget);
     }
     public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){

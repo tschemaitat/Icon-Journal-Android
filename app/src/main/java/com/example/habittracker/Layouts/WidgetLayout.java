@@ -2,9 +2,12 @@ package com.example.habittracker.Layouts;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 
@@ -12,11 +15,11 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class WidgetLayout {
     private ArrayList<Widget> widgets = new ArrayList<>();
-    private LinLayout layout;
+    private LinearElementLayout layout;
     private Context context;
     public WidgetLayout(Context context){
         this.context = context;
-        layout = new LinLayout(context);
+        layout = new LinearElementLayout(context, LinearLayout.VERTICAL);
         layout.getView().setId(R.id.widgetLayout);
     }
 
@@ -36,23 +39,23 @@ public class WidgetLayout {
 
     public void add(Widget widget){
         widgets.add(widget);
-        layout.add(widget.getView());
+        layout.add(widget.getElement());
     }
 
     public void add(Widget widget, int index){
         widgets.add(index, widget);
-        layout.add(widget.getView(), index);
+        layout.add(index, widget.getElement());
     }
 
     public void remove(Widget widget){
         widgets.remove(widget);
-        layout.remove(widget.getView());
+        layout.remove(widget.getElement());
     }
 
     public void delete(Widget widget) {
         int index = widgets.indexOf(widget);
         this.remove(widget);
-        getLinLayout().remove(widget.getView());
+        getLinearElementLayout().remove(widget.getElement());
     }
 
     public void moveUp(Widget widget) {
@@ -61,9 +64,9 @@ public class WidgetLayout {
         if(index == 0)
             return;
         widgets.remove(widget);
-        getLinLayout().remove(widget.getView());
+        getLinearElementLayout().remove(widget.getElement());
         widgets.add(index - 1, widget);
-        getLinLayout().add(widget.getView(), index - 1);
+        getLinearElementLayout().add(index - 1, widget.getElement());
     }
 
     public void moveDown(Widget widget) {
@@ -72,18 +75,18 @@ public class WidgetLayout {
         if(index == widgets.size() - 1)
             return;
         widgets.remove(widget);
-        getLinLayout().remove(widget.getView());
+        layout.remove(widget.getElement());
         widgets.add(index + 1, widget);
-        getLinLayout().add(widget.getView(), index + 1);
+        layout.add(index + 1, widget.getElement());
     }
 
 
 
-    public LinLayout getLinLayout(){
+    public LinearElementLayout getLinearElementLayout(){
         return layout;
     }
 
-    public View getView() {
-        return layout.getView();
+    public Element getElement() {
+        return layout;
     }
 }
