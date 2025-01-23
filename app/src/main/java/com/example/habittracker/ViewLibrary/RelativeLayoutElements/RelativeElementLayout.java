@@ -8,8 +8,6 @@ import android.widget.RelativeLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ElementLayout;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelLayoutSuperMeasure;
-import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelParamAllowsMatch;
 
 public class RelativeElementLayout extends ElementLayout {
     private RelLayoutSuperMeasure relativeLayout;
@@ -29,7 +27,7 @@ public class RelativeElementLayout extends ElementLayout {
     }
 
     @Override
-    protected ViewGroup getViewGroup() {
+    public ViewGroup getViewGroup() {
         return relativeLayout;
     }
 

@@ -7,6 +7,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -47,9 +48,9 @@ public class ListWidgetMultipleItems extends ListWidget {
     protected void onItemCreated(Widget item){
         MainActivity.log("setting group widget onItemCreated");
         GroupWidget groupWidget = (GroupWidget)item;
-        LinLayout linLayout = groupWidget.getLinLayout();
+        LinearElementLayout linLayout = groupWidget.getLinearElementLayout();
 
-        linLayout.getView().setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
+        linLayout.setBackground(GLib.setBackgroundColorForView(context, ColorPalette.tertiary));
         Margin.setPadding(linLayout.getView(), Margin.listChildMargin());
     }
 

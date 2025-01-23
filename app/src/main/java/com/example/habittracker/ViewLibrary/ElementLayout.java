@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public abstract class ElementLayout extends Element{
@@ -41,7 +42,6 @@ public abstract class ElementLayout extends Element{
         return marginHelper;
     }
 
-
     private MarginHelper handleMarginAndParamsOnAdd(Element element){
         //reset layout params on add to make debugging easier
         element.getView().setId(View.generateViewId());
@@ -66,35 +66,8 @@ public abstract class ElementLayout extends Element{
         if(elements.contains(element))
             throw new RuntimeException("already contains element");
     }
-    private void setDimensionsOfChild(Element element, int width, int height){
-        ViewGroup.LayoutParams layoutParams = element.getLayoutParams();
-        layoutParams.width = width;
-        layoutParams.height = height;
-    }
 
-    public void setChildMargin(Margin margin){
-        this.childMargin = margin;
-    }
-
-
-
-    private void setMarginOfChild(Element element, Margin margin){
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) element.getLayoutParams();
-        params.leftMargin = margin.left;
-        params.bottomMargin = margin.bottom;
-        params.rightMargin = margin.right;
-        params.topMargin = margin.top;
-    }
-
-    protected abstract ViewGroup.LayoutParams createLayoutParams();
-
-    protected abstract ViewGroup getViewGroup();
-
-    protected abstract void onAdd(Element element);
-
-    protected abstract void onAdd(int index, Element element);
-
-    public final void remove(Element element){
+    protected final void parentOnRemove(Element element){
         if(element == null)
             throw new RuntimeException();
         if(!elements.contains(element))
@@ -102,9 +75,7 @@ public abstract class ElementLayout extends Element{
         elements.remove(element);
         onRemove(element);
     }
-
-    public final Element remove(int index){
-
+    protected final Element parentOnRemove(int index){
         Element removedElement = elements.remove(index);
         if(removedElement == null){
             throw new RuntimeException("error removing at index: " + index);
@@ -113,10 +84,73 @@ public abstract class ElementLayout extends Element{
         return removedElement;
     }
 
+    protected final void parentOnMoveUp(Element element){
+        int index = elements.indexOf(element);
+        if(index == 0)
+            throw new RuntimeException();
+        elements.remove(element);
+        elements.add(index - 1, element);
+        //onMoveUp(element);
+    }
+    protected final void parentOnMoveDown(Element element){
+        int index = elements.indexOf(element);
+        if(index == elements.size() - 1)
+            throw new RuntimeException();
+        elements.remove(element);
+        elements.add(index + 1, element);
+        //onMoveDown(element);
+    }
 
 
+
+    public void setDimensionsOfChild(Element element, int width, int height){
+        ViewGroup.LayoutParams layoutParams = element.getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = height;
+    }
+    public void setChildMargin(Margin margin){
+        this.childMargin = margin;
+    }
+    private void setMarginOfChild(Element element, Margin margin){
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) element.getLayoutParams();
+        params.leftMargin = margin.left;
+        params.bottomMargin = margin.bottom;
+        params.rightMargin = margin.right;
+        params.topMargin = margin.top;
+    }
+
+    protected final void enableInteraction(){
+        enableInteractionLayout();
+        for(Element element: elements){
+            element.tryEnableInteraction();
+        }
+    }
+    protected final void disableInteraction(){
+        disableInteractionLayout();
+        for(Element element: elements){
+            element.tryDisableInteraction();
+        }
+        //use view setEnabled to disable stuff
+
+    }
+
+    protected abstract ViewGroup.LayoutParams createLayoutParams();
+    public abstract ViewGroup getViewGroup();
+    protected abstract void onAdd(Element element);
+    protected abstract void onAdd(int index, Element element);
     protected abstract void onRemove(Element element);
     protected abstract void onRemove(int index, Element removedElement);
+    //protected abstract void onMoveUp(Element element);
+    //protected abstract void onMoveDown(Element element);
+
+    protected abstract void enableInteractionLayout();
+    protected abstract void disableInteractionLayout();
+
+
+
+
+
+
 
     public final Element getElement(int index){
         return elements.get(index);
@@ -145,7 +179,7 @@ public abstract class ElementLayout extends Element{
         private Element element;
         public MarginHelper(Element element, MarginFunction marginFunction, DimensionsFunction dimensionsFunction){
             this.marginFunction = marginFunction;
-            this.dimensionsFunction = dimensionsFunction;
+            //this.dimensionsFunction = dimensionsFunction;
             this.element = element;
         }
 
@@ -154,10 +188,10 @@ public abstract class ElementLayout extends Element{
             return this;
         }
 
-        public MarginHelper setDimensions(int width, int height){
-            dimensionsFunction.dimensionsFunction(element, width, height);
-            return this;
-        }
+//        public MarginHelper setDimensions(int width, int height){
+//            dimensionsFunction.dimensionsFunction(element, width, height);
+//            return this;
+//        }
     }
 
     public static interface MarginFunction {

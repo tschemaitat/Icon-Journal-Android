@@ -114,7 +114,7 @@ public class StructureEditor extends Inflatable{
 //        buttonLayoutParam.gravity = Gravity.RIGHT;
 //        buttonLayoutParam.setMargins(0, 0, 40, 0);
 //        saveButton.setLayoutParams(buttonLayoutParam);
-        layout.add(saveButton).setDimensions(-2, -2);
+        layout.addWithParam(saveButton, -2, -2);
         return saveButton;
     }
 

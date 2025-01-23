@@ -7,9 +7,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.ViewLibrary.Element;
 
-import com.example.habittracker.ViewLibrary.ElementLayout;
 import com.example.habittracker.ViewLibrary.ElementLayoutWithInterface;
-import com.example.habittracker.ViewWidgets.CheckBoxElement;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class LinearElementLayout extends ElementLayoutWithInterface {
@@ -31,7 +29,7 @@ public class LinearElementLayout extends ElementLayoutWithInterface {
     }
 
     @Override
-    protected ViewGroup getViewGroup() {
+    public ViewGroup getViewGroup() {
         return linearLayout;
     }
 

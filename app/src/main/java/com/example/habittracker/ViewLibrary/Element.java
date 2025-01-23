@@ -1,12 +1,16 @@
 package com.example.habittracker.ViewLibrary;
 
-import android.content.Context;
+import static com.example.habittracker.MainActivity.context;
+
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+
+import com.example.habittracker.R;
 
 public abstract class Element {
+    private boolean setDisabled = false;
+    private boolean interactionDisabled = false;
     private ElementLayout parent;
 
     public void setBackground(Drawable drawable){
@@ -38,5 +42,55 @@ public abstract class Element {
     public ViewGroup.LayoutParams getLayoutParams(){
         return getView().getLayoutParams();
     }
+
+    public void disableWithoutGray(){
+        disableCheck();
+        setDisabled = true;
+        tryDisableInteraction();
+    }
+    public void disableWithGray(){
+        disableCheck();
+        setDisabled = true;
+        setForeGroundGray();
+        tryDisableInteraction();
+    }
+    private void disableCheck(){
+        if(setDisabled){
+            throw new RuntimeException();
+        }
+    }
+
+
+    private void setForeGroundGray(){
+        setForeground(context.getDrawable(R.drawable.rounded_foreground_inset));
+    }
+    public void enable(){
+        if(!setDisabled){
+            throw new RuntimeException();
+        }
+        tryEnableInteraction();
+    }
+    protected void tryEnableInteraction(){
+        //if nothing would change don't call
+        if(!interactionDisabled)
+            return;
+        //if its supposed to stay disabled don't call
+        if(setDisabled)
+            return;
+        enableInteraction();
+    }
+    protected void tryDisableInteraction(){
+        //if nothing would change don't call
+        if(interactionDisabled)
+            return;
+        //don't check setDisabled because it should be disabled if parent is
+        disableInteraction();
+    }
+
+
+    protected abstract void enableInteraction();
+    protected abstract void disableInteraction();
+
+
 
 }

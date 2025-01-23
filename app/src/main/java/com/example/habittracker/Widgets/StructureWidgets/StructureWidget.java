@@ -69,7 +69,7 @@ public class StructureWidget implements Widget {
         layout.add(headerView.getElement());
 
         typeDropDown = new StaticDropDown(context);
-        layout.add(typeDropDown.getView());
+        layout.add(typeDropDown.getElement());
         typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload, prevRefItemPath, prevPayload) ->
                 onTypeChange((String)payload, (String)prevPayload));
         typeDropDown.setHint("select type");
@@ -81,7 +81,7 @@ public class StructureWidget implements Widget {
         onDataChangeListener.run();
     }
 
-    public LinLayout getLinLayout(){
+    public LinearElementLayout getLinLayout(){
         return layout;
     }
 
@@ -155,10 +155,10 @@ public class StructureWidget implements Widget {
 
     public void clearWidgets(){
         if(structureWidgetList != null)
-            layout.remove(structureWidgetList.getView());
+            layout.remove(structureWidgetList.getElement());
         structureWidgetList = null;
         if(structureWidgetDropDown != null)
-            layout.remove(structureWidgetDropDown.getView());
+            layout.remove(structureWidgetDropDown.getElement());
         structureWidgetDropDown = null;
     }
 

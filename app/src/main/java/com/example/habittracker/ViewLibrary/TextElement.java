@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.defaultImportPackage.DefaultImportClass.*;
 
-public class TextElement {
+public class TextElement extends Element{
     private Context context;
     private TextView textView;
 

@@ -3,19 +3,23 @@ package com.example.habittracker.Widgets.StructureWidgets;
 import android.content.Context;
 import android.view.View;
 
-import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.StaticClasses.Dictionary;
+import com.example.habittracker.ViewLibrary.ButtonElement;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Structs.PayloadOption;
 import com.example.habittracker.Structs.RefItemPath;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetInStructure;
-import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.StaticDropDown;
 import com.example.habittracker.Widgets.Widget;
 
@@ -23,24 +27,28 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StructureWidgetDropDown implements Widget {
     private Context context;
-    private LinLayout customLinearLayout;
-    private LinLayout parent;
+    private LinearElementLayout customLinearLayout;
+    private LinearElementLayout parent;
 
     //used for drop down
     StaticDropDown structureKeyDropDown = null;
     StaticDropDown valueKeyDropDown = null;
-    GroupWidget groupLayout = null;
+    LinearElementLayout groupButtonLayout = null;
+    WidgetLayout groupWidgetLayout = null;
+    ButtonElement addButton = null;
+
+
 
 
 
 
     //used for state management when structure key changes and views need to be reset
 
-    public StructureWidgetDropDown(Context context, LinLayout parent) {
+    public StructureWidgetDropDown(Context context, LinearElementLayout parent) {
         this.context = context;
         this.parent = parent;
-        customLinearLayout = new LinLayout(context);
-        parent.add(customLinearLayout.getView());
+        customLinearLayout = new VertLayout(context);
+        parent.add(customLinearLayout);
         init();
     }
 
@@ -75,7 +83,7 @@ public class StructureWidgetDropDown implements Widget {
             throw new RuntimeException();
         structureKeyDropDown = new StaticDropDown(context);
         structureKeyDropDown.getDropDown().setHint("select spreadsheet");
-        customLinearLayout.add(structureKeyDropDown.getView());
+        customLinearLayout.add(structureKeyDropDown.getElement());
         structureKeyDropDown.disableWithGrayOut();
     }
 
@@ -136,7 +144,7 @@ public class StructureWidgetDropDown implements Widget {
         valueKeyDropDown = new StaticDropDown(context, null, (itemPath, payload, prevItemPath, prevPayload) -> {
             onValueKeyChange((WidgetInStructure) payload, (WidgetInStructure)prevPayload);
         });
-        customLinearLayout.add(valueKeyDropDown.getView());
+        customLinearLayout.add(valueKeyDropDown.getElement());
         valueKeyDropDown.setHint("item to be selected");
         valueKeyDropDown.disableWithGrayOut();
     }
@@ -196,23 +204,29 @@ public class StructureWidgetDropDown implements Widget {
         boolean lastNull = lastGroup.getSelectedString() == null;
         //System.out.println("groupLayout.getLinLayout().hasButton() = " + groupLayout.getLinLayout().hasButton());
         //System.out.println("maxNumGroups() = " + maxNumGroups());
-        if(!groupLayout.getLinLayout().hasButton() && groupDropDowns.size() < maxNumGroups() && ! lastNull){
+//        if(!groupWidgetLayout.getLinearElementLayout().hasButton() && groupDropDowns.size() < maxNumGroups() && ! lastNull){
+//            addGroupKeyDropDownAdd();
+//        }
+        if(addButton == null && groupDropDowns.size() < maxNumGroups() && ! lastNull){
             addGroupKeyDropDownAdd();
         }
     }
 
     private void enableGroupLayout(){
         MainActivity.log("enabling group layout");
-        groupLayout.enable();
+        groupWidgetLayout.enable();
 
     }
 
     private void createGroupLayout(){
+        groupButtonLayout = new VertLayout(context);
+
         System.out.println("<drop down structure widget> creating group layout");
-        groupLayout = new GroupWidget(context);
-        Margin.setStructureWidgetGroupLayout(groupLayout.getLinLayout());
-        customLinearLayout.add(groupLayout.getView());
-        groupLayout.disableWithGrayOut();
+        groupWidgetLayout = new WidgetLayout(context);
+        Margin.setStructureWidgetGroupLayout(groupWidgetLayout.getLinearElementLayout());
+        groupButtonLayout.addWithParam(groupWidgetLayout.getElement(), -2, -2);
+        customLinearLayout.add(groupButtonLayout);
+        groupWidgetLayout.disableWithGray();
         addGroupKeyDropDownAdd();
     }
 
@@ -243,10 +257,14 @@ public class StructureWidgetDropDown implements Widget {
         });
         dropDown.setHint("select group");
         groupDropDowns.add(dropDown);
-        groupLayout.getWidgetLayout().add(dropDown);
+        groupWidgetLayout.add(dropDown);
         //MainActivity.log("checking to remove button: " + groupDropDowns.size() + " >= " + maxNumGroups());
-        if(groupDropDowns.size() >= maxNumGroups())
-            groupLayout.getLinLayout().removeButton();
+        if(groupDropDowns.size() >= maxNumGroups()){
+            groupButtonLayout.remove(addButton);
+            addButton = null;
+            //groupWidgetLayout.getLinearElementLayout().removeButton();
+        }
+
     }
 
     private void onGroupValueChange(WidgetInStructure payload, WidgetInStructure prevPayload, int index){
@@ -270,29 +288,33 @@ public class StructureWidgetDropDown implements Widget {
             groupDropDowns.get(indexToResetPage).setPage(createGroupPage());
     }
     private void addGroupKeyDropDownAdd(){
-        groupLayout.getLinLayout().addButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                processGroupClick();
-            }
-        });
+
+        addButton = new ButtonElement(context, "add", this::processGroupClick);
+        groupButtonLayout.addWithParam(addButton, -2, -2);
+
+//        groupLayout.getLinearElementLayout().addButton(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                processGroupClick();
+//            }
+//        });
     }
 
 
 
     private void resetAndDisableGroupKeyWidget(){
-        ArrayList<Widget> widgets = groupLayout.getWidgetLayout().widgets();
+        ArrayList<Widget> widgets = groupWidgetLayout.widgets();
         for(Widget widget: widgets)
-            groupLayout.getWidgetLayout().remove(widget);
+            groupWidgetLayout.remove(widget);
         //customLinearLayout.remove(groupLayout.getView());
         //groupLayout = null;
-        groupLayout.disableWithGrayOut();
+        groupWidgetLayout.disableWithGray();
     }
 
 
 
     private void processGroupClick(){
-        groupLayout.getViewWrapper().resetNameColor();
+        groupWidgetLayout.resetNameColor();
         //System.out.println("group button clicked");
         //System.out.println("num groups: " + groupKeyDropDowns.widgets().size() + ", max: " + maxNumGroups());
         addGroupBy();
@@ -300,9 +322,9 @@ public class StructureWidgetDropDown implements Widget {
 
     private ArrayList<StaticDropDown> getGroupDropDownList() {
         ArrayList<StaticDropDown> dropDowns = new ArrayList<>();
-        if(groupLayout == null)
+        if(groupWidgetLayout == null)
             return dropDowns;
-        for(Widget widget: groupLayout.getWidgetLayout().widgets())
+        for(Widget widget: groupWidgetLayout.widgets())
             dropDowns.add(((StaticDropDown) widget));
         return dropDowns;
     }
@@ -322,6 +344,8 @@ public class StructureWidgetDropDown implements Widget {
     }
 
 
+
+
     public EntryWidgetParam getParam() {
         if(getSelectedStructure() == null){
             structureKeyDropDown.setError();
@@ -333,7 +357,7 @@ public class StructureWidgetDropDown implements Widget {
             return null;
         }
         checkingGroup:
-        if(groupLayout != null){
+        if(groupWidgetLayout != null){
             boolean error = false;
             ArrayList<StaticDropDown> groupDropDowns = getGroupDropDownList();
             ArrayList<WidgetInStructure> groupValues = getGroupValueList();
@@ -347,7 +371,7 @@ public class StructureWidgetDropDown implements Widget {
             }
             if(groupValues.get(groupValues.size() - 1) == null) {
                 //System.out.println("last group value is null");
-                groupLayout.getViewWrapper().setNameRed();
+                groupWidgetLayout.getViewWrapper().setNameRed();
                 return null;
             }
             if(error)
@@ -381,6 +405,16 @@ public class StructureWidgetDropDown implements Widget {
     @Override
     public View getView() {
         return customLinearLayout.getView();
+    }
+
+    @Override
+    public Element getElement() {
+        return new ViewElement() {
+            @Override
+            public View getView() {
+                return customLinearLayout.getView();
+            }
+        };
     }
 
     //endregion

@@ -3,9 +3,13 @@ package com.example.habittracker.Widgets.StructureWidgets;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.StaticClasses.EnumLoop;
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.ViewLibrary.ButtonElement;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
@@ -16,29 +20,37 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class StructureWidgetList implements Widget{
     private Context context;
-    private GroupWidget groupWidget;
-    private LinLayout parent;
-    public StructureWidgetList(Context context, LinLayout parent) {
+    private WidgetLayout widgetLayout;
+    private LinearElementLayout parent;
+    public StructureWidgetList(Context context, LinearElementLayout parent) {
         this.context = context;
         this.parent = parent;
-        groupWidget = new GroupWidget(context);
-        parent.add(groupWidget.getView());
+        widgetLayout = new WidgetLayout(context);
+        parent.add(widgetLayout.getElement());
         init();
     }
 
     private void init(){
-        groupWidget.getWidgetLayout().getLinearElementLayout().addButton(view -> {
-            addStructureWidget();
-        });
-        Margin.setStructureWidgetListLayout(groupWidget.getLinLayout());
+        //vertLayout
+            //baseview
+            //button
+        LinearElementLayout buttonLayout = new VertLayout(context);
+        buttonLayout.addWithParam(widgetLayout.getElement(), -2, -2);
+        ButtonElement buttonElement = new ButtonElement(context, "add", this::addStructureWidget);
+        buttonLayout.addWithParam(buttonElement, -2, -2);
+
+//        widgetLayout.getLinearElementLayout().addButton(view -> {
+//            addStructureWidget();
+//        });
+        Margin.setStructureWidgetListLayout(widgetLayout);
 
 //        groupWidget.getView().setBackground(new ColorDrawable(ColorPalette.tertiary));
 //        Margin.setPadding(groupWidget.getView(), Margin.listPadding());
     }
 
     public StructureWidget addStructureWidget(){
-        StructureWidget structureWidget = new StructureWidget(context, groupWidget.getWidgetLayout());
-        groupWidget.getWidgetLayout().add(structureWidget);
+        StructureWidget structureWidget = new StructureWidget(context, widgetLayout);
+        widgetLayout.add(structureWidget);
         return structureWidget;
     }
 
@@ -47,9 +59,19 @@ public class StructureWidgetList implements Widget{
 
     }
 
+    @Override
+    public Element getElement() {
+        return new Element() {
+            @Override
+            public View getView() {
+                return widgetLayout.getView();
+            }
+        };
+    }
+
 
     public EntryWidgetParam getParam() {
-        ArrayList<StructureWidget> structureWidgets = EnumLoop.makeList(groupWidget.getWidgetLayout().widgets(), (widget) ->(StructureWidget) widget);
+        ArrayList<StructureWidget> structureWidgets = EnumLoop.makeList(widgetLayout.widgets(), (widget) ->(StructureWidget) widget);
         ArrayList<EntryWidgetParam> entryWidgetParams = EnumLoop.makeList(structureWidgets, (structureWidget)->structureWidget.getWidgetInfo());
         for(EntryWidgetParam entryWidgetParam: entryWidgetParams)
             if(entryWidgetParam == null)
@@ -76,11 +98,11 @@ public class StructureWidgetList implements Widget{
 
     @Override
     public View getView() {
-        return groupWidget.getView();
+        return widgetLayout.getView();
     }
 
     public boolean hasUniqueAttribute() {
-        ArrayList<StructureWidget> structureWidgetList = EnumLoop.makeList(groupWidget.getWidgetLayout().widgets(),
+        ArrayList<StructureWidget> structureWidgetList = EnumLoop.makeList(widgetLayout.widgets(),
                 (widget)->(StructureWidget) widget);
         for(StructureWidget structureWidget: structureWidgetList){
             if(structureWidget.hasUniqueAttribute())

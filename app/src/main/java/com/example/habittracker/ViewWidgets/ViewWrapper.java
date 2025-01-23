@@ -13,7 +13,10 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
+import com.example.habittracker.ViewLibrary.ViewElement;
 
 public class ViewWrapper {
     private Context context;
@@ -23,7 +26,7 @@ public class ViewWrapper {
     private EditText invisibleEditText;
     private FillLayout borderLayout;
     private RelativeElementLayout borderLayoutRelative;
-    private LinLayout widgetLayout;
+    private LinearElementLayout widgetLayout;
     private RoundRectBorder borderView;
     private LinearLayout checkBoxLayout;
     private CheckBox checkBox;
@@ -109,19 +112,14 @@ public class ViewWrapper {
         return nameLayout;
     }
 
-    private static LinLayout createWidgetLayout(Context context, RelativeElementLayout relativeElementLayout){
-        LinLayout widgetLayout = new LinLayout(context);
+    private static LinearElementLayout createWidgetLayout(Context context, RelativeElementLayout relativeElementLayout){
+        LinearElementLayout widgetLayout = new VertLayout(context);
         //LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(-2, -2);
         //widgetLayout.getView().setLayoutParams(layoutParam);
         //widgetLayout.setOrientation(LinearLayout.VERTICAL);
 
         //borderLayout.setChildView(widgetLayout.getView());
-        relativeElementLayout.addWithParam(new Element() {
-            @Override
-            public View getView() {
-                return widgetLayout.getView();
-            }
-        }, -2, -2).alignAllParentSides();
+        relativeElementLayout.addWithParam(widgetLayout, -2, -2).alignAllParentSides();
 
         return widgetLayout;
     }
@@ -172,7 +170,12 @@ public class ViewWrapper {
         if(view == null)
             throw new RuntimeException();
         this.view = view;
-        widgetLayout.add(view);
+        widgetLayout.add(new ViewElement() {
+            @Override
+            public View getView() {
+                return view;
+            }
+        });
     }
 
     public View getView(){

@@ -23,7 +23,7 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     public ParentWidget(Context context) {
         super(context);
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getElement());
+        setViewWrapperChild(layout.getView());
         getView().setId(R.id.parentWidget);
     }
     public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){

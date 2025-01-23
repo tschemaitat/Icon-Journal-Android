@@ -9,12 +9,12 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.ViewLibrary.Element;
-import com.example.habittracker.ViewLibrary.ElementLayout;
+import com.example.habittracker.ViewLibrary.ElementLayoutWithInterface;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class ScrollElement extends ElementLayout{
+public class ScrollElement extends ElementLayoutWithInterface {
 
     private Context context;
     private LockableScrollView lockableScrollView;
@@ -45,25 +45,40 @@ public class ScrollElement extends ElementLayout{
         return lockableScrollView;
     }
 
-    public void addWithParam(Element element, int width, int height){
-        MainActivity.log("adding scroll element: " + element + ", width: " + width + ", height: " + height);
-        linearElementLayout.addWithParam(element, width, height);
-        super.add(element);
+//    public void addWithParam(Element element, int width, int height){
+//        MainActivity.log("adding scroll element: " + element + ", width: " + width + ", height: " + height);
+//        linearElementLayout.addWithParam(element, width, height);
+//        super.add(element);
+//    }
+
+    @Override
+    protected ViewGroup.LayoutParams createLayoutParams() {
+        return new LinearLayout.LayoutParams(-10, -10);
     }
 
     @Override
-    protected ViewGroup getViewGroup() {
+    public ViewGroup getViewGroup() {
         return lockableScrollView;
     }
 
     @Override
     protected void onAdd(Element element) {
+        linearElementLayout.add(element);
+    }
 
+    @Override
+    protected void onAdd(int index, Element element) {
+        linearElementLayout.add(index, element);
     }
 
     @Override
     protected void onRemove(Element element) {
+        linearElementLayout.remove(element);
+    }
 
+    @Override
+    protected void onRemove(int index, Element removedElement) {
+        linearElementLayout.remove(index);
     }
 
     public View getView(){

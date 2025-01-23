@@ -125,12 +125,4 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     public void setParamCustom(EntryWidgetParam param){
         throw new RuntimeException();
     }
-    public void makeButton(Runnable runnable){
-        layout.getLinearElementLayout().addButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                runnable.run();
-            }
-        });
-    }
 }

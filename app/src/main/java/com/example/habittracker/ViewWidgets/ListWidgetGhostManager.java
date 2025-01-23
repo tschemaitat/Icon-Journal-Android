@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
+import com.example.habittracker.ViewLibrary.BasicElement;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.Widget;
@@ -114,14 +116,13 @@ public class ListWidgetGhostManager {
     }
 
     public void addVacant(int index){
-        View view = new View(context);
-        view.setLayoutParams(new LinearLayout.LayoutParams(-1, vacantHeight));
-        widgetLayout.getLinearElementLayout().addWithoutSettingParams(view, index);
+        BasicElement view = new BasicElement(context);
+        widgetLayout.getLinearElementLayout().addWithParam(index, view, -1, vacantHeight);
         currentVacantIndex = index;
     }
 
     public void removeVacant(){
-        widgetLayout.getLinearElementLayout().removeAt(currentVacantIndex);
+        widgetLayout.getLinearElementLayout().remove(currentVacantIndex);
         currentVacantIndex = -1;
     }
 

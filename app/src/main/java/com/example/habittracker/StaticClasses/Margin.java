@@ -11,6 +11,9 @@ import android.widget.RelativeLayout;
 
 
 import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.ViewLibrary.ImageButtonElement;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 
@@ -105,18 +108,18 @@ public class Margin {
         //setPaddingAndBackground(view, ColorPalette.primary, padding);
         setPadding(view, padding);
     }
-    public static void setStructureWidgetLayout(LinLayout linLayout){
+    public static void setStructureWidgetLayout(LinearElementLayout linLayout){
         Margin padding = listPadding();
         setPaddingAndBackground(linLayout.getView(), secondary, padding);
         //linLayout.setChildMargin(Margin.listChildMargin());
     }
-    public static void setStructureWidgetListLayout(LinLayout linLayout){
+    public static void setStructureWidgetListLayout(WidgetLayout widgetLayout){
         Margin padding = listPadding();
-        setPaddingAndBackground(linLayout.getView(), groupColor, padding);
-        linLayout.setChildMargin(Margin.listChildMargin());
+        setPaddingAndBackground(widgetLayout.getView(), groupColor, padding);
+        widgetLayout.getLinearElementLayout().setChildMargin(Margin.listChildMargin());
     }
 
-    public static void setListWidgetLayout(LinLayout linLayout){
+    public static void setListWidgetLayout(LinearElementLayout linLayout){
         Margin padding = listPadding();
         setPaddingAndBackground(linLayout.getView(), groupColor, padding);
         linLayout.setChildMargin(Margin.listChildMargin());
@@ -149,7 +152,7 @@ public class Margin {
         editText.setLayoutParams(new LinearLayout.LayoutParams(700, 100 + verticalPadding));
     }
 
-    public static void setStructureWidgetGroupLayout(LinLayout linLayout){
+    public static void setStructureWidgetGroupLayout(LinearElementLayout linLayout){
         setPaddingAndBackground(linLayout.getView(), tertiary, new Margin());
         linLayout.setChildMargin(Margin.listChildMargin());
 
@@ -164,7 +167,7 @@ public class Margin {
             setEditText(nameView.getEditText());
         }
         if(headerView.deleteButton != null){
-            ImageButton deleteButton = headerView.deleteButton;
+            ImageButtonElement deleteButton = headerView.deleteButton;
             RelativeLayout.LayoutParams deleteParam = getRelativeParam(20, 20, new Margin(20));
             deleteParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             deleteButton.setLayoutParams(deleteParam);

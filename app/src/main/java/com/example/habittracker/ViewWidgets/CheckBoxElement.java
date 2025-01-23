@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
 
-public class CheckBoxElement {
+import com.example.habittracker.ViewLibrary.Element;
+
+public class CheckBoxElement extends Element {
     private Context context;
     private CheckBox checkBox;
     private CheckBoxListener checkBoxListener;

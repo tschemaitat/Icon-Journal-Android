@@ -4,19 +4,22 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.habittracker.Layouts.LinLayout;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 
 public class StructureWidgetEditText implements Widget {
     private Context context;
-    private LinLayout layout;
-    private LinLayout parent;
-    public StructureWidgetEditText(Context context, LinLayout parent) {
+    private LinearElementLayout layout;
+    private LinearElementLayout parent;
+    public StructureWidgetEditText(Context context, LinearElementLayout parent) {
         this.context = context;
         this.parent = parent;
-        layout = new LinLayout(context);
-        parent.add(layout.getView());
+        layout = new VertLayout(context);
+        parent.add(layout);
         init();
     }
 
@@ -28,6 +31,8 @@ public class StructureWidgetEditText implements Widget {
     public void setOnDataChangedListener(Runnable runnable) {
 
     }
+
+
 
     public EntryWidgetParam getParam() {
         EditTextParam editTextParam = new EditTextParam((String) null);
@@ -44,6 +49,11 @@ public class StructureWidgetEditText implements Widget {
 
     @Override
     public View getView() {
+        return null;
+    }
+
+    @Override
+    public Element getElement() {
         return null;
     }
 }

@@ -177,6 +177,9 @@ public abstract class EntryWidget implements Widget {
     protected final void setViewWrapperChild(View view){
         viewWrapper.setChildView(view);
     }
+    protected final void setViewWrapperChild(Element element){
+        viewWrapper.setChildView(element.getView());
+    }
 
     protected WidgetId getWidgetId() {
         return entryWidgetParam.getWidgetId();
