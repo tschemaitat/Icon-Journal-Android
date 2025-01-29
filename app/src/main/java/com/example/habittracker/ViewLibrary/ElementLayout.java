@@ -31,6 +31,7 @@ public abstract class ElementLayout extends Element{
         checkElementBeforeAdd(element);
         elements.add(element);
         MarginHelper marginHelper = handleMarginAndParamsOnAdd(element);
+        onAdd(element);
         return marginHelper;
     }
     protected MarginHelper parentOnAdd(int index, Element element){
@@ -39,6 +40,7 @@ public abstract class ElementLayout extends Element{
         checkElementBeforeAdd(element);
         elements.add(index, element);
         MarginHelper marginHelper = handleMarginAndParamsOnAdd(element);
+        onAdd(index, element);
         return marginHelper;
     }
 

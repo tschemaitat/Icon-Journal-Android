@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
@@ -31,65 +32,34 @@ public abstract class EntryWidget implements Widget {
     private Context context;
     private FocusTreeParent focusParent;
 
-    boolean deleteEnabled = false;
-    private boolean listGhostEnabled = true;
-    public boolean isDeleteChecked = false;
-
-    public EntryWidget(Context context){
+    public EntryWidget(Context context, Element wrapperElement){
         this.context = context;
         widgetDebugId = widgetDebugIdCounter;
         widgetDebugIdCounter++;
-        viewWrapper = new ViewWrapper(context);
-        viewWrapper.getView().setId(R.id.entryWidgetWrapper);
+        this.viewWrapper = (ViewWrapper) wrapperElement;
+        this.viewWrapper.getView().setId(R.id.entryWidgetWrapper);
     }
+//    private void setForegroundOfDisable(){
+//        Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
+//        Margin currentPadding = Margin.getPadding(getView());
+//        getView().setForeground(foregroundDrawable);
+//        Margin paddingAfter = Margin.getPadding(getView());
+//        if( ! currentPadding.equals(paddingAfter)){
+//            MainActivity.log(currentPadding.toString());
+//            MainActivity.log(paddingAfter.toString());
+//            throw new RuntimeException();
+//        }
+//    }
 
-    void disableNoVisual(){
-        if(!listGhostEnabled)
-            throw new RuntimeException();
-        listGhostEnabled = false;
-        viewWrapper.disable();
-    }
-    private void enableNoVisual(){
-        if(listGhostEnabled)
-            throw new RuntimeException();
-        viewWrapper.enable();
-        listGhostEnabled = true;
-    }
-    public void disableWithGrayOut(){
-        if(!listGhostEnabled)
-            throw new RuntimeException();
-        listGhostEnabled = false;
-        viewWrapper.disable();
-        setForegroundOfDisable();
-    }
-    private void setForegroundOfDisable(){
-        Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
-        Margin currentPadding = Margin.getPadding(getView());
-        getView().setForeground(foregroundDrawable);
-        Margin paddingAfter = Margin.getPadding(getView());
-        if( ! currentPadding.equals(paddingAfter)){
-            MainActivity.log(currentPadding.toString());
-            MainActivity.log(paddingAfter.toString());
-            throw new RuntimeException();
-        }
-    }
-    public void enable(){
-        if(listGhostEnabled)
-            throw new RuntimeException();
-        viewWrapper.enable();
-        listGhostEnabled = true;
-        getView().setForeground(null);
-    }
-
-    protected abstract void setValueCustom(WidgetValue widgetValue);
-    public final void setValue(WidgetValue widgetValue){
+    protected abstract void setValueCustom(Object widgetValue);
+    public final void setValue(Object widgetValue){
         setValueCustom(widgetValue);
     }
-    public final WidgetValue getValue(){
-        WidgetValue tree = getEntryValueTreeCustom();
+    public final Object getValue(){
+        Object tree = getEntryValueTreeCustom();
         return tree;
     }
-    protected abstract WidgetValue getEntryValueTreeCustom();
+    protected abstract Object getEntryValueTreeCustom();
 
     public void onFocusChange(boolean hasFocus){
         MainActivity.log("entry widget on focus change: " + this);
@@ -163,10 +133,11 @@ public abstract class EntryWidget implements Widget {
     }
 
     public final Element getElement(){
-        Element element = new Element() {
+        Element element = new ViewElement() {
             @Override
             public View getView() {
-                return getView();
+
+                return EntryWidget.this.getView();
             }
         };
         return element;
@@ -174,11 +145,11 @@ public abstract class EntryWidget implements Widget {
     public final ViewWrapper getViewWrapper(){
         return viewWrapper;
     }
-    protected final void setViewWrapperChild(View view){
-        viewWrapper.setChildView(view);
-    }
+//    protected final void setViewWrapperChild(View view){
+//        viewWrapper.setChildView(view);
+//    }
     protected final void setViewWrapperChild(Element element){
-        viewWrapper.setChildView(element.getView());
+        viewWrapper.setChildView(element);
     }
 
     protected WidgetId getWidgetId() {

@@ -1,9 +1,12 @@
 package com.example.habittracker.ANotUsing.Slider.Sliders;
 
 import android.content.Context;
+import android.view.View;
 
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Values.WidgetValue;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
@@ -18,10 +21,15 @@ public class TextSlider extends BaseEntryWidget {
     public static final String className = "text slider";
     Context context;
     SliderWithLabels sliderWithLabels;
-    public TextSlider(Context context) {
-        super(context);
+    public TextSlider(Context context, Element wrapperElement) {
+        super(context, wrapperElement);
         sliderWithLabels = new SliderWithLabels(context);
-        setViewWrapperChild(sliderWithLabels);
+        setViewWrapperChild(new ViewElement() {
+            @Override
+            public View getView() {
+                return sliderWithLabels;
+            }
+        });
         this.context = context;
         init();
     }
@@ -47,17 +55,27 @@ public class TextSlider extends BaseEntryWidget {
     }
 
     @Override
+    public void setTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
     protected WidgetValue getEntryValueTreeCustom() {
         return null;
     }
 
     @Override
-    protected void setValueCustom(WidgetValue widgetValue) {
+    protected void setValueCustom(Object widgetValue) {
 
     }
 
     @Override
-    protected void setHint(String hintString) {
+    public void setHint(String hintString) {
 
     }
 

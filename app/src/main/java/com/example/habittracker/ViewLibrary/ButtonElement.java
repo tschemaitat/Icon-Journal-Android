@@ -67,5 +67,15 @@ public class ButtonElement extends Element{
         return button;
     }
 
+    @Override
+    protected void enableInteraction() {
+        button.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteraction() {
+        button.setEnabled(false);
+    }
+
 
 }

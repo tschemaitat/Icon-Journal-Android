@@ -51,6 +51,16 @@ public class RelativeElementLayout extends ElementLayout {
 
     }
 
+    @Override
+    protected void enableInteractionLayout() {
+        relativeLayout.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteractionLayout() {
+        relativeLayout.setEnabled(false);
+    }
+
     public ParamHelper addWithParam(Element element, int width, int height){
         parentOnAdd(element);
         int paramWidth = width;
@@ -68,7 +78,6 @@ public class RelativeElementLayout extends ElementLayout {
         ((RelParamAllowsMatch)(element.getLayoutParams())).edit(width, height, matchWidth, matchHeight);
         //element.getView().setLayoutParams(layoutParams);
         relativeLayout.addView(element.getView());
-        super.parentOnAdd(element);
         return new ParamHelper((RelParamAllowsMatch)element.getLayoutParams());
     }
 

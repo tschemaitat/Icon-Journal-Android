@@ -1,9 +1,13 @@
 package com.example.habittracker.Widgets;
 
 import android.content.Context;
+import android.view.View;
 
+import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.DropDownPage;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -21,21 +25,21 @@ public class StaticDropDown extends BaseEntryWidget {
     private Context context;
     private DropDown dropDown;
     private DropDown.DropDownOnSelected onSelected = null;
-    public StaticDropDown(Context context) {
-        super(context);
+    public StaticDropDown(Context context, Element wrapperElement){
+        super(context, wrapperElement);
         this.context = context;
         init();
     }
-    public StaticDropDown(Context context, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
-        super(context);
+    public StaticDropDown(Context context, Element wrapperElement, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
+        super(context, wrapperElement);
         this.context = context;
         init();
         this.onSelected = onSelected;
         setup(dropDownPage, onSelected);
     }
 
-    public StaticDropDown(Context context, DropDownPage dropDownPage, Runnable onSelected){
-        super(context);
+    public StaticDropDown(Context context, Element wrapperElement, DropDownPage dropDownPage, Runnable onSelected){
+        super(context, wrapperElement);
         this.context = context;
         this.onSelected = (itemPath, payload, prevItemPath, prevPayload) -> onSelected.run();
         init();
@@ -47,7 +51,12 @@ public class StaticDropDown extends BaseEntryWidget {
         dropDown = new DropDown(context, (itemPath, payload, prevItemPath, prevPayload) -> {
             listenerWrapper(itemPath, payload, prevItemPath, prevPayload);
         });
-        setViewWrapperChild(dropDown.getView());
+        setViewWrapperChild(new ViewElement() {
+            @Override
+            public View getView() {
+                return dropDown.getView();
+            }
+        });
 
     }
 
@@ -62,7 +71,7 @@ public class StaticDropDown extends BaseEntryWidget {
     }
 
     @Override
-    public void setValueCustom(WidgetValue widgetValue) {
+    public void setValueCustom(Object widgetValue) {
         throw new RuntimeException();
     }
 
@@ -88,6 +97,16 @@ public class StaticDropDown extends BaseEntryWidget {
         if(itemPath == null)
             return null;
         return itemPath.getLast();
+    }
+
+    @Override
+    public void setTextErrorColor() {
+        dropDown.setButtonColor(ColorPalette.redText);
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        dropDown.setButtonColor(ColorPalette.textPurple);
     }
 
     public void setHint(String item_to_be_selected) {

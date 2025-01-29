@@ -1,6 +1,7 @@
 package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
+import android.view.View;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.DropDownPageFactory;
@@ -8,6 +9,8 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Values.WidgetValueString;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
@@ -27,8 +30,8 @@ public class EntryDropDown extends BaseEntryWidget {
     private DropDownPage dropDownPage = null;
     private Context context;
 
-    public EntryDropDown(Context context) {
-        super(context);
+    public EntryDropDown(Context context, Element wrapperElement){
+        super(context, wrapperElement);
         this.context = context;
         init();
     }
@@ -36,7 +39,12 @@ public class EntryDropDown extends BaseEntryWidget {
     private void init(){
 
         dropDown = new DropDown(context, (refItemPath, payload, prevRefItemPath, prevPayload) -> onDataChanged((RefItemPath)payload));
-        setViewWrapperChild(dropDown.getView());
+        setViewWrapperChild(new ViewElement() {
+            @Override
+            public View getView() {
+                return dropDown.getView();
+            }
+        });
     }
 
     private void onDataChanged(RefItemPath refItemPath){
@@ -45,7 +53,7 @@ public class EntryDropDown extends BaseEntryWidget {
     }
 
     @Override
-    public void setValueCustom(WidgetValue widgetValue) {
+    public void setValueCustom(Object widgetValue) {
 
 //        if(widgetValueStringPath.getRefItemPath() == null){
 //            //MainActivity.log(widgetValueStringPath.getParent().hierarchy());
@@ -62,7 +70,17 @@ public class EntryDropDown extends BaseEntryWidget {
     }
 
     @Override
-    protected void setHint(String hintString) {
+    public void setTextErrorColor() {
+
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+
+    }
+
+    @Override
+    public void setHint(String hintString) {
 
     }
 

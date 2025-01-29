@@ -5,18 +5,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ElementLayout;
+import com.example.habittracker.ViewLibrary.ElementProvider;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.Widget;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class WidgetLayout extends ElementLayout {
-    private ArrayList<Widget> widgets = new ArrayList<>();
+public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
+    private ArrayList<T> widgets = new ArrayList<>();
     private LinearElementLayout layout;
     private Context context;
     public WidgetLayout(Context context){
@@ -40,29 +42,30 @@ public class WidgetLayout extends ElementLayout {
 
 
 
-    public ArrayList<Widget> widgets(){
+    public ArrayList<T> widgets(){
         return widgets;
     }
 
 
-    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, Runnable onDataChange){
-        System.out.println("setting widgets: " + params.size());
-        for(int i = 0; i < params.size(); i++){
-            System.out.println("\tadding widget and inflating: ");
-            add(GLib.inflateWidget(context, params.get(i), onDataChange));
-        }
-        return widgets;
-    }
+//    public ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, Runnable onDataChange){
+//        System.out.println("setting widgets: " + params.size());
+//        for(int i = 0; i < params.size(); i++){
+//            System.out.println("\tadding widget and inflating: ");
+//            add(GLib.inflateWidget(context, params.get(i), onDataChange));
+//        }
+//        return widgets;
+//    }
 
-    public void add(Widget widget){
+    public void add(T widget){
         widgets.add(widget);
         parentOnAdd(widget.getElement());
     }
     @Override
     protected void onAdd(Element element) {
+        MainActivity.log("on add widget layout");
         layout.add(element);
     }
-    public void add(Widget widget, int index){
+    public void add(T widget, int index){
         widgets.add(index, widget);
         parentOnAdd(index, widget.getElement());
     }
@@ -71,10 +74,9 @@ public class WidgetLayout extends ElementLayout {
         layout.add(index, element);
     }
 
-    public void remove(Widget widget){
+    public void remove(T widget){
         if(!widgets.contains(widget))
             throw new RuntimeException();
-        widgets.remove(widget);
         parentOnRemove(widget.getElement());
     }
     @Override
@@ -82,7 +84,7 @@ public class WidgetLayout extends ElementLayout {
         layout.remove(element);
     }
 
-    public void delete(Widget widget) {
+    public void delete(T widget) {
         int index = widgets.indexOf(widget);
         this.remove(widget);
         getLinearElementLayout().remove(widget.getElement());
@@ -92,8 +94,8 @@ public class WidgetLayout extends ElementLayout {
 
     }
 
-    public void moveUp(Widget widget) {
-        ArrayList<Widget> widgets = this.widgets();
+    public void moveUp(T widget) {
+
         int index = widgets.indexOf(widget);
         if(index == 0)
             throw new RuntimeException();
@@ -104,8 +106,7 @@ public class WidgetLayout extends ElementLayout {
         parentOnMoveUp(widget.getElement());
     }
 
-    public void moveDown(Widget widget) {
-        ArrayList<Widget> widgets = this.widgets();
+    public void moveDown(T widget) {
         int index = widgets.indexOf(widget);
         if(index == widgets.size() - 1)
             throw new RuntimeException();
@@ -137,11 +138,5 @@ public class WidgetLayout extends ElementLayout {
 
     public View getView() {
         return layout.getView();
-    }
-
-    public void resetNameColor() {
-        for(Widget widget: widgets){
-            widget.
-        }
     }
 }

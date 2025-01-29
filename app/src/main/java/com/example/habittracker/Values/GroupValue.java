@@ -1,9 +1,12 @@
 package com.example.habittracker.Values;
 
 import com.example.habittracker.Algorithms.Lists;
+import com.example.habittracker.Algorithms.ThrowableEquals;
+import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 import com.example.habittracker.structurePack.WidgetInStructure;
@@ -19,14 +22,13 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class GroupValue extends WidgetValue{
+public class GroupValue implements ThrowableEquals {
     public static final String className = "groupValue";
     private ListItemId listItemId = null;
     private ArrayList<WidgetValue> values = new ArrayList<>();
     private ListValue parent;
     private boolean setIds = false;
     public GroupValue(ArrayList<WidgetValue> values){
-        super(null);
         if(values == null)
             throw new RuntimeException();
         this.values = new ArrayList<>(values);
@@ -37,7 +39,6 @@ public class GroupValue extends WidgetValue{
     }
 
     public GroupValue(){
-        super(null);
         values = new ArrayList<>();
     }
 
@@ -251,7 +252,7 @@ public class GroupValue extends WidgetValue{
         ArrayList<WidgetValue> widgetValues = new ArrayList<>();
         for(int i = 0; i < arraySize; i++){
             JSONObject widgetValueJSON = jsonArray.getJSONObject(i);
-            WidgetValue widgetValue = StructureTokenizer.getWidgetValue(widgetValueJSON);
+            WidgetValue widgetValue = (WidgetValue) StructureTokenizer.getWidgetValue(widgetValueJSON);
             widgetValues.add(widgetValue);
         }
         GroupValue groupValue = new GroupValue(widgetValues);
@@ -268,8 +269,8 @@ public class GroupValue extends WidgetValue{
             return false;
         if( ! Objects.equals(values, groupValue.values))
             return false;
-        if( ! Objects.equals(getWidgetId(), groupValue.getWidgetId()))
-            return false;
+//        if( ! Objects.equals(getWidgetId(), groupValue.getWidgetId()))
+//            return false;
 
 
         return true;
@@ -281,14 +282,28 @@ public class GroupValue extends WidgetValue{
         if(listItemId != null || groupValue.listItemId != null)
             listItemId.equalsThrows(groupValue.listItemId);
         Lists.equalsThrowsRecursive(values, groupValue.values);
-        if(getWidgetId() != null || groupValue.getWidgetId() != null)
-            getWidgetId().equalsThrows(groupValue.getWidgetId());
+//        if(getWidgetId() != null || groupValue.getWidgetId() != null)
+//            getWidgetId().equalsThrows(groupValue.getWidgetId());
 
         if( ! this.equals(object))
             throw new RuntimeException();
     }
 
     public String debugString() {
-        return "<GroupValue, listId: " + listItemId + ", widgetId: " + getWidgetId() + ">";
+        //return "<GroupValue, listId: " + listItemId + ", widgetId: " + getWidgetId() + ">";
+        return "<GroupValue, listId: " + listItemId + ">";
+    }
+
+    public BaseWidgetValue getValue(RefEntryString refEntryString) {
+        return getValue(refEntryString.getWidgetInStructure().getWidgetPath(), refEntryString.getListIdList());
+    }
+
+    public void editValue(WidgetInStructure widgetInStructure, WidgetValue widgetValue) {
+        WidgetValue oldWidgetValue = getBaseWidgetValueByWidget(widgetInStructure);
+        int index  = values.indexOf(oldWidgetValue);
+        if(index == -1)
+            throw new RuntimeException();
+        values.remove(oldWidgetValue);
+        values.add(index, widgetValue);
     }
 }

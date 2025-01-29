@@ -31,7 +31,7 @@ public class StructureEditor extends Inflatable{
 
 
     Context context;
-    WidgetLayout widgetLayout;
+    WidgetLayout<StructureWidget> widgetLayout;
     Structure structure = null;
     LinearElementLayout layout;
 
@@ -174,14 +174,14 @@ public class StructureEditor extends Inflatable{
         boolean error = false;
 
         if(structureKeyEditor.getText() == null){
-            structureKeyEditor.setError();
+            structureKeyEditor.setTextErrorColor();
             error = true;
         }
 
         ArrayList<EntryWidgetParam> widgetInfoList = new ArrayList<>();
         for(int i = 0; i < widgetLayout.widgets().size(); i++){
 
-            StructureWidget structureWidget = (StructureWidget) widgetLayout.widgets().get(i);
+            StructureWidget structureWidget = widgetLayout.widgets().get(i);
             EntryWidgetParam widgetInfo = structureWidget.getWidgetInfo();
             if(widgetInfo == null){
                 MainActivity.log("error at index: " + i);

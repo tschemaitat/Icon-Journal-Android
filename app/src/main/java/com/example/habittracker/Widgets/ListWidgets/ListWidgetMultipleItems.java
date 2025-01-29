@@ -7,6 +7,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
@@ -23,14 +24,14 @@ public class ListWidgetMultipleItems extends ListWidget {
     public static String childClassName = "list multiple items";
     private ListParam listMultiItemParam = null;
     private Context context;
-    public ListWidgetMultipleItems(Context context) {
-        super(context);
+    public ListWidgetMultipleItems(Context context, Element wrapperElement) {
+        super(context, wrapperElement);
         this.context = context;
         Margin.setListWidgetLayout(layout.getLinearElementLayout());
     }
 
     @Override
-    public void setValueListCustom(WidgetValue widgetValue) {
+    public void setValueListCustom(Object widgetValue) {
         ListValue listValue = (ListValue) widgetValue;
         System.out.println("list setting value: " + listValue.hierarchy());
         for(GroupValue groupValue: listValue.getGroupValueList()){

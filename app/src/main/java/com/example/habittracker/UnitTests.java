@@ -132,7 +132,7 @@ public class UnitTests {
         GroupWidget groupWidget = (GroupWidget)GLib.inflateWidget(context, groupWidgetParam, ()->{});
         GroupValue groupValue = (GroupValue)groupWidget.getValue();
         WidgetPath widgetPath = widgetInStructure.getWidgetInfo().getWidgetPath();
-        WidgetValue currentValue = groupValue;
+        GroupValue currentValue = groupValue;
         for(int i = 0; i < widgetPath.size(); i++){
             WidgetInStructure currentWidgetInStructure = widgetPath.get(i);
 

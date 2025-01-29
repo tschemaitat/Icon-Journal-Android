@@ -3,6 +3,8 @@ package com.example.habittracker.Widgets;
 import android.content.Context;
 
 import com.example.habittracker.R;
+import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
@@ -17,49 +19,50 @@ import com.example.habittracker.structurePack.ListItemId;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class GroupWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
-    private WidgetLayout layout;
+    private WidgetLayout<BaseEntryWidget> layout;
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
+    Context context;
 
     public static final String className = "group widget";
-    public GroupWidget(Context context){
-        super(context);
+    public GroupWidget(Context context, Element wrapperElement){
+        super(context, wrapperElement);
+        this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getView());
+        setViewWrapperChild(layout);
         getView().setId(R.id.groupWidget);
     }
 
     public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){
-        ArrayList<BaseEntryWidget> entryWidgets = new ArrayList<>();
-        for(Widget widget: layout.widgets()){
-            entryWidgets.add((BaseEntryWidget) widget);
-        }
-        return entryWidgets;
+        return layout.widgets();
     }
     public ArrayList<EntryWidget> getEntryWidgets(){
         ArrayList<EntryWidget> entryWidgets = new ArrayList<>();
-        for(Widget widget: layout.widgets()){
+        for(Object widget: layout.widgets()){
             entryWidgets.add((EntryWidget) widget);
         }
         return entryWidgets;
     }
 
     @Override
-    public void setValueCustom(WidgetValue widgetValue) {
+    public void setValueCustom(Object widgetValue) {
         ParentWidget.setValueCustom(getBaseEntryWidgets(), (GroupValue) widgetValue);
     }
     @Override
     public void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
-        layout.inflateAll(groupParams.params, ()->onDataChangedListener().run());
+        ArrayList<Widget> inflatedWidgets = GLib.inflateAll(groupParams.params, ()->onDataChangedListener().run(), context);
+        for(Widget widget: inflatedWidgets){
+            layout.add((BaseEntryWidget) widget);
+        }
         for(BaseEntryWidget widget: getBaseEntryWidgets()){
             widget.setFocusParent(this);
             widget.setListItemIdProvider(this);
         }
     }
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
-        return ParentWidget.getEntryValueTreeCustom(getBaseEntryWidgets());
+    public GroupValue getEntryValueTreeCustom() {
+        return (GroupValue) ParentWidget.getEntryValueTreeCustom(getBaseEntryWidgets());
     }
 
     public WidgetLayout getWidgetLayout(){
@@ -113,5 +116,20 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     public String getNameAndLocation(){
         ArrayList<ListItemId> itemIds = getListItemIdList();
         return getName() + itemIds;
+    }
+
+    @Override
+    public void setTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setHint(String string) {
+        throw new RuntimeException();
     }
 }

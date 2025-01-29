@@ -18,11 +18,11 @@ import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.ViewElement;
 
-public class ViewWrapper {
+public class ViewWrapper extends ViewElement{
     private Context context;
     private LinLayout nameLayout;
     private TextView nameTextView;
-    private View view;
+    private Element view;
     private EditText invisibleEditText;
     private FillLayout borderLayout;
     private RelativeElementLayout borderLayoutRelative;
@@ -166,16 +166,11 @@ public class ViewWrapper {
         return nameLayout;
     }
 
-    public void setChildView(View view){
+    public void setChildView(Element view){
         if(view == null)
             throw new RuntimeException();
         this.view = view;
-        widgetLayout.add(new ViewElement() {
-            @Override
-            public View getView() {
-                return view;
-            }
-        });
+        widgetLayout.add(view);
     }
 
     public View getView(){

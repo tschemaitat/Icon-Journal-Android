@@ -63,7 +63,7 @@ public class DynamicListView {
 
     //region create views
     public static ButtonElement createButtonElement(Context context){
-        return new ButtonElement(context, "confirm", null);
+        return new ButtonElement(context, "confirm", ()->{});
     }
     public HorLayout makeHorLayoutElement(String text, Runnable clickListener, Runnable longClickListener, boolean addCheckBox){
         HorLayout horLayout = new HorLayout(context);
@@ -145,7 +145,7 @@ public class DynamicListView {
     }
     public void hideConfirmButton() {
         confirmButton.getButton().setVisibility(View.GONE);
-        confirmButton.getButton().setOnClickListener(null);
+        confirmButton.getButton().setOnClickListener((view)->{});
     }
     public void hideCheckBoxes() {
         throwIfNotInCheckMode();

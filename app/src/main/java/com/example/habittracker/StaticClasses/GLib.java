@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
@@ -32,6 +33,7 @@ import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
+import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public class GLib {
     public static final int wrapContent = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -128,6 +130,16 @@ public class GLib {
         return view;
     }
 
+    public static ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, Runnable onDataChange, Context context){
+        ArrayList<Widget> widgets = new ArrayList<>();
+        System.out.println("setting widgets: " + params.size());
+        for(int i = 0; i < params.size(); i++){
+            System.out.println("\tadding widget and inflating: ");
+            widgets.add(GLib.inflateWidget(context, params.get(i), onDataChange));
+        }
+        return widgets;
+    }
+
     public static Widget inflateWidget(Context context, EntryWidgetParam params, Runnable onDataChange){
 
         String className = params.getClassName();
@@ -135,16 +147,16 @@ public class GLib {
         Widget widget = null;
         switch (className) {
             case DropDown.className -> {
-                widget = new EntryDropDown(context);
+                widget = new EntryDropDown(context, new ViewWrapper(context));
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
             case ListWidget.className->{
                 ListParam listParam = (ListParam) params;
                 if(listParam.cloneableWidget.params.size() > 1){
-                    widget = new ListWidgetMultipleItems(context);
+                    widget = new ListWidgetMultipleItems(context, new ViewWrapper(context));
                 }else{
-                    widget = new ListWidgetSingleItem(context);
+                    widget = new ListWidgetSingleItem(context, new ViewWrapper(context));
                 }
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
@@ -166,12 +178,12 @@ public class GLib {
 //                widget.setParam(params);
 //            }
             case GroupWidget.className -> {
-                widget = new GroupWidget(context);
+                widget = new GroupWidget(context, new ViewWrapper(context));
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
             case CustomEditText.className -> {
-                widget = new CustomEditText(context);
+                widget = new CustomEditText(context, new ViewWrapper(context));
                 widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }

@@ -3,6 +3,9 @@ package com.example.habittracker.StaticClasses;
 import android.content.Context;
 
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.structurePack.Structure;
+import com.example.habittracker.structurePack.WidgetInStructure;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +43,11 @@ public class SaveStructures {
             throw new RuntimeException(e);
         }
         StructureTokenizer.setStructures(structuresJSON);
+    }
+
+    public static void editWidgetValue(RefEntryString refEntryString){
+        Structure structure = refEntryString.getStructure();
+        structure.editWidgetValue(refEntryString.getEntryInStructure());
     }
 
     public static void deleteStructuresFile(Context context){

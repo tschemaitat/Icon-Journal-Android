@@ -21,6 +21,10 @@ import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
+import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
@@ -29,14 +33,14 @@ import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     public static final String className = "edit text";
     public static final String nullText = "";
-    private LinLayout linLayout;
+    private LinearElementLayout linLayout;
     private EditText editText;
     private Context context;
 
     private String currentText = nullText;
 
-    public CustomEditText(Context context) {
-        super(context);
+    public CustomEditText(Context context, Element wrapperElement) {
+        super(context, wrapperElement);
         this.context = context;
 
 
@@ -104,16 +108,22 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     private void init(){
 
 
-        linLayout = new LinLayout(context);
-        setViewWrapperChild(linLayout.getView());
+        linLayout = new VertLayout(context);
+        setViewWrapperChild(linLayout);
         //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
         editText = new EditText(context);
         editText.setPadding(10,0,0,0);
         editText.setGravity(Gravity.CENTER_VERTICAL);
-        linLayout.add(editText);
+        linLayout.addWithParam(new ViewElement() {
+            @Override
+            public View getView() {
+                return editText;
+            }
+        }, -1, -2);//used to be -1, -1
+        //linLayout.add(editText);
 
         editText.setMinWidth(GLib.dpToPx(400));
-        editText.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
+        //editText.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
         editText.setTextColor(ColorPalette.textPurple);
         editText.setBackground(null);
         editText.setHintTextColor(ColorPalette.hintText);
@@ -211,7 +221,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     }
 
     @Override
-    public void setValueCustom(WidgetValue widgetValue) {
+    public void setValueCustom(Object widgetValue) {
         WidgetValueString widgetValueString = (WidgetValueString)widgetValue;
         if(widgetValue == null)
             throw new RuntimeException();
@@ -242,20 +252,25 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
         editText.setEnabled(false);
     }
 
+
+
+
+
     public void setHint(String widget_name) {
         editText.setHint(widget_name);
     }
-
-    public void setError() {
+    @Override
+    public void setTextErrorColor() {
         String text = getText();
-        if(text == null){
-            editText.setHintTextColor(ColorPalette.redText);
-            return;
-        }
+//        if(text == null){
+//            editText.setHintTextColor(ColorPalette.redText);
+//            return;
+//        }
+        editText.setHintTextColor(ColorPalette.redText);
         editText.setTextColor(ColorPalette.redText);
     }
-
-    public void resetError(){
+    @Override
+    public void resetTextErrorColor(){
         editText.setHintTextColor(ColorPalette.hintText);
         editText.setTextColor(ColorPalette.textPurple);
     }

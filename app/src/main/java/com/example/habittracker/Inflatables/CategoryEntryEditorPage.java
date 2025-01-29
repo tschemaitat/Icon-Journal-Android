@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.Structure;
@@ -43,7 +44,7 @@ public class CategoryEntryEditorPage extends Inflatable{
         CustomEditText uniqueAttributeEditor = (CustomEditText) firstWidget;
         String uniqueAttribute = uniqueAttributeEditor.getText();
         if(uniqueAttribute == null){
-            uniqueAttributeEditor.setError();
+            uniqueAttributeEditor.setTextErrorColor();
             System.out.println("saving entry error: missing unique attribute");
             createSaveErrorDialog(page);
             return false;
@@ -98,7 +99,7 @@ public class CategoryEntryEditorPage extends Inflatable{
     @Override
     public void onOpened() {
         MenuBarManager menuBarManager = PageResources.getPageResources().getMenuBarManager();
-        parentWidget = new ParentWidget(context);
+        parentWidget = new ParentWidget(context, new ViewWrapper(context));
         menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);
 
 

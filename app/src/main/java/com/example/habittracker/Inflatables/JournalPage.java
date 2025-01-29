@@ -3,6 +3,7 @@ package com.example.habittracker.Inflatables;
 import android.content.Context;
 import android.view.View;
 
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -17,7 +18,7 @@ public class JournalPage extends Inflatable{
         System.out.println("opening journal");
         this.context = context;
         this.structure = structure;
-        groupWidget = new GroupWidget(context);
+        groupWidget = new GroupWidget(context, new ViewWrapper(context));
 
 
     }

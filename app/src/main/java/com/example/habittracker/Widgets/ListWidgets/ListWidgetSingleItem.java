@@ -6,6 +6,7 @@ import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.Margin;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -22,8 +23,8 @@ public class ListWidgetSingleItem extends ListWidget {
     private Context context;
     private ListParam param;
 
-    public ListWidgetSingleItem(Context context) {
-        super(context);
+    public ListWidgetSingleItem(Context context, Element wrapperElement) {
+        super(context, wrapperElement);
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getElement());
@@ -37,7 +38,7 @@ public class ListWidgetSingleItem extends ListWidget {
         ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
         for(BaseEntryWidget entryWidget: entryWidgetList){
-            WidgetValue widgetValue = entryWidget.getValue();
+            WidgetValue widgetValue = (WidgetValue) entryWidget.getValue();
             ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
             widgetValueList.add(widgetValue);
             GroupValue groupValue = new GroupValue(widgetValueList);
@@ -53,7 +54,7 @@ public class ListWidgetSingleItem extends ListWidget {
     }
 
     @Override
-    public void setValueListCustom(WidgetValue widgetValue) {
+    public void setValueListCustom(Object widgetValue) {
         MainActivity.log("set value single item");
         ListValue listValue = (ListValue) widgetValue;
         EntryWidgetParam entryWidgetParam = param.cloneableWidget.params.get(0);

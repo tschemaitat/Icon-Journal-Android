@@ -39,6 +39,16 @@ public class TextElement extends Element{
         return textView;
     }
 
+    @Override
+    protected void enableInteraction() {
+        textView.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteraction() {
+        textView.setEnabled(false);
+    }
+
     public void setPadding(Dimensions dimensions) {
         View view = getView();
         view.setPadding(dimensions.getLeft(), dimensions.getTop(), dimensions.getRight(), dimensions.getBottom());

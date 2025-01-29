@@ -8,6 +8,7 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -29,8 +30,8 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     protected Widget ghostItem;
     protected EntryWidgetParam cloneParam;
 
-    public ListWidget(Context context){
-        super(context);
+    public ListWidget(Context context, Element wrapperElement){
+        super(context, wrapperElement);
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getElement());
@@ -50,7 +51,8 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         widgetList = (ArrayList<Widget>) widgetList.clone();
         return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
     }
-    protected void setValueListCustom(WidgetValue widgetValue){
+
+    protected void setValueListCustom(Object widgetValue){
         throw new RuntimeException();
     }
     protected void onItemCreated(Widget widget){
@@ -80,23 +82,34 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     }
     public ArrayList<GroupWidget> getGroupWidgets(){
         ArrayList<GroupWidget> groupWidgets = new ArrayList<>();
-        for(Widget widget: layout.widgets()){
+        for(Object widget: layout.widgets()){
             groupWidgets.add((GroupWidget) widget);
         }
         groupWidgets.remove(groupWidgets.size() - 1);
         return groupWidgets;
     }
     @Override
-    public final void setValueCustom(WidgetValue widgetValue) {
+    public final void setValueCustom(Object widgetValue) {
         layout.remove(ghostItem);
         ghostItem = null;
         MainActivity.log("set value list");
         setValueListCustom(widgetValue);
         addGhostItem(createItem());
     }
-    @Override
-    protected void setHint(String hintString) {
 
+    @Override
+    public void setTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setHint(String hintString) {
+        throw new RuntimeException();
     }
 
     @Override

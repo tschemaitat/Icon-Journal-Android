@@ -81,6 +81,16 @@ public class ScrollElement extends ElementLayoutWithInterface {
         linearElementLayout.remove(index);
     }
 
+    @Override
+    protected void enableInteractionLayout() {
+        lockableScrollView.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteractionLayout() {
+        lockableScrollView.setEnabled(false);
+    }
+
     public View getView(){
         return lockableScrollView;
     }

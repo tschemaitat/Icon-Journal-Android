@@ -12,8 +12,11 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.R;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewLibrary.ElementProvider;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
+import com.example.habittracker.ViewLibrary.ViewElement;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
@@ -25,7 +28,7 @@ import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
-public class StructureWidget implements Widget {
+public class StructureWidget implements ElementProvider {
     private StructureWidgetHeaderView headerView = null;
 
     private StaticDropDown typeDropDown = null;
@@ -46,14 +49,14 @@ public class StructureWidget implements Widget {
     private Runnable moveUp;
     private Runnable moveDown;
 
-    public StructureWidget(Context context, WidgetLayout parent) {
+    public StructureWidget(Context context, WidgetLayout<StructureWidget> parent) {
         MainActivity.log("new structure widget");
         this.context = context;
         layout = new VertLayout(context);
         layout.getView().setId(R.id.structureWidget);
 
         headerView = new StructureWidgetHeaderView(context, ()->{
-            headerView.nameEditor.resetError();
+            headerView.nameEditor.resetTextErrorColor();
         }, ()->{
             MainActivity.log("deleting structureWidget");
             parent.delete(this);
@@ -68,7 +71,7 @@ public class StructureWidget implements Widget {
         });
         layout.add(headerView.getElement());
 
-        typeDropDown = new StaticDropDown(context);
+        typeDropDown = new StaticDropDown(context, new ViewWrapper(context));
         layout.add(typeDropDown.getElement());
         typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload, prevRefItemPath, prevPayload) ->
                 onTypeChange((String)payload, (String)prevPayload));
@@ -192,7 +195,7 @@ public class StructureWidget implements Widget {
             }
         }
         if(headerView.nameEditor.getText() == null){
-            headerView.nameEditor.setError();
+            headerView.nameEditor.setTextErrorColor();
 
             return null;
         }
@@ -209,7 +212,7 @@ public class StructureWidget implements Widget {
 
 
 
-    @Override
+
     public void setParam(EntryWidgetParam param){
         System.out.println("setting param: " + param);
         String type = param.getClassName();
@@ -243,19 +246,19 @@ public class StructureWidget implements Widget {
         }
     }
 
-    @Override
+
     public View getView() {
         return layout.getView();
     }
 
-    @Override
+
     public void setOnDataChangedListener(Runnable runnable) {
         onDataChangeListener = runnable;
     }
 
     @Override
     public Element getElement() {
-        return new Element() {
+        return new ViewElement() {
             @Override
             public View getView() {
                 return getView();

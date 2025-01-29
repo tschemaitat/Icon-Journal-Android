@@ -61,12 +61,22 @@ public class StructureWidgetList implements Widget{
 
     @Override
     public Element getElement() {
-        return new Element() {
-            @Override
-            public View getView() {
-                return widgetLayout.getView();
-            }
-        };
+        return widgetLayout;
+    }
+
+    @Override
+    public void setTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setHint(String string) {
+        throw new RuntimeException();
     }
 
 

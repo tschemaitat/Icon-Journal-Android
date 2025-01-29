@@ -14,6 +14,8 @@ import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ImageButtonElement;
 import com.example.habittracker.ViewLibrary.ImageToggleButtonElement;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
+import com.example.habittracker.ViewLibrary.ViewElement;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 
 public class StructureWidgetHeaderView {
@@ -150,7 +152,7 @@ public class StructureWidgetHeaderView {
 
     private void addNameEditor(String name, Runnable onTextChange){
 
-        nameEditor = new CustomEditText(context);
+        nameEditor = new CustomEditText(context, new ViewWrapper(context));
         nameEditor.setHint("widget name");
         if(name != null)
             nameEditor.setText(name);
@@ -178,7 +180,7 @@ public class StructureWidgetHeaderView {
     }
 
     public Element getElement(){
-        return new Element() {
+        return new ViewElement() {
             @Override
             public View getView() {
                 return getView();

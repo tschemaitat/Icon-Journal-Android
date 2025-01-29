@@ -61,6 +61,16 @@ public class LinearElementLayout extends ElementLayoutWithInterface {
         linearLayout.removeViewAt(index);
     }
 
+    @Override
+    protected void enableInteractionLayout() {
+        linearLayout.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteractionLayout() {
+        linearLayout.setEnabled(false);
+    }
+
     public ArrayList<View> getViewChildren(){
         return getElements().convert((index, element) -> element.getView());
     }

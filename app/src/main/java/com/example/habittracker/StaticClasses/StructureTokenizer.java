@@ -125,7 +125,7 @@ public class StructureTokenizer {
         return new Entry(groupValue, entryId);
     }
 
-    public static WidgetValue getWidgetValue(JSONObject jsonObject) throws JSONException{
+    public static Object getWidgetValue(JSONObject jsonObject) throws JSONException{
         String className = jsonObject.getString(WidgetValue.classNameKey);
         switch(className){
             case GroupValue.className->{return GroupValue.getFromJSON(jsonObject);}

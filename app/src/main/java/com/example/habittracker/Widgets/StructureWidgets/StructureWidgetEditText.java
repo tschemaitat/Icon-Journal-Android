@@ -56,4 +56,19 @@ public class StructureWidgetEditText implements Widget {
     public Element getElement() {
         return null;
     }
+
+    @Override
+    public void setTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void resetTextErrorColor() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setHint(String string) {
+        throw new RuntimeException();
+    }
 }

@@ -29,6 +29,16 @@ public class CheckBoxElement extends Element {
         return checkBox;
     }
 
+    @Override
+    protected void enableInteraction() {
+        checkBox.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteraction() {
+        checkBox.setEnabled(false);
+    }
+
     public CheckBox getCheckBox(){
         return checkBox;
     }

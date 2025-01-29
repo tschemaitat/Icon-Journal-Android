@@ -23,6 +23,16 @@ public class BasicElement extends Element{
         return view;
     }
 
+    @Override
+    protected void enableInteraction() {
+        view.setEnabled(true);
+    }
+
+    @Override
+    protected void disableInteraction() {
+        view.setEnabled(false);
+    }
+
 
     public static class ViewSuperMeasure extends View{
 

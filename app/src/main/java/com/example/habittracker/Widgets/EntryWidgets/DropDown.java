@@ -62,6 +62,10 @@ public class DropDown{
         init();
     }
 
+    public void setButtonColor(int color){
+        buttonSelectionView.setColor(color);
+    }
+
     //region init
     private void init(){
         createButton();

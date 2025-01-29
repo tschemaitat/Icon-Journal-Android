@@ -358,4 +358,16 @@ public class Structure {
             throw new RuntimeException();
         return entries.get(id);
     }
+
+    public void editWidgetValue(RefEntryString refEntryString, WidgetValue widgetValue) {
+        GroupValue groupValue = entries.get(refEntryString.getEntryInStructure().getId());
+        BaseWidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
+        GroupValue parentOfEdit = baseWidgetValue.getParentGroupValue();
+        WidgetInStructure widgetInStructure = refEntryString.getWidgetInStructure();
+        parentOfEdit.editValue(widgetInStructure, widgetValue);
+        //need to figure out how this is going to work
+        //user should be able to choose to edit a widget
+
+
+    }
 }
