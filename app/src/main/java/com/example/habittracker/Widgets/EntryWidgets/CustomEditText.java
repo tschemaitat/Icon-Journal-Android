@@ -189,7 +189,8 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
 
     public void onTextChange(String before, String newText){
         getViewWrapper().resetNameColor();
-        onDataChangedListener().run();
+        onDataChanged();
+
     }
 
     private void setTextListener(){

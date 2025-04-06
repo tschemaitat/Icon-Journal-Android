@@ -9,7 +9,6 @@ import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLa
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
@@ -26,7 +25,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
 
     public static final String className = "group widget";
     public GroupWidget(Context context, Element wrapperElement){
-        super(context, wrapperElement);
+        super(context, wrapperElement, );
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout);

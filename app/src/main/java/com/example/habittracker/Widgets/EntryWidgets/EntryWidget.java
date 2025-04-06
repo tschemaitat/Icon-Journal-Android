@@ -1,10 +1,10 @@
 package com.example.habittracker.Widgets.EntryWidgets;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
+import com.example.habittracker.Inflatables.WidgetDataListener;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewLibrary.Element;
@@ -12,12 +12,10 @@ import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.FocusTreeParent;
 import com.example.habittracker.structurePack.WidgetInStructure;
-import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.structurePack.Structure;
 
@@ -31,6 +29,8 @@ public abstract class EntryWidget implements Widget {
 
     private Context context;
     private FocusTreeParent focusParent;
+    private WidgetDataListener widgetDataListener;
+
 
     public EntryWidget(Context context, Element wrapperElement){
         this.context = context;
@@ -38,6 +38,10 @@ public abstract class EntryWidget implements Widget {
         widgetDebugIdCounter++;
         this.viewWrapper = (ViewWrapper) wrapperElement;
         this.viewWrapper.getView().setId(R.id.entryWidgetWrapper);
+    }
+
+    public void initEntryWidget(WidgetDataListener widgetDataListener){
+        this.widgetDataListener = widgetDataListener;
     }
 //    private void setForegroundOfDisable(){
 //        Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
@@ -105,9 +109,12 @@ public abstract class EntryWidget implements Widget {
         //MainActivity.log("set listener on: "+this+"\nrunnable: " + runnable);
         this.onDataChanged = runnable;
     }
-    public final Runnable onDataChangedListener(){
-        //MainActivity.log("getting on data changed listener: " + this);
-        return onDataChanged;
+//    public final Runnable onDataChangedListener(){
+//        //MainActivity.log("getting on data changed listener: " + this);
+//        return onDataChanged;
+//    }
+    protected void onDataChanged(){
+
     }
 
     public void setFocusParent(FocusTreeParent parent){

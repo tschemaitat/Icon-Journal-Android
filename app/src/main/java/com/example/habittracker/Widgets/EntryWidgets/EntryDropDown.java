@@ -49,7 +49,7 @@ public class EntryDropDown extends BaseEntryWidget {
 
     private void onDataChanged(RefItemPath refItemPath){
         MainActivity.log("on data changed: " + refItemPath);
-        onDataChangedListener().run();
+        onDataChanged();
     }
 
     @Override

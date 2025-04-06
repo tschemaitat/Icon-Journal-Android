@@ -97,7 +97,7 @@ public class Structure {
         entries.put(entry.getId(), entry.getGroupValue());
     }
 
-    public void addEntry(GroupValue entryData){
+    public EntryInStructure addEntry(GroupValue entryData){
         Set<EntryId> entryIdSet = entries.keySet();
         while(entryIdSet.contains(new EntryId(idCount)))
             idCount++;
@@ -107,6 +107,7 @@ public class Structure {
         idCount++;
         entries.put(entryInStructure.getId(), entryData);
         connectReferencesOfGroupValue(entryId, entryData);
+        return entryInStructure;
     }
 
     private void connectReferencesOfGroupValue(EntryId entryId, GroupValue groupValue){
@@ -367,7 +368,5 @@ public class Structure {
         parentOfEdit.editValue(widgetInStructure, widgetValue);
         //need to figure out how this is going to work
         //user should be able to choose to edit a widget
-
-
     }
 }

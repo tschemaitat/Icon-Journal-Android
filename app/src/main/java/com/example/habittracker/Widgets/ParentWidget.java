@@ -24,7 +24,7 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     private ListItemIdProvider listItemIdParent;
     private Context context;
     public ParentWidget(Context context, Element wrapperElement){
-        super(context, wrapperElement);
+        super(context, wrapperElement, );
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout);
