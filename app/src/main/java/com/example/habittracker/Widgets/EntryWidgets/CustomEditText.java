@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.example.habittracker.Inflatables.PageResources;
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.Margin;
@@ -39,8 +37,8 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
 
     private String currentText = nullText;
 
-    public CustomEditText(Context context, Element wrapperElement) {
-        super(context, wrapperElement);
+    public CustomEditText(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
 
 

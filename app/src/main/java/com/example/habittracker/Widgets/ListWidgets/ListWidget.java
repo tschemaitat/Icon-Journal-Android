@@ -2,13 +2,15 @@ package com.example.habittracker.Widgets.ListWidgets;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.view.View;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
@@ -27,11 +29,11 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     public static final String className = "list";
     private Context context;
     protected WidgetLayout layout;
-    protected Widget ghostItem;
+    protected EntryWidget ghostItem;
     protected EntryWidgetParam cloneParam;
 
-    public ListWidget(Context context, Element wrapperElement){
-        super(context, wrapperElement);
+    public ListWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getElement());
@@ -55,10 +57,10 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     protected void setValueListCustom(Object widgetValue){
         throw new RuntimeException();
     }
-    protected void onItemCreated(Widget widget){
+    protected void onItemCreated(EntryWidget widget){
         throw new RuntimeException();
     }
-    protected void addGhostItem(Widget widget){
+    protected void addGhostItem(EntryWidget widget){
         MainActivity.log("adding ghost");
         widget.getView().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
         ghostItem = widget;
@@ -68,14 +70,27 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     private void onGhostData() {
         MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
-        ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
+        //ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
+        ghostItem.setWidgetResources(entryWidgetResources);
         //setViewDraggable(ghostItem);
         ghostItem = null;
         addGhostItem(createItem());
     }
     protected final EntryWidget createItem(){
         MainActivity.log("list widget: creating item");
-        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, ()->onDataChangedListener().run());
+        EntryWidgetResources initialResources = new EntryWidgetResources(entryWidgetResources.keyBoardActionManager, entryWidgetResources.invisibleEditTextManager,
+                new EntryWidgetResources.EntryOnDataChange() {
+                    @Override
+                    public void onBaseEntryDataChange(RefEntryString refEntryString, WidgetValue widgetValue) {
+                        onGhostData();
+                    }
+
+                    @Override
+                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue) {
+                        onGhostData();
+                    }
+                }, entryWidgetResources.entryInStructure);
+        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, initialResources);
         entryWidget.setFocusParent(this);
         onItemCreated(entryWidget);
         return entryWidget;

@@ -4,9 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.example.habittracker.Inflatables.WidgetDataListener;
+
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
@@ -29,20 +30,24 @@ public abstract class EntryWidget implements Widget {
 
     private Context context;
     private FocusTreeParent focusParent;
-    private WidgetDataListener widgetDataListener;
+
+    protected EntryWidgetResources entryWidgetResources;
 
 
-    public EntryWidget(Context context, Element wrapperElement){
+    public EntryWidget(Context context, Element wrapperElement,
+                       EntryWidgetResources entryWidgetResources){
         this.context = context;
         widgetDebugId = widgetDebugIdCounter;
         widgetDebugIdCounter++;
         this.viewWrapper = (ViewWrapper) wrapperElement;
         this.viewWrapper.getView().setId(R.id.entryWidgetWrapper);
+        this.entryWidgetResources = entryWidgetResources;
     }
 
-    public void initEntryWidget(WidgetDataListener widgetDataListener){
-        this.widgetDataListener = widgetDataListener;
+    public void setWidgetResources(EntryWidgetResources entryWidgetResources){
+        this.entryWidgetResources = entryWidgetResources;
     }
+
 //    private void setForegroundOfDisable(){
 //        Drawable foregroundDrawable = context.getDrawable(R.drawable.rounded_foreground_inset);
 //        Margin currentPadding = Margin.getPadding(getView());
@@ -60,10 +65,10 @@ public abstract class EntryWidget implements Widget {
         setValueCustom(widgetValue);
     }
     public final Object getValue(){
-        Object tree = getEntryValueTreeCustom();
+        WidgetValue tree = getEntryValueTreeCustom();
         return tree;
     }
-    protected abstract Object getEntryValueTreeCustom();
+    protected abstract WidgetValue getEntryValueTreeCustom();
 
     public void onFocusChange(boolean hasFocus){
         MainActivity.log("entry widget on focus change: " + this);

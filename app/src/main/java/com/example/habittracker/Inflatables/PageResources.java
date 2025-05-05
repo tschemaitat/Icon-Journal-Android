@@ -5,7 +5,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
-import com.example.habittracker.StaticStateManagers.WidgetResources;
 
 public class PageResources {
     private static PageResources staticPageResources;
@@ -20,7 +19,6 @@ public class PageResources {
 
     private Context context;
     private MenuBarManager menuBarManager;
-    private WidgetResources widgetResources;
     private KeyBoardActionManager keyBoardActionManager;
     public PageResources(Context context, LinearLayout menuBarLayout, LinearLayout invisibleMenuBarLayout,
                          ImageButton menuHideButton){

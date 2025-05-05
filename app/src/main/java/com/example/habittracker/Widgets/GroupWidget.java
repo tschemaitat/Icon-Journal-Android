@@ -6,6 +6,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Values.GroupValue;
@@ -24,8 +25,8 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     Context context;
 
     public static final String className = "group widget";
-    public GroupWidget(Context context, Element wrapperElement){
-        super(context, wrapperElement, );
+    public GroupWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout);
@@ -50,7 +51,7 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     @Override
     public void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
-        ArrayList<Widget> inflatedWidgets = GLib.inflateAll(groupParams.params, ()->onDataChangedListener().run(), context);
+        ArrayList<Widget> inflatedWidgets = GLib.inflateAll(groupParams.params,entryWidgetResources , context);
         for(Widget widget: inflatedWidgets){
             layout.add((BaseEntryWidget) widget);
         }

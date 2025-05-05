@@ -2,13 +2,14 @@ package com.example.habittracker.Widgets.ListWidgets;
 
 import android.content.Context;
 
-import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -24,8 +25,8 @@ public class ListWidgetMultipleItems extends ListWidget {
     public static String childClassName = "list multiple items";
     private ListParam listMultiItemParam = null;
     private Context context;
-    public ListWidgetMultipleItems(Context context, Element wrapperElement) {
-        super(context, wrapperElement);
+    public ListWidgetMultipleItems(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         Margin.setListWidgetLayout(layout.getLinearElementLayout());
     }
@@ -46,7 +47,7 @@ public class ListWidgetMultipleItems extends ListWidget {
 
 
     @Override
-    protected void onItemCreated(Widget item){
+    protected void onItemCreated(EntryWidget item){
         MainActivity.log("setting group widget onItemCreated");
         GroupWidget groupWidget = (GroupWidget)item;
         LinearElementLayout linLayout = groupWidget.getLinearElementLayout();

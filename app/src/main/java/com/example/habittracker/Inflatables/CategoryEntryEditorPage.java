@@ -4,24 +4,19 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
+
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.Structure;
-import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
-import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
-import com.example.habittracker.Widgets.GroupWidget;
 
-import com.example.habittracker.defaultImportPackage.ArrayList;
-import com.example.habittracker.structurePack.WidgetInStructure;
-
-import java.util.Collections;
-
-public class CategoryEntryEditorPage extends Inflatable implements WidgetDataListener {
+public class CategoryEntryEditorPage extends Inflatable{
     private Context context;
     private Structure structure;
     private EntryInStructure entryInStructure;
@@ -87,10 +82,8 @@ public class CategoryEntryEditorPage extends Inflatable implements WidgetDataLis
 //        discarding = true;
 //        MainActivity.changePage(page);
 //    }
-    @Override
-    public void onWidgetChangedData(Object value, RefEntryString refEntryString){
-        structure.editWidgetValue(refEntryString, (WidgetValue)value);
-    }
+
+
 
     @Override
     public View getView() {
@@ -107,7 +100,19 @@ public class CategoryEntryEditorPage extends Inflatable implements WidgetDataLis
     @Override
     public void onOpened() {
         MenuBarManager menuBarManager = PageResources.getPageResources().getMenuBarManager();
-        parentWidget = new ParentWidget(context, new ViewWrapper(context));
+        parentWidget = new ParentWidget(context, new ViewWrapper(context),
+                new EntryWidgetResources(PageResources.getPageResources().getKeyBoardActionManager(),
+                        InvisibleEditTextManager.getManager(), new EntryWidgetResources.EntryOnDataChange() {
+                    @Override
+                    public void onBaseEntryDataChange(RefEntryString refEntryString, WidgetValue widgetValue) {
+                        structure.editWidgetValue(refEntryString, (WidgetValue)widgetValue);
+                    }
+
+                    @Override
+                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue) {
+                        structure.addListItem(refEntryString, groupValue);
+                    }
+                }, entryInStructure));
         menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);
 //
 //
@@ -144,6 +149,4 @@ public class CategoryEntryEditorPage extends Inflatable implements WidgetDataLis
 
 
 }
-public interface WidgetDataListener{
-    void onWidgetChangedData(Object value, RefEntryString refEntryString);
-}
+

@@ -2,14 +2,13 @@ package com.example.habittracker.Widgets.StructureWidgets;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.example.habittracker.MainActivity;
-import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
-import com.example.habittracker.ViewLibrary.ButtonElement;
+import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
+import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ImageButtonElement;
 import com.example.habittracker.ViewLibrary.ImageToggleButtonElement;
@@ -17,6 +16,7 @@ import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeEleme
 import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 
 public class StructureWidgetHeaderView {
     public RelativeElementLayout relativeLayout;
@@ -152,7 +152,7 @@ public class StructureWidgetHeaderView {
 
     private void addNameEditor(String name, Runnable onTextChange){
 
-        nameEditor = new CustomEditText(context, new ViewWrapper(context));
+        nameEditor = new CustomEditText(context, new ViewWrapper(context), new EntryWidgetResources(null, InvisibleEditTextManager.getManager(), null, null));
         nameEditor.setHint("widget name");
         if(name != null)
             nameEditor.setText(name);

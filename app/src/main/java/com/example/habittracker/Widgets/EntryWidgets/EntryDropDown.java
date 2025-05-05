@@ -30,8 +30,8 @@ public class EntryDropDown extends BaseEntryWidget {
     private DropDownPage dropDownPage = null;
     private Context context;
 
-    public EntryDropDown(Context context, Element wrapperElement){
-        super(context, wrapperElement);
+    public EntryDropDown(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         init();
     }

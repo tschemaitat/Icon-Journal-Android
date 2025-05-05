@@ -176,7 +176,7 @@ public class GroupValue implements ThrowableEquals {
         return parent;
     }
 
-    public BaseWidgetValue getValue(WidgetPath path, ArrayList<ListItemId> listIdList) {
+    public WidgetValue getValue(WidgetPath path, ArrayList<ListItemId> listIdList) {
         for(ListItemId listItemId: listIdList){
             if(listItemId == null){
                 MainActivity.log("list has a null id: " + listIdList);
@@ -189,9 +189,9 @@ public class GroupValue implements ThrowableEquals {
         return getValueIteration(path, listIdList, 0);
     }
 
-    public BaseWidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level){
+    public WidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level){
         if(level == path.size() - 1){
-            BaseWidgetValue baseWidgetValue = getBaseWidgetValueByWidget(path.get(level));
+            WidgetValue baseWidgetValue = getBaseWidgetValueByWidget(path.get(level));
             return baseWidgetValue;
         }
         ListValue listValue = getListValueByWidget(path.get(level));
@@ -294,7 +294,7 @@ public class GroupValue implements ThrowableEquals {
         return "<GroupValue, listId: " + listItemId + ">";
     }
 
-    public BaseWidgetValue getValue(RefEntryString refEntryString) {
+    public WidgetValue getValue(RefEntryString refEntryString) {
         return getValue(refEntryString.getWidgetInStructure().getWidgetPath(), refEntryString.getListIdList());
     }
 

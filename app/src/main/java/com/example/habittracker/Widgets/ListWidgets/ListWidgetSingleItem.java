@@ -7,6 +7,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -23,8 +25,8 @@ public class ListWidgetSingleItem extends ListWidget {
     private Context context;
     private ListParam param;
 
-    public ListWidgetSingleItem(Context context, Element wrapperElement) {
-        super(context, wrapperElement);
+    public ListWidgetSingleItem(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
         setViewWrapperChild(layout.getElement());
@@ -49,7 +51,7 @@ public class ListWidgetSingleItem extends ListWidget {
     }
 
     @Override
-    public void onItemCreated(Widget widget){
+    public void onItemCreated(EntryWidget widget){
 
     }
 

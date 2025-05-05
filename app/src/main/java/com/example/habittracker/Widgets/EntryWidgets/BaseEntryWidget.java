@@ -13,12 +13,18 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 
 public abstract class BaseEntryWidget extends EntryWidget{
     private ListItemIdProvider listItemIdProvider;
-    public BaseEntryWidget(Context context, Element wrapperElement) {
-        super(context, wrapperElement);
+    public BaseEntryWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+        super(context, wrapperElement, entryWidgetResources);
     }
 
     public void setListItemIdProvider(ListItemIdProvider listItemIdProvider) {
         this.listItemIdProvider = listItemIdProvider;
+    }
+
+    @Override
+    protected void onDataChanged(){
+        entryWidgetResources.entryOnDataChange.onBaseEntryDataChange(
+                getLocation(entryWidgetResources.entryInStructure).get(0), getEntryValueTreeCustom());
     }
 
     public ListItemIdProvider getListItemIdProvider(){

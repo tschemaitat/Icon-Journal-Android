@@ -12,6 +12,7 @@ import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.Values.BaseWidgetValue;
 import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueReference;
 import com.example.habittracker.Values.WidgetValueString;
@@ -360,13 +361,20 @@ public class Structure {
         return entries.get(id);
     }
 
-    public void editWidgetValue(RefEntryString refEntryString, WidgetValue widgetValue) {
+    public void editWidgetValue(RefEntryString refEntryString, WidgetValue addWidgetValue) {
         GroupValue groupValue = entries.get(refEntryString.getEntryInStructure().getId());
-        BaseWidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
+        WidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
         GroupValue parentOfEdit = baseWidgetValue.getParentGroupValue();
         WidgetInStructure widgetInStructure = refEntryString.getWidgetInStructure();
-        parentOfEdit.editValue(widgetInStructure, widgetValue);
+        parentOfEdit.editValue(widgetInStructure, addWidgetValue);
         //need to figure out how this is going to work
         //user should be able to choose to edit a widget
+    }
+
+    public void addListItem(RefEntryString refEntryString, GroupValue addGroupItem) {
+        GroupValue groupValue = entries.get(refEntryString.getEntryInStructure().getId());
+        WidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
+        ListValue listValue = (ListValue) baseWidgetValue;
+        listValue.addItem(addGroupItem);
     }
 }

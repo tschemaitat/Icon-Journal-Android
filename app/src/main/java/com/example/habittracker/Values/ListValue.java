@@ -88,7 +88,7 @@ public class ListValue extends WidgetValue {
         return "list: " + getWidgetId() + " (" + groupValueList.size() +")";
     }
 
-    public BaseWidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level) {
+    public WidgetValue getValueIteration(WidgetPath path, ArrayList<ListItemId> listIdList, int level) {
         GroupValue groupValue = getByListItemId(listIdList.get(level));
         return groupValue.getValueIteration(path, listIdList, level + 1);
     }
@@ -169,5 +169,9 @@ public class ListValue extends WidgetValue {
     public String toString(){
         String values = Lists.string(groupValueList, (groupValue)->groupValue.debugString());
         return "ListValue, id: " + getIntegerId() + ", values: " + values + ">";
+    }
+
+    public void addItem(GroupValue groupValue) {
+        groupValueList.add(groupValue);
     }
 }

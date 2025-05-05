@@ -25,6 +25,7 @@ import com.example.habittracker.R;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Widgets.EntryWidgets.EntryDropDown;
@@ -130,35 +131,35 @@ public class GLib {
         return view;
     }
 
-    public static ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, Runnable onDataChange, Context context){
+    public static ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, EntryWidgetResources entryWidgetResources, Context context){
         ArrayList<Widget> widgets = new ArrayList<>();
         System.out.println("setting widgets: " + params.size());
         for(int i = 0; i < params.size(); i++){
             System.out.println("\tadding widget and inflating: ");
-            widgets.add(GLib.inflateWidget(context, params.get(i), onDataChange));
+            widgets.add(GLib.inflateWidget(context, params.get(i), entryWidgetResources));
         }
         return widgets;
     }
 
-    public static Widget inflateWidget(Context context, EntryWidgetParam params, Runnable onDataChange){
+    public static Widget inflateWidget(Context context, EntryWidgetParam params, EntryWidgetResources entryWidgetResources){
 
         String className = params.getClassName();
         //System.out.println("inflating widget: " + className);
         Widget widget = null;
         switch (className) {
             case DropDown.className -> {
-                widget = new EntryDropDown(context, new ViewWrapper(context));
-                widget.setOnDataChangedListener(onDataChange);
+                widget = new EntryDropDown(context, new ViewWrapper(context), entryWidgetResources);
+                //widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
             case ListWidget.className->{
                 ListParam listParam = (ListParam) params;
                 if(listParam.cloneableWidget.params.size() > 1){
-                    widget = new ListWidgetMultipleItems(context, new ViewWrapper(context));
+                    widget = new ListWidgetMultipleItems(context, new ViewWrapper(context), entryWidgetResources);
                 }else{
-                    widget = new ListWidgetSingleItem(context, new ViewWrapper(context));
+                    widget = new ListWidgetSingleItem(context, new ViewWrapper(context), entryWidgetResources);
                 }
-                widget.setOnDataChangedListener(onDataChange);
+                //widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
 
 
@@ -178,13 +179,13 @@ public class GLib {
 //                widget.setParam(params);
 //            }
             case GroupWidget.className -> {
-                widget = new GroupWidget(context, new ViewWrapper(context));
-                widget.setOnDataChangedListener(onDataChange);
+                widget = new GroupWidget(context, new ViewWrapper(context), entryWidgetResources);
+                //widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
             case CustomEditText.className -> {
-                widget = new CustomEditText(context, new ViewWrapper(context));
-                widget.setOnDataChangedListener(onDataChange);
+                widget = new CustomEditText(context, new ViewWrapper(context), entryWidgetResources);
+                //widget.setOnDataChangedListener(onDataChange);
                 widget.setParam(params);
             }
             default -> throw new RuntimeException("unknown widget class: " + className);

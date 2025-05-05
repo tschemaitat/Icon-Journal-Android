@@ -22,7 +22,7 @@ public class TextSlider extends BaseEntryWidget {
     Context context;
     SliderWithLabels sliderWithLabels;
     public TextSlider(Context context, Element wrapperElement) {
-        super(context, wrapperElement);
+        super(context, wrapperElement, null);
         sliderWithLabels = new SliderWithLabels(context);
         setViewWrapperChild(new ViewElement() {
             @Override
