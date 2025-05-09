@@ -177,6 +177,15 @@ public class ViewWrapper extends ViewElement{
         return nameLayout.getView();
     }
 
+    public Element getElement(){
+        return new ViewElement() {
+            @Override
+            public View getView() {
+                return nameLayout.getView();
+            }
+        };
+    }
+
     public void setNameRed(){
         int colorRed = Color.RED;
         if(nameTextView != null)

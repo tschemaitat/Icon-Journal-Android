@@ -11,6 +11,8 @@ import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ViewElement;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
@@ -20,7 +22,7 @@ import com.example.habittracker.structurePack.WidgetInStructure;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class EntryDropDown extends BaseEntryWidget {
+public class EntryDropDown extends AbstractWidget {
     private Structure referenceStructure = null;
     private WidgetInStructure valueId = null;
     private ArrayList<WidgetInStructure> groupIdList = new ArrayList<>();
@@ -30,24 +32,20 @@ public class EntryDropDown extends BaseEntryWidget {
     private DropDownPage dropDownPage = null;
     private Context context;
 
-    public EntryDropDown(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
-        super(context, wrapperElement, entryWidgetResources);
+    public EntryDropDown(Context context, ViewWrapper viewWrapper){
+        super(context, viewWrapper);
+
         this.context = context;
         init();
     }
 
     private void init(){
 
-        dropDown = new DropDown(context, (refItemPath, payload, prevRefItemPath, prevPayload) -> onDataChanged((RefItemPath)payload));
-        setViewWrapperChild(new ViewElement() {
-            @Override
-            public View getView() {
-                return dropDown.getView();
-            }
-        });
+        dropDown = new DropDown(context, (refItemPath, payload, prevRefItemPath, prevPayload) -> onDataChangedCustom((RefItemPath)payload));
+        setWrapperChild();
     }
 
-    private void onDataChanged(RefItemPath refItemPath){
+    private void onDataChangedCustom(RefItemPath refItemPath){
         MainActivity.log("on data changed: " + refItemPath);
         onDataChanged();
     }
@@ -84,6 +82,16 @@ public class EntryDropDown extends BaseEntryWidget {
 
     }
 
+    @Override
+    Element widgetGetElement() {
+        return new ViewElement() {
+            @Override
+            public View getView() {
+                return dropDown.getView();
+            }
+        };
+    }
+
     public void setSelected(CachedString item){
         dropDown.setSelectedNonPath(item);
         //dropDown.setSelectedPath(itemPath);
@@ -96,7 +104,7 @@ public class EntryDropDown extends BaseEntryWidget {
     }
 
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
+    public Object getValue() {
         MainActivity.log("saving value path: " + dropDown.getSelectedPath());
         if(dropDown.getSelectedPath() == null)
             return null;

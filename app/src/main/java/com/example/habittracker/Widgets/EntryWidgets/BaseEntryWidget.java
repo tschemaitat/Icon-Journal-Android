@@ -45,17 +45,7 @@ public abstract class BaseEntryWidget extends EntryWidget{
 
     public abstract void setHint(String hintString);
 
-    public ArrayList<RefEntryString> getLocation(EntryInStructure entryInStructure) {
-        if(listItemIdProvider == null){
-            MainActivity.log("provider null: " + this);
-            throw new RuntimeException();
-        }
-        ArrayList<RefEntryString> resultList = new ArrayList<>();
-        RefEntryString result = new RefEntryString(getWidgetInStructure(),
-                entryInStructure, listItemIdProvider.getListItemIdList());
-        resultList.add(result);
-        return resultList;
-    }
+
 
     public String getNameAndLocation(){
         ArrayList<ListItemId> itemIds = getListItemIdProvider().getListItemIdList();
