@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.ListItemId;
@@ -21,11 +23,17 @@ public abstract class BaseEntryWidget extends EntryWidget{
         this.listItemIdProvider = listItemIdProvider;
     }
 
+    //TODO: i need to make this more clear
+    //this should only be call when making an edit, so it shouldn't be call by listwidget?
+    //because the child of list widget would make the call, list does not call the edit
     @Override
     protected void onDataChanged(){
+
         entryWidgetResources.entryOnDataChange.onBaseEntryDataChange(
-                getLocation(entryWidgetResources.entryInStructure).get(0), getEntryValueTreeCustom());
+                getLocation(entryWidgetResources.entryInStructure).get(0), (WidgetValue) getEntryValueTreeCustom());
     }
+
+
 
     public ListItemIdProvider getListItemIdProvider(){
         return listItemIdProvider;

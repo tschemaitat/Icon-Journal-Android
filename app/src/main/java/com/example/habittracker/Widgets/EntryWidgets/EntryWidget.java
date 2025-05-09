@@ -65,10 +65,11 @@ public abstract class EntryWidget implements Widget {
         setValueCustom(widgetValue);
     }
     public final Object getValue(){
-        WidgetValue tree = getEntryValueTreeCustom();
+        Object tree = getEntryValueTreeCustom();
         return tree;
     }
-    protected abstract WidgetValue getEntryValueTreeCustom();
+    //returns widget value or group value
+    protected abstract Object getEntryValueTreeCustom();
 
     public void onFocusChange(boolean hasFocus){
         MainActivity.log("entry widget on focus change: " + this);

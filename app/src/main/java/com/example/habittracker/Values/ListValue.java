@@ -16,7 +16,9 @@ import org.json.JSONObject;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class ListValue extends WidgetValue {
     public static final String className = "list value";
@@ -171,7 +173,26 @@ public class ListValue extends WidgetValue {
         return "ListValue, id: " + getIntegerId() + ", values: " + values + ">";
     }
 
-    public void addItem(GroupValue groupValue) {
-        groupValueList.add(groupValue);
+    public void addItem(GroupValue addGroupValue) {
+        int max = 0;
+        //just checking to see if the ids are messed up
+        Set<Integer> ids = new HashSet<>();
+        for(GroupValue groupValue: groupValueList){
+            Integer eachId = groupValue.getListItemId().getIntegerId();
+            if(ids.contains(eachId)){
+                throw new RuntimeException();
+            }
+            max = Integer.max(max, eachId);
+        }
+        //idk if i set listItemId before this so this will tell me if it was set
+        if(addGroupValue.getListItemId() != null){
+            throw new RuntimeException();
+        }
+        addGroupValue.setListItemId(new ListItemId(max + 1));
+        groupValueList.add(addGroupValue);
+
+
+        //im having the listValue init the listItemId
+
     }
 }

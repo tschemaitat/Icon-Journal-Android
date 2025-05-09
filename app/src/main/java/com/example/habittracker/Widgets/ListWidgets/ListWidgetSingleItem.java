@@ -9,6 +9,7 @@ import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
+import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
@@ -18,6 +19,7 @@ import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.structurePack.ListItemId;
 
 public class ListWidgetSingleItem extends ListWidget {
     public static final String className = "list";
@@ -35,19 +37,42 @@ public class ListWidgetSingleItem extends ListWidget {
 
     }
 
+    public static GroupValue createGroupValueFromWidgetValue(BaseEntryWidget baseEntryWidget){
+        WidgetValue widgetValue = (WidgetValue) baseEntryWidget.getValue();
+        ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
+        widgetValueList.add(widgetValue);
+        GroupValue groupValue = new GroupValue(widgetValueList);
+        groupValue.setListItemId(baseEntryWidget.getListItemId());
+        return groupValue;
+    }
+
     @Override
     public WidgetValue getEntryValueTreeCustom() {
         ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
         for(BaseEntryWidget entryWidget: entryWidgetList){
-            WidgetValue widgetValue = (WidgetValue) entryWidget.getValue();
-            ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
-            widgetValueList.add(widgetValue);
-            GroupValue groupValue = new GroupValue(widgetValueList);
-            groupValue.setListItemId(entryWidget.getListItemId());
-            groupValueList.add(groupValue);
+            groupValueList.add(createGroupValueFromWidgetValue(entryWidget));
         }
         return new ListValue(param.getWidgetInStructure().getWidgetId(), groupValueList);
+    }
+
+    @Override
+    public GroupValue getGroupValueSingleItem(ListItemId listItemId) {
+
+        ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
+        BaseEntryWidget selectedWidget = null;
+        for(BaseEntryWidget entryWidget: entryWidgetList){
+            if(entryWidget.getListItemId().equals(listItemId)){
+                selectedWidget = entryWidget;
+                break;
+            }
+        }
+        WidgetValue widgetValue = (WidgetValue) selectedWidget.getValue();
+        ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
+        widgetValueList.add(widgetValue);
+        GroupValue groupValue = new GroupValue(widgetValueList);
+        groupValue.setListItemId(selectedWidget.getListItemId());
+        return groupValue;
     }
 
     @Override

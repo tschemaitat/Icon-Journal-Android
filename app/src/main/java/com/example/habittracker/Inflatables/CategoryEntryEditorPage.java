@@ -105,12 +105,12 @@ public class CategoryEntryEditorPage extends Inflatable{
                         InvisibleEditTextManager.getManager(), new EntryWidgetResources.EntryOnDataChange() {
                     @Override
                     public void onBaseEntryDataChange(RefEntryString refEntryString, WidgetValue widgetValue) {
-                        structure.editWidgetValue(refEntryString, (WidgetValue)widgetValue);
+                        structure.editWidgetValue(refEntryString, widgetValue);
                     }
 
                     @Override
-                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue) {
-                        structure.addListItem(refEntryString, groupValue);
+                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue, EntryWidgetResources.ListIdCallBack listIdCallBack) {
+                        structure.addListItem(refEntryString, groupValue, listIdCallBack);
                     }
                 }, entryInStructure));
         menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);

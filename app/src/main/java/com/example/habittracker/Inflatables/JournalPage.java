@@ -18,7 +18,7 @@ public class JournalPage extends Inflatable{
         System.out.println("opening journal");
         this.context = context;
         this.structure = structure;
-        groupWidget = new GroupWidget(context, new ViewWrapper(context), entryWidgetResources);
+        groupWidget = new GroupWidget(context, new ViewWrapper(context), null);
 
 
     }

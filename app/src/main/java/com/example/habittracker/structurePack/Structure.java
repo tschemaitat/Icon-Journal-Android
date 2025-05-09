@@ -15,13 +15,10 @@ import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueReference;
-import com.example.habittracker.Values.WidgetValueString;
-import com.example.habittracker.Widgets.WidgetParams.DropDownParam;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
-import com.example.habittracker.defaultImportPackage.ImmutableList;
-import com.example.habittracker.defaultImportPackage.ListGetterInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -371,10 +368,20 @@ public class Structure {
         //user should be able to choose to edit a widget
     }
 
-    public void addListItem(RefEntryString refEntryString, GroupValue addGroupItem) {
+    public void addListItem(RefEntryString refEntryString, GroupValue addGroupItem, EntryWidgetResources.ListIdCallBack listIdCallBack) {
+        //the new group value should have no id
+        //then listValue init's the id
+        //then tell the widget that new id to correctly create a refEntryString for it
+        //refEntryString should refer to the listWidget
+
         GroupValue groupValue = entries.get(refEntryString.getEntryInStructure().getId());
         WidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
         ListValue listValue = (ListValue) baseWidgetValue;
         listValue.addItem(addGroupItem);
+        //listValue should init list id right now
+        if(addGroupItem.getListItemId() == null){
+            throw new RuntimeException();
+        }
+        listIdCallBack.giveListId(addGroupItem.getListItemId());
     }
 }

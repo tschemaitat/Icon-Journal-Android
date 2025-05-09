@@ -22,6 +22,7 @@ import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.Widgets.Widget;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
+import com.example.habittracker.structurePack.ListItemId;
 
 public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 
@@ -43,6 +44,8 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
 
     }
     protected ArrayList<EntryWidget> getWidgetListWithoutGhost(){
+        if(ghostItem == null)
+            throw new RuntimeException();
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();
         widgetList.remove(widgetList.size() - 1);
@@ -68,10 +71,21 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         layout.add(widget);
     }
     private void onGhostData() {
+        if(ghostItem == null)
+            throw new RuntimeException();
         MainActivity.log("on ghost data");
         ghostItem.getView().setForeground(null);
         //ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
         ghostItem.setWidgetResources(entryWidgetResources);
+        //TODO: need to have the ghost create the initial data and edit it in
+        entryWidgetResources.entryOnDataChange.onListItemCreated(
+                getLocation(entryWidgetResources.entryInStructure).get(0),
+                ListWidgetSingleItem.createGroupValueFromWidgetValue((BaseEntryWidget) ghostItem), new EntryWidgetResources.ListIdCallBack() {
+                    @Override
+                    public void giveListId(ListItemId listItemId) {
+                        ((BaseEntryWidget) ghostItem).setListItemIdProvider(new SingleItemIdProvider(listItemId));
+                    }
+                });
         //setViewDraggable(ghostItem);
         ghostItem = null;
         addGhostItem(createItem());
@@ -86,7 +100,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
                     }
 
                     @Override
-                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue) {
+                    public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue, EntryWidgetResources.ListIdCallBack listIdCallBack) {
                         onGhostData();
                     }
                 }, entryWidgetResources.entryInStructure);
@@ -149,6 +163,13 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
     public WidgetValue getEntryValueTreeCustom() {
         throw new RuntimeException();
     }
+
+
+    public GroupValue getGroupValueSingleItem(ListItemId listItemId) {
+        throw new RuntimeException();
+    }
+
+
     @Override
     public void setParamCustom(EntryWidgetParam param){
         throw new RuntimeException();
