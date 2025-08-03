@@ -23,12 +23,13 @@ import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
 import com.example.habittracker.ViewLibrary.ViewElement;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.WidgetParams.EditTextParam;
 
-public class CustomEditText extends BaseEntryWidget implements EditableWidget {
+public class CustomEditText extends AbstractWidget {
     public static final String className = "edit text";
     public static final String nullText = "";
     private LinearElementLayout linLayout;
@@ -37,7 +38,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
 
     private String currentText = nullText;
 
-    public CustomEditText(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+    public CustomEditText(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources) {
         super(context, wrapperElement, entryWidgetResources);
         this.context = context;
 
@@ -103,11 +104,21 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
+    @Override
+    public Element widgetGetElement(){
+        return new ViewElement() {
+            @Override
+            public View getView() {
+                return linLayout.getView();
+            }
+        };
+    }
+
     private void init(){
 
 
         linLayout = new VertLayout(context);
-        setViewWrapperChild(linLayout);
+        setWrapperChild();
         //editTextLayout = (TextInputLayout) GLib.inflate(R.layout.text_input_layout);
         editText = new EditText(context);
         editText.setPadding(10,0,0,0);
@@ -142,7 +153,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
         editText.setOnEditorActionListener((v, actionId, event) -> {
             return InvisibleEditTextManager.getManager().onActionListenerFromEditText(actionId);
         });
-        EntryWidget thisEntryWidget = this;
+        AbstractWidget thisEntryWidget = this;
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -236,7 +247,7 @@ public class CustomEditText extends BaseEntryWidget implements EditableWidget {
     }
 
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
+    public WidgetValue getValue() {
         //MainActivity.log("returning data tree");
         //MainActivity.log("getText() = " + getText());
         return new WidgetValueString(getWidgetId(), new LiteralString(getText()));

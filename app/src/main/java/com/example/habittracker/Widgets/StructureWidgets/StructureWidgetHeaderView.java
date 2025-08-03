@@ -33,6 +33,7 @@ public class StructureWidgetHeaderView {
         relativeLayout = new RelativeElementLayout(context);
         Margin.setStructureWidgetHeader(this);
         addNameEditor(null, onTextChange);
+        MainActivity.log("nameEditor element params: " + nameEditor.getElement().getLayoutParams());
         addDeleteButton(onDelete);
         addMoveButtons(moveUp, moveDown);
         pressedStarListener = pressStar;
@@ -40,7 +41,7 @@ public class StructureWidgetHeaderView {
         relativeLayout.addRule(starButton).below(downButton);
         relativeLayout.addRule(downButton).rightOf(starButton);
         relativeLayout.addRule(upButton).rightOf(downButton);
-
+        MainActivity.log("nameEditor element params: " + nameEditor.getElement().getLayoutParams());
         relativeLayout.addRule(nameEditor.getElement()).rightOf(starButton);
         relativeLayout.addRule(nameEditor.getElement()).below(downButton);
 //        align(starButton, RelativeLayout.BELOW, downButton);
@@ -152,14 +153,17 @@ public class StructureWidgetHeaderView {
 
     private void addNameEditor(String name, Runnable onTextChange){
 
-        nameEditor = new CustomEditText(context, new ViewWrapper(context), new EntryWidgetResources(null, InvisibleEditTextManager.getManager(), null, null));
+        nameEditor = new CustomEditText(context, new ViewWrapper(context), null);
         nameEditor.setHint("widget name");
         if(name != null)
             nameEditor.setText(name);
         relativeLayout.addWithParam(nameEditor.getElement(), -2, -2);
+        MainActivity.log("nameEditor element params right after add: " + nameEditor.getElement().getLayoutParams());
 //        relativeLayout.addView(nameEditor.getView());
-        nameEditor.setOnDataChangedListener(()->onTextChange.run());
+        nameEditor.setOnDataChangedListener((prevData, data)->onTextChange.run());
+        MainActivity.log("nameEditor element params right after add: " + nameEditor.getElement().getLayoutParams());
         Margin.setStructureWidgetHeader(this);
+        MainActivity.log("nameEditor element params right after add: " + nameEditor.getElement().getLayoutParams());
 //        nameEditor.getView().setId(View.generateViewId());
     }
 

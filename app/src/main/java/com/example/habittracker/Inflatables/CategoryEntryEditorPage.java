@@ -11,6 +11,7 @@ import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.DataChangeListener;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.ParentWidget;
 import com.example.habittracker.structurePack.EntryInStructure;
@@ -116,8 +117,10 @@ public class CategoryEntryEditorPage extends Inflatable{
         menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);
 //
 //
-        parentWidget.setOnDataChangedListener(()->onDataChanged());
-        linearLayout.addView(parentWidget.getView());
+        parentWidget.setOnDataChangedListener((prevData, data) -> {
+
+        });
+        linearLayout.addView(parentWidget.getElement().getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
         parentWidget.setParam(structure.getWidgetParam());
         if(entryInStructure != null){

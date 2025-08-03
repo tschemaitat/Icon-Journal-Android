@@ -40,16 +40,19 @@ public class StructureWidgetEditText implements Widget {
     }
 
 
-
-
     @Override
-    public void setParam(EntryWidgetParam params) {
+    public void setValue(Object widgetValue) {
 
     }
 
     @Override
-    public View getView() {
-        return null;
+    public Object getEntryValueTreeCustom() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setParam(EntryWidgetParam params) {
+        throw new RuntimeException();
     }
 
     @Override
@@ -70,5 +73,10 @@ public class StructureWidgetEditText implements Widget {
     @Override
     public void setHint(String string) {
         throw new RuntimeException();
+    }
+
+    @Override
+    public Context getContext() {
+        return null;
     }
 }

@@ -9,6 +9,7 @@ import android.widget.ScrollView;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.Rectangle;
+import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.LayoutMeasureFunction;
 import com.example.habittracker.ViewLibrary.ScrollElements.ScrollElement;
 
@@ -74,7 +75,8 @@ public class LockableScrollView extends ScrollView {
         }
     }
 
-    public void scrollToChildPublic(View view){
+    public void scrollToChildPublic(Element element){
+        View view = element.getView();
         Rectangle childRectangleScreen = getScreenRect(view);
         Rectangle scrollRectangleScreen = getScreenRect(this);
         Rectangle scrollParentRectangleScreen = getScreenRect((View)this.getParent());

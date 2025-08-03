@@ -10,10 +10,11 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Widgets.FocusTreeParent;
@@ -24,73 +25,89 @@ import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import com.example.habittracker.structurePack.ListItemId;
 
-public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
+public abstract class ListWidget extends AbstractWidget implements FocusTreeParent {
 
 
     public static final String className = "list";
     private Context context;
     protected WidgetLayout layout;
-    protected EntryWidget ghostItem;
+    protected AbstractWidget ghostItem;
     protected EntryWidgetParam cloneParam;
+    private EntryWidgetResources entryWidgetResources;
 
-    public ListWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
+
+    public ListWidget(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources){
         super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getElement());
+        setWrapperChild();
+
 
 
         //makeButton(()->addItem());
 
     }
-    protected ArrayList<EntryWidget> getWidgetListWithoutGhost(){
+    protected ArrayList<AbstractWidget> getWidgetListWithoutGhost(){
         if(ghostItem == null)
             throw new RuntimeException();
         ArrayList<Widget> widgetList = layout.widgets();
         widgetList = (ArrayList<Widget>) widgetList.clone();
         widgetList.remove(widgetList.size() - 1);
-        return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
+        return EnumLoop.makeList(widgetList, widget->(AbstractWidget) widget);
     }
-    protected ArrayList<EntryWidget> getEntryWidgetListWithGhost(){
-        ArrayList<Widget> widgetList = layout.widgets();
-        widgetList = (ArrayList<Widget>) widgetList.clone();
-        return EnumLoop.makeList(widgetList, widget->(EntryWidget) widget);
+    protected ArrayList<AbstractWidget> getEntryWidgetListWithGhost(){
+        ArrayList<AbstractWidget> widgetList = layout.widgets();
+        widgetList = (ArrayList<AbstractWidget>) widgetList.clone();
+        return EnumLoop.makeList(widgetList, widget->(AbstractWidget) widget);
     }
+
+
+
 
     protected void setValueListCustom(Object widgetValue){
         throw new RuntimeException();
     }
-    protected void onItemCreated(EntryWidget widget){
+    protected void onItemCreated(AbstractWidget widget){
         throw new RuntimeException();
     }
-    protected void addGhostItem(EntryWidget widget){
+    protected void addGhostItem(AbstractWidget widget){
         MainActivity.log("adding ghost");
-        widget.getView().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
+        widget.getElement().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
         ghostItem = widget;
-        widget.setOnDataChangedListener(()->onGhostData());
+        widget.setEntryWidgetResources(entryWidgetResources);
+
         layout.add(widget);
     }
-    private void onGhostData() {
+    public void onGhostData() {
         if(ghostItem == null)
             throw new RuntimeException();
+        if(isGhostItem()){
+            getListParent().onGhostData();
+        }
+
         MainActivity.log("on ghost data");
-        ghostItem.getView().setForeground(null);
+        ghostItem.getElement().setForeground(null);
         //ghostItem.setOnDataChangedListener(()->onDataChangedListener().run());
-        ghostItem.setWidgetResources(entryWidgetResources);
+//        ghostItem.setOnDataListener(()->{
+//            if(ghostItem instanceof GroupWidget)
+//            entryWidgetResources.entryOnDataChange.onBaseEntryDataChange(
+//                    ghostItem.getLocation(entryWidgetResources.entryInStructure),
+//                    ghostItem.getValue());
+//        });
         //TODO: need to have the ghost create the initial data and edit it in
         entryWidgetResources.entryOnDataChange.onListItemCreated(
-                getLocation(entryWidgetResources.entryInStructure).get(0),
-                ListWidgetSingleItem.createGroupValueFromWidgetValue((BaseEntryWidget) ghostItem), new EntryWidgetResources.ListIdCallBack() {
+                getLocation(entryWidgetResources.entryInStructure),
+                ListWidgetSingleItem.createGroupValueFromWidgetValue(ghostItem), new EntryWidgetResources.ListIdCallBack() {
                     @Override
                     public void giveListId(ListItemId listItemId) {
-                        ((BaseEntryWidget) ghostItem).setListItemIdProvider(new SingleItemIdProvider(listItemId));
+                        ghostItem.setListItemIdProvider(new SingleItemIdProvider(listItemId));
                     }
                 });
         //setViewDraggable(ghostItem);
         ghostItem = null;
         addGhostItem(createItem());
     }
-    protected final EntryWidget createItem(){
+    protected final AbstractWidget createItem(){
         MainActivity.log("list widget: creating item");
         EntryWidgetResources initialResources = new EntryWidgetResources(entryWidgetResources.keyBoardActionManager, entryWidgetResources.invisibleEditTextManager,
                 new EntryWidgetResources.EntryOnDataChange() {
@@ -104,7 +121,7 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
                         onGhostData();
                     }
                 }, entryWidgetResources.entryInStructure);
-        EntryWidget entryWidget = (EntryWidget) GLib.inflateWidget(context, cloneParam, initialResources);
+        AbstractWidget entryWidget = GLib.inflateWidget(context, cloneParam, initialResources);
         entryWidget.setFocusParent(this);
         onItemCreated(entryWidget);
         return entryWidget;
@@ -136,33 +153,47 @@ public class ListWidget extends BaseEntryWidget implements FocusTreeParent {
         throw new RuntimeException();
     }
 
+
+
     @Override
     public void setHint(String hintString) {
         throw new RuntimeException();
     }
 
     @Override
-    public EntryWidget getFirstWidget() {
-        EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
+    protected Element widgetGetElement() {
+        return layout.getElement();
+    }
+
+    @Override
+    public AbstractWidget getFirstWidget() {
+        AbstractWidget firstWidget = (AbstractWidget) layout.widgets().get(0);
         if(firstWidget instanceof FocusTreeParent focusTreeParent){
             return focusTreeParent.getFirstWidget();
         }
         return firstWidget;
     }
+
+
+
     @Override
-    public EntryWidget findNextWidget(EntryWidget entryWidget){
-        return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgetListWithGhost(), getFocusParent(), this);
+    public AbstractWidget findNextWidget(AbstractWidget abstractWidget){
+        return FocusTreeParentHelper.findNextWidget(abstractWidget, getEntryWidgetListWithGhost().convert(
+                (index, entryWidget) -> entryWidget), getFocusParent(), this);
     }
+
+    @Override
+    public AbstractWidget getWidget() {
+        return this;
+    }
+
     protected void setWidgetParam(EntryWidgetParam entryWidgetParam){
         this.cloneParam = entryWidgetParam;
         if(ghostItem != null)
             throw new RuntimeException();
         addGhostItem(createItem());
     }
-    @Override
-    public WidgetValue getEntryValueTreeCustom() {
-        throw new RuntimeException();
-    }
+
 
 
     public GroupValue getGroupValueSingleItem(ListItemId listItemId) {

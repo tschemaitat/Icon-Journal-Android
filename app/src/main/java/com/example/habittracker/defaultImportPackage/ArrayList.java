@@ -20,6 +20,12 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterIn
         super();
     }
 
+    public ArrayList<E> copy(){
+        ArrayList<E> copy = new ArrayList<>();
+        copy.addAll(this);
+        return copy;
+    }
+
     public void enumerate(EnumerateFunction<E> enumerateFunction){
         for(int i = 0; i < this.size(); i++){
             enumerateFunction.enumerateIteration(i, this.get(i));
@@ -72,4 +78,6 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterIn
             function.iterate(element);
         }
     }
+
+
 }

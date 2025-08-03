@@ -9,7 +9,8 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.ViewLibrary.Element;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
@@ -18,44 +19,41 @@ import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.defaultImportPackage.ArrayList;
 import com.example.habittracker.structurePack.ListItemId;
 
-public class ParentWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
-    private WidgetLayout layout;
+public class ParentWidget extends AbstractWidget implements FocusTreeParent, ListItemIdProvider {
+    private WidgetLayout<AbstractWidget> layout;
     public static final String className = "parent widget";
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
     private Context context;
-    public ParentWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
-        super(context, wrapperElement, entryWidgetResources);
+
+    public ParentWidget(Context context, ViewWrapper viewWrapper, EntryWidgetResources entryWidgetResources){
+        super(context, viewWrapper, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout);
-        getView().setId(R.id.parentWidget);
+        setWrapperChild();
+        getElement().getView().setId(R.id.parentWidget);
     }
-    public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){
-        ArrayList<BaseEntryWidget> entryWidgets = new ArrayList<>();
+    public ArrayList<AbstractWidget> getBaseEntryWidgets(){
+        ArrayList<AbstractWidget> entryWidgets = new ArrayList<>();
         for(Object widget: layout.widgets()){
-            entryWidgets.add((BaseEntryWidget) widget);
+            entryWidgets.add((AbstractWidget) widget);
         }
         return entryWidgets;
     }
-    public ArrayList<EntryWidget> getEntryWidgets(){
-        ArrayList<EntryWidget> entryWidgets = new ArrayList<>();
-        for(Object widget: layout.widgets()){
-            entryWidgets.add((EntryWidget) widget);
-        }
-        return entryWidgets;
+    public ArrayList<AbstractWidget> getEntryWidgets(){
+        return layout.widgets().copy();
     }
     public WidgetLayout getWidgetLayout(){
         return layout;
     }
     @Override
-    protected Object getEntryValueTreeCustom() {
+    public Object getValue() {
         return getEntryValueTreeCustom(getBaseEntryWidgets());
     }
-    public static Object getEntryValueTreeCustom(ArrayList<BaseEntryWidget> baseEntryWidgets){
+    public static Object getEntryValueTreeCustom(ArrayList<AbstractWidget> baseEntryWidgets){
         ArrayList<WidgetValue> result = new ArrayList<>();
 
-        for(BaseEntryWidget widget: baseEntryWidgets){
+        for(AbstractWidget widget: baseEntryWidgets){
             WidgetValue widgetValue = (WidgetValue) widget.getValue();
             if(widgetValue != null)
                 result.add(widgetValue);
@@ -67,12 +65,12 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     protected void setValueCustom(Object widgetValue) {
         setValueCustom(getBaseEntryWidgets(), (GroupValue) widgetValue);
     }
-    public static void setValueCustom(ArrayList<BaseEntryWidget> entryWidgets, GroupValue groupValue){
+    public static void setValueCustom(ArrayList<AbstractWidget> entryWidgets, GroupValue groupValue){
         MainActivity.log("group setting values: \n" + groupValue.hierarchy());
         for(int i = 0; i < entryWidgets.size(); i++){
 
 
-            BaseEntryWidget entryWidget = entryWidgets.get(i);
+            AbstractWidget entryWidget = entryWidgets.get(i);
             MainActivity.log("widget: " + entryWidget.getName() + ", id: " + entryWidget.getWidgetInStructure());
             WidgetValue childWidgetValue = groupValue.getWidgetValueByWidget(entryWidget.getWidgetInStructure());
             if(childWidgetValue != null)
@@ -84,34 +82,36 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     @Override
     protected void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
-        ArrayList<Widget> inflatedWidgets = GLib.inflateAll(groupParams.params, entryWidgetResources, context);
-        for(Widget widget: inflatedWidgets){
+        ArrayList<AbstractWidget> inflatedWidgets = GLib.inflateAll(groupParams.params, getEntryWidgetResources(), context);
+        for(AbstractWidget widget: inflatedWidgets){
             layout.add(widget);
         }
 
 //        layout.inflateAll(groupParams.params, ()->onDataChangedListener().run());
-        for(BaseEntryWidget widget: getBaseEntryWidgets()){
+        for(AbstractWidget widget: getBaseEntryWidgets()){
             widget.setFocusParent(this);
             widget.setListItemIdProvider(this);
         }
     }
-    @Override
-    public String getNameAndLocation() {
-        return "parent widget";
-    }
-    @Override
 
-    public EntryWidget getFirstWidget() {
-        EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
+    @Override
+    public AbstractWidget getFirstWidget() {
+        AbstractWidget firstWidget = (AbstractWidget)layout.widgets().get(0);
         if(firstWidget instanceof FocusTreeParent focusTreeParent){
             return focusTreeParent.getFirstWidget();
         }
         return firstWidget;
     }
     @Override
-    public EntryWidget findNextWidget(EntryWidget entryWidget){
+    public AbstractWidget findNextWidget(AbstractWidget entryWidget){
         return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgets(), getFocusParent(), this);
     }
+
+    @Override
+    public AbstractWidget getWidget() {
+        return this;
+    }
+
     @Override
 
     public ListItemId getListItemId() {
@@ -151,5 +151,10 @@ public class ParentWidget extends EntryWidget implements FocusTreeParent, ListIt
     @Override
     public void setHint(String string) {
         throw new RuntimeException();
+    }
+
+    @Override
+    protected Element widgetGetElement() {
+        return layout.getElement();
     }
 }

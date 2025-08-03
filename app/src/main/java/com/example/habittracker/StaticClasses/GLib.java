@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
@@ -131,8 +132,8 @@ public class GLib {
         return view;
     }
 
-    public static ArrayList<Widget> inflateAll(ArrayList<EntryWidgetParam> params, EntryWidgetResources entryWidgetResources, Context context){
-        ArrayList<Widget> widgets = new ArrayList<>();
+    public static ArrayList<AbstractWidget> inflateAll(ArrayList<EntryWidgetParam> params, EntryWidgetResources entryWidgetResources, Context context){
+        ArrayList<AbstractWidget> widgets = new ArrayList<>();
         System.out.println("setting widgets: " + params.size());
         for(int i = 0; i < params.size(); i++){
             System.out.println("\tadding widget and inflating: ");
@@ -141,11 +142,11 @@ public class GLib {
         return widgets;
     }
 
-    public static Widget inflateWidget(Context context, EntryWidgetParam params, EntryWidgetResources entryWidgetResources){
+    public static AbstractWidget inflateWidget(Context context, EntryWidgetParam params, EntryWidgetResources entryWidgetResources){
 
         String className = params.getClassName();
         //System.out.println("inflating widget: " + className);
-        Widget widget = null;
+        AbstractWidget widget = null;
         switch (className) {
             case DropDown.className -> {
                 widget = new EntryDropDown(context, new ViewWrapper(context), entryWidgetResources);

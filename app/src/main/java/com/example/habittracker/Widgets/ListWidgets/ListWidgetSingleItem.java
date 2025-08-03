@@ -7,6 +7,8 @@ import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.EnumLoop;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.ViewLibrary.Element;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.GroupWidget;
@@ -14,7 +16,6 @@ import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.GroupValue;
 import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.Widgets.WidgetParams.ListParam;
 
@@ -27,17 +28,15 @@ public class ListWidgetSingleItem extends ListWidget {
     private Context context;
     private ListParam param;
 
-    public ListWidgetSingleItem(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+    public ListWidgetSingleItem(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources) {
         super(context, wrapperElement, entryWidgetResources);
         this.context = context;
-        layout = new WidgetLayout(context);
-        setViewWrapperChild(layout.getElement());
 
         Margin.setListWidgetLayout(layout.getLinearElementLayout());
 
     }
 
-    public static GroupValue createGroupValueFromWidgetValue(BaseEntryWidget baseEntryWidget){
+    public static GroupValue createGroupValueFromWidgetValue(AbstractWidget baseEntryWidget){
         WidgetValue widgetValue = (WidgetValue) baseEntryWidget.getValue();
         ArrayList<WidgetValue> widgetValueList = new ArrayList<>();
         widgetValueList.add(widgetValue);
@@ -47,10 +46,10 @@ public class ListWidgetSingleItem extends ListWidget {
     }
 
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
-        ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
+    public WidgetValue getValue() {
+        ArrayList<AbstractWidget> entryWidgetList = getWidgetListWithoutGhost();
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
-        for(BaseEntryWidget entryWidget: entryWidgetList){
+        for(AbstractWidget entryWidget: entryWidgetList){
             groupValueList.add(createGroupValueFromWidgetValue(entryWidget));
         }
         return new ListValue(param.getWidgetInStructure().getWidgetId(), groupValueList);
@@ -59,9 +58,9 @@ public class ListWidgetSingleItem extends ListWidget {
     @Override
     public GroupValue getGroupValueSingleItem(ListItemId listItemId) {
 
-        ArrayList<BaseEntryWidget> entryWidgetList = EnumLoop.makeList(getWidgetListWithoutGhost(), widget -> (BaseEntryWidget) widget);
-        BaseEntryWidget selectedWidget = null;
-        for(BaseEntryWidget entryWidget: entryWidgetList){
+        ArrayList<AbstractWidget> entryWidgetList = getWidgetListWithoutGhost();
+        AbstractWidget selectedWidget = null;
+        for(AbstractWidget entryWidget: entryWidgetList){
             if(entryWidget.getListItemId().equals(listItemId)){
                 selectedWidget = entryWidget;
                 break;
@@ -76,7 +75,7 @@ public class ListWidgetSingleItem extends ListWidget {
     }
 
     @Override
-    public void onItemCreated(EntryWidget widget){
+    public void onItemCreated(AbstractWidget widget){
 
     }
 
@@ -87,7 +86,7 @@ public class ListWidgetSingleItem extends ListWidget {
         EntryWidgetParam entryWidgetParam = param.cloneableWidget.params.get(0);
         ArrayList<GroupValue> groupValueList = listValue.getGroupValueList();
         for(GroupValue groupValue: groupValueList){
-            BaseEntryWidget item = (BaseEntryWidget)createItem();
+            AbstractWidget item = (AbstractWidget)createItem();
             layout.add(item);
             WidgetValue valueInGroup = groupValue.getWidgetValueByWidget(entryWidgetParam.getWidgetInStructure());
             item.setValue(valueInGroup);

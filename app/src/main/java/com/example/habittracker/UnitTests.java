@@ -129,7 +129,7 @@ public class UnitTests {
 
     public void addValues(ArrayList<String> values, WidgetInStructure widgetInStructure, Structure structure){
         GroupWidgetParam groupWidgetParam = structure.getWidgetParam();
-        GroupWidget groupWidget = (GroupWidget)GLib.inflateWidget(context, groupWidgetParam, ()->{});
+        GroupWidget groupWidget = (GroupWidget)GLib.inflateWidget(context, groupWidgetParam, null);
         GroupValue groupValue = (GroupValue)groupWidget.getValue();
         WidgetPath widgetPath = widgetInStructure.getWidgetInfo().getWidgetPath();
         GroupValue currentValue = groupValue;

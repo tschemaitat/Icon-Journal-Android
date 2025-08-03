@@ -25,7 +25,7 @@ public class JournalPage extends Inflatable{
 
     @Override
     public View getView() {
-        return groupWidget.getView();
+        return groupWidget.getElement().getView();
     }
 
     @Override

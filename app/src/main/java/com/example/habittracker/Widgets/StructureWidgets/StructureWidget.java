@@ -71,7 +71,7 @@ public class StructureWidget implements ElementProvider {
         });
         layout.add(headerView.getElement());
 
-        typeDropDown = new StaticDropDown(context, new ViewWrapper(context));
+        typeDropDown = new StaticDropDown(context, new ViewWrapper(context), null);
         layout.add(typeDropDown.getElement());
         typeDropDown.setup(DropDownPageFactory.getTypes(), (itemPath, payload, prevRefItemPath, prevPayload) ->
                 onTypeChange((String)payload, (String)prevPayload));

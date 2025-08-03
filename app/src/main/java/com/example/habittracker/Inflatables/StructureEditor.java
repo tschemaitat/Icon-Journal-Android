@@ -82,7 +82,8 @@ public class StructureEditor extends Inflatable{
 
         ButtonElement buttonElement = new ButtonElement(context, "add", addStructureWidget);
         buttonAndWidgetLayout.add(buttonElement);
-        layout.add(widgetLayout.getElement());
+        //this was widgetLayout, changed to button and widget layout
+        layout.add(buttonAndWidgetLayout);
         if(groupWidgetParam != null)
             inflateStructureUsingParam(groupWidgetParam, widgetLayout, context);
         widgetLayout.getLinearElementLayout().setChildMargin(Margin.listChildMargin());
@@ -121,7 +122,7 @@ public class StructureEditor extends Inflatable{
     private static CustomEditText setupStructureKeyEditor(String name, LinearElementLayout layout, Context context) {
 
         EditTextParam editTextParam = new EditTextParam("spreadsheet name");
-        CustomEditText structureKeyEditor = (CustomEditText)GLib.inflateWidget(context, editTextParam, ()->{});
+        CustomEditText structureKeyEditor = (CustomEditText)GLib.inflateWidget(context, editTextParam, null);
         structureKeyEditor.setText(name);
         layout.add(structureKeyEditor.getElement());
         return structureKeyEditor;

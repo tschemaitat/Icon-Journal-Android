@@ -8,9 +8,11 @@ import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.DropDownPage;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ViewElement;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
+import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Values.WidgetValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
 import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.Structs.RefItemPath;
@@ -20,26 +22,26 @@ import org.json.JSONObject;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class StaticDropDown extends BaseEntryWidget {
+public class StaticDropDown extends AbstractWidget {
     boolean dataSet = false;
     private Context context;
     private DropDown dropDown;
     private DropDown.DropDownOnSelected onSelected = null;
-    public StaticDropDown(Context context, Element wrapperElement){
-        super(context, wrapperElement);
+    public StaticDropDown(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         init();
     }
-    public StaticDropDown(Context context, Element wrapperElement, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
-        super(context, wrapperElement);
+    public StaticDropDown(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources, DropDownPage dropDownPage, DropDown.DropDownOnSelected onSelected){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         init();
         this.onSelected = onSelected;
         setup(dropDownPage, onSelected);
     }
 
-    public StaticDropDown(Context context, Element wrapperElement, DropDownPage dropDownPage, Runnable onSelected){
-        super(context, wrapperElement);
+    public StaticDropDown(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources, DropDownPage dropDownPage, Runnable onSelected){
+        super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         this.onSelected = (itemPath, payload, prevItemPath, prevPayload) -> onSelected.run();
         init();
@@ -47,16 +49,19 @@ public class StaticDropDown extends BaseEntryWidget {
         setup(dropDownPage, (itemPath, payload, prevItemPath, prevPayload) -> onSelected.run());
     }
 
+
+
     private void init(){
         dropDown = new DropDown(context, (itemPath, payload, prevItemPath, prevPayload) -> {
             listenerWrapper(itemPath, payload, prevItemPath, prevPayload);
         });
-        setViewWrapperChild(new ViewElement() {
-            @Override
-            public View getView() {
-                return dropDown.getView();
-            }
-        });
+        setWrapperChild();
+//        setViewWrapperChild(new ViewElement() {
+//            @Override
+//            public View getView() {
+//                return dropDown.getView();
+//            }
+//        });
 
     }
 
@@ -66,7 +71,7 @@ public class StaticDropDown extends BaseEntryWidget {
     }
 
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
+    public Object getValue() {
         throw new RuntimeException();
     }
 
@@ -111,6 +116,16 @@ public class StaticDropDown extends BaseEntryWidget {
 
     public void setHint(String item_to_be_selected) {
         dropDown.setHint(item_to_be_selected);
+    }
+
+    @Override
+    protected Element widgetGetElement() {
+        return new ViewElement() {
+            @Override
+            public View getView() {
+                return getDropDown().getView();
+            }
+        };
     }
 
     public void resetError() {

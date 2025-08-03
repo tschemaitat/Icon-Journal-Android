@@ -8,6 +8,8 @@ import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
@@ -25,7 +27,7 @@ public class ListWidgetMultipleItems extends ListWidget {
     public static String childClassName = "list multiple items";
     private ListParam listMultiItemParam = null;
     private Context context;
-    public ListWidgetMultipleItems(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources) {
+    public ListWidgetMultipleItems(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources) {
         super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         Margin.setListWidgetLayout(layout.getLinearElementLayout());
@@ -47,7 +49,7 @@ public class ListWidgetMultipleItems extends ListWidget {
 
 
     @Override
-    protected void onItemCreated(EntryWidget item){
+    protected void onItemCreated(AbstractWidget item){
         MainActivity.log("setting group widget onItemCreated");
         GroupWidget groupWidget = (GroupWidget)item;
         LinearElementLayout linLayout = groupWidget.getLinearElementLayout();
@@ -57,7 +59,7 @@ public class ListWidgetMultipleItems extends ListWidget {
     }
 
     @Override
-    public WidgetValue getEntryValueTreeCustom() {
+    public WidgetValue getValue() {
         ArrayList<GroupWidget> groupWidgets = getGroupWidgets();
         ArrayList<GroupValue> groupValueList = new ArrayList<>();
         for(GroupWidget groupWidget: groupWidgets){

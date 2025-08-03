@@ -79,6 +79,11 @@ public class StructureWidgetList implements Widget{
         throw new RuntimeException();
     }
 
+    @Override
+    public Context getContext() {
+        return null;
+    }
+
 
     public EntryWidgetParam getParam() {
         ArrayList<StructureWidget> structureWidgets = EnumLoop.makeList(widgetLayout.widgets(), (widget) ->(StructureWidget) widget);
@@ -97,6 +102,16 @@ public class StructureWidgetList implements Widget{
     }
 
     @Override
+    public void setValue(Object widgetValue) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public Object getEntryValueTreeCustom() {
+        throw new RuntimeException();
+    }
+
+    @Override
     public void setParam(EntryWidgetParam params) {
         ListParam listMultiItemParam = (ListParam) params;
         ArrayList<EntryWidgetParam> children = listMultiItemParam.cloneableWidget.params;
@@ -104,11 +119,6 @@ public class StructureWidgetList implements Widget{
             StructureWidget structureWidget = addStructureWidget();
             structureWidget.setParam(entryWidgetParam);
         }
-    }
-
-    @Override
-    public View getView() {
-        return widgetLayout.getView();
     }
 
     public boolean hasUniqueAttribute() {

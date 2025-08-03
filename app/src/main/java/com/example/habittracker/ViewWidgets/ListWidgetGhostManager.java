@@ -41,7 +41,7 @@ public class ListWidgetGhostManager {
         originalIndex = groupWidgetList.indexOf(draggedWidget);
         widgetLayout.remove(draggedWidget);
         groupWidgetList.remove(draggedWidget);
-        View draggedView = draggedWidget.getView();
+        View draggedView = draggedWidget.getElement().getView();
         int shadowWidth = draggedView.getWidth();
         int shadowHeight = getShadowHeight(draggedView);
         generateRectangleList(groupWidgetList, shadowWidth, shadowHeight, draggedView.getHeight(), MainActivity.scrollView.getScrollY());
@@ -98,7 +98,7 @@ public class ListWidgetGhostManager {
             if(indexCount == originalIndex){
                 addedY = draggedViewHeight;
             }
-            View groupWidgetView = widget.getView();
+            View groupWidgetView = widget.getElement().getView();
             int[] tempPosArray = new int[2];
             int width = groupWidgetView.getWidth();
             int height = groupWidgetView.getHeight();

@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.ColorPalette;
 import com.example.habittracker.ViewWidgets.LockableScrollView;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -29,7 +30,7 @@ public class InvisibleEditTextManager {
     }
 
     private EditText invisibleEditText;
-    private EntryWidget focusedWidget;
+    private AbstractWidget focusedWidget;
     private StringBuilder logList = new StringBuilder();
 
     private InvisibleEditTextManager(ConstraintLayout parent, Context context){
@@ -44,7 +45,7 @@ public class InvisibleEditTextManager {
         });
     }
 
-    public void setEditableWidgetThatGotFocus(EntryWidget editableWidget){
+    public void setEditableWidgetThatGotFocus(AbstractWidget editableWidget){
         logList.append("set focused that got focus: " + editableWidget.widgetDebugId + " , name: " + editableWidget.getName() + "\n");
         MainActivity.log("set focused widget from edit text press");
 //        if(focusedWidget != null){
@@ -92,7 +93,7 @@ public class InvisibleEditTextManager {
 
     }
 
-    public void setFocusedWidget(EntryWidget entryWidget){
+    public void setFocusedWidget(AbstractWidget entryWidget){
         logList.append("set focused widget widgetDebugId: " + entryWidget.widgetDebugId + " , name: " + entryWidget.getName() + "\n");
         MainActivity.log("new focused widget");
 //        if(focusedWidget != null){
@@ -101,7 +102,7 @@ public class InvisibleEditTextManager {
 //            throw new RuntimeException();
 //        }
         LockableScrollView scrollView = MainActivity.scrollView;
-        scrollView.scrollToChildPublic(entryWidget.getView());
+        scrollView.scrollToChildPublic(entryWidget.getElement());
         focusedWidget = entryWidget;
         if(focusedWidget instanceof EditableWidget editableWidget){
             editableWidget.getEditText().requestFocus();

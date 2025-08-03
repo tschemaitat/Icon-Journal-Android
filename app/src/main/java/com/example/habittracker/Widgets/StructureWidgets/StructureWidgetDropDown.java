@@ -85,7 +85,7 @@ public class StructureWidgetDropDown{
     private void createStructureKeyDropDown(){
         if(structureKeyDropDown != null)
             throw new RuntimeException();
-        structureKeyDropDown = new StaticDropDown(context, new ViewWrapper(context));
+        structureKeyDropDown = new StaticDropDown(context, new ViewWrapper(context), null);
         structureKeyDropDown.getDropDown().setHint("select spreadsheet");
         customLinearLayout.add(structureKeyDropDown.getElement());
         structureKeyDropDown.getElement().disableWithGray();
@@ -145,7 +145,7 @@ public class StructureWidgetDropDown{
     private void createValueKeyDropDown(){
         if(valueKeyDropDown != null)
             throw new RuntimeException();
-        valueKeyDropDown = new StaticDropDown(context, new ViewWrapper(context), null, (itemPath, payload, prevItemPath, prevPayload) -> {
+        valueKeyDropDown = new StaticDropDown(context, new ViewWrapper(context), null, null, (itemPath, payload, prevItemPath, prevPayload) -> {
             onValueKeyChange((WidgetInStructure) payload, (WidgetInStructure)prevPayload);
         });
         customLinearLayout.add(valueKeyDropDown.getElement());
@@ -256,7 +256,7 @@ public class StructureWidgetDropDown{
     private void addGroupBy(){
         ArrayList<StaticDropDown> groupDropDowns = getGroupDropDownList();
         int newIndex = groupDropDowns.size();
-        StaticDropDown dropDown = new StaticDropDown(context, new ViewWrapper(context), createGroupPage(), (itemPath, payload, prevItemPath, prevPayload) -> {
+        StaticDropDown dropDown = new StaticDropDown(context, new ViewWrapper(context), null, createGroupPage(), (itemPath, payload, prevItemPath, prevPayload) -> {
             onGroupValueChange((WidgetInStructure) payload, (WidgetInStructure) prevPayload, newIndex);
         });
         dropDown.setHint("select group");
@@ -318,7 +318,7 @@ public class StructureWidgetDropDown{
 
 
     private void processGroupClick(){
-        for(Widget widget: groupWidgetLayout.widgets())
+        for(StaticDropDown widget: groupWidgetLayout.widgets())
             widget.resetTextErrorColor();
             //groupWidgetLayout.resetNameColor();
         //System.out.println("group button clicked");
@@ -327,12 +327,8 @@ public class StructureWidgetDropDown{
     }
 
     private ArrayList<StaticDropDown> getGroupDropDownList() {
-        ArrayList<StaticDropDown> dropDowns = new ArrayList<>();
-        if(groupWidgetLayout == null)
-            return dropDowns;
-        for(StaticDropDown widget: groupWidgetLayout.widgets())
-            dropDowns.add(widget);
-        return dropDowns;
+
+        return groupWidgetLayout.widgets();
     }
 
     private int maxNumGroups(){
@@ -373,7 +369,7 @@ public class StructureWidgetDropDown{
             }
             if(groupValues.get(groupValues.size() - 1) == null) {
                 //System.out.println("last group value is null");
-                for(Widget widget: groupWidgetLayout.widgets())
+                for(StaticDropDown widget: groupWidgetLayout.widgets())
                     widget.setTextErrorColor();
                 //groupWidgetLayout.getViewWrapper().setNameRed();
                 return null;

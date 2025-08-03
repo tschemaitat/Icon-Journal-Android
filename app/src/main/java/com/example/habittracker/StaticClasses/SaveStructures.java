@@ -46,8 +46,10 @@ public class SaveStructures {
     }
 
     public static void editWidgetValue(RefEntryString refEntryString){
-        Structure structure = refEntryString.getStructure();
-        structure.editWidgetValue(refEntryString.getEntryInStructure());
+        throw new RuntimeException();
+        //this function made no sense and wasn't called
+//        Structure structure = refEntryString.getStructure();
+//        structure.editWidgetValue(refEntryString.getEntryInStructure());
     }
 
     public static void deleteStructuresFile(Context context){

@@ -6,11 +6,12 @@ import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewWidgets.ViewWrapper;
+import com.example.habittracker.Widgets.EntryWidgets.AbstractWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.Values.GroupValue;
-import com.example.habittracker.Widgets.EntryWidgets.BaseEntryWidget;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListItemIdProvider;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
@@ -18,28 +19,28 @@ import com.example.habittracker.structurePack.ListItemId;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
-public class GroupWidget extends EntryWidget implements FocusTreeParent, ListItemIdProvider {
-    private WidgetLayout<BaseEntryWidget> layout;
+public class GroupWidget extends AbstractWidget implements FocusTreeParent, ListItemIdProvider {
+    private WidgetLayout<AbstractWidget> layout;
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
     Context context;
 
     public static final String className = "group widget";
-    public GroupWidget(Context context, Element wrapperElement, EntryWidgetResources entryWidgetResources){
+    public GroupWidget(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources){
         super(context, wrapperElement, entryWidgetResources);
         this.context = context;
         layout = new WidgetLayout(context);
-        setViewWrapperChild(layout);
-        getView().setId(R.id.groupWidget);
+        setWrapperChild();
+        getElement().getView().setId(R.id.groupWidget);
     }
 
-    public ArrayList<BaseEntryWidget> getBaseEntryWidgets(){
+    public ArrayList<AbstractWidget> getBaseEntryWidgets(){
         return layout.widgets();
     }
-    public ArrayList<EntryWidget> getEntryWidgets(){
-        ArrayList<EntryWidget> entryWidgets = new ArrayList<>();
-        for(Object widget: layout.widgets()){
-            entryWidgets.add((EntryWidget) widget);
+    public ArrayList<AbstractWidget> getEntryWidgets(){
+        ArrayList<AbstractWidget> entryWidgets = new ArrayList<>();
+        for(AbstractWidget widget: layout.widgets()){
+            entryWidgets.add(widget);
         }
         return entryWidgets;
     }
@@ -51,17 +52,17 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     @Override
     public void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
-        ArrayList<Widget> inflatedWidgets = GLib.inflateAll(groupParams.params,entryWidgetResources , context);
-        for(Widget widget: inflatedWidgets){
-            layout.add((BaseEntryWidget) widget);
+        ArrayList<AbstractWidget> inflatedWidgets = GLib.inflateAll(groupParams.params,getEntryWidgetResources() , context);
+        for(AbstractWidget widget: inflatedWidgets){
+            layout.add((AbstractWidget) widget);
         }
-        for(BaseEntryWidget widget: getBaseEntryWidgets()){
+        for(AbstractWidget widget: getBaseEntryWidgets()){
             widget.setFocusParent(this);
             widget.setListItemIdProvider(this);
         }
     }
     @Override
-    public GroupValue getEntryValueTreeCustom() {
+    public GroupValue getValue() {
         return (GroupValue) ParentWidget.getEntryValueTreeCustom(getBaseEntryWidgets());
     }
 
@@ -73,16 +74,21 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     }
 
     @Override
-    public EntryWidget getFirstWidget() {
-        EntryWidget firstWidget = (EntryWidget)layout.widgets().get(0);
+    public AbstractWidget getFirstWidget() {
+        AbstractWidget firstWidget = layout.widgets().get(0);
         if(firstWidget instanceof FocusTreeParent focusTreeParent){
             return focusTreeParent.getFirstWidget();
         }
         return firstWidget;
     }
     @Override
-    public EntryWidget findNextWidget(EntryWidget entryWidget){
-        return FocusTreeParentHelper.findNextWidget(entryWidget, getEntryWidgets(), getFocusParent(), this);
+    public AbstractWidget findNextWidget(AbstractWidget abstractWidget){
+        return FocusTreeParentHelper.findNextWidget(abstractWidget, getEntryWidgets(), getFocusParent(), this);
+    }
+
+    @Override
+    public AbstractWidget getWidget() {
+        return this;
     }
 
     @Override
@@ -113,11 +119,6 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
         this.listItemId = listItemId;
     }
 
-    public String getNameAndLocation(){
-        ArrayList<ListItemId> itemIds = getListItemIdList();
-        return getName() + itemIds;
-    }
-
     @Override
     public void setTextErrorColor() {
         throw new RuntimeException();
@@ -131,5 +132,10 @@ public class GroupWidget extends EntryWidget implements FocusTreeParent, ListIte
     @Override
     public void setHint(String string) {
         throw new RuntimeException();
+    }
+
+    @Override
+    protected Element widgetGetElement() {
+        return layout.getElement();
     }
 }

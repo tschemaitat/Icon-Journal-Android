@@ -32,8 +32,8 @@ public class EntryDropDown extends AbstractWidget {
     private DropDownPage dropDownPage = null;
     private Context context;
 
-    public EntryDropDown(Context context, ViewWrapper viewWrapper){
-        super(context, viewWrapper);
+    public EntryDropDown(Context context, ViewWrapper viewWrapper, EntryWidgetResources entryWidgetResources){
+        super(context, viewWrapper, entryWidgetResources);
 
         this.context = context;
         init();
@@ -83,13 +83,18 @@ public class EntryDropDown extends AbstractWidget {
     }
 
     @Override
-    Element widgetGetElement() {
+    protected Element widgetGetElement() {
         return new ViewElement() {
             @Override
             public View getView() {
                 return dropDown.getView();
             }
         };
+    }
+
+    @Override
+    public String getNameAndLocation() {
+        return null;
     }
 
     public void setSelected(CachedString item){

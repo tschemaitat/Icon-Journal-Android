@@ -14,6 +14,7 @@ import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.Layouts.WidgetLayout;
 import com.example.habittracker.ViewLibrary.ImageButtonElement;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelParamAllowsMatch;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 
@@ -162,8 +163,11 @@ public class Margin {
     public static void setStructureWidgetHeader(StructureWidgetHeaderView headerView){
         if(headerView.nameEditor != null){
             CustomEditText nameView = headerView.nameEditor;
+            RelParamAllowsMatch relParam = (RelParamAllowsMatch)(nameView.getElement().getLayoutParams());
+            relParam.edit(-2, -2, false, false);
+            //create way to create or edit relParam easily
             RelativeLayout.LayoutParams nameParam = getRelativeParam(-2, -2, new Margin(0));
-            nameView.getView().setLayoutParams(nameParam);
+            nameView.getElement().setLayoutParams(nameParam);
             setEditText(nameView.getEditText());
         }
         if(headerView.deleteButton != null){
