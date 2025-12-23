@@ -35,7 +35,7 @@ public class StructureWidgetList implements Widget{
             //baseview
             //button
         LinearElementLayout buttonLayout = new VertLayout(context);
-        buttonLayout.addWithParam(widgetLayout.getElement(), -2, -2);
+        widgetLayout.getElement().addWithParam(buttonLayout, -2, -2);
         ButtonElement buttonElement = new ButtonElement(context, "add", this::addStructureWidget);
         buttonLayout.addWithParam(buttonElement, -2, -2);
 

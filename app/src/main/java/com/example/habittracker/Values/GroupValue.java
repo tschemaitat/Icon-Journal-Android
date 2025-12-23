@@ -33,8 +33,9 @@ public class GroupValue implements ThrowableEquals {
             throw new RuntimeException();
         this.values = new ArrayList<>(values);
 
-        for(WidgetValue widgetValue: values){
+        for(WidgetValue widgetValue: this.values){
             widgetValue.setParentGroupValue(this);
+            //widgetValue.getParentGroupValue();
         }
     }
 
@@ -185,6 +186,8 @@ public class GroupValue implements ThrowableEquals {
         }
         if(path.size() - 1 != listIdList.size()){
             MainActivity.log("widget path: " + path + "\nlist id list: " + listIdList);
+            MainActivity.log("path size: " + path.size() + ", listIdList size: "+listIdList.size());
+            throw new RuntimeException();
         }
         return getValueIteration(path, listIdList, 0);
     }
@@ -305,5 +308,6 @@ public class GroupValue implements ThrowableEquals {
             throw new RuntimeException();
         values.remove(oldWidgetValue);
         values.add(index, widgetValue);
+        widgetValue.setParentGroupValue(this);
     }
 }

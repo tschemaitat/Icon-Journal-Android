@@ -33,7 +33,6 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
     protected WidgetLayout layout;
     protected AbstractWidget ghostItem;
     protected EntryWidgetParam cloneParam;
-    private EntryWidgetResources entryWidgetResources;
 
 
     public ListWidget(Context context, ViewWrapper wrapperElement, EntryWidgetResources entryWidgetResources){
@@ -71,10 +70,16 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
         throw new RuntimeException();
     }
     protected void addGhostItem(AbstractWidget widget){
+        debugMessages.add("added ghost item");
+        debugMessages.add("ghost item id: " + widget.getElement().getView().getId());
         MainActivity.log("adding ghost");
         widget.getElement().setForeground(new ColorDrawable(ColorPalette.listItemBeforeAddForeground));
+        if(ghostItem != null)
+            throw new RuntimeException();
         ghostItem = widget;
-        widget.setEntryWidgetResources(entryWidgetResources);
+        widget.setEntryWidgetResources(getEntryWidgetResources());
+        debugMessages.add("ghostitem object id: "+System.identityHashCode(ghostItem));
+        debugMessages.add("ghost item element object id: "+System.identityHashCode(ghostItem.getElement()));
 
         layout.add(widget);
     }
@@ -95,12 +100,23 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
 //                    ghostItem.getValue());
 //        });
         //TODO: need to have the ghost create the initial data and edit it in
-        entryWidgetResources.entryOnDataChange.onListItemCreated(
-                getLocation(entryWidgetResources.entryInStructure),
-                ListWidgetSingleItem.createGroupValueFromWidgetValue(ghostItem), new EntryWidgetResources.ListIdCallBack() {
+        getEntryWidgetResources().entryOnDataChange.onListItemCreated(
+                getLocation(getEntryWidgetResources().entryInStructure),
+                ListWidgetSingleItem.createGroupValueFromWidgetValue(ghostItem),
+                new EntryWidgetResources.ListIdCallBack() {
                     @Override
                     public void giveListId(ListItemId listItemId) {
-                        ghostItem.setListItemIdProvider(new SingleItemIdProvider(listItemId));
+                        //since this is a groupWidget, use set list id directly instead of provider
+                        //group widget uses provider if its in a parent list
+                        //regular widget uses provider from
+                        if(ghostItem instanceof GroupWidget groupWidget){
+                            groupWidget.setListItemId(listItemId);
+                            groupWidget.setListItemIdProvider(getListItemIdProvider());
+                        }else{
+                            ghostItem.setListItemIdProvider(
+                                    new SingleItemIdProvider(listItemId, getListItemIdProvider()));
+                        }
+
                     }
                 });
         //setViewDraggable(ghostItem);
@@ -109,7 +125,7 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
     }
     protected final AbstractWidget createItem(){
         MainActivity.log("list widget: creating item");
-        EntryWidgetResources initialResources = new EntryWidgetResources(entryWidgetResources.keyBoardActionManager, entryWidgetResources.invisibleEditTextManager,
+        EntryWidgetResources initialResources = new EntryWidgetResources(getEntryWidgetResources().keyBoardActionManager, getEntryWidgetResources().invisibleEditTextManager,
                 new EntryWidgetResources.EntryOnDataChange() {
                     @Override
                     public void onBaseEntryDataChange(RefEntryString refEntryString, WidgetValue widgetValue) {
@@ -120,7 +136,7 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
                     public void onListItemCreated(RefEntryString refEntryString, GroupValue groupValue, EntryWidgetResources.ListIdCallBack listIdCallBack) {
                         onGhostData();
                     }
-                }, entryWidgetResources.entryInStructure);
+                }, getEntryWidgetResources().entryInStructure);
         AbstractWidget entryWidget = GLib.inflateWidget(context, cloneParam, initialResources);
         entryWidget.setFocusParent(this);
         onItemCreated(entryWidget);
@@ -136,6 +152,13 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
     }
     @Override
     public final void setValueCustom(Object widgetValue) {
+
+        if(ghostItem == null)
+            throw new RuntimeException();
+        debugMessages.add("ghost item id: " + ghostItem.getElement().getView().getId());
+        debugMessages.add("ghost item object id: "+System.identityHashCode(ghostItem));
+        debugMessages.add("ghost item element object id: "+System.identityHashCode(ghostItem.getElement()));
+        debugMessages.printDebugMessages();
         layout.remove(ghostItem);
         ghostItem = null;
         MainActivity.log("set value list");
@@ -188,6 +211,9 @@ public abstract class ListWidget extends AbstractWidget implements FocusTreePare
     }
 
     protected void setWidgetParam(EntryWidgetParam entryWidgetParam){
+        if(getEntryWidgetResources() == null){
+            throw new RuntimeException("widget resources null");
+        }
         this.cloneParam = entryWidgetParam;
         if(ghostItem != null)
             throw new RuntimeException();

@@ -261,7 +261,7 @@ public class StructureWidget implements ElementProvider {
         return new ViewElement() {
             @Override
             public View getView() {
-                return getView();
+                return StructureWidget.this.getView();
             }
         };
     }

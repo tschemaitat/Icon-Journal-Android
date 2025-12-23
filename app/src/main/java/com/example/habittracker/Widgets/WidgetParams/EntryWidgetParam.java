@@ -4,6 +4,7 @@ import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.WidgetParams.GroupWidgetParam;
 import com.example.habittracker.structurePack.HeaderNode;
 import com.example.habittracker.structurePack.Structure;
@@ -143,6 +144,9 @@ public abstract class EntryWidgetParam implements ThrowableEqualsWithId{
     }
 
     public abstract void equalsThrows(Object object);
+
+    //this is used to create a template when the entryEditor page is creating a new entry
+    public abstract Object getEmptyWidgetValue();
 
 
     public static class EntryWidgetParamBuilder{

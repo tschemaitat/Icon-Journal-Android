@@ -3,6 +3,7 @@ package com.example.habittracker.Widgets.EntryWidgets;
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
 
+import com.example.habittracker.DebugMessages;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
@@ -40,6 +41,8 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
 
     private DataChangeListener onDataChangedListener;
 
+    public DebugMessages debugMessages = new DebugMessages();
+
     public AbstractWidget(Context context, ViewWrapper viewWrapper, EntryWidgetResources entryWidgetResources){
         this.entryWidgetResources = entryWidgetResources;
         widgetDebugId = widgetDebugIdCounter;
@@ -48,19 +51,24 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
         this.viewWrapper.getView().setId(R.id.entryWidgetWrapper);
     }
 
+
+
     public ViewWrapper getViewWrapper(){
         return viewWrapper;
     }
 
     protected void setWrapperChild(){
+        debugMessages.add("set wrapper child");
         viewWrapper.setChildView(widgetGetElement());
     }
     public void setEntryWidgetResources(EntryWidgetResources entryWidgetResources){
+        debugMessages.add("set setEntryWidgetResources");
         this.entryWidgetResources = entryWidgetResources;
 
     }
 
     public void setOnDataChangedListener(DataChangeListener listener){
+        debugMessages.add("setOnDataChangedListener");
         if(listener == null)
             throw new RuntimeException();
         this.onDataChangedListener = listener;
@@ -80,12 +88,18 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
         return getName() + itemIds;
     }
     public void setParam(EntryWidgetParam entryWidgetParam){
+        debugMessages.add("set param");
         this.entryWidgetParam = entryWidgetParam;
         setParamCustom(entryWidgetParam);
         //probably going to move this to each individual widget class
         //if( instanceof BaseEntryWidget baseEntryWidget){
+
+        //listwidget does not currently use this function
+        if(! (this instanceof ListWidget)){
             if(entryWidgetParam.name != null)
                 setHint(entryWidgetParam.name);
+        }
+
         //}
     }
 
@@ -112,6 +126,8 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
             listParent.onGhostData();
         }
         if(entryWidgetResources != null){
+            if(entryWidgetResources.entryInStructure == null)
+                throw new RuntimeException();
             entryWidgetResources.entryOnDataChange.onBaseEntryDataChange(
                     getLocation(entryWidgetResources.entryInStructure), (WidgetValue) getValue()
             );
@@ -155,6 +171,7 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
     }
 
     public void setListItemIdProvider(ListItemIdProvider listItemIdProvider){
+        debugMessages.add("set list item id provider");
         this.listItemIdProvider = listItemIdProvider;
     }
 
@@ -167,6 +184,7 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
     }
 
     public void setFocusParent(FocusTreeParent parent){
+        debugMessages.add("set focus parent");
         this.focusParent = parent;
         viewWrapper.getElement().getView().setFocusable(true);
         viewWrapper.getElement().getView().setFocusableInTouchMode(true);
@@ -233,6 +251,7 @@ public abstract class AbstractWidget implements ElementProvider, FocusTreeParent
     }
 
     public void setValue(Object valueInGroup) {
+        debugMessages.add("set value");
         setValueCustom(valueInGroup);
     }
 }

@@ -114,7 +114,8 @@ public class EntryDropDown extends AbstractWidget {
         if(dropDown.getSelectedPath() == null)
             return null;
         //return new WidgetValueStringPath(getWidgetInStructure().getWidgetId(), dropDown.getSelectedPath());
-        return new WidgetValueString(getWidgetInStructure().getWidgetId(), new LiteralString(dropDown.getSelectedPath().getLast().getString()));
+        return new WidgetValueString(getWidgetInStructure().getWidgetId(),
+                new LiteralString(dropDown.getSelectedPath().getLast().getString()));
     }
 
     @Override

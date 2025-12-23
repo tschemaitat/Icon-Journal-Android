@@ -42,6 +42,15 @@ public abstract class Element {
     public ViewGroup.LayoutParams getLayoutParams(){
         return getView().getLayoutParams();
     }
+    @Override
+    public boolean equals(Object other){
+        if(!(other instanceof Element otherElement))
+            return false;
+
+        if(this.getView().getId() == otherElement.getView().getId())
+            return true;
+        return false;
+    }
 
     public void disableWithoutGray(){
         disableCheck();
@@ -65,9 +74,9 @@ public abstract class Element {
         setForeground(context.getDrawable(R.drawable.rounded_foreground_inset));
     }
     public void enable(){
-        if(!setDisabled){
-            throw new RuntimeException();
-        }
+//        if(!setDisabled){
+//            throw new RuntimeException();
+//        }
         tryEnableInteraction();
     }
     protected void tryEnableInteraction(){

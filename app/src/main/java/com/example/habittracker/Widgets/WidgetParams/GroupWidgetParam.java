@@ -3,6 +3,8 @@ package com.example.habittracker.Widgets.WidgetParams;
 import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Values.GroupValue;
+import com.example.habittracker.Values.WidgetValue;
 import com.example.habittracker.Widgets.GroupWidget;
 import com.example.habittracker.structurePack.HeaderNode;
 
@@ -125,5 +127,16 @@ public class GroupWidgetParam extends EntryWidgetParam {
         Lists.equalsThrowsRecursive(params, groupWidgetParam.params);
         if( ! this.equals(object))
             throw new RuntimeException();
+    }
+
+    @Override
+    public Object getEmptyWidgetValue() {
+
+        ArrayList<WidgetValue> widgetValues = new ArrayList<>();
+        for(EntryWidgetParam param: params){
+            widgetValues.add((WidgetValue)param.getEmptyWidgetValue());
+        }
+        GroupValue groupValue = new GroupValue(widgetValues);
+        return groupValue;
     }
 }

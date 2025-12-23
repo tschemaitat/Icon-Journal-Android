@@ -1,5 +1,6 @@
 package com.example.habittracker.defaultImportPackage;
 
+import android.content.Context;
 import android.widget.LinearLayout;
 
 import com.example.habittracker.Structs.CachedStrings.CachedString;
@@ -107,5 +108,9 @@ public class DefaultImportClass {
 
     public interface OnAdd{
         public void onAdd();
+    }
+
+    public static int getInt(Context context, int id){
+        return context.getResources().getInteger(id);
     }
 }

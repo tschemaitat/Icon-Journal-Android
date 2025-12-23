@@ -190,6 +190,12 @@ public class StaticDropDown extends AbstractWidget {
             throw new RuntimeException("not supposed to call this");
         }
 
+        @Override
+        public Object getEmptyWidgetValue() {
+            //this method is for entry so it shouldn't be called
+            throw new RuntimeException();
+        }
+
 
     }
 }

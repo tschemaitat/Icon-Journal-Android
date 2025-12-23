@@ -45,7 +45,21 @@ public class RelLayoutSuperMeasure extends RelativeLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //to catch "circular dependency exception
+        // add debug logs for parameters
+        try{
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }catch(Exception e){
+            int childrenCount = getChildCount();
+            for(int i = 0; i < childrenCount; i++){
+                View child = getChildAt(i);
+                RelParamAllowsMatch param = ((RelParamAllowsMatch) child.getLayoutParams());
+                MainActivity.log("rel child id: "+child.getId()+" at: " + i + "param:\n" + param);
+            }
+            MainActivity.log(e.toString());
+            throw new RuntimeException();
+        }
+
         if(!superMeasure)
             return;
         MainActivity.log("super rel onMeasure width mode: " +

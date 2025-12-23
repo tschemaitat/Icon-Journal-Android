@@ -1,6 +1,8 @@
 package com.example.habittracker.Widgets.WidgetParams;
 
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
+import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
 import com.example.habittracker.structurePack.HeaderNode;
 
@@ -58,6 +60,12 @@ public class EditTextParam extends EntryWidgetParam {
         getWidgetId().equalsThrows(editTextParam.getWidgetId());
         if( ! this.equals(object))
             throw new RuntimeException();
+    }
+
+    @Override
+    public Object getEmptyWidgetValue() {
+        //i think this should just have a empty string
+        return new WidgetValueString(getWidgetId(), new LiteralString(""));
     }
 
 

@@ -30,7 +30,7 @@ public class WidgetInStructure {
     }
 
     public String toString(){
-        return "<widgetInStructure, widgetId: " + getWidgetId() + ", structureId: " + structure + ">";
+        return "<widgetInStructure, widgetId: " + getWidgetId() + ", structureId: " + structure + ", "+widgetInfo.getEntryWidgetParam().getClassName()+">";
     }
 
     public String nameAndStructure(){

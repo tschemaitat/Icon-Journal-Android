@@ -52,7 +52,7 @@ public class StructureWidgetEditText implements Widget {
 
     @Override
     public void setParam(EntryWidgetParam params) {
-        throw new RuntimeException();
+        //i think this does nothing
     }
 
     @Override

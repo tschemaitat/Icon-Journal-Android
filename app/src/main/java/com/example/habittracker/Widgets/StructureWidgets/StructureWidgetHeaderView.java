@@ -1,10 +1,14 @@
 package com.example.habittracker.Widgets.StructureWidgets;
 
+import static com.example.habittracker.StaticClasses.Margin.getRelativeParam;
+import static com.example.habittracker.defaultImportPackage.DefaultImportClass.getInt;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.example.habittracker.MainActivity;
+import com.example.habittracker.R;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
@@ -12,6 +16,7 @@ import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ImageButtonElement;
 import com.example.habittracker.ViewLibrary.ImageToggleButtonElement;
+import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelParamAllowsMatch;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelativeElementLayout;
 import com.example.habittracker.ViewLibrary.ViewElement;
 import com.example.habittracker.ViewWidgets.ViewWrapper;
@@ -38,25 +43,17 @@ public class StructureWidgetHeaderView {
         addMoveButtons(moveUp, moveDown);
         pressedStarListener = pressStar;
         addStar();
-        relativeLayout.addRule(starButton).below(downButton);
+        //removed because of circularL
+        //relativeLayout.addRule(starButton).below(downButton);
         relativeLayout.addRule(downButton).rightOf(starButton);
         relativeLayout.addRule(upButton).rightOf(downButton);
         MainActivity.log("nameEditor element params: " + nameEditor.getElement().getLayoutParams());
         relativeLayout.addRule(nameEditor.getElement()).rightOf(starButton);
         relativeLayout.addRule(nameEditor.getElement()).below(downButton);
-//        align(starButton, RelativeLayout.BELOW, downButton);
-//        align(downButton, RelativeLayout.RIGHT_OF, starButton);
-//        align(upButton, RelativeLayout.RIGHT_OF, downButton);
-//
-//        align(nameEditor.getView(), RelativeLayout.RIGHT_OF, starButton);
-//        align(nameEditor.getView(), RelativeLayout.BELOW, downButton);
-    }
-
-    private void align(View first, int rule, View second){
-        RelativeLayout.LayoutParams param = ((RelativeLayout.LayoutParams) first.getLayoutParams());
-        param.addRule(rule, second.getId());
-        //first.setLayoutParams(param);
-
+        relativeLayout.addRule(upButton).alignParentTop();
+        //replaced because circular
+        //relativeLayout.addRule(downButton).leftOf(upButton).alignParentTop();
+        relativeLayout.addRule(downButton).alignParentTop();
     }
 
     public void disableStar(){
@@ -117,8 +114,8 @@ public class StructureWidgetHeaderView {
         int horMargin = 20;
         downButton = new ImageButtonElement(context, GLib.downArrow, moveDown);
         upButton = new ImageButtonElement(context, GLib.upArrow, moveUp);
-        relativeLayout.addWithParam(upButton, size, size).alignParentTop();
-        relativeLayout.addWithParam(downButton, size, size).leftOf(upButton).alignParentTop();
+        relativeLayout.addWithParam(upButton, size, size);
+        relativeLayout.addWithParam(downButton, size, size);
 
 
 
@@ -162,21 +159,31 @@ public class StructureWidgetHeaderView {
 //        relativeLayout.addView(nameEditor.getView());
         nameEditor.setOnDataChangedListener((prevData, data)->onTextChange.run());
         MainActivity.log("nameEditor element params right after add: " + nameEditor.getElement().getLayoutParams());
-        Margin.setStructureWidgetHeader(this);
+        //Margin.setStructureWidgetHeader(this);
         MainActivity.log("nameEditor element params right after add: " + nameEditor.getElement().getLayoutParams());
 //        nameEditor.getView().setId(View.generateViewId());
+
     }
 
-    private void addDeleteButton(Runnable runnable){
-        deleteButton = new ImageButtonElement(context, GLib.delete, runnable);
-//        deleteButton = (ImageButton) GLib.inflate(R.layout.delete_button);
-//        //deleteButton.setScaleType(ImageButton.ScaleType.FIT_CENTER);
-//        deleteButton.setId(View.generateViewId());
-//        relativeLayout.addView(deleteButton);
-//
-//        deleteButton.setOnClickListener((view)->runnable.run());
-//        Margin.setStructureWidgetHeader(this);
 
+
+    private void addDeleteButton(Runnable runnable){
+        //i think i currently don't have this part working so i don't add it?
+        deleteButton = new ImageButtonElement(context, GLib.delete, runnable);
+
+
+
+    }
+
+    private RelativeLayout.LayoutParams deleteButtonParams(){
+        //separated to use when i add delete button
+        RelativeLayout.LayoutParams deleteParam = getRelativeParam(
+                getInt(context, R.integer.structureWidgetHeader_width),
+                getInt(context, R.integer.structureWidgetHeader_height),
+                new Margin(getInt(context, R.integer.structureWidgetHeader_margin)));
+        deleteParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        deleteButton.setLayoutParams(deleteParam);
+        return deleteParam;
     }
 
     public View getView(){
@@ -187,7 +194,7 @@ public class StructureWidgetHeaderView {
         return new ViewElement() {
             @Override
             public View getView() {
-                return getView();
+                return StructureWidgetHeaderView.this.getView();
             }
         };
     }

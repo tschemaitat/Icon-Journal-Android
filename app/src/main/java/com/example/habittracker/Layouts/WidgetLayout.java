@@ -7,13 +7,10 @@ import android.widget.LinearLayout;
 
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.R;
-import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.ElementLayout;
 import com.example.habittracker.ViewLibrary.ElementProvider;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
-import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
-import com.example.habittracker.Widgets.Widget;
 
 import com.example.habittracker.defaultImportPackage.ArrayList;
 
@@ -56,16 +53,21 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
 //        return widgets;
 //    }
 
+
+
     public void add(T widget){
+        this.debugMessages.add("add: " + widget.getElement().getView().getId());
         widgets.add(widget);
         parentOnAdd(widget.getElement());
     }
     @Override
     protected void onAdd(Element element) {
+
         MainActivity.log("on add widget layout");
         layout.add(element);
     }
     public void add(T widget, int index){
+        this.debugMessages.add("index: " + index + "add: " + widget.getElement().getView().getId());
         widgets.add(index, widget);
         parentOnAdd(index, widget.getElement());
     }
@@ -75,6 +77,8 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
     }
 
     public void remove(T widget){
+        this.debugMessages.add("remove: " + widget.getElement().getView().getId());
+        debugMessages.add("widgets: " + widgets.get(0).getElement().getView().getId());
         if(!widgets.contains(widget))
             throw new RuntimeException();
         parentOnRemove(widget.getElement());
@@ -85,6 +89,7 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
     }
 
     public void delete(T widget) {
+        this.debugMessages.add("delete: " + widget.getElement().getView().getId());
         int index = widgets.indexOf(widget);
         this.remove(widget);
         getLinearElementLayout().remove(widget.getElement());
@@ -95,7 +100,7 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
     }
 
     public void moveUp(T widget) {
-
+        this.debugMessages.add("moveUp: " + widget.getElement().getView().getId());
         int index = widgets.indexOf(widget);
         if(index == 0)
             throw new RuntimeException();
@@ -107,6 +112,7 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
     }
 
     public void moveDown(T widget) {
+        this.debugMessages.add("moveDown: " + widget.getElement().getView().getId());
         int index = widgets.indexOf(widget);
         if(index == widgets.size() - 1)
             throw new RuntimeException();
@@ -132,7 +138,7 @@ public class WidgetLayout<T extends ElementProvider> extends ElementLayout {
         return layout;
     }
 
-    public Element getElement() {
+    public LinearElementLayout getElement() {
         return layout;
     }
 

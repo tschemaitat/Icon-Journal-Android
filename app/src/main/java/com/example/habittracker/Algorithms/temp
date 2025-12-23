@@ -1,0 +1,166 @@
+game has 8 phases, group decided to go to location
+either a location to explore, or location to shop
+each location has a deck
+maybe like 3 shop location, 3 explore location
+
+stats:
+    strength: more damage or better effect of cards
+    dexterity
+    mana: ability to perform magic
+        either more damage or better effect of spells
+
+    evasion: defensive evade damage
+    (maybe not, just for attacks)accuracy: offensive evade damage
+    armor: defensive damage
+    sneakiness: offensive decide distance
+    ingenuity: draw more cards
+variable stats:
+    endurance: amount of cards or events can be done
+
+stats of monsters:
+    dexterity
+    evasion
+    detection
+    armor
+
+
+experience:
+    increasing amount of experience needed for more stats
+    how do i keep track of so many experience tracks
+        remove experience when stat is upgraded
+        stat number show experience needed to upgrade
+
+
+you draw cards (during explore)
+cards maybe represent options and always use resources to get what the card does
+attacks:
+    maybe cards display the calculation
+    like one attack card is 2+strength damage(cost 1 endurance), and other is 2*strength damage
+training:
+    temporary stats
+    endurance card: lets you do more actions but takes a draw
+
+you can choose to take a phase in a marketplace instead of exploring
+there you unique and non-unique items
+non-unique items come at a different price and you can buy many times
+unique items can only be bought by one player
+additional items can be drawn using a gold
+
+im thinking maybe cards list stats like piercing amount or accuracy amount
+
+but then you need to subtract a bunch of stats every time you use a different attack
+
+one phase is exploring, you can find cards of monsters or places
+choose different locations to explore, changes chance of monster or location
+some places
+maybe one ability is to be able to explore extra spots
+places:
+    may find more places and then maybe costs one less endurance if you use it
+    some places may be limited to one use, other multiple players can use it
+    may cost endurance
+    examples:
+        meditation spot:
+            +1 any experience
+        waterfall:
+            +1 mana, +1 any experience
+        ruin: 1 basic mystery card, 2 gold
+        something that requires parkour:
+            part of cost: (6 - dex) chance of taking 2 damage
+            better rewards i guess
+
+monsters:
+
+    engage with monster: 1 endurance
+    find 1 more monster: 1 endurance
+    engaging a monster you find is free, but you cannot find another monster and then engage the last monster for free
+    monsters can either flee, fight, or fight and then flee
+    players can fight different monsters at the same time?
+    armor: monster takes less damage per hit
+        piercing: decreases effect of armor (damage = damage - [not neg](armor - piercing))
+        piercing can be shown on attacks
+        maybe some cards help grant piercing or decrease armor or a fight
+        some attack maybe have full piercing
+    effectiveness:
+        after armor, effectiveness multiplies damage
+        effectiveness = 33%, damage = 3, applied is 1, damage = 4 -> applied is 1
+    damage types:
+        cut, blunt, poison, fire
+        other types is magic, physical
+        so mana missile, and hammer is both blunt
+        but slash and hammer are both physical
+    monster fleeing:
+        distance starts depend on other stats, lets say 10
+        fleeing by default would be 20, distance changes by dexterity difference + 2, so 5 turns
+        once it reaches the max, it successfully ran away.
+        if the attacker runs out of endurance, fight also ends
+        monsters by default uses 1 endurance per turn
+        players can play 1 card per turn
+    starting distance:
+        distance = 10 + 5*(detection difference)
+        player can choose a longer distance, the equation decides the smallest distance
+        maybe endurance decreases by 1 per turn
+            so maybe fight take min 2: (engage, card)
+            then if 2 turns it takes min 3: (engage, end turn, card)
+            then 4 if played 2 cards: (engage, card, end turn, card)
+
+
+OOH:
+    attack of monsters have a lot of info, monster labels when they attack
+    attack are numbered: you take it out of the deck and then can read it
+
+simple multiple players:
+    everything moves at the slowest of everyone
+    attack can be aoe, if so it affects all players
+    everyone can decide to be moving closer or farther
+how do i allow multiple player to engage a target?
+move speed is 2+dexterity
+
+
+example:
+fairy:
+swipe: accuracy 2 -> chance to miss is 1/6 so need at least a 1
+
+battle cards
+attack
+    turns endurance into damage
+spell
+    turns mana into damage
+
+
+attack damage is strength + attack damage
+
+attack stats:
+    damage
+    reach
+    accuracy
+    pierce
+
+attack cards:
+    slash:
+        damage: 2 + strength
+        reach: 5
+        accuracy: 3
+    throw dagger:
+        damage: 4
+        base accuracy: 1
+        reach: 10 + accuracy
+    mace:
+        damage: -2 + 2 * strength
+        base accuracy: 2
+        reach: 5
+    magic missile:
+        damage: 3
+        reach: 15
+    sleepy spell:
+        reduce endurance by 2
+
+monster: goblin
+    hp: 5
+    dexterity: 0
+    endurance: 4
+    actions:
+        attack (goblin attack) for 2 turns
+        flee after
+    goblin attack:
+        1 damage
+        reach: 5

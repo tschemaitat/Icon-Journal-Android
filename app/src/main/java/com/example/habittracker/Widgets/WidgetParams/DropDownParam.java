@@ -4,8 +4,10 @@ import com.example.habittracker.Algorithms.Lists;
 import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.Dictionary;
 import com.example.habittracker.StaticClasses.EnumLoop;
+import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.Structs.StructureId;
 import com.example.habittracker.Structs.WidgetId;
+import com.example.habittracker.Values.WidgetValueString;
 import com.example.habittracker.structurePack.Structure;
 import com.example.habittracker.structurePack.WidgetInStructure;
 import com.example.habittracker.Widgets.EntryWidgets.DropDown;
@@ -140,6 +142,14 @@ public class DropDownParam extends EntryWidgetParam {
             throw new RuntimeException();
     }
 
+    @Override
+    public Object getEmptyWidgetValue() {
+        //im not sure how the empty value should work here
+        //also i don't understand why this is supposed to be literal
+        //im referencing how entryDropDown creates its value
+        return new WidgetValueString(getWidgetInStructure().getWidgetId(),
+                new LiteralString(""));
+    }
 
 
     public ArrayList<WidgetInStructure> getWidgetReferences() {

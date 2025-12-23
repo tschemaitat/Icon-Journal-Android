@@ -1,5 +1,6 @@
 package com.example.habittracker.Structs;
 
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.Structs.CachedStrings.CachedString;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
@@ -111,8 +112,12 @@ public class DropDownPage{
         if(payloadOption == null)
             throw new RuntimeException("null name in getOrAdd function");
         for(DropDownPage page: children){
+            MainActivity.log("checking if: " + page.getPayloadOption().getCachedString()+", equals: "
+            +payloadOption.getCachedString()
+            +", " + page.getPayloadOption().getCachedString().equals(payloadOption.getCachedString()));
             if(page.getPayloadOption().getCachedString().equals(payloadOption.getCachedString()))
                 return page;
+
         }
         DropDownPage newPage = new DropDownPage(payloadOption);
         add(newPage);

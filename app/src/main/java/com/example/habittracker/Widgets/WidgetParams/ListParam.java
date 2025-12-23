@@ -4,6 +4,7 @@ import static com.example.habittracker.defaultImportPackage.DefaultImportClass.*
 
 import com.example.habittracker.StaticClasses.GLib;
 import com.example.habittracker.StaticClasses.StructureTokenizer;
+import com.example.habittracker.Values.ListValue;
 import com.example.habittracker.Widgets.ListWidgets.ListWidget;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetMultipleItems;
 import com.example.habittracker.Widgets.ListWidgets.ListWidgetSingleItem;
@@ -96,5 +97,12 @@ public class ListParam extends EntryWidgetParam{
         cloneableWidget.equalsThrows(listParam.cloneableWidget);
         if( ! this.equals(object))
             throw new RuntimeException();
+    }
+
+    @Override
+    public Object getEmptyWidgetValue() {
+        //i think this should have no values in the list
+        //this is for a list that hasn't created any children yet
+        return new ListValue(getWidgetId(), new ArrayList<>());
     }
 }

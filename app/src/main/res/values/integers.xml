@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="structureWidgetHeader_width">20</integer>
+    <integer name="structureWidgetHeader_height">20</integer>
+    <integer name="structureWidgetHeader_margin">20</integer>
+    <integer name="myNumberwow">52</integer>
+
+</resources>

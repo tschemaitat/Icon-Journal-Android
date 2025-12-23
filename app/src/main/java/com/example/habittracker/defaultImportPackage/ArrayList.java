@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterInterface<E> {
     public ArrayList(E... numbers) {
@@ -71,6 +72,12 @@ public class ArrayList<E> extends java.util.ArrayList<E> implements ListGetterIn
             result.add(converted);
         }
         return result;
+    }
+
+    public void addAll(ArrayList<E> input){
+        for(E item: input){
+            this.add(item);
+        }
     }
 
     public void iter(IterateFunction<E> function){

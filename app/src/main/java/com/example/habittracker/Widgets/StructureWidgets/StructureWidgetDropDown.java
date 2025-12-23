@@ -126,6 +126,8 @@ public class StructureWidgetDropDown{
     //region value
 
     private DropDownPage createValuePage(){
+        MainActivity.log("creating value page");
+        MainActivity.log("selected structure: " + getSelectedStructure().toString());
         ArrayList<WidgetInStructure> widgetInStructureList = getSelectedStructure().getWidgetIdList();
         ArrayList<RefItemPath> itemPathList = EnumLoop.makeList(widgetInStructureList, widgetId -> widgetId.getNameWithPath());
         ArrayList<Object> payloadList = EnumLoop.makeList(widgetInStructureList, widgetId -> widgetId);
@@ -291,6 +293,7 @@ public class StructureWidgetDropDown{
         if(groupDropDowns.size() > indexToResetPage)
             groupDropDowns.get(indexToResetPage).setPage(createGroupPage());
     }
+
     private void addGroupKeyDropDownAdd(){
 
         addButton = new ButtonElement(context, "add", this::processGroupClick);
@@ -387,7 +390,8 @@ public class StructureWidgetDropDown{
         DropDownParam dropDownParam = ((DropDownParam) param);
         //structure = dropDownParam.structure;
         //createStructureKeyDropDown();
-        structureKeyDropDown.setSelectedByPayload(dropDownParam.getStructure());
+        MainActivity.log("structure payload set: " + dropDownParam.getReferenceStructure());
+        structureKeyDropDown.setSelectedByPayload(dropDownParam.getReferenceStructure());
         onStructureKeyChange(dropDownParam.getStructure(), null);
         //onStructureKeyChange(structure);
         //valueWidget = dropDownParam.valueKey;

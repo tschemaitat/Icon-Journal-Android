@@ -82,6 +82,9 @@ public class ParentWidget extends AbstractWidget implements FocusTreeParent, Lis
     @Override
     protected void setParamCustom(EntryWidgetParam param) {
         GroupWidgetParam groupParams = (GroupWidgetParam) param;
+        if(getEntryWidgetResources() == null){
+            throw new RuntimeException();
+        }
         ArrayList<AbstractWidget> inflatedWidgets = GLib.inflateAll(groupParams.params, getEntryWidgetResources(), context);
         for(AbstractWidget widget: inflatedWidgets){
             layout.add(widget);

@@ -35,14 +35,10 @@ public class GroupWidget extends AbstractWidget implements FocusTreeParent, List
     }
 
     public ArrayList<AbstractWidget> getBaseEntryWidgets(){
-        return layout.widgets();
+        return layout.widgets().copy();
     }
     public ArrayList<AbstractWidget> getEntryWidgets(){
-        ArrayList<AbstractWidget> entryWidgets = new ArrayList<>();
-        for(AbstractWidget widget: layout.widgets()){
-            entryWidgets.add(widget);
-        }
-        return entryWidgets;
+        return layout.widgets().copy();
     }
 
     @Override
@@ -98,16 +94,18 @@ public class GroupWidget extends AbstractWidget implements FocusTreeParent, List
     @Override
     public ArrayList<ListItemId> getListItemIdList() {
         ArrayList<ListItemId> result;
+        if(listItemId == null){
+            throw new RuntimeException();
+        }
         if(listItemIdParent != null){
             result = listItemIdParent.getListItemIdList();
-            if(listItemId == null){
-                throw new RuntimeException();
-            }
 
-            result.add(listItemId);
+
+
         }else{
             result = new ArrayList<>();
         }
+        result.add(listItemId);
 
         return result;
     }

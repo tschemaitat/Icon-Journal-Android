@@ -14,6 +14,7 @@ import com.example.habittracker.ViewWidgets.ViewWrapper;
 import com.example.habittracker.Widgets.EntryWidgets.DataChangeListener;
 import com.example.habittracker.Widgets.EntryWidgets.EntryWidgetResources;
 import com.example.habittracker.Widgets.ParentWidget;
+import com.example.habittracker.Widgets.WidgetParams.EntryWidgetParam;
 import com.example.habittracker.structurePack.EntryInStructure;
 import com.example.habittracker.structurePack.Structure;
 
@@ -30,6 +31,12 @@ public class CategoryEntryEditorPage extends Inflatable{
             MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry id: " + entryInStructure.getId() +"\n"+ entryInStructure.getGroupValue().hierarchy());
         else
             MainActivity.log("entry editor: " + spreadsheet.getCachedName() + " entry: null");
+        if(entryInStructure == null){
+            EntryWidgetParam groupParam = spreadsheet.getWidgetParam();
+            GroupValue groupValue = (GroupValue) groupParam.getEmptyWidgetValue();
+
+            entryInStructure = spreadsheet.addEntry(groupValue);
+        }
         this.context = context;
         this.structure = spreadsheet;
         this.entryInStructure = entryInStructure;
@@ -117,9 +124,9 @@ public class CategoryEntryEditorPage extends Inflatable{
         menuBarManager.addEntryEditorBar(parentWidget, entryInStructure);
 //
 //
-        parentWidget.setOnDataChangedListener((prevData, data) -> {
-
-        });
+//        parentWidget.setOnDataChangedListener((prevData, data) -> {
+//
+//        });
         linearLayout.addView(parentWidget.getElement().getView());
         MainActivity.log("settting param: \n" + structure.getWidgetParam());
         parentWidget.setParam(structure.getWidgetParam());

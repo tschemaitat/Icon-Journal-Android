@@ -1,6 +1,7 @@
 package com.example.habittracker.Values;
 
 import com.example.habittracker.Algorithms.ThrowableEqualsWithId;
+import com.example.habittracker.MainActivity;
 import com.example.habittracker.Structs.CachedStrings.RefEntryString;
 import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.defaultImportPackage.ListGetterInterface;
@@ -32,6 +33,11 @@ public abstract class WidgetValue implements ThrowableEqualsWithId {
     }
 
     public GroupValue getParentGroupValue(){
+        if(parent == null){
+            MainActivity.log(this.toString());
+            throw new RuntimeException();
+
+        }
         return parent;
     }
 

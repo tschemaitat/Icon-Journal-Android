@@ -19,6 +19,7 @@ import com.example.habittracker.StaticStateManagers.InvisibleEditTextManager;
 import com.example.habittracker.StaticStateManagers.KeyBoardActionManager;
 import com.example.habittracker.Structs.CachedStrings.LiteralString;
 import com.example.habittracker.StaticClasses.GLib;
+import com.example.habittracker.Structs.WidgetId;
 import com.example.habittracker.ViewLibrary.Element;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.VertLayout;
@@ -250,6 +251,9 @@ public class CustomEditText extends AbstractWidget {
     public WidgetValue getValue() {
         //MainActivity.log("returning data tree");
         //MainActivity.log("getText() = " + getText());
+        if(getEntryWidgetParams() == null){
+            return new WidgetValueString(new WidgetId(-1), new LiteralString(getText()));
+        }
         return new WidgetValueString(getWidgetId(), new LiteralString(getText()));
     }
 

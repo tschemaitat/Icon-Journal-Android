@@ -206,14 +206,18 @@ public class DropDown{
             currentRefItemPath = selectedDropDownOption.getPathSelected();
             currentPayload = selectedDropDownOption.payload;
         }
+        CachedString currentRefItemPathString;
         if(currentRefItemPath == null){
-
+            currentRefItemPathString = null;
+        }else{
+            currentRefItemPathString = currentRefItemPath.getArrayString();
         }
 //        if( ! isDataSame(prevRefItemPath, currentRefItemPath.getArrayString())){
 //            MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
 //            onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
 //        }
-        if( ! Objects.equals(prevRefItemPath, currentRefItemPath.getArrayString())){
+
+        if( ! Objects.equals(prevRefItemPath, currentRefItemPathString)){
             MainActivity.log("data is different: " + prevRefItemPath + ", " + currentRefItemPath);
             onSelectedListener.onSelected(currentRefItemPath, currentPayload, prevRefItemPath, prevPayload);
         }
@@ -239,8 +243,8 @@ public class DropDown{
     }
 
     public void setDropDownPage(DropDownPage dropDownPage){
-        if(parentPage != null)
-            throw new RuntimeException();
+//        if(parentPage != null)
+//            throw new RuntimeException();
         this.parentPage = dropDownPage;
         currentPage = parentPage;
     }
@@ -279,14 +283,19 @@ public class DropDown{
             throw new RuntimeException("tried to set selected path with no page set");
         if(currentPage != parentPage)
             throw new RuntimeException("weird state, tried to set selected when current page isn't parent page");
-        buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(item)));
+
         selectedDropDownOption = new SelectedOption(item);
+        //dealing with error where loading editor tries to set value of an empty string
+        if(item.getString().equals("")){
+            return;
+        }
 
         if( ! recursiveSearchPageForValue(parentPage, item)){
             throw new RuntimeException("tried to set non-path item to drop down, not found in pages\n" +
                     "item: " + item.getString() + "\n" +
                     "pages: \n" + parentPage.hierarchyString());
         }
+        buttonSelectionView.setTextString(new ArrayList<>(Collections.singleton(item)));
     }
 
     private boolean recursiveSearchPageForValue(DropDownPage currentParentPage, CachedString searchValue){

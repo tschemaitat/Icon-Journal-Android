@@ -7,8 +7,9 @@ import com.example.habittracker.defaultImportPackage.ArrayList;
 public class SingleItemIdProvider implements ListItemIdProvider{
     private ListItemId listItemId;
     private ListItemIdProvider listItemIdParent;
-    public SingleItemIdProvider(ListItemId listItemId){
+    public SingleItemIdProvider(ListItemId listItemId, ListItemIdProvider parent){
         this.listItemId = listItemId;
+        this.listItemIdParent = parent;
     }
 
     @Override

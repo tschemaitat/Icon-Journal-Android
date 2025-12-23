@@ -161,6 +161,8 @@ public class GLib {
                     widget = new ListWidgetSingleItem(context, new ViewWrapper(context), entryWidgetResources);
                 }
                 //widget.setOnDataChangedListener(onDataChange);
+                if(entryWidgetResources == null)
+                    throw new RuntimeException();
                 widget.setParam(params);
 
 

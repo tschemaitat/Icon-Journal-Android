@@ -12,6 +12,7 @@ public class ColorPalette {
 
     public static void setColors(Context context){
         text = context.getColor(R.color.darkText1);
+
         text = context.getColor(R.color.darkText2);
         textPurple = context.getColor(R.color.purple);
         redText = context.getColor(R.color.errorTextColor);

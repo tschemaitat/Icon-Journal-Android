@@ -146,6 +146,12 @@ public class RefEntryString<E extends BaseWidgetValue> implements CachedString{
 
     @Override
     public boolean equals(Object object){
+        //when checking if a drop has an item, i think it needs to check literals with reference strings
+        if(object instanceof LiteralString literalString){
+            if(this.getString().equals(literalString.getString())){
+                return true;
+            }
+        }
 
         if( ! (object instanceof RefEntryString refEntryString))
             return false;

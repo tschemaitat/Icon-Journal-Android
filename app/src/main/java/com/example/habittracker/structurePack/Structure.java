@@ -359,7 +359,12 @@ public class Structure {
     }
 
     public void editWidgetValue(RefEntryString refEntryString, WidgetValue addWidgetValue) {
+        MainActivity.log("entries size: "+entries.size() + "");
         GroupValue groupValue = entries.get(refEntryString.getEntryInStructure().getId());
+        for(WidgetValue widgetValue: groupValue.getValues()){
+            MainActivity.log(widgetValue.getParentGroupValue().toString());
+        }
+        MainActivity.log(groupValue.hierarchy());
         WidgetValue baseWidgetValue = groupValue.getValue(refEntryString);
         GroupValue parentOfEdit = baseWidgetValue.getParentGroupValue();
         WidgetInStructure widgetInStructure = refEntryString.getWidgetInStructure();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.habittracker.DebugMessages;
 import com.example.habittracker.StaticClasses.Margin;
 import com.example.habittracker.Widgets.Widget;
 import com.example.habittracker.defaultImportPackage.ArrayList;
@@ -13,6 +14,8 @@ public abstract class ElementLayout extends Element{
     private Context context;
     private ViewGroup viewGroup;
     private Margin childMargin = null;
+
+    public DebugMessages debugMessages = new DebugMessages();
 
     public ElementLayout(Context context){
         this.context = context;
@@ -28,6 +31,7 @@ public abstract class ElementLayout extends Element{
     //resets layoutParams and handles margin
     //does not add view to view layout
     protected MarginHelper parentOnAdd(Element element){
+        debugMessages.add("parent on add: " + element.getView().getId());
         checkElementBeforeAdd(element);
         elements.add(element);
         MarginHelper marginHelper = handleMarginAndParamsOnAdd(element);
@@ -35,6 +39,7 @@ public abstract class ElementLayout extends Element{
         return marginHelper;
     }
     protected MarginHelper parentOnAdd(int index, Element element){
+        debugMessages.add("parent on add index: "+index+ ", " + element.getView().getId());
         if(index < 0 || index >= elements.size())
             throw new RuntimeException("incorrect index: " + index);
         checkElementBeforeAdd(element);
@@ -70,18 +75,28 @@ public abstract class ElementLayout extends Element{
     }
 
     protected final void parentOnRemove(Element element){
-        if(element == null)
+        debugMessages.add("parent on remove: " + element.getView().getId());
+        if(element == null){
+            debugMessages.printDebugMessages();
             throw new RuntimeException();
-        if(!elements.contains(element))
+        }
+        debugMessages.add("to remove object id: " + System.identityHashCode(element));
+        debugMessages.add("existing object id: " + System.identityHashCode(elements.get(0)));
+
+        if(!elements.contains(element)) {
+            debugMessages.printDebugMessages();
             throw new RuntimeException();
+        }
         elements.remove(element);
         onRemove(element);
     }
     protected final Element parentOnRemove(int index){
+
         Element removedElement = elements.remove(index);
         if(removedElement == null){
             throw new RuntimeException("error removing at index: " + index);
         }
+        debugMessages.add("parent on remove index: "+index+ ", " + removedElement.getView().getId());
         onRemove(index, removedElement);
         return removedElement;
     }

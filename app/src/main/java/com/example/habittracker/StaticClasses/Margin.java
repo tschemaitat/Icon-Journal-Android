@@ -1,6 +1,7 @@
 package com.example.habittracker.StaticClasses;
 
 import static com.example.habittracker.StaticClasses.ColorPalette.*;
+import static com.example.habittracker.defaultImportPackage.DefaultImportClass.getInt;
 
 import android.content.Context;
 import android.view.View;
@@ -12,11 +13,15 @@ import android.widget.RelativeLayout;
 
 import com.example.habittracker.Layouts.LinLayout;
 import com.example.habittracker.Layouts.WidgetLayout;
+import com.example.habittracker.R;
 import com.example.habittracker.ViewLibrary.ImageButtonElement;
 import com.example.habittracker.ViewLibrary.LinearLayoutElements.LinearElementLayout;
 import com.example.habittracker.ViewLibrary.RelativeLayoutElements.RelParamAllowsMatch;
 import com.example.habittracker.Widgets.StructureWidgets.StructureWidgetHeaderView;
 import com.example.habittracker.Widgets.EntryWidgets.CustomEditText;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Margin {
     public static final int initialLeftMargin = 20;
@@ -159,20 +164,17 @@ public class Margin {
 
     }
 
-
     public static void setStructureWidgetHeader(StructureWidgetHeaderView headerView){
+        Context context = null;
         if(headerView.nameEditor != null){
-            CustomEditText nameView = headerView.nameEditor;
-            RelParamAllowsMatch relParam = (RelParamAllowsMatch)(nameView.getElement().getLayoutParams());
-            relParam.edit(-2, -2, false, false);
-            //create way to create or edit relParam easily
-            RelativeLayout.LayoutParams nameParam = getRelativeParam(-2, -2, new Margin(0));
-            nameView.getElement().setLayoutParams(nameParam);
-            setEditText(nameView.getEditText());
+
         }
         if(headerView.deleteButton != null){
             ImageButtonElement deleteButton = headerView.deleteButton;
-            RelativeLayout.LayoutParams deleteParam = getRelativeParam(20, 20, new Margin(20));
+            RelativeLayout.LayoutParams deleteParam = getRelativeParam(
+                    getInt(context, R.integer.structureWidgetHeader_width),
+                    getInt(context, R.integer.structureWidgetHeader_height),
+                    new Margin(getInt(context, R.integer.structureWidgetHeader_margin)));
             deleteParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             deleteButton.setLayoutParams(deleteParam);
         }

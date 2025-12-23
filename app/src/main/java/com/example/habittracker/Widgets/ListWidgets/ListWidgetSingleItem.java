@@ -90,7 +90,7 @@ public class ListWidgetSingleItem extends ListWidget {
             layout.add(item);
             WidgetValue valueInGroup = groupValue.getWidgetValueByWidget(entryWidgetParam.getWidgetInStructure());
             item.setValue(valueInGroup);
-            item.setListItemIdProvider(new SingleItemIdProvider(groupValue.getListItemId()));
+            item.setListItemIdProvider(new SingleItemIdProvider(groupValue.getListItemId(), getListItemIdProvider()));
         }
         addGhostItem(createItem());
 

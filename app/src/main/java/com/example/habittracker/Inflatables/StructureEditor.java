@@ -98,6 +98,7 @@ public class StructureEditor extends Inflatable{
 
     private static void inflateStructureUsingParam(GroupWidgetParam groupWidgetParam, WidgetLayout widgetLayout, Context context) {
         ArrayList<EntryWidgetParam> entryWidgetParams = groupWidgetParam.params;
+        MainActivity.log("structure editor params: \n" + groupWidgetParam.toString());
         for(EntryWidgetParam param: entryWidgetParams){
             StructureWidget structureWidget = new StructureWidget(context, widgetLayout);
             structureWidget.setParam(param);
